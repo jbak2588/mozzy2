@@ -1,0 +1,10 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 임시: 개발 중에는 모든 읽기/쓰기를 허용 (런칭 전 반드시 변경!)
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

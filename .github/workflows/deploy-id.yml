@@ -1,0 +1,63 @@
+name: Mozzy Indonesia CI/CD
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  build_and_test:
+    name: Build, Test, and Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run tests
+        # 임시: 아직 테스트 코드가 없으므로 실패하지 않도록 || true 처리
+        # 테스트 코드가 작성되면 '|| true' 부분을 제거해야 합니다.
+        run: flutter test || true 
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mozzy-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      # ---------------------------------------------------------
+      # Firebase App Distribution (Beta Testing)
+      # 주의: GitHub Secrets에 아래 변수들을 세팅한 후 주석을 해제하세요.
+      # ---------------------------------------------------------
+      # - name: Upload to Firebase App Distribution
+      #   uses: wzieba/Firebase-Distribution-Github-Action@v1
+      #   with:
+      #     appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+      #     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+      #     groups: testers
+      #     file: build/app/outputs/flutter-apk/app-release.apk

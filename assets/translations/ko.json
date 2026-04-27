@@ -41,5 +41,13 @@
     "market": "마켓",
     "chat": "채팅",
     "profile": "프로필"
+  },
+  "trust": {
+    "level": {
+      "anggota_baru": "신규 멤버",
+      "terpercaya": "신뢰 멤버",
+      "terverifikasi": "인증 멤버",
+      "hero_lokal": "동네 영웅"
+    }
   }
 }

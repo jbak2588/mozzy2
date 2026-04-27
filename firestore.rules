@@ -2,9 +2,50 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 임시: 개발 중에는 모든 읽기/쓰기를 허용 (런칭 전 반드시 변경!)
-    match /{document=**} {
-      allow read, write: if true;
+    
+    // [헬퍼 함수]
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // [1] 사용자 프로필
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    // [2] 국가별 도메인 게시글 (Path-sharded architecture)
+    // 경로: countries/{countryId}/domains/{domainId}/posts/{postId}
+    match /countries/{countryId}/domains/{domainId}/posts/{postId} {
+      
+      // 누구나 읽기 가능 (하위 로컬 정책에 따라 필터링될 수 있음)
+      allow read: if isAuthenticated();
+      
+      // 작성 및 수정 규칙
+      allow create: if isAuthenticated() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.geoPath.size() > 0
+        && request.resource.data.trustScore >= 0.0;
+        
+      allow update: if isOwner(resource.data.userId)
+        && request.resource.data.userId == resource.data.userId; // 작성자 변경 금지
+        
+      allow delete: if isOwner(resource.data.userId);
+    }
+
+    // [3] 채팅 (추후 확장 예정)
+    match /chat_rooms/{roomId} {
+      allow read, write: if isAuthenticated() 
+        && request.auth.uid in resource.data.participants;
+    }
+    
+    // [Collection Group] 모든 도메인의 'posts' 컬렉션에 공통 적용
+    match /{path=**}/posts/{postId} {
+      allow read: if isAuthenticated();
     }
   }
 }

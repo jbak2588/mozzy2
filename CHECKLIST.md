@@ -45,13 +45,14 @@
 - [x] `assets/translations/en.json` 생성
 - [x] `assets/translations/ko.json` 생성 (다국어 확장)
 - [x] `lib/mozzy_ii/shared/contracts/mozzy_post_contract.dart` 생성 (MozzyPostContract)
-- [ ] Firestore Security Rules 초안 (`firestore.rules`) 작성
-- [ ] `firestore.indexes.json` 초안 생성
+- [x] Firestore Security Rules 초안 (`firestore.rules`) 작성
+- [x] `firestore.indexes.json` 초안 생성
 
 ### 📝 메모 및 주요 결정 사항 (Memos & Decisions)
 * **[2026-04-27] 인덱스 최적화 전략 확정**: 132개 인덱스 제한 준수 및 다국가 확장을 위해 `countryCode`를 쿼리 필드가 아닌 경로(Path) 기반으로 격리하기로 결정함. (자세한 내용은 `docs/Firestore_Architecture_Strategy.md` 참조)
 * **[2026-04-27] Firebase 비용 지원 연동**: Google for Startups 크레딧은 '프로젝트'가 아닌 '결제 계정' 단위로 적용되므로, 신규 프로젝트 생성 시 기존 계정(bling_app 사용 계정)을 그대로 연결하여 지원 유지 가능.
 * **[2026-04-27] Phase 1-B/D 기초 구현 완료**: AuthService(Google 로그인 전환 적용), MozzyFormatters(IDR/날짜), 번역 키(id, en, ko) 업데이트 및 AuthGate 연동 완료.
+* **[2026-04-27] Trust Layer & 테스트 완료**: TrustScoreService/Badge 구현 완료 및 주요 서비스들에 대한 단위/위젯 테스트(20개+) 통과 확인. google_sign_in 7.2.0 API 대응 완료.
 
 ### 0-E. CI/CD 파이프라인 (deploy-agent)
 - [x] GitHub 저장소 생성 (Private) (수동)
@@ -104,19 +105,18 @@
   - [x] 인도네시아식 날짜 (12 April 2026)
 
 ### 1-E. Trust Layer 기반 (security-agent + dart-agent)
-- [ ] `TrustScoreService` 기본 구현
-- [ ] Trust Level 정의: Anggota Baru → Terpercaya → Terverifikasi → Hero Lokal
-- [ ] `TrustScoreBadge` 위젯
+- [x] `TrustScoreService` 기본 구현
+- [x] Trust Level 정의: Anggota Baru → Terpercaya → Terverifikasi → Hero Lokal
+- [x] `TrustScoreBadge` 위젯
 - [ ] 신고 시스템 기본 구조
 
 ### 1-F. Phase 1 테스트 (test-agent)
-- [ ] `IndonesiaLocationService` 단위 테스트 10개+
-- [ ] `CountryRegistryService` 단위 테스트 5개+
-- [ ] IDR 포맷터 단위 테스트 8개+
-- [ ] Auth flow 위젯 테스트 5개+
+- [x] `IndonesiaLocationService` 단위 테스트 10개+
+- [x] `CountryRegistryService` 단위 테스트 5개+
+- [x] IDR 포맷터 단위 테스트 8개+
+- [x] Auth flow 위젯 테스트 5개+
 
-**Phase 1 완료 기준**: 앱 실행 → 위치 감지 → 인도네시아 주소(Kecamatan) 표시 → 로그인 완료
-
+**Phase 1 완료 기준**: 앱 실행 → 위치 감지 → 인도네시아 주소(Kecamatan) 표시 → 로그인 완료 ➔ **(✅ 완료)**
 ---
 
 ## 🔲 Phase 2 — Core 3 Features MVP (Week 7~10)

@@ -41,5 +41,13 @@
     "market": "Market",
     "chat": "Messages",
     "profile": "Profile"
+  },
+  "trust": {
+    "level": {
+      "anggota_baru": "New Member",
+      "terpercaya": "Trusted",
+      "terverifikasi": "Verified",
+      "hero_lokal": "Local Hero"
+    }
   }
 }

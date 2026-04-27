@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'main_scaffold.dart';
 import '../auth/auth_gate.dart';
-import '../auth/auth_service.dart';
 import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
 import '../../discovery/screens/home_screen.dart';

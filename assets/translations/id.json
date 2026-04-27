@@ -41,5 +41,13 @@
     "market": "Pasar",
     "chat": "Pesan",
     "profile": "Profil"
+  },
+  "trust": {
+    "level": {
+      "anggota_baru": "Anggota Baru",
+      "terpercaya": "Terpercaya",
+      "terverifikasi": "Terverifikasi",
+      "hero_lokal": "Hero Lokal"
+    }
   }
 }

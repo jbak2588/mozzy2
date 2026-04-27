@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
@@ -57,7 +58,7 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
       );
     } catch (e) {
       // 역지오코딩 실패 시 좌표만 반환하거나 처리
-      print('Reverse geocoding failed: $e');
+      debugPrint('Reverse geocoding failed: $e');
       return null;
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 class CountryRegistryService {
   static final CountryRegistryService _instance = CountryRegistryService._internal();
@@ -15,7 +16,7 @@ class CountryRegistryService {
       _countryData = jsonDecode(jsonString) as Map<String, dynamic>;
     } catch (e) {
       // Fallback 로직이나 에러 처리 (운영 환경에서는 더 세밀하게 처리 필요)
-      print('Failed to load country config for $countryCode: $e');
+      debugPrint('Failed to load country config for $countryCode: $e');
     }
   }
 

@@ -13,20 +13,15 @@ class AuthService {
   /// Google 로그인
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // 1. Google 로그인 프로세스 시작
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      // 1. Google 로그인 프로세스 시작 (7.2.0+: authenticate 사용)
+      // Note: 7.2.0+ authenticate() returns non-nullable Future; cancellation throws PlatformException
+      final googleUser = await GoogleSignIn.instance.authenticate();
       
-      // 사용자가 로그인을 취소한 경우
-      if (googleUser == null) {
-        return null;
-      }
-
       // 2. Google 인증 세부 정보 획득
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final googleAuth = googleUser.authentication;
 
-      // 3. Firebase용 새 자격 증명 생성
+      // 3. Firebase용 새 자격 증명 생성 (7.2.0+: accessToken은 별도 승인 절차로 분리됨)
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
@@ -78,17 +73,17 @@ class AuthService {
 
   /// 로그아웃
   Future<void> signOut() async {
-    await GoogleSignIn().signOut();
+    await GoogleSignIn.instance.signOut();
     await _auth.signOut();
   }
 }
 
 @riverpod
-AuthService authService(AuthServiceRef ref) {
+AuthService authService(Ref ref) {
   return AuthService();
 }
 
 @riverpod
-Stream<User?> authState(AuthStateRef ref) {
+Stream<User?> authState(Ref ref) {
   return ref.watch(authServiceProvider).authStateChanges;
 }

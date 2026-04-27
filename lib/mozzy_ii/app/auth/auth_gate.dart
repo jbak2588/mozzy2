@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'auth_service.dart';
-import '../navigation/main_scaffold.dart';
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -14,7 +13,12 @@ class AuthGate extends ConsumerWidget {
     return authState.when(
       data: (user) {
         if (user != null) {
-          return const MainScaffold();
+          // Navigation shell not provided yet — return a placeholder Scaffold until configured
+          return Scaffold(
+            body: Center(
+              child: Text('Home (navigation not configured)'),
+            ),
+          );
         }
         return const LoginScreen();
       },

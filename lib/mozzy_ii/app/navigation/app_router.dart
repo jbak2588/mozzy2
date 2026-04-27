@@ -7,6 +7,7 @@ import '../auth/auth_gate.dart';
 import '../auth/auth_service.dart';
 import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
+import '../../discovery/screens/home_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -54,7 +55,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/home',
-                builder: (context, state) => const DummyScreen(title: 'Beranda (Smart Feed)'),
+                builder: (context, state) => const HomeScreen(),
               ),
             ],
           ),

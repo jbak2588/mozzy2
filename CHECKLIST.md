@@ -9,40 +9,41 @@
 ## 🔲 Phase 0 — 프로젝트 셋업 (Week 1~2)
 
 ### 0-A. 개발 환경 구성
-- [ ] Flutter 3.27+ 설치 확인 (`flutter --version`)
-- [ ] Dart 3.6+ 확인
-- [ ] Android Studio / VS Code + Flutter extension 설정
-- [ ] Firebase CLI 설치 (`npm install -g firebase-tools`)
-- [ ] FlutterFire CLI 설치 (`dart pub global activate flutterfire_cli`)
-- [ ] Google Cloud SDK 설치 (Gemini API용)
+- [x] Flutter 3.27+ 설치 확인 (`flutter --version`)
+- [x] Dart 3.6+ 확인
+- [x] Android Studio / VS Code + Flutter extension 설정
+- [x] Firebase CLI 설치 (`npm install -g firebase-tools`)
+- [x] FlutterFire CLI 설치 (`dart pub global activate flutterfire_cli`)
+- [x] Google Cloud SDK 설치 (Gemini API용)
 
 ### 0-B. Firebase 프로젝트 구성 (인도네시아)
 - [x] Firebase 프로젝트 생성: `mozzy-indonesia-prod` (mozzy-v2로 대체)
 - [ ] Firebase 프로젝트 생성: `mozzy-indonesia-dev`
 - [x] 서비스 활성화:
   - [x] Firestore (asia-southeast2 — 자카르타 리전)
-  - [x] Authentication (Phone Auth — 인도네시아 +62)
+  - [x] Authentication (Google Sign-In 단일화 적용)
   - [ ] Storage
   - [ ] Cloud Functions (Node.js 20)
   - [ ] FCM (Push Notification)
   - [ ] Analytics
   - [ ] Crashlytics
 - [x] `flutterfire configure` 실행 → `firebase_options.dart` 생성
-- [ ] `.env` 파일 생성 (MIDTRANS_SERVER_KEY, GEMINI_API_KEY)
-- [ ] `.gitignore`에 `.env`, `firebase_options.dart` 추가 확인
+- [x] `.env` 파일 생성 (MIDTRANS_SERVER_KEY, GEMINI_API_KEY) - 기본 구조 마련
+- [x] `.gitignore`에 `.env`, `firebase_options.dart` 추가 확인
 
 ### 0-C. Flutter 프로젝트 초기화
 - [x] `flutter create mozzy_id --platforms android,ios` 실행
 - [x] `pubspec.yaml` 핵심 패키지 추가
 - [x] `flutter pub get` 성공
-- [ ] `flutter run` 기본 실행 확인
+- [x] `flutter run` 기본 실행 확인
 
 ### 0-D. 아키텍처 기반 설정 (architect-agent)
 - [x] 폴더 구조 생성 (`lib/mozzy_ii/` 전체)
-- [ ] `CLAUDE.md` 프로젝트 루트에 위치
+- [x] `CLAUDE.md` 프로젝트 루트에 위치
 - [x] `assets/config/countries/ID.json` 생성 (CountryRegistry)
-- [ ] `assets/translations/id.json` 생성 (인도네시아어 마스터)
-- [ ] `assets/translations/en.json` 생성
+- [x] `assets/translations/id.json` 생성 (인도네시아어 마스터)
+- [x] `assets/translations/en.json` 생성
+- [x] `assets/translations/ko.json` 생성 (다국어 확장)
 - [x] `lib/mozzy_ii/shared/contracts/mozzy_post_contract.dart` 생성 (MozzyPostContract)
 - [ ] Firestore Security Rules 초안 (`firestore.rules`) 작성
 - [ ] `firestore.indexes.json` 초안 생성
@@ -50,7 +51,7 @@
 ### 📝 메모 및 주요 결정 사항 (Memos & Decisions)
 * **[2026-04-27] 인덱스 최적화 전략 확정**: 132개 인덱스 제한 준수 및 다국가 확장을 위해 `countryCode`를 쿼리 필드가 아닌 경로(Path) 기반으로 격리하기로 결정함. (자세한 내용은 `docs/Firestore_Architecture_Strategy.md` 참조)
 * **[2026-04-27] Firebase 비용 지원 연동**: Google for Startups 크레딧은 '프로젝트'가 아닌 '결제 계정' 단위로 적용되므로, 신규 프로젝트 생성 시 기존 계정(bling_app 사용 계정)을 그대로 연결하여 지원 유지 가능.
-* **[2026-04-27] Phase 1-B/D 기초 구현 완료**: AuthService(Firebase Auth), MozzyFormatters(IDR/날짜), 번역 키 업데이트 및 AuthGate 연동 완료.
+* **[2026-04-27] Phase 1-B/D 기초 구현 완료**: AuthService(Google 로그인 전환 적용), MozzyFormatters(IDR/날짜), 번역 키(id, en, ko) 업데이트 및 AuthGate 연동 완료.
 
 ### 0-E. CI/CD 파이프라인 (deploy-agent)
 - [x] GitHub 저장소 생성 (Private) (수동)
@@ -73,8 +74,8 @@
 - [ ] `app/deep_link/deep_link_service.dart` — 딥링크 처리 (추후 연동)
 
 ### 1-B. 인증 시스템 (dart-agent + security-agent)
-- [ ] 전화번호 인증 (인도네시아 +62 SMS OTP)
-- [ ] Google 소셜 로그인
+- [ ] 전화번호 인증 (인도네시아 +62 SMS OTP) - 보류 (Google 로그인 단일화)
+- [x] Google 소셜 로그인 (빠른 개발을 위해 단일화 적용)
 - [x] 익명 로그인 (둘러보기 모드)
 - [ ] 사용자 프로필 생성 (최소 정보 — PDPB 준수)
 - [ ] KTP 검증 옵션 (Trust Score 향상용, 선택사항)
@@ -94,8 +95,9 @@
 ### 1-D. 인도네시아 i18n 기반 (i18n-agent)
 - [x] `id.json` 완성 (공통 UI 키 포함)
 - [x] `en.json` 완성
+- [x] `ko.json` 완성 (한국어 지원 추가)
 - [x] `easy_localization` 설정 완료
-- [ ] 앱 내 언어 변경 기능
+- [x] 앱 내 언어 변경 기능 (메인 홈 화면에 적용)
 - [x] 인도네시아 숫자/날짜/통화 포맷터 구현 (MozzyFormatters)
   - [x] `formatIDR()` 함수 (Rp 1.500.000 형식)
   - [x] `formatIDRCompact()` (1,5Jt / 500Rb)

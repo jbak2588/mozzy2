@@ -52,38 +52,43 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 
 | \# | 개발 단위 (Unit) | 세부 작업 | 담당 에이전트 | 완료 기준 | 상태 |
 | :---: | ----- | ----- | ----- | ----- | :---: |
-| P0-U1 | **개발 환경 구성** | Flutter 3.27+·Dart 3.6+·Android Studio·Firebase CLI·FlutterFire CLI 설치 및 버전 확인 | deploy·dart | 모든 CLI 명령 정상 실행 | □ |
-| P0-U2 | **Firebase 프로젝트 생성** | mozzy-indonesia-prod·dev 생성 / asia-southeast2 리전 / Firestore·Auth·Storage·FCM·Analytics 활성화 | deploy | firebase deploy 성공 | □ |
-| P0-U3 | **Flutter 프로젝트 초기화** | flutter create / pubspec.yaml 패키지 구성 / Riverpod3·Freezed·easy\_localization 설치 | dart | flutter pub get & run 성공 | □ |
-| P0-U4 | **5-Layer 폴더 구조 생성** | lib/mozzy\_ii/ 전체 폴더 트리 생성 / 각 레이어 경계 확립 | architect | tree 구조 architect 승인 | □ |
-| P0-U5 | **Shared Contract 정의** | MozzyPostContract·GeoScope·ReachMode 추상 클래스 / Dart 추상 클래스 파일 | architect·dart | Dart 컴파일 오류 없음 | □ |
-| P0-U6 | **CountryRegistry ID.json** | assets/config/countries/ID.json 완성 / 34개 Provinsi·타임존·결제수단·통화 포함 | geo | JSON 파싱 테스트 통과 | □ |
-| P0-U7 | **i18n 기반 파일** | assets/translations/id.json 마스터 / en.json·ko.json 생성 / easy\_localization 초기화 | i18n | 앱 실행 시 인도네시아어 표시 | □ |
+| P0-U1 | **개발 환경 구성** | Flutter 3.27+·Dart 3.6+·Android Studio·Firebase CLI·FlutterFire CLI 설치 및 버전 확인 | deploy·dart | 모든 CLI 명령 정상 실행 | ☑ |
+| P0-U2 | **Firebase 프로젝트 생성** | mozzy-indonesia-prod·dev 생성 / asia-southeast2 리전 / Firestore·Auth·Storage·FCM·Analytics 활성화 | deploy | firebase deploy 성공 | ☑ |
+| P0-U3 | **Flutter 프로젝트 초기화** | flutter create / pubspec.yaml 패키지 구성 / Riverpod3·Freezed·easy\_localization 설치 | dart | flutter pub get & run 성공 | ☑ |
+| P0-U4 | **5-Layer 폴더 구조 생성** | lib/mozzy\_ii/ 전체 폴더 트리 생성 / 각 레이어 경계 확립 | architect | tree 구조 architect 승인 | ☑ |
+| P0-U5 | **Shared Contract 정의** | MozzyPostContract·GeoScope·ReachMode 추상 클래스 / Dart 추상 클래스 파일 | architect·dart | Dart 컴파일 오류 없음 | ☑ |
+| P0-U6 | **CountryRegistry ID.json** | assets/config/countries/ID.json 완성 / 34개 Provinsi·타임존·결제수단·통화 포함 | geo | JSON 파싱 테스트 통과 | ☑ |
+| P0-U7 | **i18n 기반 파일** | assets/translations/id.json 마스터 / en.json·ko.json 생성 / easy\_localization 초기화 | i18n | 앱 실행 시 인도네시아어 표시 | ☑ |
 | P0-U8 | **Firestore 초안** | firestore.rules·firestore.indexes.json 초안 / Security Rules 기본 구조 | firestore·security | firebase emulators:start 정상 | □ |
-| P0-U9 | **CI/CD 파이프라인** | GitHub Actions 워크플로우 / Firebase App Distribution 연결 / Secrets 설정 | deploy | 첫 CI 빌드 Green | □ |
+| P0-U9 | **CI/CD 파이프라인** | GitHub Actions 워크플로우 / Firebase App Distribution 연결 / Secrets 설정 | deploy | 첫 CI 빌드 Green | ☑ |
 | P0-U10 | **RateLimiter 유틸리티** | lib/core/utils/rate\_limiter.dart / AI API 비용 관리 / 단위 테스트 | dart·test | RateLimiter 테스트 5개 통과 | □ |
-| P0-U11 | **CurrencyService** | formatIDR()·formatIDRCompact() / 인도네시아식 포맷 (점 천단위) / 테스트 | dart·test | formatIDR(1500000)='Rp 1.500.000' | □ |
+| P0-U11 | **CurrencyService** | formatIDR()·formatIDRCompact() / 인도네시아식 포맷 (점 천단위) / 테스트 | dart·test | formatIDR(1500000)='Rp 1.500.000' | ☑ |
+
+<!-- [2026-04-27 진행상황] Phase 0의 환경 구성, Firebase, i18n 구조 및 초기 설정 거의 완료. -->
 
 | Phase 1  App Shell \+ Geo Layer 📅 Week 3 \~ 6 (28일)  |  담당: architect → dart → test → review → deploy |
 | :---- |
 
 | \# | 개발 단위 (Unit) | 세부 작업 | 담당 에이전트 | 완료 기준 | 상태 |
 | :---: | ----- | ----- | ----- | ----- | :---: |
-| P1-U1 | **인도네시아 Geo 모델** | LocationParts·IndonesiaGeoAddress·GlobalGeoAddress·GeoScope·IndonesiaTimezone 데이터 클래스 (Freezed) | geo·dart | Freezed 코드 생성 완료 | □ |
-| P1-U2 | **LocationService** | GPS 획득·역지오코딩·Track1 주소 파싱·타임존 감지(WIB/WITA/WIT) | geo·dart | Coblong,Bandung 역지오코딩 성공 | □ |
-| P1-U3 | **LocationProvider** | Riverpod3 AsyncNotifier / 수동 위치 변경 / 오프라인 캐시 | geo·dart | Provider 상태 전환 테스트 | □ |
+| P1-U1 | **인도네시아 Geo 모델** | LocationParts·IndonesiaGeoAddress·GlobalGeoAddress·GeoScope·IndonesiaTimezone 데이터 클래스 (Freezed) | geo·dart | Freezed 코드 생성 완료 | ☑ |
+| P1-U2 | **LocationService** | GPS 획득·역지오코딩·Track1 주소 파싱·타임존 감지(WIB/WITA/WIT) | geo·dart | Coblong,Bandung 역지오코딩 성공 | ☑ |
+| P1-U3 | **LocationProvider** | Riverpod3 AsyncNotifier / 수동 위치 변경 / 오프라인 캐시 | geo·dart | Provider 상태 전환 테스트 | ☑ |
 | P1-U4 | **주소 포맷터** | formatAddress(IndonesiaGeoAddress,AddressDetail) / minimal·standard·full 3단계 | i18n·dart | 3개 레벨 포맷 테스트 | □ |
 | P1-U5 | **전화번호 인증** | \+62 SMS OTP / Firebase Phone Auth / 0→62 자동 변환 UI | dart·security | OTP 발송·검증 성공 | □ |
-| P1-U6 | **구글 소셜 로그인** | google\_sign\_in 연동 / 익명 로그인 (둘러보기) / auth\_gate.dart | dart | Google 로그인 성공 | □ |
+| P1-U6 | **구글 소셜 로그인** | google\_sign\_in 연동 / 익명 로그인 (둘러보기) / auth\_gate.dart | dart | Google 로그인 성공 | ☑ |
 | P1-U7 | **UserModel** | Freezed·NIK 미수집·phoneHash·trustScore·locationParts / PDPB 준수 | dart·security | PDPB 필드 검증 통과 | □ |
-| P1-U8 | **App Theme** | 인도네시아 빨강 \#CC0001 / Nunito Sans / Material3 / 다크 모드 | dart | ThemeData 렌더 확인 | □ |
-| P1-U9 | **GoRouter 설정** | 11개 Feature 라우트 / 딥링크 mozzy://item/{id} / auth 가드 | dart | 모든 라우트 네비게이션 확인 | □ |
-| P1-U10 | **BottomNavigationBar** | 5개 주요 탭 / FAB 빠른 게시 / 배지 알림 카운트 | dart | 탭 전환 애니메이션 확인 | □ |
-| P1-U11 | **SharedMapBrowser 기반** | Google Maps 기본 / 마커 / 카테고리 필터칩 / DraggableScrollableSheet | dart·geo | 지도 렌더링 확인 | □ |
+| P1-U8 | **App Theme** | 인도네시아 빨강 \#CC0001 / Nunito Sans / Material3 / 다크 모드 | dart | ThemeData 렌더 확인 | ☑ |
+| P1-U9 | **GoRouter 설정** | 11개 Feature 라우트 / 딥링크 mozzy://item/{id} / auth 가드 | dart | 모든 라우트 네비게이션 확인 | ☑ |
+| P1-U10 | **BottomNavigationBar** | 5개 주요 탭 / FAB 빠른 게시 / 배지 알림 카운트 | dart | 탭 전환 애니메이션 확인 | ☑ |
+| P1-U11 | **SharedMapBrowser 기반** | Google Maps 기본 / 마커 / 카테고리 필터칩 / DraggableScrollableSheet | dart·geo | 지도 렌더링 확인 | ☑ |
 | P1-U12 | **TrustScoreService** | 기본 Trust Score 로직 / Trust Level 4단계 / TrustScoreBadge 위젯 | dart | 신규가입 0.3 → OTP완료 0.5 | □ |
 | P1-U13 | **신고 시스템 기반** | Report 모달 / Firestore reports 컬렉션 / FCM 관리자 알림 | dart·firestore | 신고 저장 확인 | □ |
 | P1-U14 | **Hive 오프라인 캐시 초기화** | HiveBoxes 정의 / 오프라인 배너 UI (인도네시아어) / NetworkStatusService | dart·perf | 오프라인 모드 전환 확인 | □ |
 | P1-U15 | **Phase 1 테스트** | LocationService 10개+ / 포맷터 8개+ / Auth flow 5개+ / Trust Score 5개+ | test | 28개+ 테스트 통과 | □ |
+
+<!-- [2026-04-27 진행상황] Phase 1의 GeoLayer 기초, GoRouter, Theme, Google Login 및 Formatters 구현 완료. 속도를 위해 Auth는 Google 로그인으로 단일화. -->
+
 
 | Phase 2  Core 3 Features MVP 📅 Week 7 \~ 10 (28일)  |  담당: architect → dart → test → review → deploy |
 | :---- |

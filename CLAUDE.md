@@ -114,8 +114,8 @@ class GlobalGeoAddress {
 ## 📁 프로젝트 폴더 구조 (목표)
 
 ```
-mozzy_indonesia/
-├── CLAUDE.md                    ← 이 파일 (마스터 지시서)
+mozzy_ii/
+├── CLAUDE.md, GEMINI.md,                   ← 이 파일 (마스터 지시서)
 ├── CHECKLIST.md                 ← 단계별 체크리스트
 ├── agents/                      ← 에이전트별 지시서
 │   ├── architect-agent.md

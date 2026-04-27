@@ -50,6 +50,7 @@
 ### 📝 메모 및 주요 결정 사항 (Memos & Decisions)
 * **[2026-04-27] 인덱스 최적화 전략 확정**: 132개 인덱스 제한 준수 및 다국가 확장을 위해 `countryCode`를 쿼리 필드가 아닌 경로(Path) 기반으로 격리하기로 결정함. (자세한 내용은 `docs/Firestore_Architecture_Strategy.md` 참조)
 * **[2026-04-27] Firebase 비용 지원 연동**: Google for Startups 크레딧은 '프로젝트'가 아닌 '결제 계정' 단위로 적용되므로, 신규 프로젝트 생성 시 기존 계정(bling_app 사용 계정)을 그대로 연결하여 지원 유지 가능.
+* **[2026-04-27] Phase 1-B/D 기초 구현 완료**: AuthService(Firebase Auth), MozzyFormatters(IDR/날짜), 번역 키 업데이트 및 AuthGate 연동 완료.
 
 ### 0-E. CI/CD 파이프라인 (deploy-agent)
 - [x] GitHub 저장소 생성 (Private) (수동)
@@ -74,10 +75,10 @@
 ### 1-B. 인증 시스템 (dart-agent + security-agent)
 - [ ] 전화번호 인증 (인도네시아 +62 SMS OTP)
 - [ ] Google 소셜 로그인
-- [ ] 익명 로그인 (둘러보기 모드)
+- [x] 익명 로그인 (둘러보기 모드)
 - [ ] 사용자 프로필 생성 (최소 정보 — PDPB 준수)
 - [ ] KTP 검증 옵션 (Trust Score 향상용, 선택사항)
-- [ ] 로그인 상태 Riverpod Provider 구현
+- [x] 로그인 상태 Riverpod Provider 구현 (AuthService, authStateProvider)
 
 ### 1-C. 인도네시아 Geo Layer (geo-agent)
 - [x] `IndonesiaLocationService` 구현
@@ -91,14 +92,14 @@
 - [x] `SharedMapBrowserScreen` 기본 구조 (Google Maps)
 
 ### 1-D. 인도네시아 i18n 기반 (i18n-agent)
-- [ ] `id.json` 완성 (모든 기본 키 포함)
-- [ ] `en.json` 완성
-- [ ] `easy_localization` 설정 완료
+- [x] `id.json` 완성 (공통 UI 키 포함)
+- [x] `en.json` 완성
+- [x] `easy_localization` 설정 완료
 - [ ] 앱 내 언어 변경 기능
-- [ ] 인도네시아 숫자/날짜/통화 포맷터 구현
-  - [ ] `formatIDR()` 함수 (Rp 1.500.000 형식)
-  - [ ] `formatIDRCompact()` (1,5Jt / 500Rb)
-  - [ ] 인도네시아식 날짜 (12 April 2026)
+- [x] 인도네시아 숫자/날짜/통화 포맷터 구현 (MozzyFormatters)
+  - [x] `formatIDR()` 함수 (Rp 1.500.000 형식)
+  - [x] `formatIDRCompact()` (1,5Jt / 500Rb)
+  - [x] 인도네시아식 날짜 (12 April 2026)
 
 ### 1-E. Trust Layer 기반 (security-agent + dart-agent)
 - [ ] `TrustScoreService` 기본 구현

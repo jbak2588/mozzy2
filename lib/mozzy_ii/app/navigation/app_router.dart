@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'main_scaffold.dart';
 import '../auth/auth_gate.dart';
+import '../auth/auth_service.dart';
 import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
 
@@ -19,28 +20,15 @@ class DummyScreen extends StatelessWidget {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // 인증 상태 구독 (라우트 리다이렉트에 사용)
-  // ignore: unused_local_variable
-  final isAuth = ref.watch(authStateProvider);
-
   return GoRouter(
     initialLocation: '/',
-    // 디버깅용 로깅 켜기
     debugLogDiagnostics: true,
     
-    redirect: (context, state) {
-      // Phase 1-B 완성 전까지 리다이렉트는 임시로 우회 (홈으로 바로 가게 처리)
-      if (state.matchedLocation == '/') {
-        return '/home'; 
-      }
-      return null;
-    },
-
     routes: [
-      // 진입점 (Auth Gate)
+      // 진입점 (Auth Gate에서 로그인 여부에 따라 MainScaffold 또는 LoginScreen 반환)
       GoRoute(
         path: '/',
-        builder: (context, state) => const AuthGateScreen(),
+        builder: (context, state) => const AuthGate(),
       ),
       
       // 위치 권한 요청 화면
@@ -109,7 +97,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
       
-      // 나머지 Feature 라우트 (하단 탭 이외의 진입점)
+      // 나머지 Feature 라우트
       GoRoute(path: '/jobs', builder: (context, state) => const DummyScreen(title: 'Lowongan Kerja')),
       GoRoute(path: '/auction', builder: (context, state) => const DummyScreen(title: 'Lelang')),
       GoRoute(path: '/clubs', builder: (context, state) => const DummyScreen(title: 'Komunitas')),

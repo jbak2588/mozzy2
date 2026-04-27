@@ -1,4 +1,45 @@
 {
   "app_name": "Mozzy",
-  "welcome": "Welcome to Mozzy"
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "next": "Next",
+    "back": "Back",
+    "confirm": "Confirm",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "phone_login": "Login with Phone Number",
+    "google_login": "Login with Google",
+    "guest_login": "Continue as Guest",
+    "send_otp": "Send OTP",
+    "verify_otp": "Verify OTP",
+    "phone_hint": "Example: 8123456789",
+    "otp_hint": "Enter 6 digit code"
+  },
+  "geo": {
+    "location_required": "Location Permission Required",
+    "location_desc": "Mozzy needs your location to show news and offers around you.",
+    "grant_permission": "Grant Permission",
+    "change_location": "Change Location",
+    "search_city": "Search City or District",
+    "current_location": "Current Location",
+    "detecting": "Detecting location..."
+  },
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "market": "Market",
+    "chat": "Messages",
+    "profile": "Profile"
+  }
 }

@@ -1,4 +1,45 @@
 {
   "app_name": "Mozzy",
-  "welcome": "Selamat datang di Mozzy"
+  "common": {
+    "ok": "OK",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "delete": "Hapus",
+    "edit": "Ubah",
+    "next": "Lanjut",
+    "back": "Kembali",
+    "confirm": "Konfirmasi",
+    "search": "Cari",
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba lagi"
+  },
+  "auth": {
+    "login": "Masuk",
+    "register": "Daftar",
+    "logout": "Keluar",
+    "phone_login": "Masuk dengan Nomor HP",
+    "google_login": "Masuk dengan Google",
+    "guest_login": "Masuk sebagai Tamu",
+    "send_otp": "Kirim OTP",
+    "verify_otp": "Verifikasi OTP",
+    "phone_hint": "Contoh: 8123456789",
+    "otp_hint": "Masukkan 6 digit kode"
+  },
+  "geo": {
+    "location_required": "Izin Lokasi Diperlukan",
+    "location_desc": "Mozzy membutuhkan lokasi Anda untuk menampilkan berita 및 penawaran di sekitar Anda.",
+    "grant_permission": "Berikan Izin",
+    "change_location": "Ganti Lokasi",
+    "search_city": "Cari Kota atau Kecamatan",
+    "current_location": "Lokasi Saat Ini",
+    "detecting": "Mendeteksi lokasi..."
+  },
+  "nav": {
+    "home": "Beranda",
+    "news": "Berita",
+    "market": "Pasar",
+    "chat": "Pesan",
+    "profile": "Profil"
+  }
 }

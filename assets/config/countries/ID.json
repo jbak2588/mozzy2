@@ -1,23 +1,43 @@
 {
   "countryCode": "ID",
   "countryName": "Indonesia",
-  "currency": {
-    "code": "IDR",
-    "symbol": "Rp",
-    "decimalDigits": 0,
-    "groupSeparator": "."
+  "trackVersion": "1+2",
+  "geoTrack": {
+    "track1": {
+      "levels": ["provinsi", "kabupaten", "kecamatan", "kelurahan"],
+      "displayFormat": "{kecamatan}, {kabupaten}",
+      "searchLevel": "kecamatan",
+      "hyperlocalLevel": "kelurahan"
+    },
+    "track2": {
+      "levels": ["l1", "l2", "l3"],
+      "mapping": { "l1": "provinsi", "l2": "kabupaten", "l3": "kecamatan" }
+    }
   },
+  "currency": "IDR",
+  "currencySymbol": "Rp",
+  "currencyFormat": "Rp #,###",
+  "thousandSeparator": ".",
+  "decimalSeparator": ",",
+  "languages": ["id", "jv", "su", "ms"],
+  "primaryLanguage": "id",
   "phonePrefix": "+62",
-  "timezones": ["WIB", "WITA", "WIT"],
-  "paymentMethods": ["GoPay", "OVO", "DANA", "VA", "Alfamart", "QRIS"],
-  "provinces": [
-    "Aceh", "Sumatera Utara", "Sumatera Barat", "Riau", "Jambi", 
-    "Sumatera Selatan", "Bengkulu", "Lampung", "Kepulauan Bangka Belitung", 
-    "Kepulauan Riau", "DKI Jakarta", "Jawa Barat", "Jawa Tengah", 
-    "DI Yogyakarta", "Jawa Timur", "Banten", "Bali", "Nusa Tenggara Barat", 
-    "Nusa Tenggara Timur", "Kalimantan Barat", "Kalimantan Tengah", 
-    "Kalimantan Selatan", "Kalimantan Timur", "Kalimantan Utara", "Sulawesi Utara", 
-    "Sulawesi Tengah", "Sulawesi Selatan", "Sulawesi Tenggara", "Gorontalo", 
-    "Sulawesi Barat", "Maluku", "Maluku Utara", "Papua Barat", "Papua"
-  ]
+  "phoneFormat": "0xxx-xxxx-xxxx",
+  "timezones": [
+    { "code": "WIB", "offset": 7, "provinces": ["JK","JB","JT","JI","SS","SB","BB","BT","LA","BE","KU"] },
+    { "code": "WITA", "offset": 8, "provinces": ["BA","NTB","NTT","KT","KS","KU","SR","ST","SG"] },
+    { "code": "WIT", "offset": 9, "provinces": ["MA","MU","PA","PB"] }
+  ],
+  "paymentMethods": ["gopay","ovo","dana","virtual_account","alfamart","indomaret","bca","mandiri"],
+  "mapConfig": {
+    "defaultCenter": { "lat": -6.200000, "lng": 106.816666 },
+    "defaultZoom": 5,
+    "cityZoom": 12,
+    "neighborhoodZoom": 15
+  },
+  "regulatoryBody": {
+    "financial": "OJK",
+    "data": "Kominfo",
+    "privacy": "PDPB"
+  }
 }

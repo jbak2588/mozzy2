@@ -4,6 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'firebase_options.dart';
 
+import 'mozzy_ii/app/theme/mozzy_theme.dart';
+import 'mozzy_ii/app/navigation/app_router.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
@@ -27,25 +30,20 @@ void main() async {
   );
 }
 
-class MozzyApp extends StatelessWidget {
+class MozzyApp extends ConsumerWidget {
   const MozzyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
       title: 'Mozzy Indonesia',
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFCC0001)),
-        useMaterial3: true,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Mozzy Version 2 - Firebase & Riverpod Initialized'),
-        ),
-      ),
+      theme: MozzyTheme.lightTheme,
+      routerConfig: router,
     );
   }
 }

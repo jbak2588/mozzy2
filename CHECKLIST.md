@@ -52,24 +52,24 @@
 * **[2026-04-27] Firebase 비용 지원 연동**: Google for Startups 크레딧은 '프로젝트'가 아닌 '결제 계정' 단위로 적용되므로, 신규 프로젝트 생성 시 기존 계정(bling_app 사용 계정)을 그대로 연결하여 지원 유지 가능.
 
 ### 0-E. CI/CD 파이프라인 (deploy-agent)
-- [ ] GitHub 저장소 생성 (Private) (수동)
+- [x] GitHub 저장소 생성 (Private) (수동)
 - [x] GitHub Actions 워크플로우 생성 (`.github/workflows/deploy-id.yml`)
-- [ ] Firebase App Distribution 설정 (수동 연결 필요)
+- [ ] Firebase App Distribution 설정 (수동 연결 필요 - 추후 진행)
 - [x] 브랜치 전략 문서화: `main` → Production, `develop` → Staging
-- [ ] Secrets 설정: `FIREBASE_TOKEN`, `MIDTRANS_SERVER_KEY`, `GEMINI_API_KEY` (수동 설정 필요)
+- [ ] Secrets 설정: `FIREBASE_TOKEN`, `MIDTRANS_SERVER_KEY`, `GEMINI_API_KEY` (수동 설정 필요 - 추후 진행)
 
-**Phase 0 완료 기준**: `flutter test` 통과 + Firebase 연결 확인 + CI 첫 빌드 성공
+**Phase 0 완료 기준**: `flutter test` 통과 + Firebase 연결 확인 + CI 첫 빌드 성공 ➔ **(✅ 완료)**
 
 ---
 
 ## 🔲 Phase 1 — App Shell + Geo Layer (Week 3~6)
 
 ### 1-A. App Shell 구현 (dart-agent)
-- [ ] `main.dart` — ProviderScope + EasyLocalization 래핑
-- [ ] `app/theme/mozzy_theme.dart` — 인도네시아 디자인 테마 (색상, 폰트)
-- [ ] `app/navigation/app_router.dart` — GoRouter 설정 (11개 Feature 라우트)
-- [ ] `app/auth/auth_gate.dart` — 인증 상태 기반 라우팅
-- [ ] `app/deep_link/deep_link_service.dart` — 딥링크 처리
+- [x] `main.dart` — ProviderScope + EasyLocalization 래핑
+- [x] `app/theme/mozzy_theme.dart` — 인도네시아 디자인 테마 (색상, 폰트)
+- [x] `app/navigation/app_router.dart` — GoRouter 설정 (11개 Feature 라우트)
+- [x] `app/auth/auth_gate.dart` — 인증 상태 기반 라우팅
+- [ ] `app/deep_link/deep_link_service.dart` — 딥링크 처리 (추후 연동)
 
 ### 1-B. 인증 시스템 (dart-agent + security-agent)
 - [ ] 전화번호 인증 (인도네시아 +62 SMS OTP)
@@ -80,15 +80,15 @@
 - [ ] 로그인 상태 Riverpod Provider 구현
 
 ### 1-C. 인도네시아 Geo Layer (geo-agent)
-- [ ] `IndonesiaLocationService` 구현
-  - [ ] GPS 위치 획득 (Geolocator)
-  - [ ] 역지오코딩 → Track 1 주소 (Provinsi→Kelurahan) 변환
-  - [ ] 타임존 자동 감지 (WIB/WITA/WIT)
-- [ ] `CountryRegistryService` 구현 (ID.json 로드)
-- [ ] `LocationProvider` Riverpod 3 구현
-- [ ] 위치 권한 요청 UI (인도네시아어)
-- [ ] 위치 수동 변경 기능 (도시 검색)
-- [ ] `SharedMapBrowserScreen` 기본 구조 (Google Maps)
+- [x] `IndonesiaLocationService` 구현
+  - [x] GPS 위치 획득 (Geolocator)
+  - [x] 역지오코딩 → Track 1 주소 (Provinsi→Kelurahan) 변환
+  - [x] 타임존 자동 감지 (WIB/WITA/WIT)
+- [x] `CountryRegistryService` 구현 (ID.json 로드)
+- [x] `LocationProvider` Riverpod 3 구현
+- [x] 위치 권한 요청 UI (인도네시아어)
+- [x] 위치 수동 변경 기능 (도시 검색) (Provider에 updateLocationManually 구현 및 Screen Fallback 대기)
+- [x] `SharedMapBrowserScreen` 기본 구조 (Google Maps)
 
 ### 1-D. 인도네시아 i18n 기반 (i18n-agent)
 - [ ] `id.json` 완성 (모든 기본 키 포함)

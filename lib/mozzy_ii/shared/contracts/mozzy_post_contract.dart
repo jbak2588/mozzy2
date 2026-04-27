@@ -1,24 +1,24 @@
-/// ============================================================================
-/// Mozzy DocHeader
-/// Module        : Shared Contract
-/// File          : lib/mozzy_ii/shared/contracts/mozzy_post_contract.dart
-/// Purpose       : 11개 Feature 도메인이 공통으로 구현해야 하는 필수 계약 인터페이스입니다.
-///                 Firestore Collection Group 쿼리와 Smart Feed 엔진의 기반이 됩니다.
-/// ============================================================================
+// ============================================================================
+// Mozzy DocHeader
+// Module        : Shared Contract
+// File          : lib/mozzy_ii/shared/contracts/mozzy_post_contract.dart
+// Purpose       : 11개 Feature 도메인이 공통으로 구현해야 하는 필수 계약 인터페이스입니다.
+//                 Firestore Collection Group 쿼리와 Smart Feed 엔진의 기반이 됩니다.
+// ============================================================================
 
 /// 위치 기반 노출 범위를 정의합니다. (Track 1+2 듀얼 지오 체계 지원)
 enum GeoScope {
   neighborhood, // 동네 (Kelurahan / Kecamatan)
-  city,         // 도시 (Kabupaten / Kota)
-  country,      // 국가 (Provinsi / National)
-  global        // 글로벌 (전 세계)
+  city, // 도시 (Kabupaten / Kota)
+  country, // 국가 (Provinsi / National)
+  global, // 글로벌 (전 세계)
 }
 
 /// 콘텐츠의 노출 도달 방식을 정의합니다.
 enum ReachMode {
-  local_only,       // 지정된 지역 내에서만 노출
-  progressive,      // 시간이 지남에 따라 점진적으로 인접 지역으로 노출 범위 확장
-  global_relay      // 타 국가로 번역되어 글로벌 노출
+  localOnly, // 지정된 지역 내에서만 노출
+  progressive, // 시간이 지남에 따라 점진적으로 인접 지역으로 노출 범위 확장
+  globalRelay, // 타 국가로 번역되어 글로벌 노출
 }
 
 /// 모든 Feature 도메인(뉴스, 마켓, 일자리 등)의 모델이 반드시 구현해야 하는 인터페이스.

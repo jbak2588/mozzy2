@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_service.g.dart';
@@ -9,6 +10,34 @@ class AuthService {
   Stream<User?> get authStateChanges => _auth.authStateChanges();
   User? get currentUser => _auth.currentUser;
 
+  /// Google 로그인
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      // 1. Google 로그인 프로세스 시작
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      
+      // 사용자가 로그인을 취소한 경우
+      if (googleUser == null) {
+        return null;
+      }
+
+      // 2. Google 인증 세부 정보 획득
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // 3. Firebase용 새 자격 증명 생성
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // 4. Firebase 인증을 통해 로그인
+      return await _auth.signInWithCredential(credential);
+    } catch (e) {
+      // TODO: 로깅 추가
+      rethrow;
+    }
+  }
+
   /// 익명 로그인 (둘러보기 모드)
   Future<UserCredential> signInAnonymously() async {
     try {
@@ -18,7 +47,7 @@ class AuthService {
     }
   }
 
-  /// 전화번호 인증 - 코드 전송
+  /// 전화번호 인증 - 코드 전송 (추후 사용)
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required Function(PhoneAuthCredential) verificationCompleted,
@@ -35,7 +64,7 @@ class AuthService {
     );
   }
 
-  /// 전화번호 인증 - 코드 검증 및 로그인
+  /// 전화번호 인증 - 코드 검증 및 로그인 (추후 사용)
   Future<UserCredential> signInWithPhoneNumber(
     String verificationId,
     String smsCode,
@@ -49,6 +78,7 @@ class AuthService {
 
   /// 로그아웃
   Future<void> signOut() async {
+    await GoogleSignIn().signOut();
     await _auth.signOut();
   }
 }

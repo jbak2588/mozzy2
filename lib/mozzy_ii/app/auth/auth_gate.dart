@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'auth_service.dart';
 import '../navigation/main_scaffold.dart';
-
-// LoginScreen이 아직 구현되지 않았으므로 임시로 빈 화면을 사용하거나 나중에 구현 예정인 화면으로 연결합니다.
-// 여기서는 간단한 로그인 버튼이 있는 화면을 예시로 둡니다.
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -34,13 +32,40 @@ class AuthGate extends ConsumerWidget {
   }
 }
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool _isLoading = false;
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(authServiceProvider).signInWithGoogle();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${'common.error'.tr()}: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mozzy Indonesia')),
+      appBar: AppBar(title: Text('app_name'.tr())),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -50,23 +75,24 @@ class LoginScreen extends ConsumerWidget {
               'Selamat Datang',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 48),
-            ElevatedButton(
-              onPressed: () {
-                // TODO: 전화번호 로그인 화면으로 이동
-              },
-              child: const Text('Masuk dengan Nomor HP'),
-            ),
             const SizedBox(height: 16),
-            OutlinedButton(
-              onPressed: () async {
-                await ref.read(authServiceProvider).signInAnonymously();
-              },
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-              ),
-              child: const Text('Masuk sebagai Tamu (Coba Dulu)'),
+            Text(
+              'geo.location_desc'.tr(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
+            const SizedBox(height: 48),
+            if (_isLoading)
+              const CircularProgressIndicator()
+            else
+              ElevatedButton.icon(
+                onPressed: _handleGoogleSignIn,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                icon: const Icon(Icons.g_mobiledata, size: 32),
+                label: Text('auth.google_login'.tr()),
+              ),
           ],
         ),
       ),

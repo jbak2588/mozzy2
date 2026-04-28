@@ -7,6 +7,7 @@ import '../auth/auth_gate.dart';
 import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
 import '../../discovery/screens/home_screen.dart';
+import '../../dev/profile_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -23,20 +24,17 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
-    
+
     routes: [
       // 진입점 (Auth Gate에서 로그인 여부에 따라 MainScaffold 또는 LoginScreen 반환)
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const AuthGate(),
-      ),
-      
+      GoRoute(path: '/', builder: (context, state) => const AuthGate()),
+
       // 위치 권한 요청 화면
       GoRoute(
         path: '/location-permission',
         builder: (context, state) => const LocationPermissionScreen(),
       ),
-      
+
       // 공통 지도 브라우저 화면
       GoRoute(
         path: '/map',
@@ -63,7 +61,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/marketplace',
-                builder: (context, state) => const DummyScreen(title: 'Jual Beli (Marketplace)'),
+                builder: (context, state) =>
+                    const DummyScreen(title: 'Jual Beli (Marketplace)'),
               ),
             ],
           ),
@@ -72,7 +71,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/news',
-                builder: (context, state) => const DummyScreen(title: 'Berita Lokal (News)'),
+                builder: (context, state) =>
+                    const DummyScreen(title: 'Berita Lokal (News)'),
               ),
             ],
           ),
@@ -81,7 +81,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/stores',
-                builder: (context, state) => const DummyScreen(title: 'Toko Sekitar (Stores)'),
+                builder: (context, state) =>
+                    const DummyScreen(title: 'Toko Sekitar (Stores)'),
               ),
             ],
           ),
@@ -90,21 +91,49 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/chat',
-                builder: (context, state) => const DummyScreen(title: 'Pesan (Chat)'),
+                builder: (context, state) =>
+                    const DummyScreen(title: 'Pesan (Chat)'),
               ),
             ],
           ),
         ],
       ),
-      
+
       // 나머지 Feature 라우트
-      GoRoute(path: '/jobs', builder: (context, state) => const DummyScreen(title: 'Lowongan Kerja')),
-      GoRoute(path: '/auction', builder: (context, state) => const DummyScreen(title: 'Lelang')),
-      GoRoute(path: '/clubs', builder: (context, state) => const DummyScreen(title: 'Komunitas')),
-      GoRoute(path: '/lost-found', builder: (context, state) => const DummyScreen(title: 'Barang Hilang')),
-      GoRoute(path: '/pom', builder: (context, state) => const DummyScreen(title: 'Pamer!')),
-      GoRoute(path: '/real-estate', builder: (context, state) => const DummyScreen(title: 'Properti')),
-      GoRoute(path: '/together', builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!')),
+      GoRoute(
+        path: '/jobs',
+        builder: (context, state) => const DummyScreen(title: 'Lowongan Kerja'),
+      ),
+      // Dev routes (development-only) -------------------------------------------------
+      // TODO: remove or protect these routes before production release.
+      GoRoute(
+        path: '/dev/profile',
+        builder: (context, state) => const DevProfileScreen(),
+      ),
+      GoRoute(
+        path: '/auction',
+        builder: (context, state) => const DummyScreen(title: 'Lelang'),
+      ),
+      GoRoute(
+        path: '/clubs',
+        builder: (context, state) => const DummyScreen(title: 'Komunitas'),
+      ),
+      GoRoute(
+        path: '/lost-found',
+        builder: (context, state) => const DummyScreen(title: 'Barang Hilang'),
+      ),
+      GoRoute(
+        path: '/pom',
+        builder: (context, state) => const DummyScreen(title: 'Pamer!'),
+      ),
+      GoRoute(
+        path: '/real-estate',
+        builder: (context, state) => const DummyScreen(title: 'Properti'),
+      ),
+      GoRoute(
+        path: '/together',
+        builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
+      ),
     ],
   );
 });

@@ -77,15 +77,15 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | P1-U4 | **주소 포맷터** | formatAddress(IndonesiaGeoAddress,AddressDetail) / minimal·standard·full 3단계 | i18n·dart | 3개 레벨 포맷 테스트 | □ |
 | P1-U5 | **전화번호 인증** | \+62 SMS OTP / Firebase Phone Auth / 0→62 자동 변환 UI | dart·security | OTP 발송·검증 성공 | □ |
 | P1-U6 | **구글 소셜 로그인** | google\_sign\_in 연동 / 익명 로그인 (둘러보기) / auth\_gate.dart | dart | Google 로그인 성공 | ☑ |
-| P1-U7 | **UserModel** | Freezed·NIK 미수집·phoneHash·trustScore·locationParts / PDPB 준수 | dart·security | PDPB 필드 검증 통과 | □ |
+| P1-U7 | **UserModel** | Freezed·NIK 미수집·phoneHash·trustScore·locationParts / PDPB 준수 | dart·security | PDPB 필드 검증 통과 | ☑ |
 | P1-U8 | **App Theme** | 인도네시아 빨강 \#CC0001 / Nunito Sans / Material3 / 다크 모드 | dart | ThemeData 렌더 확인 | ☑ |
 | P1-U9 | **GoRouter 설정** | 11개 Feature 라우트 / 딥링크 mozzy://item/{id} / auth 가드 | dart | 모든 라우트 네비게이션 확인 | ☑ |
 | P1-U10 | **BottomNavigationBar** | 5개 주요 탭 / FAB 빠른 게시 / 배지 알림 카운트 | dart | 탭 전환 애니메이션 확인 | ☑ |
 | P1-U11 | **SharedMapBrowser 기반** | Google Maps 기본 / 마커 / 카테고리 필터칩 / DraggableScrollableSheet | dart·geo | 지도 렌더링 확인 | ☑ |
-| P1-U12 | **TrustScoreService** | 기본 Trust Score 로직 / Trust Level 4단계 / TrustScoreBadge 위젯 | dart | 신규가입 0.3 → OTP완료 0.5 | □ |
+| P1-U12 | **TrustScoreService** | 기본 Trust Score 로직 / Trust Level 4단계 / TrustScoreBadge 위젯 | dart | 신규가입 0.3 → OTP완료 0.5 | ☑ |
 | P1-U13 | **신고 시스템 기반** | Report 모달 / Firestore reports 컬렉션 / FCM 관리자 알림 | dart·firestore | 신고 저장 확인 | □ |
 | P1-U14 | **Hive 오프라인 캐시 초기화** | HiveBoxes 정의 / 오프라인 배너 UI (인도네시아어) / NetworkStatusService | dart·perf | 오프라인 모드 전환 확인 | □ |
-| P1-U15 | **Phase 1 테스트** | LocationService 10개+ / 포맷터 8개+ / Auth flow 5개+ / Trust Score 5개+ | test | 28개+ 테스트 통과 | □ |
+| P1-U15 | **Phase 1 테스트** | LocationService 10개+ / 포맷터 8개+ / Auth flow 5개+ / Trust Score 5개+ | test | 28개+ 테스트 통과 | ☑ |
 
 <!-- [2026-04-27 진행상황] Phase 1의 GeoLayer 기초, GoRouter, Theme, Google Login 및 Formatters 구현 완료. 속도를 위해 Auth는 Google 로그인으로 단일화. -->
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -105,35 +106,41 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const DummyScreen(title: 'Lowongan Kerja'),
       ),
       // Dev routes (development-only) -------------------------------------------------
-      // TODO: remove or protect these routes before production release.
-      GoRoute(
-        path: '/dev/profile',
-        builder: (context, state) => const DevProfileScreen(),
-      ),
-      GoRoute(
-        path: '/auction',
-        builder: (context, state) => const DummyScreen(title: 'Lelang'),
-      ),
-      GoRoute(
-        path: '/clubs',
-        builder: (context, state) => const DummyScreen(title: 'Komunitas'),
-      ),
-      GoRoute(
-        path: '/lost-found',
-        builder: (context, state) => const DummyScreen(title: 'Barang Hilang'),
-      ),
-      GoRoute(
-        path: '/pom',
-        builder: (context, state) => const DummyScreen(title: 'Pamer!'),
-      ),
-      GoRoute(
-        path: '/real-estate',
-        builder: (context, state) => const DummyScreen(title: 'Properti'),
-      ),
-      GoRoute(
-        path: '/together',
-        builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
-      ),
+      // NOTE: development-only routes are registered only in debug builds.
+      // They will not be present in release builds. Remove or further protect
+      // these routes before production if needed.
+      if (kDebugMode) ...[
+        GoRoute(
+          path: '/dev/profile',
+          builder: (context, state) => const DevProfileScreen(),
+        ),
+        GoRoute(
+          path: '/auction',
+          builder: (context, state) => const DummyScreen(title: 'Lelang'),
+        ),
+        GoRoute(
+          path: '/clubs',
+          builder: (context, state) => const DummyScreen(title: 'Komunitas'),
+        ),
+        GoRoute(
+          path: '/lost-found',
+          builder: (context, state) =>
+              const DummyScreen(title: 'Barang Hilang'),
+        ),
+        GoRoute(
+          path: '/pom',
+          builder: (context, state) => const DummyScreen(title: 'Pamer!'),
+        ),
+        GoRoute(
+          path: '/real-estate',
+          builder: (context, state) => const DummyScreen(title: 'Properti'),
+        ),
+        GoRoute(
+          path: '/together',
+          builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
+        ),
+      ],
+      // (non-dev feature placeholders removed from release registration)
     ],
   );
 });

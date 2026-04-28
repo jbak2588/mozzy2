@@ -78,7 +78,7 @@
 - [ ] 전화번호 인증 (인도네시아 +62 SMS OTP) - 보류 (Google 로그인 단일화)
 - [x] Google 소셜 로그인 (빠른 개발을 위해 단일화 적용)
 - [x] 익명 로그인 (둘러보기 모드)
-- [ ] 사용자 프로필 생성 (최소 정보 — PDPB 준수)
+- [x] 사용자 프로필 생성 (최소 정보 — PDPB 준수)
 - [ ] KTP 검증 옵션 (Trust Score 향상용, 선택사항)
 - [x] 로그인 상태 Riverpod Provider 구현 (AuthService, authStateProvider)
 

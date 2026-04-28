@@ -140,7 +140,7 @@
 - [ ] `LocalNewsListScreen` (카테고리 탭 — 인도네시아화)
   - 카테고리: Umum, Info, Event, Darurat, Kuliner, Tips Hidup
 - [ ] `LocalNewsDetailScreen` + CrossLinkSection
-- [ ] `CreatePostScreen` (이미지 5장, 카테고리, 위치 자동)
+- [x] `CreatePostScreen` (이미지 5장, 카테고리, 위치 자동)
 - [ ] 인도네시아 언어 태그 시스템
 
 ### 2-A Local News: 상세 체크리스트

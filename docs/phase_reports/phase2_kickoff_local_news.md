@@ -7,8 +7,7 @@ Commit: 4554a4a
 - First Feature for Phase 2: Local News (Berita Lokal)
 - Reason: lower external dependencies (no payment/AI/complex uploads), good for validating Firestore CRUD + location-based feed and Shared Contract application.
  - Progress: P2-U3 LocalNewsListScreen implemented (list UI, category chips, kecamatan-based query, empty/loading/error states). Commit: 62a1220
- - Progress: P2-U3 LocalNewsListScreen implemented (list UI, category chips, kecamatan-based query, empty/loading/error states). Commit: 62a1220
- - Progress: P2-U5 CreatePostScreen implemented and validated (basic validation + geoPath). Commit: 4554a4a
+ - Progress: P2-U5 CreatePostScreen implemented and validated (basic validation + geoPath + fixed test hang). Commit: 6991b45
 
 ## Scope (Initial)
 - PostModel (Freezed) implementing `MozzyPostContract`

@@ -33,8 +33,7 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
  - P2-U2: PostRepository (Firestore CRUD) (☑)
  - P2-U3: LocalNewsListScreen (☑)
 - P2-U4: LocalNewsDetailScreen (□)
-- P2-U5: CreatePostScreen (□)
- - P2-U5: CreatePostScreen (☑)
+- P2-U5: CreatePostScreen (☑)
 - P2-U6: Local News tests (□)
 
 
@@ -113,7 +112,7 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | P2-U3 | **PostsProvider** | Riverpod3 AsyncNotifier / 실시간 Stream / 필터 상태 | dart | 스트림 업데이트 확인 | □ |
 | P2-U4 | **LocalNewsListScreen** | 카테고리 탭바 / 무한 스크롤 / signalScore 정렬 / Shimmer 로딩 | dart | 6개 카테고리 탭 동작 | □ |
 | P2-U5 | **LocalNewsDetailScreen** | 본문·이미지·댓글·CrossLinkSection 기초 | dart | 상세 화면 렌더링 | □ |
-| P2-U6 | **CreatePostScreen** | 이미지 5장 업로드·WebP 압축 / 카테고리 선택 / 위치 자동 삽입 | dart·perf | 이미지 업로드 1MB 이하 | □ |
+| P2-U6 | **CreatePostScreen** | 이미지 5장 업로드·WebP 압축 / 카테고리 선택 / 위치 자동 삽입 | dart·perf | 이미지 업로드 1MB 이하 | ☑ |
 | P2-U7 | **Local News 인덱스** | posts 컬렉션 인덱스 12개 정의 / Security Rules 추가 | firestore | 12개 인덱스 배포 | □ |
 | P2-U8 | **ProductModel** | Freezed·isAiVerified·IDR 가격·거래방식(COD/Pengiriman)·MozzyPostContract | dart | AIVerification 직렬화 | □ |
 | P2-U9 | **MarketplaceRepository** | GeoHash 반경 쿼리 / fetchNearby(kecamatan) / 커서 페이지 | dart·firestore | 5km 반경 쿼리 동작 | □ |

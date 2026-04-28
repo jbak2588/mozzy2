@@ -1,13 +1,32 @@
 # Phase 2 Kickoff — Local News
 
 Date: 2026-04-28
-Commit: 4554a4a
+Latest Docs Commit: c9be5d168e61f57a07024b769886cfeb0f8d854c
 
 ## Summary
 - First Feature for Phase 2: Local News (Berita Lokal)
 - Reason: lower external dependencies (no payment/AI/complex uploads), good for validating Firestore CRUD + location-based feed and Shared Contract application.
- - Progress: P2-U3 LocalNewsListScreen implemented (list UI, category chips, kecamatan-based query, empty/loading/error states). Commit: 62a1220
- - Progress: P2-U5 CreatePostScreen implemented and validated (basic validation + geoPath + fixed test hang). Commit: 6991b45
+
+## Progress Log
+
+### P2-U1 / P2-U2 — PostModel + PostRepository
+- Status: Completed
+- Commit: 20eecc080c4c9be21633b600ce1b232f52e3445e
+
+### P2-U3 — LocalNewsListScreen
+- Status: Completed
+- Commit: 62a122045369305de708de1d55cc8b12870f6e20
+
+### P2-U5 — CreatePostScreen
+- Status: Completed
+- Feature Commit: 4554a4a39b46475231bff8f9af4651fa12c9eb0a
+- Docs Commit: c9be5d168e61f57a07024b769886cfeb0f8d854c
+- Scope:
+  - CreatePostScreen
+  - /news/create route
+  - LocalNewsListScreen FAB navigation
+  - geoPath builder
+  - validation tests
 
 ## Scope (Initial)
 - PostModel (Freezed) implementing `MozzyPostContract`

@@ -43,6 +43,7 @@ void main() {
     expect(restored.id, equals(post.id));
     expect(restored.userId, equals(post.userId));
     expect(restored.category, equals('umum'));
+    // ignore: unnecessary_type_check
     expect(restored is MozzyPostContract, isTrue);
     expect(restored.location.countryCode, equals('ID'));
     expect(restored.trustScore, equals(0.3));

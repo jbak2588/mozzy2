@@ -7,32 +7,39 @@ import 'package:mozzy/mozzy_ii/domains/news/providers/posts_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/news/repositories/post_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mozzy/mozzy_ii/domains/news/models/post_model.dart';
+import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
+import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
+
+class FakeLocationNotifier extends LocationNotifier {
+  @override
+  Future<LocationParts?> build() async {
+    return null;
+  }
+}
 
 void main() {
   testWidgets('LocalNewsListScreen shows title and chips and empty state', (
     tester,
   ) async {
-    await EasyLocalization.ensureInitialized();
-
     final fakeRepo = _FakePostRepository();
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [postRepositoryProvider.overrideWithValue(fakeRepo)],
-        child: EasyLocalization(
-          supportedLocales: const [Locale('id')],
-          path: 'assets/translations',
-          child: MaterialApp(home: LocalNewsListScreen()),
-        ),
+        overrides: [
+          postRepositoryProvider.overrideWithValue(fakeRepo),
+          locationProvider.overrideWith(() => FakeLocationNotifier()),
+        ],
+        child: const MaterialApp(home: LocalNewsListScreen()),
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
-    expect(find.text('news.title'.tr()), findsOneWidget);
+    expect(find.text('news.title'), findsOneWidget);
     expect(find.byType(ChoiceChip), findsWidgets);
     // empty state
-    expect(find.text('news.emptyTitle'.tr()), findsOneWidget);
+    expect(find.text('news.emptyTitle'), findsOneWidget);
   });
 }
 

@@ -23,6 +23,17 @@ class PostsQuery {
   final String category;
   final String? kecamatan;
   const PostsQuery({required this.category, this.kecamatan});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PostsQuery &&
+          runtimeType == other.runtimeType &&
+          category == other.category &&
+          kecamatan == other.kecamatan;
+
+  @override
+  int get hashCode => category.hashCode ^ kecamatan.hashCode;
 }
 
 final postsByCategoryAndKecamatanProvider = FutureProvider.family

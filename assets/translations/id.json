@@ -50,4 +50,12 @@
       "hero_lokal": "Hero Lokal"
     }
   }
+  ,
+  "home": {
+    "welcome": "Selamat datang",
+    "currentLocation": "Lokasi saat ini",
+    "locationUnavailable": "Lokasi belum tersedia",
+    "trustStatus": "Status kepercayaan",
+    "devProfile": "Dev Profile"
+  }
 }

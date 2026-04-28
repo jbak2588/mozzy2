@@ -50,4 +50,12 @@
       "hero_lokal": "Local Hero"
     }
   }
+  ,
+  "home": {
+    "welcome": "Welcome",
+    "currentLocation": "Current location",
+    "locationUnavailable": "Location not available",
+    "trustStatus": "Trust status",
+    "devProfile": "Dev Profile"
+  }
 }

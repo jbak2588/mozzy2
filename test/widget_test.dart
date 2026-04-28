@@ -1,3 +1,4 @@
+// NOTE: temporary isolated counter test. TODO: replace with MozzyApp smoke test.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,7 +19,7 @@ void main() {
 }
 
 class _TestCounterApp extends StatefulWidget {
-  const _TestCounterApp({Key? key}) : super(key: key);
+  const _TestCounterApp();
 
   @override
   State<_TestCounterApp> createState() => _TestCounterAppState();

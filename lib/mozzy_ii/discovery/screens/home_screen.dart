@@ -1,133 +1,168 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../app/auth/auth_service.dart';
+import '../../geo/providers/location_provider.dart';
+import '../../domains/users/presentation/providers/user_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    User? user;
+    try {
+      user = FirebaseAuth.instance.currentUser;
+    } catch (_) {
+      user = null; // In tests Firebase may not be initialized
+    }
+
+    final locationAsync = ref.watch(locationProvider);
+
+    // If we have a uid, watch user model; otherwise null
+    final userModelAsync = user != null
+        ? ref.watch(userModelProvider(user.uid))
+        : null;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('app_name'.tr()),
         actions: [
-          // 언어 변경 드롭다운
-          DropdownButton<Locale>(
-            value: context.locale,
-            icon: const Icon(Icons.language, color: Colors.black87),
-            underline: const SizedBox(),
-            onChanged: (Locale? newLocale) {
-              if (newLocale != null) {
-                context.setLocale(newLocale);
-              }
-            },
-            items: const [
-              DropdownMenuItem(
-                value: Locale('id'),
-                child: Text('🇮🇩 ID'),
-              ),
-              DropdownMenuItem(
-                value: Locale('en'),
-                child: Text('🇺🇸 EN'),
-              ),
-              DropdownMenuItem(
-                value: Locale('ko'),
-                child: Text('🇰🇷 KO'),
-              ),
-            ],
-          ),
-          const SizedBox(width: 8),
-          // 임시 로그아웃 버튼 (개발 편의를 위함)
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await ref.read(authServiceProvider).signOut();
-            },
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => context.go('/dev/profile'),
+            tooltip: 'home.devProfile'.tr(),
           ),
-          const SizedBox(width: 8),
         ],
       ),
-      body: CustomScrollView(
-        slivers: [
-          // 1. 상단 위치 표시 바 (Geo Layer 영역)
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              color: Colors.grey[100],
-              child: Row(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'app_name'.tr(),
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'home.welcome'.tr(),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 12),
+
+              // Current Location
+              Row(
                 children: [
-                  const Icon(Icons.location_on, color: Color(0xFFCC0001), size: 20),
+                  const Icon(Icons.location_on, color: Color(0xFFCC0001)),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      'geo.detecting'.tr(), // 임시 텍스트, 추후 LocationProvider 연동
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    child: locationAsync.when(
+                      data: (loc) {
+                        if (loc == null) {
+                          return Text('home.locationUnavailable'.tr());
+                        }
+                        final kec = loc.idAddress?.kecamatan ?? '';
+                        final kab = loc.idAddress?.kabupaten ?? '';
+                        if (kec.isEmpty && kab.isEmpty) {
+                          return Text('home.locationUnavailable'.tr());
+                        }
+                        return Text('$kec, $kab');
+                      },
+                      loading: () => Text('geo.detecting'.tr()),
+                      error: (error, stack) =>
+                          Text('home.locationUnavailable'.tr()),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // TODO: 위치 변경 기능
-                    },
-                    child: Text('geo.change_location'.tr()),
                   ),
                 ],
               ),
-            ),
-          ),
-          
-          // 2. Smart Feed 콘텐츠 영역 (Placeholder)
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 12),
+
+              // User / Trust info
+              Card(
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'home.currentLocation'.tr(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.grey[300],
-                                child: const Icon(Icons.person, color: Colors.white),
-                              ),
-                              const SizedBox(width: 12),
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Warga Lokal', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  Text('2 jam yang lalu', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'home.trustStatus'.tr(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                if (userModelAsync == null) ...[
+                                  Text(user?.email ?? user?.displayName ?? '—'),
+                                  const SizedBox(height: 6),
+                                  Text('${'home.trustStatus'.tr()}: —'),
+                                ] else ...[
+                                  userModelAsync.when(
+                                    data: (model) {
+                                      final score = (model != null)
+                                          ? model.trustScore.toStringAsFixed(2)
+                                          : '—';
+                                      final level = (model != null)
+                                          ? model.trustLevel
+                                          : '—';
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            user?.email ??
+                                                user?.displayName ??
+                                                '—',
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text('Trust: $score'),
+                                          Text('Level: $level'),
+                                        ],
+                                      );
+                                    },
+                                    loading: () => const Text('Memuat...'),
+                                    error: (error, stack) => const Text('—'),
+                                  ),
                                 ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 16),
-                          Container(
-                            height: 150,
-                            color: Colors.grey[200],
-                            width: double.infinity,
-                            child: const Center(child: Text('Image / Content Placeholder')),
-                          ),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Ini adalah contoh postingan di Smart Feed Mozzy. Berisi informasi lokal yang relevan.',
-                            style: TextStyle(fontSize: 14),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFCC0001),
+                            ),
+                            onPressed: () => context.go('/dev/profile'),
+                            child: Text('home.devProfile'.tr()),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
-                childCount: 5, // 더미 아이템 개수
+                    ],
+                  ),
+                ),
               ),
-            ),
+
+              const SizedBox(height: 12),
+
+              // Placeholder for feed
+              const Expanded(child: Center(child: Text('Feed placeholder'))),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

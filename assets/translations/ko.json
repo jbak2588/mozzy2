@@ -50,4 +50,12 @@
       "hero_lokal": "동네 영웅"
     }
   }
+  ,
+  "home": {
+    "welcome": "환영합니다",
+    "currentLocation": "현재 위치",
+    "locationUnavailable": "위치가 없습니다",
+    "trustStatus": "신뢰 상태",
+    "devProfile": "개발자 프로필"
+  }
 }

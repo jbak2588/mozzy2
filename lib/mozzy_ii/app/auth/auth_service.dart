@@ -13,22 +13,27 @@ class AuthService {
   /// Google 로그인
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      // 1. Google 로그인 프로세스 시작 (7.2.0+: authenticate 사용)
-      // Note: 7.2.0+ authenticate() returns non-nullable Future; cancellation throws PlatformException
+      // 1. Google 로그인 프로세스 시작
       final googleUser = await GoogleSignIn.instance.authenticate();
-      
+
       // 2. Google 인증 세부 정보 획득
       final googleAuth = googleUser.authentication;
+      final idToken = googleAuth.idToken;
 
-      // 3. Firebase용 새 자격 증명 생성 (7.2.0+: accessToken은 별도 승인 절차로 분리됨)
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-      );
+      if (idToken == null || idToken.isEmpty) {
+        throw StateError('Google ID token is null or empty');
+      }
+
+      // 3. Firebase용 새 자격 증명 생성
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
 
       // 4. Firebase 인증을 통해 로그인
       return await _auth.signInWithCredential(credential);
+    } on GoogleSignInException catch (gse) {
+      throw StateError('Google sign-in failed: $gse');
+    } on FirebaseAuthException {
+      rethrow;
     } catch (e) {
-      // TODO: 로깅 추가
       rethrow;
     }
   }

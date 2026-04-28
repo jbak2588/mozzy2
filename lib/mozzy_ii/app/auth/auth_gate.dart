@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 import 'auth_service.dart';
 
 class AuthGate extends ConsumerWidget {
@@ -13,11 +14,20 @@ class AuthGate extends ConsumerWidget {
     return authState.when(
       data: (user) {
         if (user != null) {
-          // Navigation shell not provided yet — return a placeholder Scaffold until configured
+          // 로그인 상태 감지 시 라우터의 메인 경로로 이동
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              try {
+                context.go('/home');
+              } catch (_) {
+                // In tests there may be no GoRouter; ignore navigation error
+              }
+            }
+          });
+          // 기본 동작: 라우터가 없으면(테스트 환경 등) placeholder를 보여줌
+          // 실제 앱에서는 addPostFrameCallback에서 navigation을 시도함
           return Scaffold(
-            body: Center(
-              child: Text('Home (navigation not configured)'),
-            ),
+            body: Center(child: Text('Home (navigation not configured)')),
           );
         }
         return const LoginScreen();
@@ -27,11 +37,7 @@ class AuthGate extends ConsumerWidget {
           child: CircularProgressIndicator(color: Color(0xFFCC0001)),
         ),
       ),
-      error: (e, st) => Scaffold(
-        body: Center(
-          child: Text('Error: $e'),
-        ),
-      ),
+      error: (e, st) => Scaffold(body: Center(child: Text('Error: $e'))),
     );
   }
 }
@@ -51,10 +57,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await ref.read(authServiceProvider).signInWithGoogle();
     } catch (e) {
+      // 개발용 로깅
+      debugPrint('signInWithGoogle error: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${'common.error'.tr()}: $e'),
+            content: Text('auth.google_login_failed'.tr()),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

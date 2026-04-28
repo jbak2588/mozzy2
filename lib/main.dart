@@ -4,13 +4,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/date_symbol_data_local.dart'; // 추가
 import 'firebase_options.dart';
+import 'mozzy_ii/app/auth/google_sign_in_config.dart';
 
 import 'mozzy_ii/app/theme/mozzy_theme.dart';
 import 'mozzy_ii/app/navigation/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // 1. EasyLocalization 초기화
   await EasyLocalization.ensureInitialized();
 
@@ -18,9 +19,10 @@ void main() async {
   await initializeDateFormatting('id_ID', null);
 
   // 3. Firebase 초기화
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // 3.5 Google Sign-In 초기화 (dart-define로 Web Client ID 주입 필요)
+  await GoogleSignInConfig.initialize();
 
   runApp(
     ProviderScope(

@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAkAEilz69Y1LXSGE5lHYWVsxpWDYxn50c',
-    appId: '1:149673701591:android:8b8bb2701daf0720348092',
+    appId: '1:149673701591:android:e4abccc584ea6d44348092',
     messagingSenderId: '149673701591',
     projectId: 'mozzy-v2',
     storageBucket: 'mozzy-v2.firebasestorage.app',
@@ -66,12 +66,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDDU3slAnweGlzok4vvoYThVl3OzAClh9g',
-    appId: '1:149673701591:ios:3c75a20b18497d38348092',
+    appId: '1:149673701591:ios:161888e02652f8ec348092',
     messagingSenderId: '149673701591',
     projectId: 'mozzy-v2',
     storageBucket: 'mozzy-v2.firebasestorage.app',
-    iosClientId:
-        '149673701591-9ugvl6hcrtrp0qkagcsie6gbjnqhoina.apps.googleusercontent.com',
-    iosBundleId: 'package com.humantric.mozzy2',
+    androidClientId: '149673701591-l9t5usl2d1tjueclcbql220lbppqudju.apps.googleusercontent.com',
+    iosClientId: '149673701591-bk436mnn06h9tt8ml8e56qcfei52b1j9.apps.googleusercontent.com',
+    iosBundleId: 'com.humantric.mozzy2',
   );
+
 }

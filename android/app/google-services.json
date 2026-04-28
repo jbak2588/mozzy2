@@ -7,42 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:149673701591:android:8b8bb2701daf0720348092",
-        "android_client_info": {
-          "package_name": "package com.humantric.mozzy2"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "149673701591-oml428ssc9hon7mla0rvsn6e528hgdv9.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAkAEilz69Y1LXSGE5lHYWVsxpWDYxn50c"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "149673701591-oml428ssc9hon7mla0rvsn6e528hgdv9.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "149673701591-bk436mnn06h9tt8ml8e56qcfei52b1j9.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.humantric.mozzy2"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:149673701591:android:e4abccc584ea6d44348092",
         "android_client_info": {
           "package_name": "com.humantric.mozzy2"
@@ -50,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "149673701591-l9t5usl2d1tjueclcbql220lbppqudju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humantric.mozzy2",
+            "certificate_hash": "1dcff3b93b1d547f4d4bd2210a9069b64aac463f"
+          }
+        },
+        {
           "client_id": "149673701591-oml428ssc9hon7mla0rvsn6e528hgdv9.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -67,7 +39,7 @@
               "client_type": 3
             },
             {
-              "client_id": "149673701591-bk436mnn06h9tt8ml8e56qcfei52b1j9.apps.googleusercontent.com",
+              "client_id": "149673701591-9ugvl6hcrtrp0qkagcsie6gbjnqhoina.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.humantric.mozzy2"

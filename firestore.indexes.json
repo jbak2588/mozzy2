@@ -57,5 +57,24 @@
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     }
+    ,
+    {
+      "collectionGroup": "posts",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "countryCode", "order": "ASCENDING" },
+        { "fieldPath": "category", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "posts",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "countryCode", "order": "ASCENDING" },
+        { "fieldPath": "location.idAddress.kecamatan", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
   ]
 }

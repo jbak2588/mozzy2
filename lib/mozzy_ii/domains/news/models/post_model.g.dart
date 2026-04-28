@@ -30,6 +30,20 @@ _PostModel _$PostModelFromJson(Map<String, dynamic> json) => _PostModel(
   signalScore: (json['signalScore'] as num?)?.toDouble() ?? 0.0,
   geoPath: json['geoPath'] as String,
   location: LocationParts.fromJson(json['location'] as Map<String, dynamic>),
+  countryCode: json['countryCode'] as String? ?? 'ID',
+  isDeleted: json['isDeleted'] as bool? ?? false,
+  reportCount: (json['reportCount'] as num?)?.toInt() ?? 0,
+  mapVisibility: json['mapVisibility'] as bool? ?? true,
+  discoveryChannels:
+      (json['discoveryChannels'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
+  relayTargets:
+      (json['relayTargets'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>[],
   createdAt: DateTime.parse(json['createdAt'] as String),
   updatedAt: json['updatedAt'] == null
       ? null
@@ -50,7 +64,13 @@ Map<String, dynamic> _$PostModelToJson(_PostModel instance) =>
       'trustScore': instance.trustScore,
       'signalScore': instance.signalScore,
       'geoPath': instance.geoPath,
-      'location': instance.location,
+      'location': instance.location.toJson(),
+      'countryCode': instance.countryCode,
+      'isDeleted': instance.isDeleted,
+      'reportCount': instance.reportCount,
+      'mapVisibility': instance.mapVisibility,
+      'discoveryChannels': instance.discoveryChannels,
+      'relayTargets': instance.relayTargets,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
     };

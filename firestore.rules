@@ -2,6 +2,18 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // posts under countries/{country}/domains/local_news/posts/{postId}
+    match /countries/{country}/domains/local_news/posts/{postId} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.location != null
+        && request.resource.data.geoPath is string;
+
+      allow update, delete: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
     
     // [헬퍼 함수]
     function isAuthenticated() {

@@ -18,6 +18,7 @@ abstract class PostModel with _$PostModel {
   const PostModel._();
 
   @Implements<MozzyPostContract>()
+  @JsonSerializable(explicitToJson: true)
   const factory PostModel({
     required String id,
     required String userId,
@@ -25,7 +26,6 @@ abstract class PostModel with _$PostModel {
     required String content,
     @Default([]) List<String> imageUrls,
     required String category, // Umum, Info, Event, Darurat, Kuliner, Tips Hidup
-    
     // MozzyPostContract 구현 필드
     @Default(GeoScope.neighborhood) GeoScope geoScope,
     @Default(ReachMode.localOnly) ReachMode reachMode,
@@ -36,10 +36,23 @@ abstract class PostModel with _$PostModel {
 
     // 위치 상세 (Track 1)
     required LocationParts location,
-    
+
+    // Country code redundancy for queries (ISO alpha-2)
+    @Default('ID') String countryCode,
+
+    // Soft-delete flag and moderation counters
+    @Default(false) bool isDeleted,
+    @Default(0) int reportCount,
+
+    // Visibility and discovery
+    @Default(true) bool mapVisibility,
+    @Default(<String>[]) List<String> discoveryChannels,
+    @Default(<String>[]) List<String> relayTargets,
+
     required DateTime createdAt,
     DateTime? updatedAt,
   }) = _PostModel;
 
-  factory PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
+  factory PostModel.fromJson(Map<String, dynamic> json) =>
+      _$PostModelFromJson(json);
 }

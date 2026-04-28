@@ -1,70 +1,93 @@
-// ============================================================================
-// Mozzy DocHeader
-// Module        : Local News Domain
-// File          : lib/mozzy_ii/domains/news/repositories/post_repository.dart
-// Purpose       : Firestore 기반의 뉴스 게시글 CRUD 및 쿼리를 담당합니다.
-//                 Path-sharding 아키텍처를 준수합니다.
-// ============================================================================
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mozzy/mozzy_ii/core/config/firebase_constants.dart';
-import 'package:mozzy/mozzy_ii/domains/news/models/post_model.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'post_repository.g.dart';
+import 'package:flutter/foundation.dart';
+import '../models/post_model.dart';
 
 class PostRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _fs;
+  static const String countryId = 'ID';
+  static const String domainId = 'local_news';
 
-  /// 뉴스 게시글 컬렉션 참조 획득 (Sharded Path)
-  CollectionReference<Map<String, dynamic>> _newsCollection(String countryId) {
-    return _firestore
-        .collection(FirebaseConstants.countries)
-        .doc(countryId)
-        .collection(FirebaseConstants.domains)
-        .doc('news')
-        .collection(FirebaseConstants.posts);
+  PostRepository([FirebaseFirestore? fs])
+    : _fs = fs ?? FirebaseFirestore.instance;
+
+  String postsCollectionPath([String? country]) {
+    final c = country ?? countryId;
+    return 'countries/$c/domains/$domainId/posts';
   }
 
-  /// 게시글 작성
-  Future<void> createPost(String countryId, PostModel post) async {
-    await _newsCollection(countryId).doc(post.id).set(post.toJson());
+  CollectionReference get postsCollection =>
+      _fs.collection(postsCollectionPath());
+
+  Future<void> createPost(PostModel post) async {
+    final docRef = postsCollection.doc(post.id);
+    await docRef.set(post.toJson());
   }
 
-  /// 게시글 단건 조회
-  Future<PostModel?> getPost(String countryId, String postId) async {
-    final doc = await _newsCollection(countryId).doc(postId).get();
-    if (doc.exists) {
-      return PostModel.fromJson(doc.data()!);
-    }
-    return null;
+  Future<PostModel?> getPostById(String postId) async {
+    final doc = await postsCollection.doc(postId).get();
+    if (!doc.exists) return null;
+    final data = doc.data() as Map<String, dynamic>;
+    return PostModel.fromJson({...data, 'id': doc.id});
   }
 
-  /// 동네 뉴스 피드 조회 (GeoPath 기반 Prefix Match)
-  /// [geoPath] 예: "ID#JB#Bandung#Coblong"
-  Future<List<PostModel>> getPostsByGeoPath({
-    required String countryId,
-    required String geoPath,
+  Future<List<PostModel>> fetchByKecamatan({
+    required String kecamatan,
     int limit = 20,
     DocumentSnapshot? startAfter,
   }) async {
-    var query = _newsCollection(countryId)
-        .where(FirebaseConstants.fieldGeoPath, isGreaterThanOrEqualTo: geoPath)
-        .where(FirebaseConstants.fieldGeoPath, isLessThan: '$geoPath\uf8ff')
-        .orderBy(FirebaseConstants.fieldGeoPath)
-        .orderBy(FirebaseConstants.fieldCreatedAt, descending: true)
+    Query query = postsCollection
+        .where('isDeleted', isEqualTo: false)
+        .where('location.idAddress.kecamatan', isEqualTo: kecamatan)
+        .orderBy('createdAt', descending: true)
         .limit(limit);
 
-    if (startAfter != null) {
-      query = query.startAfterDocument(startAfter);
-    }
+    if (startAfter != null) query = query.startAfterDocument(startAfter);
 
-    final snapshot = await query.get();
-    return snapshot.docs.map((doc) => PostModel.fromJson(doc.data())).toList();
+    final snap = await query.get();
+    return snap.docs
+        .map(
+          (d) => PostModel.fromJson({
+            ...d.data() as Map<String, dynamic>,
+            'id': d.id,
+          }),
+        )
+        .toList();
   }
-}
 
-@riverpod
-PostRepository postRepository(Ref ref) {
-  return PostRepository();
+  Future<List<PostModel>> fetchByCategory({
+    required String category,
+    int limit = 20,
+    DocumentSnapshot? startAfter,
+  }) async {
+    Query query = postsCollection
+        .where('isDeleted', isEqualTo: false)
+        .where('category', isEqualTo: category)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+
+    if (startAfter != null) query = query.startAfterDocument(startAfter);
+
+    final snap = await query.get();
+    return snap.docs
+        .map(
+          (d) => PostModel.fromJson({
+            ...d.data() as Map<String, dynamic>,
+            'id': d.id,
+          }),
+        )
+        .toList();
+  }
+
+  Future<void> updatePost(PostModel post) async {
+    final docRef = postsCollection.doc(post.id);
+    await docRef.set(post.toJson(), SetOptions(merge: true));
+  }
+
+  Future<void> softDeletePost(String postId) async {
+    final now = DateTime.now().toUtc();
+    await postsCollection.doc(postId).set({
+      'isDeleted': true,
+      'updatedAt': now,
+    }, SetOptions(merge: true));
+  }
 }

@@ -232,9 +232,9 @@ return $default(_that.id,_that.userId,_that.title,_that.content,_that.imageUrls,
 }
 
 /// @nodoc
+@JsonSerializable()
 
-@JsonSerializable(explicitToJson: true)
-class _PostModel extends PostModel implements MozzyPostContract {
+class _PostModel extends PostModel {
   const _PostModel({required this.id, required this.userId, required this.title, required this.content, final  List<String> imageUrls = const [], required this.category, this.geoScope = GeoScope.neighborhood, this.reachMode = ReachMode.localOnly, final  Map<String, String> translationState = const {}, this.trustScore = 0.0, this.signalScore = 0.0, required this.geoPath, required this.location, this.countryCode = 'ID', this.isDeleted = false, this.reportCount = 0, this.mapVisibility = true, final  List<String> discoveryChannels = const <String>[], final  List<String> relayTargets = const <String>[], required this.createdAt, this.updatedAt}): _imageUrls = imageUrls,_translationState = translationState,_discoveryChannels = discoveryChannels,_relayTargets = relayTargets,super._();
   factory _PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
 

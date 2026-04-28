@@ -7,16 +7,12 @@ import 'package:mozzy/mozzy_ii/domains/news/providers/posts_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/news/repositories/post_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mozzy/mozzy_ii/domains/news/models/post_model.dart';
-import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
-import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
 
 void main() {
   testWidgets('LocalNewsListScreen shows title and chips and empty state', (
     tester,
   ) async {
     await EasyLocalization.ensureInitialized();
-
-    final testPosts = <PostModel>[];
 
     final fakeRepo = _FakePostRepository();
 

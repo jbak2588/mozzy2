@@ -4,7 +4,7 @@ import '../models/post_model.dart';
 
 class LocalNewsCard extends StatelessWidget {
   final PostModel post;
-  const LocalNewsCard({Key? key, required this.post}) : super(key: key);
+  const LocalNewsCard({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {

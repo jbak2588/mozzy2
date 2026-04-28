@@ -15,12 +15,13 @@ final currentUserIdProvider = Provider<String?>(
 );
 
 // Indirection to make location easily overrideable in tests.
-final effectiveLocationProvider = Provider.autoDispose<AsyncValue<LocationParts?>>(
-  (ref) => ref.watch(locationProvider),
-);
+final effectiveLocationProvider =
+    Provider.autoDispose<AsyncValue<LocationParts?>>(
+      (ref) => ref.watch(locationProvider),
+    );
 
 class CreatePostScreen extends ConsumerStatefulWidget {
-  const CreatePostScreen({Key? key}) : super(key: key);
+  const CreatePostScreen({super.key});
 
   @override
   ConsumerState<CreatePostScreen> createState() => _CreatePostScreenState();
@@ -91,9 +92,10 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             .doc(userId)
             .get();
         if (userDoc.exists) {
-          final data = userDoc.data() as Map<String, dynamic>?;
-          if (data != null && data['trustScore'] is num)
+          final data = userDoc.data();
+          if (data != null && data['trustScore'] is num) {
             trustScore = (data['trustScore'] as num).toDouble();
+          }
         }
       } catch (_) {}
 
@@ -123,14 +125,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
       await ref.read(createLocalNewsPostProvider).call(post);
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('news.createSuccess'.tr())));
-      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('news.createSuccess'.tr())));
+        Navigator.of(context).pop();
+      }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('news.createFailed'.tr())));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('news.createFailed'.tr())));
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -165,7 +171,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: _category,
+              initialValue: _category,
               items: categories
                   .map(
                     (c) => DropdownMenuItem(

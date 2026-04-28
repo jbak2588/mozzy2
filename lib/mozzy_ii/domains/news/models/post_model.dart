@@ -14,11 +14,9 @@ part 'post_model.freezed.dart';
 part 'post_model.g.dart';
 
 @freezed
-abstract class PostModel with _$PostModel {
+abstract class PostModel with _$PostModel implements MozzyPostContract {
   const PostModel._();
 
-  @Implements<MozzyPostContract>()
-  @JsonSerializable(explicitToJson: true)
   const factory PostModel({
     required String id,
     required String userId,

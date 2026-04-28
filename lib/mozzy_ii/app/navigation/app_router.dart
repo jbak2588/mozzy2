@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// unused imports removed
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +8,7 @@ import '../auth/auth_gate.dart';
 import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
 import '../../discovery/screens/home_screen.dart';
-// profile screen not referenced here
+import '../../dev/profile_screen.dart';
 import '../../domains/news/screens/local_news_list_screen.dart';
 import '../../domains/news/screens/create_post_screen.dart';
 
@@ -75,6 +75,12 @@ final routerProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/news',
                 builder: (context, state) => const LocalNewsListScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'create',
+                    builder: (context, state) => const CreatePostScreen(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -103,15 +109,8 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 나머지 Feature 라우트
       GoRoute(
-        path: '/news',
-        name: 'news',
-        builder: (context, state) => const LocalNewsListScreen(),
-        routes: [
-          GoRoute(
-            path: 'create',
-            builder: (context, state) => const CreatePostScreen(),
-          ),
-        ],
+        path: '/jobs',
+        builder: (context, state) => const DummyScreen(title: 'Jobs'),
       ),
 
       // Feature placeholder routes — must be available in debug and release
@@ -139,6 +138,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/together',
         builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
       ),
+      // Dev-only debug routes
+      if (kDebugMode)
+        GoRoute(
+          path: '/dev/profile',
+          builder: (context, state) => const DevProfileScreen(),
+        ),
     ],
   );
 });

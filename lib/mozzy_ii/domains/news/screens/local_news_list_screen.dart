@@ -7,7 +7,7 @@ import '../../../geo/providers/location_provider.dart';
 import '../widgets/local_news_card.dart';
 
 class LocalNewsListScreen extends ConsumerStatefulWidget {
-  const LocalNewsListScreen({Key? key}) : super(key: key);
+  const LocalNewsListScreen({super.key});
 
   @override
   ConsumerState<LocalNewsListScreen> createState() =>
@@ -79,7 +79,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
                   onSelected: (_) => setState(() => _selectedCategory = cat),
                 );
               },
-              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemCount: categories.length,
             ),
           ),
@@ -107,7 +107,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
                 return ListView.separated(
                   itemBuilder: (context, index) =>
                       LocalNewsCard(post: posts[index]),
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, _) => const Divider(height: 1),
                   itemCount: posts.length,
                 );
               },
@@ -137,7 +137,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/news/create'),
+        onPressed: () => context.push('/news/create'),
         label: Text('news.createPost'.tr()),
         icon: const Icon(Icons.create),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../geo/utils/geo_path_builder.dart';
+import '../../../geo/models/location_parts.dart';
 import '../../../geo/providers/location_provider.dart';
 import '../models/post_model.dart';
 import '../providers/posts_provider.dart';
@@ -11,6 +12,11 @@ import '../../../shared/contracts/mozzy_post_contract.dart';
 // Provider that exposes current user id (easy to override in tests)
 final currentUserIdProvider = Provider<String?>(
   (ref) => FirebaseAuth.instance.currentUser?.uid,
+);
+
+// Indirection to make location easily overrideable in tests.
+final effectiveLocationProvider = Provider.autoDispose<AsyncValue<LocationParts?>>(
+  (ref) => ref.watch(locationProvider),
 );
 
 class CreatePostScreen extends ConsumerStatefulWidget {
@@ -58,7 +64,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       return;
     }
 
-    final locationAsync = ref.read(locationProvider);
+    final locationAsync = ref.read(effectiveLocationProvider);
     final location = locationAsync.maybeWhen(
       data: (l) => l,
       orElse: () => null,
@@ -132,7 +138,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final locationAsync = ref.watch(locationProvider);
+    final locationAsync = ref.watch(effectiveLocationProvider);
     final locText = locationAsync.maybeWhen(
       data: (l) => l?.idAddress != null
           ? '${l!.idAddress!.kecamatan}, ${l.idAddress!.kabupaten}'

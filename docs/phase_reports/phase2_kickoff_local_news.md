@@ -1,7 +1,7 @@
 # Phase 2 Kickoff — Local News
 
 Date: 2026-04-28
-Latest Docs Commit: c9be5d168e61f57a07024b769886cfeb0f8d854c
+Latest Docs Commit: 29b46c46557654a62fddfcbf93abf838e99e9e72
 
 ## Summary
 - First Feature for Phase 2: Local News (Berita Lokal)
@@ -27,6 +27,16 @@ Latest Docs Commit: c9be5d168e61f57a07024b769886cfeb0f8d854c
   - LocalNewsListScreen FAB navigation
   - geoPath builder
   - validation tests
+
+### P2-U4 — LocalNewsDetailScreen
+- Status: Completed
+- Scope:
+  - LocalNewsDetailScreen
+  - /news/:postId route
+  - LocalNewsCard navigation
+  - CrossLinkSection foundation
+  - detail screen widget tests
+- Commit: 5a0cfc0c7ba95b5e38e38e5a51327d9472d91af0
 
 ## Scope (Initial)
 - PostModel (Freezed) implementing `MozzyPostContract`

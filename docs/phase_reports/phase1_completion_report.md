@@ -1,7 +1,7 @@
 # Phase 1 Completion Report
 
 Date: 2026-04-28
-Commit: b1ddbab3d806e75ca59e7be53a17bf9544b582ea
+Commit: 82fc568465a9440735da9a781fadfaff24525011
 
 ## Summary
 - Phase: 1 — App Shell + Geo Layer
@@ -55,6 +55,15 @@ Commands executed locally in workspace (successful):
 - Integrate Firestore emulator into CI for rules testing and integration tests
 - Implement Hive offline caching and complete Phase 2 unit tests
 - Prepare Phase 2 sprint board tasks and assign owners
+
+## Post-lock correction required
+- Issue: During the Phase 1 doc lock commit a broad `kDebugMode` guard was added which
+  unintentionally removed several feature placeholder routes from release builds.
+- Action taken: Restored feature routes (`/auction`, `/clubs`, `/lost-found`, `/pom`, `/real-estate`, `/together`) to be registered in both debug and release builds; kept only `/dev/profile` under `kDebugMode`.
+- Impact: No runtime behavior change for release builds except dev-only profile route removal.
+
+## Phase 2 entry condition
+- Phase 2 kickoff may proceed after: route correction (this commit) + `flutter analyze` and `flutter test` pass.
 
 ## Sign-off
 Phase 1 core acceptance criteria met and documented. Ready to mark Phase 1 as complete.

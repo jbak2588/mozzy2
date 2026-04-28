@@ -105,42 +105,40 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/jobs',
         builder: (context, state) => const DummyScreen(title: 'Lowongan Kerja'),
       ),
-      // Dev routes (development-only) -------------------------------------------------
-      // NOTE: development-only routes are registered only in debug builds.
-      // They will not be present in release builds. Remove or further protect
-      // these routes before production if needed.
-      if (kDebugMode) ...[
+      // Dev route (development-only). Keep only `/dev/profile` guarded
+      // with `kDebugMode`. Production builds should not include this route.
+      // TODO: Before production, remove or replace with admin-guard.
+      if (kDebugMode)
         GoRoute(
           path: '/dev/profile',
           builder: (context, state) => const DevProfileScreen(),
         ),
-        GoRoute(
-          path: '/auction',
-          builder: (context, state) => const DummyScreen(title: 'Lelang'),
-        ),
-        GoRoute(
-          path: '/clubs',
-          builder: (context, state) => const DummyScreen(title: 'Komunitas'),
-        ),
-        GoRoute(
-          path: '/lost-found',
-          builder: (context, state) =>
-              const DummyScreen(title: 'Barang Hilang'),
-        ),
-        GoRoute(
-          path: '/pom',
-          builder: (context, state) => const DummyScreen(title: 'Pamer!'),
-        ),
-        GoRoute(
-          path: '/real-estate',
-          builder: (context, state) => const DummyScreen(title: 'Properti'),
-        ),
-        GoRoute(
-          path: '/together',
-          builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
-        ),
-      ],
-      // (non-dev feature placeholders removed from release registration)
+
+      // Feature placeholder routes — must be available in debug and release
+      GoRoute(
+        path: '/auction',
+        builder: (context, state) => const DummyScreen(title: 'Lelang'),
+      ),
+      GoRoute(
+        path: '/clubs',
+        builder: (context, state) => const DummyScreen(title: 'Komunitas'),
+      ),
+      GoRoute(
+        path: '/lost-found',
+        builder: (context, state) => const DummyScreen(title: 'Barang Hilang'),
+      ),
+      GoRoute(
+        path: '/pom',
+        builder: (context, state) => const DummyScreen(title: 'Pamer!'),
+      ),
+      GoRoute(
+        path: '/real-estate',
+        builder: (context, state) => const DummyScreen(title: 'Properti'),
+      ),
+      GoRoute(
+        path: '/together',
+        builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
+      ),
     ],
   );
 });

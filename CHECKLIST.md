@@ -121,6 +121,16 @@
 
 ## 🔲 Phase 2 — Core 3 Features MVP (Week 7~10)
 
+### Phase 2 Kickoff Prerequisites
+- [x] Phase 1 문서 잠금 완료 (docs/phase_reports/phase1_completion_report.md 생성)
+- [x] Phase 1 완료 리포트 생성
+- [x] Dev route `/dev/profile` debug-only 보호 적용
+- [x] Feature placeholder routes 유지(Release 포함) 확인
+- [ ] Phase 2 Local News 모델 설계 시작
+- [ ] Phase 2 Local News Firestore schema 확정
+- [ ] Phase 2 Local News list/detail/create 화면 구현
+
+
 ### 2-A. Local News (Berita Lokal) — architect-agent → dart-agent
 - [ ] `PostModel` (MozzyPostContract 구현, Track 1 주소 포함)
 - [ ] `PostRepository` (Firestore CRUD + 커서 페이지네이션)

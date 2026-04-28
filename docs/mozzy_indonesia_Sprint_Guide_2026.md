@@ -25,6 +25,18 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | 6 | Week 23\~26 | 베타 런칭 | PlayStore·AppStore 공개 | deploy·market | ○ 시작 전 |
 | 7 | Week 27+ | 성장·글로벌 준비 | DAU성장·29개국 릴레이 준비 | market·ai·deploy | ○ 시작 전 |
 
+**Current Status:** Phase 1 — Completed and Locked (see docs/phase_reports/phase1_completion_report.md)
+
+**Phase 2 Next Focus:** Local News (Kickoff prepared — route correction applied). First units to start:
+
+- P2-U1: PostModel (□)
+- P2-U2: PostRepository (Firestore CRUD) (□)
+- P2-U3: LocalNewsListScreen (□)
+- P2-U4: LocalNewsDetailScreen (□)
+- P2-U5: CreatePostScreen (□)
+- P2-U6: Local News tests (□)
+
+
 ## **▌ 에이전트 책임 매트릭스**
 
 | 에이전트 | 주요 역할 | 관여 Phase | Gate Keeper 역할 |

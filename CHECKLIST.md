@@ -18,7 +18,7 @@
 
 ### 0-B. Firebase 프로젝트 구성 (인도네시아)
 - [x] Firebase 프로젝트 생성: `mozzy-indonesia-prod` (mozzy-v2로 대체)
-- [ ] Firebase 프로젝트 생성: `mozzy-indonesia-dev`
+- [ ] Firebase 프로젝트 생성: `mozzy-indonesia-dev`(잠정 보류)
 - [x] 서비스 활성화:
   - [x] Firestore (asia-southeast2 — 자카르타 리전)
   - [x] Authentication (Google Sign-In 단일화 적용)

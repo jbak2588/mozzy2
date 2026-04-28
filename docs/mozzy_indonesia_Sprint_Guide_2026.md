@@ -32,7 +32,7 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 - P2-U1: PostModel (☑)
 - P2-U2: PostRepository (Firestore CRUD) (☑)
 - P2-U3: LocalNewsListScreen (☑)
-- P2-U4: LocalNewsDetailScreen (□)
+- P2-U4: LocalNewsDetailScreen (☑)
 - P2-U5: CreatePostScreen (☑)
 - P2-U6: Local News tests (△)
 

@@ -89,6 +89,15 @@
     "titleRequired": "제목을 입력하세요",
     "contentRequired": "내용을 입력하세요",
     "locationRequired": "게시물 작성에는 위치 정보가 필요합니다",
-    "loginRequired": "게시물 작성을 위해 로그인하세요"
+    "loginRequired": "게시물 작성을 위해 로그인하세요",
+    "detailTitle": "뉴스 상세",
+    "notFound": "뉴스를 찾을 수 없습니다",
+    "relatedLocalItems": "주변 관련 항목",
+    "crossLinkDescription": "마켓, 스토어, 로컬 정보 링크가 여기에 표시됩니다.",
+    "commentsComingSoon": "댓글 기능이 곧 제공됩니다",
+    "postedAt": "게시일",
+    "location": "위치",
+    "signal": "신호",
+    "scope": "범위"
   }
 }

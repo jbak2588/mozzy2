@@ -137,7 +137,7 @@
 - [x] PostsProvider
 - [x] LocalNewsListScreen
 - [x] CreatePostScreen
-- [ ] LocalNewsDetailScreen
+- [x] LocalNewsDetailScreen
 - [ ] Image upload
 - [ ] Comments
 

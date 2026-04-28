@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:mozzy/mozzy_ii/domains/news/screens/local_news_list_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/news/providers/posts_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/news/repositories/post_repository.dart';

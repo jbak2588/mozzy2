@@ -89,6 +89,15 @@
     "titleRequired": "Judul wajib diisi",
     "contentRequired": "Isi berita wajib diisi",
     "locationRequired": "Lokasi diperlukan untuk membuat berita",
-    "loginRequired": "Silakan masuk untuk membuat berita"
+    "loginRequired": "Silakan masuk untuk membuat berita",
+    "detailTitle": "Detail Berita",
+    "notFound": "Berita tidak ditemukan",
+    "relatedLocalItems": "Terkait di sekitar",
+    "crossLinkDescription": "Koneksi ke marketplace, toko, atau info lokal akan tersedia di sini.",
+    "commentsComingSoon": "Komentar akan tersedia segera",
+    "postedAt": "Dipublikasikan",
+    "location": "Lokasi",
+    "signal": "Sinyal",
+    "scope": "Jangkauan"
   }
 }

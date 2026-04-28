@@ -62,3 +62,8 @@ class CreateLocalNewsPostAction {
 final createLocalNewsPostProvider = Provider<CreateLocalNewsPostAction>((ref) {
   return CreateLocalNewsPostAction(ref.read(postRepositoryProvider));
 });
+
+final postByIdProvider = FutureProvider.family.autoDispose<PostModel?, String>((ref, postId) {
+  final repo = ref.read(postRepositoryProvider);
+  return repo.getPostById(postId);
+});

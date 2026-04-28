@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../models/post_model.dart';
 
@@ -57,7 +58,7 @@ class LocalNewsCard extends StatelessWidget {
         ],
       ),
       onTap: () {
-        // TODO: navigate to detail screen
+        context.push('/news/${post.id}');
       },
     );
   }

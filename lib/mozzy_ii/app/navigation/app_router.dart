@@ -11,6 +11,7 @@ import '../../discovery/screens/home_screen.dart';
 import '../../dev/profile_screen.dart';
 import '../../domains/news/screens/local_news_list_screen.dart';
 import '../../domains/news/screens/create_post_screen.dart';
+import '../../domains/news/screens/local_news_detail_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -79,6 +80,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'create',
                     builder: (context, state) => const CreatePostScreen(),
+                  ),
+                  GoRoute(
+                    path: ':postId',
+                    builder: (context, state) {
+                      final postId = state.pathParameters['postId']!;
+                      return LocalNewsDetailScreen(postId: postId);
+                    },
                   ),
                 ],
               ),

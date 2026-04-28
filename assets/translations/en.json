@@ -89,6 +89,15 @@
     "titleRequired": "Title is required",
     "contentRequired": "Content is required",
     "locationRequired": "Location is required to create a post",
-    "loginRequired": "Please log in to create a post"
+    "loginRequired": "Please log in to create a post",
+    "detailTitle": "News Detail",
+    "notFound": "News not found",
+    "relatedLocalItems": "Related around you",
+    "crossLinkDescription": "Connections to marketplace, stores, or local info will be available here.",
+    "commentsComingSoon": "Comments will be available soon",
+    "postedAt": "Posted at",
+    "location": "Location",
+    "signal": "Signal",
+    "scope": "Scope"
   }
 }

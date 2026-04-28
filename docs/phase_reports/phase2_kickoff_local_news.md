@@ -1,11 +1,12 @@
 # Phase 2 Kickoff — Local News
 
 Date: 2026-04-28
-Commit: 20eecc0
+Commit: 62a1220
 
 ## Summary
 - First Feature for Phase 2: Local News (Berita Lokal)
 - Reason: lower external dependencies (no payment/AI/complex uploads), good for validating Firestore CRUD + location-based feed and Shared Contract application.
+ - Progress: P2-U3 LocalNewsListScreen implemented (list UI, category chips, kecamatan-based query, empty/loading/error states). Commit: 62a1220
 
 ## Scope (Initial)
 - PostModel (Freezed) implementing `MozzyPostContract`

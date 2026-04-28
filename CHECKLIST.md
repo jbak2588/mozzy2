@@ -134,6 +134,7 @@
 | P2-U1 | **PostModel** | Freezed·MozzyPostContract 구현·Track1 주소·카테고리(Umum·Info·Event·Darurat·Kuliner·Tips) | dart | Contract 필드 전체 존재 | ☑ |
 | P2-U2 | **PostRepository** | Firestore CRUD / fetchByKecamatan / fetchByCategory / 커서 페이지네이션 | dart·firestore | startAfterDocument 동작 | ☑ |
 | P2-U3 | **PostsProvider / LocalNewsListScreen** | Riverpod provider + ListScreen 구현 (카테고리·로케이션 기반 조회) | dart | 화면 렌더/필터 동작, 빈 상태 UI | ☑ |
+| P2-U5 | **CreatePostScreen** | 작성 화면(카테고리·위치 자동·검증) | dart | 기본 검증 및 저장 로직(이미지 제외) | ☑ |
 - [ ] `PostRepository` (Firestore CRUD + 커서 페이지네이션)
 - [ ] `PostsProvider` Riverpod 3
 - [ ] `LocalNewsListScreen` (카테고리 탭 — 인도네시아화)
@@ -141,6 +142,16 @@
 - [ ] `LocalNewsDetailScreen` + CrossLinkSection
 - [ ] `CreatePostScreen` (이미지 5장, 카테고리, 위치 자동)
 - [ ] 인도네시아 언어 태그 시스템
+
+### 2-A Local News: 상세 체크리스트
+- [x] PostModel
+- [x] PostRepository
+- [x] PostsProvider
+- [x] LocalNewsListScreen
+- [x] CreatePostScreen
+- [ ] LocalNewsDetailScreen
+- [ ] Image upload
+- [ ] Comments
 
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent
 - [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)

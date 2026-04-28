@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../repositories/post_repository.dart';
 import '../models/post_model.dart';
 
@@ -41,3 +40,14 @@ final postsByCategoryAndKecamatanProvider = FutureProvider.family
         category: q.category,
       );
     });
+
+class CreateLocalNewsPostAction {
+  final PostRepository _repo;
+  CreateLocalNewsPostAction(this._repo);
+
+  Future<void> call(PostModel post) => _repo.createPost(post);
+}
+
+final createLocalNewsPostProvider = Provider<CreateLocalNewsPostAction>((ref) {
+  return CreateLocalNewsPostAction(ref.read(postRepositoryProvider));
+});

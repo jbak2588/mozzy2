@@ -78,5 +78,17 @@
     "retry": "다시 시도",
     "trust": "신뢰",
     "readMore": "더보기"
+    ,
+    "titleHint": "제목을 입력하세요",
+    "contentHint": "내용을 입력하세요",
+    "selectCategory": "카테고리 선택",
+    "submit": "제출",
+    "saving": "저장 중...",
+    "createSuccess": "게시물이 생성되었습니다",
+    "createFailed": "게시물 생성에 실패했습니다",
+    "titleRequired": "제목을 입력하세요",
+    "contentRequired": "내용을 입력하세요",
+    "locationRequired": "게시물 작성에는 위치 정보가 필요합니다",
+    "loginRequired": "게시물 작성을 위해 로그인하세요"
   }
 }

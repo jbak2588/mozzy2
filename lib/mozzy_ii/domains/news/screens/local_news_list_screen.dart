@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../models/post_model.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/posts_provider.dart';
 import '../../../geo/providers/location_provider.dart';
 import '../widgets/local_news_card.dart';
@@ -137,11 +137,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('news.createPost'.tr())));
-        },
+        onPressed: () => context.go('/news/create'),
         label: Text('news.createPost'.tr()),
         icon: const Icon(Icons.create),
       ),

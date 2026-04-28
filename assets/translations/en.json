@@ -78,5 +78,17 @@
     "retry": "Retry",
     "trust": "Trust",
     "readMore": "Read"
+    ,
+    "titleHint": "Post title",
+    "contentHint": "Write your post details here",
+    "selectCategory": "Select category",
+    "submit": "Submit",
+    "saving": "Saving...",
+    "createSuccess": "Post created successfully",
+    "createFailed": "Failed to create post",
+    "titleRequired": "Title is required",
+    "contentRequired": "Content is required",
+    "locationRequired": "Location is required to create a post",
+    "loginRequired": "Please log in to create a post"
   }
 }

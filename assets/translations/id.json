@@ -78,5 +78,17 @@
     "retry": "Coba lagi",
     "trust": "Trust",
     "readMore": "Baca"
+    ,
+    "titleHint": "Judul berita",
+    "contentHint": "Tulis isi berita di sini",
+    "selectCategory": "Pilih kategori",
+    "submit": "Kirim",
+    "saving": "Menyimpan...",
+    "createSuccess": "Berita berhasil dibuat",
+    "createFailed": "Gagal membuat berita",
+    "titleRequired": "Judul wajib diisi",
+    "contentRequired": "Isi berita wajib diisi",
+    "locationRequired": "Lokasi diperlukan untuk membuat berita",
+    "loginRequired": "Silakan masuk untuk membuat berita"
   }
 }

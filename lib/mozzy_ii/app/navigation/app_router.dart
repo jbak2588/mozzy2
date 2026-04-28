@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+// unused imports removed
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,8 +8,9 @@ import '../auth/auth_gate.dart';
 import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
 import '../../discovery/screens/home_screen.dart';
-import '../../dev/profile_screen.dart';
+// profile screen not referenced here
 import '../../domains/news/screens/local_news_list_screen.dart';
+import '../../domains/news/screens/create_post_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -102,17 +103,16 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 나머지 Feature 라우트
       GoRoute(
-        path: '/jobs',
-        builder: (context, state) => const DummyScreen(title: 'Lowongan Kerja'),
+        path: '/news',
+        name: 'news',
+        builder: (context, state) => const LocalNewsListScreen(),
+        routes: [
+          GoRoute(
+            path: 'create',
+            builder: (context, state) => const CreatePostScreen(),
+          ),
+        ],
       ),
-      // Dev route (development-only). Keep only `/dev/profile` guarded
-      // with `kDebugMode`. Production builds should not include this route.
-      // TODO: Before production, remove or replace with admin-guard.
-      if (kDebugMode)
-        GoRoute(
-          path: '/dev/profile',
-          builder: (context, state) => const DevProfileScreen(),
-        ),
 
       // Feature placeholder routes — must be available in debug and release
       GoRoute(

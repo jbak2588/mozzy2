@@ -58,4 +58,25 @@
     "trustStatus": "Trust status",
     "devProfile": "Dev Profile"
   }
+  ,
+  "news": {
+    "title": "Local News",
+    "all": "All",
+    "category": {
+      "umum": "General",
+      "info": "Info",
+      "event": "Event",
+      "darurat": "Emergency",
+      "kuliner": "Food",
+      "tips": "Tips"
+    },
+    "currentLocation": "News location",
+    "locationFallback": "Location not available",
+    "emptyTitle": "No local news yet",
+    "emptyDescription": "Be the first to share news around you.",
+    "createPost": "Write News",
+    "retry": "Retry",
+    "trust": "Trust",
+    "readMore": "Read"
+  }
 }

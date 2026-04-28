@@ -78,6 +78,35 @@ class PostRepository {
         .toList();
   }
 
+  Future<List<PostModel>> fetchByKecamatanAndCategory({
+    required String kecamatan,
+    required String category,
+    int limit = 20,
+    DocumentSnapshot? startAfter,
+  }) async {
+    Query query = postsCollection
+        .where('isDeleted', isEqualTo: false)
+        .where('location.idAddress.kecamatan', isEqualTo: kecamatan)
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
+
+    if (category != 'all') {
+      query = query.where('category', isEqualTo: category);
+    }
+
+    if (startAfter != null) query = query.startAfterDocument(startAfter);
+
+    final snap = await query.get();
+    return snap.docs
+        .map(
+          (d) => PostModel.fromJson({
+            ...d.data() as Map<String, dynamic>,
+            'id': d.id,
+          }),
+        )
+        .toList();
+  }
+
   Future<void> updatePost(PostModel post) async {
     final docRef = postsCollection.doc(post.id);
     await docRef.set(post.toJson(), SetOptions(merge: true));

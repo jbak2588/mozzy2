@@ -122,17 +122,18 @@
 ## 🔲 Phase 2 — Core 3 Features MVP (Week 7~10)
 
 ### Phase 2 Kickoff Prerequisites
-- [x] Phase 1 문서 잠금 완료 (docs/phase_reports/phase1_completion_report.md 생성)
-- [x] Phase 1 완료 리포트 생성
-- [x] Dev route `/dev/profile` debug-only 보호 적용
-- [x] Feature placeholder routes 유지(Release 포함) 확인
-- [ ] Phase 2 Local News 모델 설계 시작
-- [ ] Phase 2 Local News Firestore schema 확정
-- [ ] Phase 2 Local News list/detail/create 화면 구현
+### Phase 2 Kickoff Prerequisites
+ - [x] Phase 1 문서 잠금 완료 (docs/phase_reports/phase1_completion_report.md 생성)
+ - [x] Phase 1 완료 리포트 생성
+ - [x] Dev route `/dev/profile` debug-only 보호 적용
+ - [x] Feature placeholder routes 유지(Release 포함) 확인
+ - [x] Phase 2 Local News 모델 설계 시작
+ - [x] Phase 2 Local News Firestore schema 확정
+ - [x] Phase 2 Local News list/detail/create 화면 구현 (진행중)
 
-
-### 2-A. Local News (Berita Lokal) — architect-agent → dart-agent
-- [ ] `PostModel` (MozzyPostContract 구현, Track 1 주소 포함)
+| P2-U1 | **PostModel** | Freezed·MozzyPostContract 구현·Track1 주소·카테고리(Umum·Info·Event·Darurat·Kuliner·Tips) | dart | Contract 필드 전체 존재 | ☑ |
+| P2-U2 | **PostRepository** | Firestore CRUD / fetchByKecamatan / fetchByCategory / 커서 페이지네이션 | dart·firestore | startAfterDocument 동작 | ☑ |
+| P2-U3 | **PostsProvider / LocalNewsListScreen** | Riverpod provider + ListScreen 구현 (카테고리·로케이션 기반 조회) | dart | 화면 렌더/필터 동작, 빈 상태 UI | ☑ |
 - [ ] `PostRepository` (Firestore CRUD + 커서 페이지네이션)
 - [ ] `PostsProvider` Riverpod 3
 - [ ] `LocalNewsListScreen` (카테고리 탭 — 인도네시아화)

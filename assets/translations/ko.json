@@ -58,4 +58,25 @@
     "trustStatus": "신뢰 상태",
     "devProfile": "개발자 프로필"
   }
+  ,
+  "news": {
+    "title": "로컬 뉴스",
+    "all": "전체",
+    "category": {
+      "umum": "일반",
+      "info": "정보",
+      "event": "이벤트",
+      "darurat": "긴급",
+      "kuliner": "맛집",
+      "tips": "팁"
+    },
+    "currentLocation": "뉴스 위치",
+    "locationFallback": "위치가 없습니다",
+    "emptyTitle": "로컬 뉴스가 아직 없습니다",
+    "emptyDescription": "주변 소식을 처음으로 공유해보세요.",
+    "createPost": "뉴스 작성",
+    "retry": "다시 시도",
+    "trust": "신뢰",
+    "readMore": "더보기"
+  }
 }

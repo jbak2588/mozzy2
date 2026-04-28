@@ -18,3 +18,26 @@ final postsByCategoryProvider = FutureProvider.family
       final repo = ref.read(postRepositoryProvider);
       return repo.fetchByCategory(category: category);
     });
+
+/// Query object for list screen provider
+class PostsQuery {
+  final String category;
+  final String? kecamatan;
+  const PostsQuery({required this.category, this.kecamatan});
+}
+
+final postsByCategoryAndKecamatanProvider = FutureProvider.family
+    .autoDispose<List<PostModel>, PostsQuery>((ref, q) async {
+      final repo = ref.read(postRepositoryProvider);
+      final kec = q.kecamatan;
+      if (kec == null) {
+        // if no kecamatan known, fallback to category-only
+        if (q.category == 'all') return [];
+        return repo.fetchByCategory(category: q.category);
+      }
+
+      return repo.fetchByKecamatanAndCategory(
+        kecamatan: kec,
+        category: q.category,
+      );
+    });

@@ -58,4 +58,25 @@
     "trustStatus": "Status kepercayaan",
     "devProfile": "Dev Profile"
   }
+  ,
+  "news": {
+    "title": "Berita Lokal",
+    "all": "Semua",
+    "category": {
+      "umum": "Umum",
+      "info": "Info",
+      "event": "Event",
+      "darurat": "Darurat",
+      "kuliner": "Kuliner",
+      "tips": "Tips"
+    },
+    "currentLocation": "Lokasi berita",
+    "locationFallback": "Lokasi belum tersedia",
+    "emptyTitle": "Belum ada berita lokal",
+    "emptyDescription": "Jadilah yang pertama membagikan kabar di sekitar kamu.",
+    "createPost": "Tulis Berita",
+    "retry": "Coba lagi",
+    "trust": "Trust",
+    "readMore": "Baca"
+  }
 }

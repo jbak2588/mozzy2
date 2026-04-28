@@ -9,6 +9,7 @@ import '../../geo/screens/location_permission_screen.dart';
 import '../../geo/screens/shared_map_browser_screen.dart';
 import '../../discovery/screens/home_screen.dart';
 import '../../dev/profile_screen.dart';
+import '../../domains/news/screens/local_news_list_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -72,8 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/news',
-                builder: (context, state) =>
-                    const DummyScreen(title: 'Berita Lokal (News)'),
+                builder: (context, state) => const LocalNewsListScreen(),
               ),
             ],
           ),

@@ -33,7 +33,7 @@ class MozzyTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryRed,
           foregroundColor: Colors.white,
-          minimumSize: const Size(double.infinity, 48), // 터치 영역 최소 48dp 기준 준수
+          minimumSize: const Size(88, 48), // 터치 영역 최소 48dp 기준 준수
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),

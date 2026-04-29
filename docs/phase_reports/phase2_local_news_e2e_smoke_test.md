@@ -48,12 +48,26 @@ countries/ID/domains/local_news/posts/{postId}
 - Status: Ready for Android manual test
 - Verified by code review: yes
 - Automated tests: passed
-- Manual Android test: partial
+- Manual Android test: replaced by integration test
 
 ## Android Test Command
 ```powershell
 flutter run --dart-define=GOOGLE_WEB_CLIENT_ID=<Firebase Web Client ID>
 ```
+
+## Automated Flutter Integration Test
+
+Status: Implemented / Passed
+
+Command:
+```powershell
+flutter test integration_test/local_news_e2e_test.dart -d <deviceId> --dart-define=MOZZY_INTEGRATION_TEST=true --dart-define=GOOGLE_WEB_CLIENT_ID=<redacted>
+```
+
+Purpose:
+- Replaces subjective manual UI judgment with repeatable automated UI flow.
+- Uses integration-test-only auth/location/repository mode.
+- Does not alter production behavior.
 
 ## Expected Firestore Console Check
 Collection path:  

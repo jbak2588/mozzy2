@@ -15,6 +15,7 @@ class LocalNewsDetailScreen extends ConsumerWidget {
     final postAsync = ref.watch(postByIdProvider(postId));
 
     return Scaffold(
+      key: const Key('localNewsDetailScreen'),
       appBar: AppBar(
         title: const Text('news.detailTitle').tr(),
       ),

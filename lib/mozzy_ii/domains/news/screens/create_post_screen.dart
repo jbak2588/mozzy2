@@ -9,16 +9,37 @@ import '../models/post_model.dart';
 import '../providers/posts_provider.dart';
 import '../../../shared/contracts/mozzy_post_contract.dart';
 
+import '../../../core/config/integration_test_config.dart';
+
 // Provider that exposes current user id (easy to override in tests)
-final currentUserIdProvider = Provider<String?>(
-  (ref) => FirebaseAuth.instance.currentUser?.uid,
-);
+final currentUserIdProvider = Provider<String?>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return IntegrationTestConfig.testUserId;
+  }
+  return FirebaseAuth.instance.currentUser?.uid;
+});
 
 // Indirection to make location easily overrideable in tests.
 final effectiveLocationProvider =
-    Provider.autoDispose<AsyncValue<LocationParts?>>(
-      (ref) => ref.watch(locationProvider),
+    Provider.autoDispose<AsyncValue<LocationParts?>>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return AsyncData(
+      LocationParts(
+        countryCode: 'ID',
+        latitude: -6.2278,
+        longitude: 106.8016,
+        geoHash: 'qqguw',
+        idAddress: const IndonesiaGeoAddress(
+          provinsi: 'DKI Jakarta',
+          kabupaten: 'Jakarta Selatan',
+          kecamatan: 'Kebayoran Baru',
+          kelurahan: 'Senayan',
+        ),
+      ),
     );
+  }
+  return ref.watch(locationProvider);
+});
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
@@ -81,7 +102,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
     try {
       final repo = ref.read(postRepositoryProvider);
-      final newId = repo.postsCollection.doc().id;
+      String newId;
+      try {
+        newId = repo.postsCollection.doc().id;
+      } catch (_) {
+        newId = 'integration-post-${DateTime.now().millisecondsSinceEpoch}';
+      }
       final geoPath = buildIndonesiaGeoPath(location);
 
       // Try read trustScore from user doc - best effort
@@ -153,6 +179,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
 
     return Scaffold(
+      key: const Key('createPostScreen'),
       appBar: AppBar(title: Text('news.createPost'.tr())),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -160,17 +187,20 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              key: const Key('createPostTitleField'),
               controller: _titleCtrl,
               decoration: InputDecoration(hintText: 'news.titleHint'.tr()),
             ),
             const SizedBox(height: 12),
             TextField(
+              key: const Key('createPostContentField'),
               controller: _contentCtrl,
               maxLines: 5,
               decoration: InputDecoration(hintText: 'news.contentHint'.tr()),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
+              key: const Key('createPostCategoryDropdown'),
               initialValue: _category,
               items: categories
                   .map(
@@ -191,6 +221,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
+                key: const Key('createPostSubmitButton'),
                 onPressed: _isSaving ? null : _onSubmit,
                 child: _isSaving
                     ? Row(

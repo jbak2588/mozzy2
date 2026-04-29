@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mozzy/mozzy_ii/app/auth/auth_service.dart';
 import 'package:mozzy/mozzy_ii/app/auth/auth_bootstrap.dart';
+import 'package:mozzy/mozzy_ii/core/config/integration_test_config.dart';
 // keep imports minimal; bootstrap provider handles repo/location work
 
 class AuthGate extends ConsumerWidget {
@@ -11,6 +12,16 @@ class AuthGate extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (IntegrationTestConfig.enabled) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        try {
+          context.go('/home');
+        } catch (_) {}
+      });
+      return const Scaffold(body: SizedBox.shrink());
+    }
+
     final authState = ref.watch(authStateProvider);
 
     return authState.when(

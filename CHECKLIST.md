@@ -141,6 +141,8 @@
 - [x] CrossLinkSection foundation
 - [x] Local News E2E smoke test checklist
 - [x] Local News E2E smoke readiness verified
+- [x] Local News E2E automated integration test added
+- [x] Local News E2E automated integration test passed on Android emulator/device
 - [ ] Local News E2E smoke manually passed on Android device
   - *Blocker: Pending human physical interaction to verify UI flow (Create -> Detail).*
 - [ ] Manual smoke test on Android device

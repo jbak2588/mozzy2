@@ -1,10 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/config/integration_test_config.dart';
 import '../repositories/post_repository.dart';
+import '../repositories/in_memory_post_repository.dart';
 import '../models/post_model.dart';
 
-final postRepositoryProvider = Provider<PostRepository>(
-  (ref) => PostRepository(),
-);
+final postRepositoryProvider = Provider<PostRepository>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return InMemoryPostRepository();
+  }
+  return PostRepository();
+});
 
 final postsByKecamatanProvider = FutureProvider.family
     .autoDispose<List<PostModel>, String>((ref, kecamatan) async {

@@ -5,11 +5,26 @@ import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/location_parts.dart';
 import '../location/indonesia_location_service.dart';
+import '../../core/config/integration_test_config.dart';
 
 /// 현재 사용자 위치 상태를 관리하는 Riverpod Provider
 class LocationNotifier extends AsyncNotifier<LocationParts?> {
   @override
   Future<LocationParts?> build() async {
+    if (IntegrationTestConfig.enabled) {
+      return LocationParts(
+        countryCode: 'ID',
+        latitude: -6.2278,
+        longitude: 106.8016,
+        geoHash: 'qqguw',
+        idAddress: const IndonesiaGeoAddress(
+          provinsi: 'DKI Jakarta',
+          kabupaten: 'Jakarta Selatan',
+          kecamatan: 'Kebayoran Baru',
+          kelurahan: 'Senayan',
+        ),
+      );
+    }
     // 초기 로드 시 위치 권한 확인 및 현재 위치 가져오기
     return _fetchCurrentLocation();
   }

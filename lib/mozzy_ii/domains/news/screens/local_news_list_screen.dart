@@ -43,6 +43,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
     );
 
     return Scaffold(
+      key: const Key('localNewsListScreen'),
       appBar: AppBar(title: Text('news.title'.tr())),
       body: Column(
         children: [
@@ -137,6 +138,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        key: const Key('localNewsCreateFab'),
         onPressed: () async {
           await context.push('/news/create');
           ref.invalidate(postsByCategoryAndKecamatanProvider);

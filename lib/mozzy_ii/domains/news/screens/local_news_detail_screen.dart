@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:easy_localization/easy_localization.dart';
+
 import '../providers/posts_provider.dart';
-import 'package:mozzy/mozzy_ii/domains/news/widgets/cross_link_section.dart';
+import '../widgets/cross_link_section.dart';
 
 class LocalNewsDetailScreen extends ConsumerWidget {
   final String postId;
@@ -103,7 +104,7 @@ class LocalNewsDetailScreen extends ConsumerWidget {
               Text(err.toString()),
               ElevatedButton(
                 onPressed: () => ref.refresh(postByIdProvider(postId)),
-                child: const Text('action.retry').tr(),
+                child: Text('news.retry'.tr()),
               ),
             ],
           ),

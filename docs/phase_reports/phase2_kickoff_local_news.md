@@ -38,6 +38,14 @@ Latest Docs Commit: 29b46c46557654a62fddfcbf93abf838e99e9e72
   - detail screen widget tests
 - Commit: 5a0cfc0c7ba95b5e38e38e5a51327d9472d91af0
 
+### P2-U4 Hotfix — DetailScreen Compile Verification
+- Status: Completed
+- Fix:
+  - Removed unnecessary intl import (handled by easy_localization)
+  - Fixed retry button i18n key to `news.retry`
+  - Re-ran analyze/test successfully
+- Commit: 6d9cc2b6185d519512073aa005565db818955ce8
+
 ## Scope (Initial)
 - PostModel (Freezed) implementing `MozzyPostContract`
 - PostRepository (Firestore CRUD, cursor pagination, fetchByKecamatan)

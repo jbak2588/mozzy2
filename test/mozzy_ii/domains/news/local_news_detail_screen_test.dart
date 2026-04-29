@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mozzy/mozzy_ii/domains/news/screens/local_news_detail_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/news/providers/posts_provider.dart';
+import 'package:mozzy/mozzy_ii/domains/news/providers/comments_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/news/models/post_model.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/domains/news/widgets/cross_link_section.dart';
@@ -35,6 +36,8 @@ void main() {
       ProviderScope(
         overrides: [
           postByIdProvider('post-1').overrideWith((ref) => testPost),
+          currentCommentUserIdProvider.overrideWith((ref) => 'u1'),
+          visibleTopLevelCommentsProvider(const VisibleCommentsQuery(postId: 'post-1', currentUserId: 'u1')).overrideWith((ref) => []),
         ],
         child: const MaterialApp(
           home: LocalNewsDetailScreen(postId: 'post-1'),

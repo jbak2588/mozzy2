@@ -10,7 +10,7 @@ void main() {
       repo = InMemoryCommentRepository();
     });
 
-    test('createComment and fetchComments work correctly', () async {
+    test('createComment and fetchTopLevelComments work correctly', () async {
       final comment = CommentModel(
         id: 'c1',
         postId: 'p1',
@@ -20,13 +20,13 @@ void main() {
       );
 
       await repo.createComment(comment);
-      final comments = await repo.fetchComments('p1');
+      final comments = await repo.fetchTopLevelComments('p1');
 
       expect(comments.length, 1);
       expect(comments.first.id, 'c1');
     });
 
-    test('softDeleteComment hides comment from fetchComments', () async {
+    test('softDeleteComment hides comment from fetchTopLevelComments', () async {
       final comment = CommentModel(
         id: 'c1',
         postId: 'p1',
@@ -38,7 +38,7 @@ void main() {
       await repo.createComment(comment);
       await repo.softDeleteComment(postId: 'p1', commentId: 'c1');
 
-      final comments = await repo.fetchComments('p1');
+      final comments = await repo.fetchTopLevelComments('p1');
       expect(comments.isEmpty, true);
     });
 
@@ -107,6 +107,61 @@ void main() {
 
       final replies = await repo.fetchReplies(postId: 'p1', parentCommentId: 'c1');
       expect(replies.isEmpty, true);
+    });
+
+    test('fetchVisibleTopLevelComments respects secret visibility', () async {
+      final publicComment = CommentModel(
+        id: 'pub1',
+        postId: 'p1',
+        userId: 'u1',
+        content: 'public',
+        createdAt: DateTime.now().toUtc(),
+        isSecret: false,
+      );
+      final secretComment = CommentModel(
+        id: 'sec1',
+        postId: 'p1',
+        userId: 'u1',
+        content: 'secret',
+        createdAt: DateTime.now().toUtc(),
+        isSecret: true,
+        visibleToUserIds: ['u1', 'owner1'],
+      );
+
+      await repo.createComment(publicComment);
+      await repo.createComment(secretComment);
+
+      // Authorized user u1
+      final visibleToU1 = await repo.fetchVisibleTopLevelComments(postId: 'p1', currentUserId: 'u1');
+      expect(visibleToU1.length, 2);
+
+      // Unauthorized user u2
+      final visibleToU2 = await repo.fetchVisibleTopLevelComments(postId: 'p1', currentUserId: 'u2');
+      expect(visibleToU2.length, 1);
+      expect(visibleToU2.first.id, 'pub1');
+    });
+
+    test('fetchVisibleReplies respects secret visibility', () async {
+      final secretReply = CommentModel(
+        id: 'r1',
+        postId: 'p1',
+        userId: 'u2',
+        content: 'secret reply',
+        createdAt: DateTime.now().toUtc(),
+        parentCommentId: 'c1',
+        isSecret: true,
+        visibleToUserIds: ['u2', 'owner1', 'u1'], // u1 is parent owner
+      );
+
+      await repo.createComment(secretReply);
+
+      // Authorized user u1
+      final visibleToU1 = await repo.fetchVisibleReplies(postId: 'p1', parentCommentId: 'c1', currentUserId: 'u1');
+      expect(visibleToU1.length, 1);
+
+      // Unauthorized user u3
+      final visibleToU3 = await repo.fetchVisibleReplies(postId: 'p1', parentCommentId: 'c1', currentUserId: 'u3');
+      expect(visibleToU3.length, 0);
     });
   });
 }

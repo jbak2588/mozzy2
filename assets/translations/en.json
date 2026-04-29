@@ -104,6 +104,10 @@
     "reply": "Reply",
     "replyingTo": "Replying",
     "cancelReply": "Cancel",
-    "replyRequired": "Please write a reply"
+    "replyRequired": "Please write a reply",
+    "secret": "Secret",
+    "secretComment": "Secret Comment",
+    "publicComment": "Public Comment",
+    "visibleOnlyToAllowedUsers": "Visible only to you and recipient"
   }
 }

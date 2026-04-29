@@ -119,7 +119,7 @@ void main() {
 
     // 21. Tap reply button
     final replyButtonFinder = find.byWidgetPredicate(
-      (widget) => widget.key != null && widget.key is ValueKey && (widget.key as ValueKey<String>).value.startsWith('commentReplyButton_'),
+      (widget) => widget.key != null && widget.key is ValueKey && (widget.key as ValueKey).value.toString().startsWith('commentReplyButton_'),
     ).first;
     await tester.ensureVisible(replyButtonFinder);
     await tester.tap(replyButtonFinder);

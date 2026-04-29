@@ -104,6 +104,10 @@
     "reply": "Balas",
     "replyingTo": "Membalas",
     "cancelReply": "Batal",
-    "replyRequired": "Tolong tulis balasan"
+    "replyRequired": "Tolong tulis balasan",
+    "secret": "Rahasia",
+    "secretComment": "Komentar Rahasia",
+    "publicComment": "Komentar Publik",
+    "visibleOnlyToAllowedUsers": "Hanya terlihat oleh Anda dan penerima"
   }
 }

@@ -25,8 +25,44 @@ class InMemoryCommentRepository implements CommentRepository {
   }
 
   @override
-  Future<List<CommentModel>> fetchComments(String postId, {int limit = 50}) async {
-    return fetchTopLevelComments(postId, limit: limit);
+  Future<List<CommentModel>> fetchVisibleTopLevelComments({
+    required String postId,
+    required String currentUserId,
+    int limit = 50,
+  }) async {
+    return _fetchVisible(postId, currentUserId, null, limit);
+  }
+
+  @override
+  Future<List<CommentModel>> fetchVisibleReplies({
+    required String postId,
+    required String parentCommentId,
+    required String currentUserId,
+    int limit = 50,
+  }) async {
+    return _fetchVisible(postId, currentUserId, parentCommentId, limit);
+  }
+
+  List<CommentModel> _fetchVisible(String postId, String currentUserId, String? parentCommentId, int limit) {
+    final comments = _commentsByPost[postId] ?? [];
+    
+    final filtered = comments.where((c) {
+      if (c.isDeleted) return false;
+      if (parentCommentId == null) {
+        if (c.parentCommentId != null && c.parentCommentId!.isNotEmpty) return false;
+      } else {
+        if (c.parentCommentId != parentCommentId) return false;
+      }
+      
+      if (c.isSecret) {
+        return c.visibleToUserIds.contains(currentUserId);
+      }
+      return true;
+    }).toList();
+    
+    filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    
+    return filtered.take(limit).toList();
   }
 
   @override

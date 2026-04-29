@@ -104,6 +104,10 @@
     "reply": "답글",
     "replyingTo": "답글 작성 중",
     "cancelReply": "취소",
-    "replyRequired": "답글을 작성해주세요"
-  }
-}
+    "replyRequired": "답글을 작성해주세요",
+    "secret": "비밀",
+    "secretComment": "비밀 댓글",
+    "publicComment": "공개 댓글",
+    "visibleOnlyToAllowedUsers": "작성자와 게시글 주인에게만 보입니다"
+    }
+    }

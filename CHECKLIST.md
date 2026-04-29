@@ -149,8 +149,8 @@
 - [ ] Image upload
 - [x] Comments
 - [x] Reply support foundation
-- [ ] Secret comments / replies
-- [x] Secret comments / replies secure spec
+- [x] Secret comments / replies
+- [x] Secret comments visibility and rules
 - [ ] AI moderation
 
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent

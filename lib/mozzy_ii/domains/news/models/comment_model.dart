@@ -58,6 +58,10 @@ abstract class CommentModel with _$CommentModel {
     @Default(0) int reportCount,
     @Default(0.3) double trustScore,
     String? parentCommentId,
+    @Default(false) bool isSecret,
+    @Default('') String postOwnerId,
+    String? parentCommentOwnerId,
+    @Default([]) List<String> visibleToUserIds,
   }) = _CommentModel;
 
   bool get isReply => parentCommentId != null && parentCommentId!.isNotEmpty;

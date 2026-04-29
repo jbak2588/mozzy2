@@ -20,6 +20,14 @@ _CommentModel _$CommentModelFromJson(Map<String, dynamic> json) =>
       reportCount: (json['reportCount'] as num?)?.toInt() ?? 0,
       trustScore: (json['trustScore'] as num?)?.toDouble() ?? 0.3,
       parentCommentId: json['parentCommentId'] as String?,
+      isSecret: json['isSecret'] as bool? ?? false,
+      postOwnerId: json['postOwnerId'] as String? ?? '',
+      parentCommentOwnerId: json['parentCommentOwnerId'] as String?,
+      visibleToUserIds:
+          (json['visibleToUserIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$CommentModelToJson(
@@ -35,4 +43,8 @@ Map<String, dynamic> _$CommentModelToJson(
   'reportCount': instance.reportCount,
   'trustScore': instance.trustScore,
   'parentCommentId': instance.parentCommentId,
+  'isSecret': instance.isSecret,
+  'postOwnerId': instance.postOwnerId,
+  'parentCommentOwnerId': instance.parentCommentOwnerId,
+  'visibleToUserIds': instance.visibleToUserIds,
 };

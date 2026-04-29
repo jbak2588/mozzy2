@@ -87,7 +87,7 @@ class LocalNewsDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 const CrossLinkSection(),
                 const SizedBox(height: 24),
-                CommentsSection(postId: post.id),
+                CommentsSection(postId: post.id, postOwnerId: post.userId),
                 const SizedBox(height: 40),
               ],
             ),

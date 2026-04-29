@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CommentModel {
 
- String get id; String get postId; String get userId; String get content;@SafeDateTimeConverter() DateTime get createdAt;@OptionalSafeDateTimeConverter() DateTime? get updatedAt; bool get isDeleted; int get reportCount; double get trustScore; String? get parentCommentId;
+ String get id; String get postId; String get userId; String get content;@SafeDateTimeConverter() DateTime get createdAt;@OptionalSafeDateTimeConverter() DateTime? get updatedAt; bool get isDeleted; int get reportCount; double get trustScore; String? get parentCommentId; bool get isSecret; String get postOwnerId; String? get parentCommentOwnerId; List<String> get visibleToUserIds;
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CommentModelCopyWith<CommentModel> get copyWith => _$CommentModelCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.reportCount, reportCount) || other.reportCount == reportCount)&&(identical(other.trustScore, trustScore) || other.trustScore == trustScore)&&(identical(other.parentCommentId, parentCommentId) || other.parentCommentId == parentCommentId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.reportCount, reportCount) || other.reportCount == reportCount)&&(identical(other.trustScore, trustScore) || other.trustScore == trustScore)&&(identical(other.parentCommentId, parentCommentId) || other.parentCommentId == parentCommentId)&&(identical(other.isSecret, isSecret) || other.isSecret == isSecret)&&(identical(other.postOwnerId, postOwnerId) || other.postOwnerId == postOwnerId)&&(identical(other.parentCommentOwnerId, parentCommentOwnerId) || other.parentCommentOwnerId == parentCommentOwnerId)&&const DeepCollectionEquality().equals(other.visibleToUserIds, visibleToUserIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,postId,userId,content,createdAt,updatedAt,isDeleted,reportCount,trustScore,parentCommentId);
+int get hashCode => Object.hash(runtimeType,id,postId,userId,content,createdAt,updatedAt,isDeleted,reportCount,trustScore,parentCommentId,isSecret,postOwnerId,parentCommentOwnerId,const DeepCollectionEquality().hash(visibleToUserIds));
 
 @override
 String toString() {
-  return 'CommentModel(id: $id, postId: $postId, userId: $userId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, reportCount: $reportCount, trustScore: $trustScore, parentCommentId: $parentCommentId)';
+  return 'CommentModel(id: $id, postId: $postId, userId: $userId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, reportCount: $reportCount, trustScore: $trustScore, parentCommentId: $parentCommentId, isSecret: $isSecret, postOwnerId: $postOwnerId, parentCommentOwnerId: $parentCommentOwnerId, visibleToUserIds: $visibleToUserIds)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CommentModelCopyWith<$Res>  {
   factory $CommentModelCopyWith(CommentModel value, $Res Function(CommentModel) _then) = _$CommentModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String postId, String userId, String content,@SafeDateTimeConverter() DateTime createdAt,@OptionalSafeDateTimeConverter() DateTime? updatedAt, bool isDeleted, int reportCount, double trustScore, String? parentCommentId
+ String id, String postId, String userId, String content,@SafeDateTimeConverter() DateTime createdAt,@OptionalSafeDateTimeConverter() DateTime? updatedAt, bool isDeleted, int reportCount, double trustScore, String? parentCommentId, bool isSecret, String postOwnerId, String? parentCommentOwnerId, List<String> visibleToUserIds
 });
 
 
@@ -65,7 +65,7 @@ class _$CommentModelCopyWithImpl<$Res>
 
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? postId = null,Object? userId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = freezed,Object? isDeleted = null,Object? reportCount = null,Object? trustScore = null,Object? parentCommentId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? postId = null,Object? userId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = freezed,Object? isDeleted = null,Object? reportCount = null,Object? trustScore = null,Object? parentCommentId = freezed,Object? isSecret = null,Object? postOwnerId = null,Object? parentCommentOwnerId = freezed,Object? visibleToUserIds = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,postId: null == postId ? _self.postId : postId // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,11 @@ as DateTime?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignor
 as bool,reportCount: null == reportCount ? _self.reportCount : reportCount // ignore: cast_nullable_to_non_nullable
 as int,trustScore: null == trustScore ? _self.trustScore : trustScore // ignore: cast_nullable_to_non_nullable
 as double,parentCommentId: freezed == parentCommentId ? _self.parentCommentId : parentCommentId // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isSecret: null == isSecret ? _self.isSecret : isSecret // ignore: cast_nullable_to_non_nullable
+as bool,postOwnerId: null == postOwnerId ? _self.postOwnerId : postOwnerId // ignore: cast_nullable_to_non_nullable
+as String,parentCommentOwnerId: freezed == parentCommentOwnerId ? _self.parentCommentOwnerId : parentCommentOwnerId // ignore: cast_nullable_to_non_nullable
+as String?,visibleToUserIds: null == visibleToUserIds ? _self.visibleToUserIds : visibleToUserIds // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
@@ -162,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String postId,  String userId,  String content, @SafeDateTimeConverter()  DateTime createdAt, @OptionalSafeDateTimeConverter()  DateTime? updatedAt,  bool isDeleted,  int reportCount,  double trustScore,  String? parentCommentId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String postId,  String userId,  String content, @SafeDateTimeConverter()  DateTime createdAt, @OptionalSafeDateTimeConverter()  DateTime? updatedAt,  bool isDeleted,  int reportCount,  double trustScore,  String? parentCommentId,  bool isSecret,  String postOwnerId,  String? parentCommentOwnerId,  List<String> visibleToUserIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommentModel() when $default != null:
-return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.reportCount,_that.trustScore,_that.parentCommentId);case _:
+return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.reportCount,_that.trustScore,_that.parentCommentId,_that.isSecret,_that.postOwnerId,_that.parentCommentOwnerId,_that.visibleToUserIds);case _:
   return orElse();
 
 }
@@ -183,10 +187,10 @@ return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String postId,  String userId,  String content, @SafeDateTimeConverter()  DateTime createdAt, @OptionalSafeDateTimeConverter()  DateTime? updatedAt,  bool isDeleted,  int reportCount,  double trustScore,  String? parentCommentId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String postId,  String userId,  String content, @SafeDateTimeConverter()  DateTime createdAt, @OptionalSafeDateTimeConverter()  DateTime? updatedAt,  bool isDeleted,  int reportCount,  double trustScore,  String? parentCommentId,  bool isSecret,  String postOwnerId,  String? parentCommentOwnerId,  List<String> visibleToUserIds)  $default,) {final _that = this;
 switch (_that) {
 case _CommentModel():
-return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.reportCount,_that.trustScore,_that.parentCommentId);case _:
+return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.reportCount,_that.trustScore,_that.parentCommentId,_that.isSecret,_that.postOwnerId,_that.parentCommentOwnerId,_that.visibleToUserIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +207,10 @@ return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String postId,  String userId,  String content, @SafeDateTimeConverter()  DateTime createdAt, @OptionalSafeDateTimeConverter()  DateTime? updatedAt,  bool isDeleted,  int reportCount,  double trustScore,  String? parentCommentId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String postId,  String userId,  String content, @SafeDateTimeConverter()  DateTime createdAt, @OptionalSafeDateTimeConverter()  DateTime? updatedAt,  bool isDeleted,  int reportCount,  double trustScore,  String? parentCommentId,  bool isSecret,  String postOwnerId,  String? parentCommentOwnerId,  List<String> visibleToUserIds)?  $default,) {final _that = this;
 switch (_that) {
 case _CommentModel() when $default != null:
-return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.reportCount,_that.trustScore,_that.parentCommentId);case _:
+return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.reportCount,_that.trustScore,_that.parentCommentId,_that.isSecret,_that.postOwnerId,_that.parentCommentOwnerId,_that.visibleToUserIds);case _:
   return null;
 
 }
@@ -218,7 +222,7 @@ return $default(_that.id,_that.postId,_that.userId,_that.content,_that.createdAt
 @JsonSerializable()
 
 class _CommentModel extends CommentModel {
-  const _CommentModel({required this.id, required this.postId, required this.userId, required this.content, @SafeDateTimeConverter() required this.createdAt, @OptionalSafeDateTimeConverter() this.updatedAt, this.isDeleted = false, this.reportCount = 0, this.trustScore = 0.3, this.parentCommentId}): super._();
+  const _CommentModel({required this.id, required this.postId, required this.userId, required this.content, @SafeDateTimeConverter() required this.createdAt, @OptionalSafeDateTimeConverter() this.updatedAt, this.isDeleted = false, this.reportCount = 0, this.trustScore = 0.3, this.parentCommentId, this.isSecret = false, this.postOwnerId = '', this.parentCommentOwnerId, final  List<String> visibleToUserIds = const []}): _visibleToUserIds = visibleToUserIds,super._();
   factory _CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
 
 @override final  String id;
@@ -231,6 +235,16 @@ class _CommentModel extends CommentModel {
 @override@JsonKey() final  int reportCount;
 @override@JsonKey() final  double trustScore;
 @override final  String? parentCommentId;
+@override@JsonKey() final  bool isSecret;
+@override@JsonKey() final  String postOwnerId;
+@override final  String? parentCommentOwnerId;
+ final  List<String> _visibleToUserIds;
+@override@JsonKey() List<String> get visibleToUserIds {
+  if (_visibleToUserIds is EqualUnmodifiableListView) return _visibleToUserIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_visibleToUserIds);
+}
+
 
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +259,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.reportCount, reportCount) || other.reportCount == reportCount)&&(identical(other.trustScore, trustScore) || other.trustScore == trustScore)&&(identical(other.parentCommentId, parentCommentId) || other.parentCommentId == parentCommentId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.postId, postId) || other.postId == postId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.content, content) || other.content == content)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.reportCount, reportCount) || other.reportCount == reportCount)&&(identical(other.trustScore, trustScore) || other.trustScore == trustScore)&&(identical(other.parentCommentId, parentCommentId) || other.parentCommentId == parentCommentId)&&(identical(other.isSecret, isSecret) || other.isSecret == isSecret)&&(identical(other.postOwnerId, postOwnerId) || other.postOwnerId == postOwnerId)&&(identical(other.parentCommentOwnerId, parentCommentOwnerId) || other.parentCommentOwnerId == parentCommentOwnerId)&&const DeepCollectionEquality().equals(other._visibleToUserIds, _visibleToUserIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,postId,userId,content,createdAt,updatedAt,isDeleted,reportCount,trustScore,parentCommentId);
+int get hashCode => Object.hash(runtimeType,id,postId,userId,content,createdAt,updatedAt,isDeleted,reportCount,trustScore,parentCommentId,isSecret,postOwnerId,parentCommentOwnerId,const DeepCollectionEquality().hash(_visibleToUserIds));
 
 @override
 String toString() {
-  return 'CommentModel(id: $id, postId: $postId, userId: $userId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, reportCount: $reportCount, trustScore: $trustScore, parentCommentId: $parentCommentId)';
+  return 'CommentModel(id: $id, postId: $postId, userId: $userId, content: $content, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, reportCount: $reportCount, trustScore: $trustScore, parentCommentId: $parentCommentId, isSecret: $isSecret, postOwnerId: $postOwnerId, parentCommentOwnerId: $parentCommentOwnerId, visibleToUserIds: $visibleToUserIds)';
 }
 
 
@@ -265,7 +279,7 @@ abstract mixin class _$CommentModelCopyWith<$Res> implements $CommentModelCopyWi
   factory _$CommentModelCopyWith(_CommentModel value, $Res Function(_CommentModel) _then) = __$CommentModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String postId, String userId, String content,@SafeDateTimeConverter() DateTime createdAt,@OptionalSafeDateTimeConverter() DateTime? updatedAt, bool isDeleted, int reportCount, double trustScore, String? parentCommentId
+ String id, String postId, String userId, String content,@SafeDateTimeConverter() DateTime createdAt,@OptionalSafeDateTimeConverter() DateTime? updatedAt, bool isDeleted, int reportCount, double trustScore, String? parentCommentId, bool isSecret, String postOwnerId, String? parentCommentOwnerId, List<String> visibleToUserIds
 });
 
 
@@ -282,7 +296,7 @@ class __$CommentModelCopyWithImpl<$Res>
 
 /// Create a copy of CommentModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? postId = null,Object? userId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = freezed,Object? isDeleted = null,Object? reportCount = null,Object? trustScore = null,Object? parentCommentId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? postId = null,Object? userId = null,Object? content = null,Object? createdAt = null,Object? updatedAt = freezed,Object? isDeleted = null,Object? reportCount = null,Object? trustScore = null,Object? parentCommentId = freezed,Object? isSecret = null,Object? postOwnerId = null,Object? parentCommentOwnerId = freezed,Object? visibleToUserIds = null,}) {
   return _then(_CommentModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,postId: null == postId ? _self.postId : postId // ignore: cast_nullable_to_non_nullable
@@ -294,7 +308,11 @@ as DateTime?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignor
 as bool,reportCount: null == reportCount ? _self.reportCount : reportCount // ignore: cast_nullable_to_non_nullable
 as int,trustScore: null == trustScore ? _self.trustScore : trustScore // ignore: cast_nullable_to_non_nullable
 as double,parentCommentId: freezed == parentCommentId ? _self.parentCommentId : parentCommentId // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isSecret: null == isSecret ? _self.isSecret : isSecret // ignore: cast_nullable_to_non_nullable
+as bool,postOwnerId: null == postOwnerId ? _self.postOwnerId : postOwnerId // ignore: cast_nullable_to_non_nullable
+as String,parentCommentOwnerId: freezed == parentCommentOwnerId ? _self.parentCommentOwnerId : parentCommentOwnerId // ignore: cast_nullable_to_non_nullable
+as String?,visibleToUserIds: null == visibleToUserIds ? _self._visibleToUserIds : visibleToUserIds // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 

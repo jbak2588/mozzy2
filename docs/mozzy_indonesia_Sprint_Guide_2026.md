@@ -121,7 +121,8 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | P2-B1 | **Marketplace Foundation** | ProductModel + Repository + InMemory + Providers | dart | Tests passed | ☑ |
 | P2-U8 | **ProductModel** | Freezed·isAiVerified·IDR 가격·거래방식(COD/Pengiriman)·MozzyPostContract | dart | AIVerification 직렬화 | □ |
 | P2-U9 | **MarketplaceRepository** | GeoHash 반경 쿼리 / fetchNearby(kecamatan) / 커서 페이지 | dart·firestore | 5km 반경 쿼리 동작 | □ |
-| P2-U10 | **MarketplaceListScreen** | 그리드/리스트 전환 / 필터바 (카테고리·가격·거래방식) / 지도 연동 | dart | 그리드 전환 확인 | □ |
+| P2-B2 | **MarketplaceListScreen** | 그리드/리스트 전환 / 필터바 (카테고리·가격·거래방식) / 지도 연동 | dart | 그리드 전환 확인 | ☑ |
+
 | P2-U11 | **ProductDetailScreen** | AI 검수 배지 / 가격 IDR 포맷 / '찜하기' / CrossLinkSection / Chat 진입 | dart | 상세 화면 렌더링 | □ |
 | P2-U12 | **CreateProductScreen** | 이미지 5장·WebP / IDR 입력 / 카테고리 / COD·Pengiriman 선택 | dart | 물품 등록 Firestore 저장 | □ |
 | P2-U13 | **MarketplaceAiService** | Gemini3.0 이미지 분석 / 인도네시아어 프롬프트 / RateLimiter 10/분 | ai | AI 검수 결과 JSON 파싱 | □ |

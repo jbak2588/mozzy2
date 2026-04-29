@@ -158,7 +158,7 @@
 - [x] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)
 - [x] `MarketplaceRepository` foundation
 - [x] `InMemoryMarketplaceRepository`
-- [ ] `MarketplaceListScreen` (그리드/리스트 전환)
+- [x] `MarketplaceListScreen` (그리드/리스트 전환)
 - [ ] `ProductDetailScreen` + AI 검수 배지
 - [ ] `CreateProductScreen`
   - [ ] 이미지 업로드 (최대 5장, WebP 압축)

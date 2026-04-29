@@ -109,5 +109,29 @@
     "secretComment": "Komentar Rahasia",
     "publicComment": "Komentar Publik",
     "visibleOnlyToAllowedUsers": "Hanya terlihat oleh Anda dan penerima"
+  },
+  "marketplace": {
+    "title": "Jual Beli",
+    "all": "Semua",
+    "currentLocation": "Lokasi saat ini",
+    "locationUnavailable": "Lokasi belum tersedia",
+    "emptyTitle": "Belum ada barang dijual",
+    "emptyDescription": "Jadilah yang pertama menjual sesuatu di sekitar kamu.",
+    "createProduct": "Jual Barang",
+    "retry": "Coba lagi",
+    "trust": "Trust",
+    "aiVerified": "Terverifikasi AI",
+    "aiStatus": "Status AI",
+    "price": "Harga",
+    "category": {
+      "electronics": "Elektronik",
+      "fashion": "Fashion",
+      "home": "Rumah Tangga",
+      "baby": "Bayi & Anak",
+      "sports": "Olahraga",
+      "vehicles": "Otomotif",
+      "books": "Buku & Hobi",
+      "other": "Lainnya"
+    }
   }
 }

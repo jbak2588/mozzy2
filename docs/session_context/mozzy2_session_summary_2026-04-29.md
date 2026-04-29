@@ -26,6 +26,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - AI moderation: deferred
 - Current Marketplace status:
   - P2-B1 ProductModel + Repository foundation: completed
+  - P2-B2 MarketplaceListScreen foundation: completed
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase
@@ -94,10 +95,10 @@ Key files implemented:
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-B2 MarketplaceListScreen foundation
+P2-B3 ProductDetailScreen foundation
 
 Reason:
-Marketplace foundation (Model/Repository/Providers) is now locked.
+Marketplace list foundation is now locked.
 
 Keep warning:
 Do not start payment, Xendit, chat, escrow, or AI verification API yet.

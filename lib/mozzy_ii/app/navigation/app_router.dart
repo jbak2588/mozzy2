@@ -12,6 +12,7 @@ import '../../dev/profile_screen.dart';
 import '../../domains/news/screens/local_news_list_screen.dart';
 import '../../domains/news/screens/create_post_screen.dart';
 import '../../domains/news/screens/local_news_detail_screen.dart';
+import '../../domains/marketplace/screens/marketplace_list_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -65,8 +66,20 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/marketplace',
-                builder: (context, state) =>
-                    const DummyScreen(title: 'Jual Beli (Marketplace)'),
+                builder: (context, state) => const MarketplaceListScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'create',
+                    builder: (context, state) => const DummyScreen(title: 'Create Product'),
+                  ),
+                  GoRoute(
+                    path: ':productId',
+                    builder: (context, state) {
+                      final productId = state.pathParameters['productId']!;
+                      return DummyScreen(title: 'Product Detail: $productId');
+                    },
+                  ),
+                ],
               ),
             ],
           ),

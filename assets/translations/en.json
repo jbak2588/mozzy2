@@ -109,5 +109,29 @@
     "secretComment": "Secret Comment",
     "publicComment": "Public Comment",
     "visibleOnlyToAllowedUsers": "Visible only to you and recipient"
+  },
+  "marketplace": {
+    "title": "Marketplace",
+    "all": "All",
+    "currentLocation": "Current location",
+    "locationUnavailable": "Location not available",
+    "emptyTitle": "No products yet",
+    "emptyDescription": "Be the first to sell something nearby.",
+    "createProduct": "Sell item",
+    "retry": "Retry",
+    "trust": "Trust",
+    "aiVerified": "AI Verified",
+    "aiStatus": "AI Status",
+    "price": "Price",
+    "category": {
+      "electronics": "Electronics",
+      "fashion": "Fashion",
+      "home": "Home",
+      "baby": "Baby",
+      "sports": "Sports",
+      "vehicles": "Vehicles",
+      "books": "Books",
+      "other": "Other"
+    }
   }
 }

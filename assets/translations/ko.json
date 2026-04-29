@@ -109,5 +109,29 @@
     "secretComment": "비밀 댓글",
     "publicComment": "공개 댓글",
     "visibleOnlyToAllowedUsers": "작성자와 게시글 주인에게만 보입니다"
+    },
+    "marketplace": {
+    "title": "중고마켓",
+    "all": "전체",
+    "currentLocation": "현재 위치",
+    "locationUnavailable": "위치를 사용할 수 없습니다",
+    "emptyTitle": "등록된 상품이 없습니다",
+    "emptyDescription": "주변에서 첫 번째로 상품을 판매해보세요.",
+    "createProduct": "상품 판매",
+    "retry": "다시 시도",
+    "trust": "신뢰",
+    "aiVerified": "AI 인증됨",
+    "aiStatus": "AI 상태",
+    "price": "가격",
+    "category": {
+      "electronics": "전자제품",
+      "fashion": "패션",
+      "home": "생활가전",
+      "baby": "유아동",
+      "sports": "스포츠/레저",
+      "vehicles": "차량/오토바이",
+      "books": "도서/취미",
+      "other": "기타"
+    }
     }
     }

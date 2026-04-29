@@ -44,6 +44,31 @@ countries/ID/domains/local_news/posts/{postId}
 - createdAt
 - updatedAt
 
+## Execution Status
+- Status: Ready for Android manual test
+- Verified by code review: yes
+- Automated tests: passed
+- Manual Android test: pending
+
+## Android Test Command
+```powershell
+flutter run --dart-define=GOOGLE_WEB_CLIENT_ID=<Firebase Web Client ID>
+```
+
+## Expected Firestore Console Check
+Collection path:  
+`countries/ID/domains/local_news/posts`
+
+Document should include:
+- `userId`
+- `title`
+- `content`
+- `category`
+- `location`
+- `geoPath`
+- `createdAt`
+- `trustScore`
+
 ## Manual Test Checklist
 - [ ] App opens without crash
 - [ ] Google login succeeds

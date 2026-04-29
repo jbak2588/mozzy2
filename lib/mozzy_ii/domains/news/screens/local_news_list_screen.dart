@@ -137,7 +137,10 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/news/create'),
+        onPressed: () async {
+          await context.push('/news/create');
+          ref.invalidate(postsByCategoryAndKecamatanProvider);
+        },
         label: Text('news.createPost'.tr()),
         icon: const Icon(Icons.create),
       ),

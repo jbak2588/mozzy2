@@ -140,6 +140,8 @@
 - [x] LocalNewsDetailScreen
 - [x] CrossLinkSection foundation
 - [x] Local News E2E smoke test checklist
+- [x] Local News E2E smoke readiness verified
+- [ ] Local News E2E smoke manually passed on Android device
 - [ ] Manual smoke test on Android device
 - [ ] Image upload
 - [ ] Comments

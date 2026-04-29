@@ -145,4 +145,4 @@ Implement P2-U10 in two commits:
 2. Secret comment visibility and rules
 ## 14. Progress
 - P2-U10-A Reply support foundation: Implemented / Commit: c43ddd53a6375ba162d581df43df2a0582bffdd4
-- P2-U10-B Secret visibility and rules: Pending
+- P2-U10-B Secret visibility and rules: Implemented / Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e

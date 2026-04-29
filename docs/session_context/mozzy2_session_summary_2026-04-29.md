@@ -4,8 +4,8 @@
 This document summarizes the current Mozzy2 development state for future AI sessions.
 
 ## 2. Latest Verified Commits
-- Latest Local News Feature Commit: c43ddd53a6375ba162d581df43df2a0582bffdd4
-- Latest Session Handoff Commit: efd2a58c7778092b0e827518ca0fea5ce89138d3
+- Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
+- Latest Session Handoff Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked
@@ -17,7 +17,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - CrossLinkSection foundation: completed
   - Basic comments: completed
   - P2-U10-A Reply support foundation: completed
-  - P2-U10-B Secret comments visibility: deferred
+  - P2-U10-B Secret comments visibility: completed
   - Automated integration test: completed
   - Human manual Android smoke test: pending
   - Image upload: deferred
@@ -93,9 +93,9 @@ Key files implemented:
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-U10 Secret comments / replies
+P2-U11 Local News - Comment Likes
 Alternative:
-Start Marketplace ProductModel only after Local News community flow is locked.
+Start Marketplace ProductModel (Phase 2-B).
 
 ## 11. Rules for Future AI Sessions
 - Do not duplicate `domains/news` into `domains/local_news`.

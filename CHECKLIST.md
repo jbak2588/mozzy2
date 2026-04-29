@@ -147,9 +147,8 @@
   - *Blocker: Pending human physical interaction to verify UI flow (Create -> Detail).*
 - [ ] Manual smoke test on Android device
 - [ ] Image upload
-- [ ] Comments
+- [x] Comments
 - [ ] AI moderation
-
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent
 - [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)
 - [ ] `MarketplaceRepository` (GeoHash 반경 쿼리)

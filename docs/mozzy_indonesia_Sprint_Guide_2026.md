@@ -37,7 +37,8 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 - P2-U6: Local News tests (△)
 - P2-U7: Local News E2E integration test (☑)
 - P2-U8: Human manual Android smoke test (□)
-
+- P2-U9: Local News basic comments (☑)
+- P2-U10: Secret comments / replies (□)
 
 ## **▌ 에이전트 책임 매트릭스**
 

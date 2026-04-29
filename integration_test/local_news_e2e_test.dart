@@ -95,6 +95,28 @@ void main() {
     expect(find.text('Smoke Test Local News'), findsWidgets);
     expect(find.text('This is an automated integration test post from Flutter.'), findsWidgets);
 
+    // 17. Confirm comments section
+    // Scroll down if needed
+    final listFinder = find.byType(Scrollable).first;
+    await tester.drag(listFinder, const Offset(0, -500));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('commentsSection')), findsOneWidget);
+    expect(find.byKey(const Key('commentInputField')), findsOneWidget);
+
+    // 18. Enter comment
+    await tester.enterText(find.byKey(const Key('commentInputField')), 'Automated integration test comment');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+
+    // 19. Submit comment
+    await tester.tap(find.byKey(const Key('commentSubmitButton')));
+    await tester.pumpAndSettle();
+
+    // 20. Confirm comment appears
+    expect(find.text('Automated integration test comment'), findsOneWidget);
+
     // Test completed successfully
   });
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/posts_provider.dart';
 import '../widgets/cross_link_section.dart';
+import '../widgets/comments_section.dart';
 
 class LocalNewsDetailScreen extends ConsumerWidget {
   final String postId;
@@ -86,12 +87,7 @@ class LocalNewsDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 const CrossLinkSection(),
                 const SizedBox(height: 24),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text('news.commentsComingSoon').tr(),
-                  ),
-                ),
+                CommentsSection(postId: post.id),
                 const SizedBox(height: 40),
               ],
             ),

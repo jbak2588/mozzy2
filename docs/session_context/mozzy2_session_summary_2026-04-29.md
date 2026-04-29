@@ -3,9 +3,9 @@
 ## 1. Purpose
 This document summarizes the current Mozzy2 development state for future AI sessions.
 
-## 2. Latest Verified Commit
-- Commit: d46ef074f2c9904a46d0e84ec30079081ae04adc
-- Message: feat(local-news): add basic comments flow
+## 2. Latest Verified Commits
+- Latest Local News Feature Commit: d46ef074f2c9904a46d0e84ec30079081ae04adc
+- Latest Session Handoff Commit: efd2a58c7778092b0e827518ca0fea5ce89138d3
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked

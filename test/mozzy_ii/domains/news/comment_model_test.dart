@@ -28,7 +28,7 @@ void main() {
     test('fromJson handles Firestore Timestamp', () {
       final now = DateTime.now();
       final timestamp = Timestamp.fromDate(now);
-      
+
       final json = {
         'id': 'c2',
         'postId': 'p1',
@@ -39,6 +39,31 @@ void main() {
 
       final parsed = CommentModel.fromJson(json);
       expect(parsed.createdAt, now);
+    });
+
+    test('parentCommentId nullable for top-level, isReply is false', () {
+      final comment = CommentModel(
+        id: 'c1',
+        postId: 'p1',
+        userId: 'u1',
+        content: 'hello',
+        createdAt: DateTime.now(),
+      );
+      expect(comment.parentCommentId, isNull);
+      expect(comment.isReply, false);
+    });
+
+    test('parentCommentId populated for reply, isReply is true', () {
+      final comment = CommentModel(
+        id: 'c1',
+        postId: 'p1',
+        userId: 'u1',
+        content: 'hello',
+        createdAt: DateTime.now(),
+        parentCommentId: 'parent1',
+      );
+      expect(comment.parentCommentId, 'parent1');
+      expect(comment.isReply, true);
     });
   });
 }

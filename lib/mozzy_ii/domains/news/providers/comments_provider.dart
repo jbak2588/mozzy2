@@ -17,7 +17,34 @@ final commentRepositoryProvider = Provider<CommentRepository>((ref) {
 final commentsByPostProvider =
     FutureProvider.family.autoDispose<List<CommentModel>, String>((ref, postId) {
   final repo = ref.read(commentRepositoryProvider);
-  return repo.fetchComments(postId);
+  return repo.fetchComments(postId); // Delegates to fetchTopLevelComments now
+});
+
+class ReplyQuery {
+  final String postId;
+  final String parentCommentId;
+
+  const ReplyQuery({required this.postId, required this.parentCommentId});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReplyQuery &&
+          runtimeType == other.runtimeType &&
+          postId == other.postId &&
+          parentCommentId == other.parentCommentId;
+
+  @override
+  int get hashCode => postId.hashCode ^ parentCommentId.hashCode;
+}
+
+final repliesByCommentProvider =
+    FutureProvider.family.autoDispose<List<CommentModel>, ReplyQuery>((ref, query) {
+  final repo = ref.read(commentRepositoryProvider);
+  return repo.fetchReplies(
+    postId: query.postId,
+    parentCommentId: query.parentCommentId,
+  );
 });
 
 class CreateCommentAction {

@@ -49,16 +49,14 @@
       "terverifikasi": "Verified",
       "hero_lokal": "Local Hero"
     }
-  }
-  ,
+  },
   "home": {
     "welcome": "Welcome",
     "currentLocation": "Current location",
     "locationUnavailable": "Location not available",
     "trustStatus": "Trust status",
     "devProfile": "Dev Profile"
-  }
-  ,
+  },
   "news": {
     "title": "Local News",
     "all": "All",
@@ -77,8 +75,7 @@
     "createPost": "Write News",
     "retry": "Retry",
     "trust": "Trust",
-    "readMore": "Read"
-    ,
+    "readMore": "Read",
     "titleHint": "Post title",
     "contentHint": "Write your post details here",
     "selectCategory": "Select category",
@@ -103,6 +100,10 @@
     "postedAt": "Posted at",
     "location": "Location",
     "signal": "Signal",
-    "scope": "Scope"
+    "scope": "Scope",
+    "reply": "Reply",
+    "replyingTo": "Replying",
+    "cancelReply": "Cancel",
+    "replyRequired": "Please write a reply"
   }
 }

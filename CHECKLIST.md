@@ -148,12 +148,14 @@
 - [ ] Manual smoke test on Android device
 - [ ] Image upload
 - [x] Comments
+- [x] Reply support foundation
 - [ ] Secret comments / replies
 - [x] Secret comments / replies secure spec
 - [ ] AI moderation
 
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent
-- [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)- [ ] `MarketplaceRepository` (GeoHash 반경 쿼리)
+- [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)
+- [ ] `MarketplaceRepository` (GeoHash 반경 쿼리)
 - [ ] `MarketplaceListScreen` (그리드/리스트 전환)
 - [ ] `ProductDetailScreen` + AI 검수 배지
 - [ ] `CreateProductScreen`

@@ -49,16 +49,14 @@
       "terverifikasi": "Terverifikasi",
       "hero_lokal": "Hero Lokal"
     }
-  }
-  ,
+  },
   "home": {
     "welcome": "Selamat datang",
     "currentLocation": "Lokasi saat ini",
     "locationUnavailable": "Lokasi belum tersedia",
     "trustStatus": "Status kepercayaan",
     "devProfile": "Dev Profile"
-  }
-  ,
+  },
   "news": {
     "title": "Berita Lokal",
     "all": "Semua",
@@ -77,8 +75,7 @@
     "createPost": "Tulis Berita",
     "retry": "Coba lagi",
     "trust": "Trust",
-    "readMore": "Baca"
-    ,
+    "readMore": "Baca",
     "titleHint": "Judul berita",
     "contentHint": "Tulis isi berita di sini",
     "selectCategory": "Pilih kategori",
@@ -103,6 +100,10 @@
     "postedAt": "Dipublikasikan",
     "location": "Lokasi",
     "signal": "Sinyal",
-    "scope": "Jangkauan"
+    "scope": "Jangkauan",
+    "reply": "Balas",
+    "replyingTo": "Membalas",
+    "cancelReply": "Batal",
+    "replyRequired": "Tolong tulis balasan"
   }
 }

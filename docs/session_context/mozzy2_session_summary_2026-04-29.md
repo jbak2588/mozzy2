@@ -4,7 +4,7 @@
 This document summarizes the current Mozzy2 development state for future AI sessions.
 
 ## 2. Latest Verified Commits
-- Latest Local News Feature Commit: d46ef074f2c9904a46d0e84ec30079081ae04adc
+- Latest Local News Feature Commit: <commit SHA after commit>
 - Latest Session Handoff Commit: efd2a58c7778092b0e827518ca0fea5ce89138d3
 
 ## 3. Current Development Phase
@@ -16,10 +16,11 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - Detail: completed
   - CrossLinkSection foundation: completed
   - Basic comments: completed
+  - P2-U10-A Reply support foundation: completed
+  - P2-U10-B Secret comments visibility: deferred
   - Automated integration test: completed
   - Human manual Android smoke test: pending
   - Image upload: deferred
-  - Secret comments / replies: deferred
   - Comment likes: deferred
   - AI moderation: deferred
 
@@ -104,3 +105,11 @@ Start Marketplace ProductModel only after Local News community flow is locked.
 - Always update CHECKLIST.md and Sprint Guide.
 - Always run analyze/test/integration test before commit.
 - Always commit and push with clear message.
+## 12. Session Summary Regeneration Trigger
+Regenerate or update this session summary when:
+- A new chat session starts
+- CHECKLIST.md or Sprint Guide changes
+- A phase report is created
+- A new feature commit is pushed
+- Context/token limit is approaching
+- Before switching from Local News to Marketplace

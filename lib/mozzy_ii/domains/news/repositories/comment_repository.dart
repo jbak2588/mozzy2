@@ -23,8 +23,33 @@ class CommentRepository {
   }
 
   Future<List<CommentModel>> fetchComments(String postId, {int limit = 50}) async {
+    return fetchTopLevelComments(postId, limit: limit);
+  }
+
+  Future<List<CommentModel>> fetchTopLevelComments(String postId, {int limit = 50}) async {
     final query = getCommentsCollection(postId)
         .where('isDeleted', isEqualTo: false)
+        .where('parentCommentId', isNull: true)
+        .orderBy('createdAt', descending: false)
+        .limit(limit);
+
+    final snap = await query.get();
+    return snap.docs
+        .map((d) => CommentModel.fromJson({
+              ...d.data() as Map<String, dynamic>,
+              'id': d.id,
+            }))
+        .toList();
+  }
+
+  Future<List<CommentModel>> fetchReplies({
+    required String postId,
+    required String parentCommentId,
+    int limit = 50,
+  }) async {
+    final query = getCommentsCollection(postId)
+        .where('isDeleted', isEqualTo: false)
+        .where('parentCommentId', isEqualTo: parentCommentId)
         .orderBy('createdAt', descending: false)
         .limit(limit);
 

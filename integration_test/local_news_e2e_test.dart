@@ -117,6 +117,30 @@ void main() {
     // 20. Confirm comment appears
     expect(find.text('Automated integration test comment'), findsOneWidget);
 
+    // 21. Tap reply button
+    final replyButtonFinder = find.byWidgetPredicate(
+      (widget) => widget.key != null && widget.key is ValueKey && (widget.key as ValueKey<String>).value.startsWith('commentReplyButton_'),
+    ).first;
+    await tester.ensureVisible(replyButtonFinder);
+    await tester.tap(replyButtonFinder);
+    await tester.pumpAndSettle();
+
+    // 22. Confirm reply mode
+    expect(find.byKey(const Key('replyModeLabel')), findsOneWidget);
+
+    // 23. Enter reply comment
+    await tester.enterText(find.byKey(const Key('commentInputField')), 'Automated integration test reply');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+
+    // 24. Submit reply
+    await tester.tap(find.byKey(const Key('commentSubmitButton')));
+    await tester.pumpAndSettle();
+
+    // 25. Confirm reply appears
+    expect(find.text('Automated integration test reply'), findsOneWidget);
+
     // Test completed successfully
   });
 }

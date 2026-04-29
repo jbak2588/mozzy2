@@ -60,5 +60,7 @@ abstract class CommentModel with _$CommentModel {
     String? parentCommentId,
   }) = _CommentModel;
 
+  bool get isReply => parentCommentId != null && parentCommentId!.isNotEmpty;
+
   factory CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
 }

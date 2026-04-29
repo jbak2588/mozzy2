@@ -49,16 +49,14 @@
       "terverifikasi": "인증 멤버",
       "hero_lokal": "동네 영웅"
     }
-  }
-  ,
+  },
   "home": {
     "welcome": "환영합니다",
     "currentLocation": "현재 위치",
     "locationUnavailable": "위치가 없습니다",
     "trustStatus": "신뢰 상태",
     "devProfile": "개발자 프로필"
-  }
-  ,
+  },
   "news": {
     "title": "로컬 뉴스",
     "all": "전체",
@@ -77,8 +75,7 @@
     "createPost": "뉴스 작성",
     "retry": "다시 시도",
     "trust": "신뢰",
-    "readMore": "더보기"
-    ,
+    "readMore": "더보기",
     "titleHint": "제목을 입력하세요",
     "contentHint": "내용을 입력하세요",
     "selectCategory": "카테고리 선택",
@@ -103,6 +100,10 @@
     "postedAt": "게시일",
     "location": "위치",
     "signal": "신호",
-    "scope": "범위"
+    "scope": "범위",
+    "reply": "답글",
+    "replyingTo": "답글 작성 중",
+    "cancelReply": "취소",
+    "replyRequired": "답글을 작성해주세요"
   }
 }

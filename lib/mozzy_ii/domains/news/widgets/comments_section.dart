@@ -18,11 +18,14 @@ class CommentsSection extends ConsumerStatefulWidget {
 
 class _CommentsSectionState extends ConsumerState<CommentsSection> {
   final _controller = TextEditingController();
+  final _focusNode = FocusNode();
   bool _isSubmitting = false;
+  String? _replyingToCommentId;
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -67,15 +70,29 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
         userId: userId,
         content: content,
         createdAt: DateTime.now().toUtc(),
+        parentCommentId: _replyingToCommentId,
       );
 
       final action = ref.read(createCommentProvider);
       await action(comment);
 
       _controller.clear();
-      FocusManager.instance.primaryFocus?.unfocus();
+      _focusNode.unfocus();
 
-      ref.invalidate(commentsByPostProvider(widget.postId));
+      final parentIdToInvalidate = _replyingToCommentId;
+      
+      setState(() {
+        _replyingToCommentId = null;
+      });
+
+      if (parentIdToInvalidate == null) {
+        ref.invalidate(commentsByPostProvider(widget.postId));
+      } else {
+        ref.invalidate(repliesByCommentProvider(ReplyQuery(
+          postId: widget.postId,
+          parentCommentId: parentIdToInvalidate,
+        )));
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -87,6 +104,20 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
         setState(() => _isSubmitting = false);
       }
     }
+  }
+
+  void _onReplyPressed(String commentId) {
+    setState(() {
+      _replyingToCommentId = commentId;
+    });
+    _focusNode.requestFocus();
+  }
+
+  void _onCancelReply() {
+    setState(() {
+      _replyingToCommentId = null;
+    });
+    _focusNode.unfocus();
   }
 
   @override
@@ -121,13 +152,9 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
               itemCount: comments.length,
               itemBuilder: (context, index) {
                 final c = comments[index];
-                return ListTile(
-                  title: Text(c.content),
-                  subtitle: Text(
-                    c.createdAt.toLocal().toString().split('.')[0],
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  trailing: Text('Trust: ${c.trustScore.toStringAsFixed(1)}'),
+                return _CommentItem(
+                  comment: c,
+                  onReplyPressed: () => _onReplyPressed(c.id),
                 );
               },
             );
@@ -140,38 +167,138 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: TextField(
-                  key: const Key('commentInputField'),
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'news.commentHint'.tr(),
-                    border: const OutlineInputBorder(),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
+              if (_replyingToCommentId != null)
+                Container(
+                  key: const Key('replyModeLabel'),
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        'news.replyingTo'.tr(),
+                        style: const TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.blue),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: _onCancelReply,
+                        child: Text(
+                          'news.cancelReply'.tr(),
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      key: const Key('commentInputField'),
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      decoration: InputDecoration(
+                        hintText: 'news.commentHint'.tr(),
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                      ),
+                      maxLines: null,
                     ),
                   ),
-                  maxLines: null,
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                key: const Key('commentSubmitButton'),
-                onPressed: _isSubmitting ? null : _submitComment,
-                child: _isSubmitting
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text('news.commentSubmit'.tr()),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    key: const Key('commentSubmitButton'),
+                    onPressed: _isSubmitting ? null : _submitComment,
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('news.commentSubmit'.tr()),
+                  ),
+                ],
               ),
             ],
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _CommentItem extends ConsumerWidget {
+  final CommentModel comment;
+  final VoidCallback onReplyPressed;
+
+  const _CommentItem({
+    required this.comment,
+    required this.onReplyPressed,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final repliesAsync = ref.watch(repliesByCommentProvider(ReplyQuery(
+      postId: comment.postId,
+      parentCommentId: comment.id,
+    )));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ListTile(
+          title: Text(comment.content),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                comment.createdAt.toLocal().toString().split('.')[0],
+                style: const TextStyle(fontSize: 12),
+              ),
+              InkWell(
+                key: Key('commentReplyButton_${comment.id}'),
+                onTap: onReplyPressed,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Text(
+                    'news.reply'.tr(),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              )
+            ],
+          ),
+          trailing: Text('Trust: ${comment.trustScore.toStringAsFixed(1)}'),
+        ),
+        repliesAsync.when(
+          data: (replies) {
+            if (replies.isEmpty) return const SizedBox.shrink();
+            return Padding(
+              padding: const EdgeInsets.only(left: 32.0),
+              child: Column(
+                children: replies.map((r) {
+                  return ListTile(
+                    key: Key('replyItem_${r.id}'),
+                    title: Text(r.content),
+                    subtitle: Text(
+                      r.createdAt.toLocal().toString().split('.')[0],
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (e, st) => const SizedBox.shrink(),
+        ),
+        const Divider(),
       ],
     );
   }

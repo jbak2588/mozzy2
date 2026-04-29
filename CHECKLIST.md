@@ -145,13 +145,14 @@
 - [x] Local News E2E automated integration test passed on Android emulator/device
 - [ ] Local News E2E smoke manually passed on Android device
   - *Blocker: Pending human physical interaction to verify UI flow (Create -> Detail).*
-- [ ] Manual smoke test on Android device
-- [ ] Image upload
 - [x] Comments
 - [x] Reply support foundation
 - [x] Secret comments / replies
 - [x] Secret comments visibility and rules
+- [ ] Comment likes
 - [ ] AI moderation
+- [ ] Image upload
+- [ ] Manual smoke test on Android device
 
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent
 - [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)

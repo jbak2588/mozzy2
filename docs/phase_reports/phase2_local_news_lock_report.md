@@ -11,26 +11,26 @@ Core automated flow locked.
 - P2-U5 CreatePostScreen
 - P2-U7 Automated E2E integration test
 - P2-U9 Basic comments
+- P2-U10-A Reply support foundation
+- P2-U10-B Secret comments visibility and rules
 
 ## Latest Feature Commit
-d46ef074f2c9904a46d0e84ec30079081ae04adc
+51340cf132b5d7efa22205dbb855038918fd3f4e
 
 ## Latest Session Handoff Commit
-efd2a58c7778092b0e827518ca0fea5ce89138d3
+51340cf132b5d7efa22205dbb855038918fd3f4e
 
 ## Automated Test Coverage
 - Unit tests
 - Widget tests
 - Integration test:
-  List → Create → Detail → Comment
+  List → Create → Detail → Comment → Reply → Secret
 
 ## Not Yet Locked
 - Human manual Android smoke test
 - Image upload
-- Secret comments / replies
+- Comment likes
 - AI moderation
 
 ## Decision
-Local News is ready for either:
-1. Secret comments / replies, or
-2. Marketplace ProductModel kickoff
+Local News community flow is now locked through comments, replies, and secret visibility. Ready for Marketplace ProductModel kickoff.

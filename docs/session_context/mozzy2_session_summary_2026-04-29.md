@@ -83,8 +83,6 @@ Key files implemented:
 ## 9. Known Deferred Items
 - Human manual Android smoke test
 - Image upload
-- Secret comments
-- Comment replies
 - Comment likes
 - AI moderation
 - Marketplace ProductModel
@@ -93,9 +91,13 @@ Key files implemented:
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-U11 Local News - Comment Likes
-Alternative:
-Start Marketplace ProductModel (Phase 2-B).
+P2-B1 Marketplace ProductModel + Repository foundation
+
+Reason:
+Local News community flow is now locked through comments, replies, and secret visibility.
+
+Keep warning:
+Do not start payment, Xendit, chat, escrow, or AI verification API in the first Marketplace commit.
 
 ## 11. Rules for Future AI Sessions
 - Do not duplicate `domains/news` into `domains/local_news`.

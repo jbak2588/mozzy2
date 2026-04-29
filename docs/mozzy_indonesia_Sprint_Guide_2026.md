@@ -39,7 +39,7 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 - P2-U8: Human manual Android smoke test (□)
 - P2-U9: Local News basic comments (☑)
 - P2-U10-A: Reply support foundation (☑)
-- P2-U10-B: Secret comments visibility and rules (□)
+- P2-U10-B: Secret comments visibility and rules (☑)
 
 ## **▌ 에이전트 책임 매트릭스**
 

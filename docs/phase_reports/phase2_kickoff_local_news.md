@@ -1,6 +1,7 @@
 # Phase 2 Kickoff — Local News
 
 Date: 2026-04-28
+Latest Verified Commit: a9d16517173d2c7fa24e347333bac46bc80baf2b
 Latest Docs Commit: 29b46c46557654a62fddfcbf93abf838e99e9e72
 
 ## Summary
@@ -41,10 +42,10 @@ Latest Docs Commit: 29b46c46557654a62fddfcbf93abf838e99e9e72
 ### P2-U4 Hotfix — DetailScreen Compile Verification
 - Status: Completed
 - Fix:
-  - Removed unnecessary intl import (handled by easy_localization)
+  - Removed unnecessary intl import handling ambiguity
   - Fixed retry button i18n key to `news.retry`
   - Re-ran analyze/test successfully
-- Commit: 6d9cc2b6185d519512073aa005565db818955ce8
+- Commit: a9d16517173d2c7fa24e347333bac46bc80baf2b
 
 ## Scope (Initial)
 - PostModel (Freezed) implementing `MozzyPostContract`

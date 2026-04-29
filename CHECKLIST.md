@@ -138,8 +138,12 @@
 - [x] LocalNewsListScreen
 - [x] CreatePostScreen
 - [x] LocalNewsDetailScreen
+- [x] CrossLinkSection foundation
+- [x] Local News E2E smoke test checklist
+- [ ] Manual smoke test on Android device
 - [ ] Image upload
 - [ ] Comments
+- [ ] AI moderation
 
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent
 - [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)

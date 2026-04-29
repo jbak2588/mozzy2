@@ -35,6 +35,7 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 - P2-U4: LocalNewsDetailScreen (☑)
 - P2-U5: CreatePostScreen (☑)
 - P2-U6: Local News tests (△)
+- P2-U7: Local News E2E manual smoke test (□)
 
 
 ## **▌ 에이전트 책임 매트릭스**

@@ -142,6 +142,7 @@
 - [x] Local News E2E smoke test checklist
 - [x] Local News E2E smoke readiness verified
 - [ ] Local News E2E smoke manually passed on Android device
+  - *Blocker: Pending human physical interaction to verify UI flow (Create -> Detail).*
 - [ ] Manual smoke test on Android device
 - [ ] Image upload
 - [ ] Comments

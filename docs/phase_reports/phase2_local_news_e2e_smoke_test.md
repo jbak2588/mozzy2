@@ -48,7 +48,7 @@ countries/ID/domains/local_news/posts/{postId}
 - Status: Ready for Android manual test
 - Verified by code review: yes
 - Automated tests: passed
-- Manual Android test: pending
+- Manual Android test: partial
 
 ## Android Test Command
 ```powershell
@@ -86,6 +86,53 @@ Document should include:
 - [ ] Comments placeholder appears
 - [ ] Back navigation works
 - [ ] App relaunch keeps login state
+
+## Android Manual Smoke Test Result
+
+Date: 2026-04-29
+Device:
+- Model: SM A715F
+- Android version: 13
+- Build mode: debug
+- Command used:
+  ```powershell
+  flutter run --dart-define=GOOGLE_WEB_CLIENT_ID=<redacted>
+  ```
+
+## Result
+- Status: Partial
+- Summary: Automated code analysis and widget tests passed. Firebase Firestore rules were updated. However, full E2E physical tapping (List -> Create -> Detail) could not be fully verified from the terminal logs. Manual Android test needs human verification.
+
+## Passed Checklist
+- [x] App opens without crash
+- [x] Google login succeeds (verified via Firestore permission logs previously)
+- [ ] `/news` opens
+- [ ] Category chips render
+- [ ] FAB opens `/news/create`
+- [ ] Empty title validation works
+- [ ] Empty content validation works
+- [ ] Post creation succeeds
+- [ ] Firestore post document is created
+- [ ] Created post appears in Local News list
+- [ ] Tapping LocalNewsCard opens detail page
+- [ ] Detail page shows title/content/category/location
+- [ ] CrossLinkSection appears
+- [ ] Comments placeholder appears
+- [ ] Back navigation works
+- [ ] App relaunch keeps login state
+
+## Issues Found
+- Missing terminal validation for the full UI flow (Create -> Detail). AI cannot physically interact with the device.
+
+## Fixes Applied
+- Firestore `users/{userId}` security rule updated to allow user profile read on startup to prevent infinite loading.
+- build_runner executed to clean up conflicting outputs.
+
+## Firestore Document Sample
+(Pending manual creation)
+
+## Decision
+- Local News core E2E flow is not ready (pending manual human verification of UI flow).
 
 ## Known Deferred Items
 - Image upload

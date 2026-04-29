@@ -74,6 +74,27 @@ service cloud.firestore {
       allow delete: if isOwner(resource.data.userId);
     }
 
+    // [Marketplace Products]
+    // 경로: countries/{country}/domains/marketplace/products/{productId}
+    match /countries/{country}/domains/marketplace/products/{productId} {
+      allow read: if isAuthenticated() && resource.data.isDeleted == false;
+
+      allow create: if isAuthenticated()
+        && request.resource.data.sellerId == request.auth.uid
+        && request.resource.data.title is string && request.resource.data.title.size() > 0
+        && (request.resource.data.price is int || request.resource.data.price is number)
+        && request.resource.data.price >= 0
+        && request.resource.data.countryCode is string
+        && request.resource.data.geoPath is string
+        && request.resource.data.isDeleted == false;
+
+      allow update: if isAuthenticated()
+        && resource.data.sellerId == request.auth.uid
+        && request.resource.data.sellerId == resource.data.sellerId; // immutable sellerId
+
+      allow delete: if isAuthenticated() && resource.data.sellerId == request.auth.uid;
+    }
+
     // [3] 채팅 (추후 확장 예정)
     match /chat_rooms/{roomId} {
       allow read, write: if isAuthenticated() 

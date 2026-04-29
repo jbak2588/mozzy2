@@ -5,7 +5,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
 
 ## 2. Latest Verified Commits
 - Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
-- Latest Session Handoff Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
+- Latest Session Handoff Commit: 49c96d8be0325cdd8ebc015ed5e5ed1290798e77
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked
@@ -23,6 +23,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - Image upload: deferred
   - Comment likes: deferred
   - AI moderation: deferred
+- Current Marketplace status:
+  - P2-B1 ProductModel + Repository foundation: completed
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase
@@ -91,13 +93,13 @@ Key files implemented:
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-B1 Marketplace ProductModel + Repository foundation
+P2-B2 MarketplaceListScreen foundation
 
 Reason:
-Local News community flow is now locked through comments, replies, and secret visibility.
+Marketplace foundation (Model/Repository/Providers) is now locked.
 
 Keep warning:
-Do not start payment, Xendit, chat, escrow, or AI verification API in the first Marketplace commit.
+Do not start payment, Xendit, chat, escrow, or AI verification API yet.
 
 ## 11. Rules for Future AI Sessions
 - Do not duplicate `domains/news` into `domains/local_news`.

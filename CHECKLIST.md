@@ -155,8 +155,9 @@
 - [ ] Manual smoke test on Android device
 
 ### 2-B. Marketplace (Jual Beli) — dart-agent + ai-agent
-- [ ] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)
-- [ ] `MarketplaceRepository` (GeoHash 반경 쿼리)
+- [x] `ProductModel` (MozzyPostContract, isAiVerified, IDR 가격)
+- [x] `MarketplaceRepository` foundation
+- [x] `InMemoryMarketplaceRepository`
 - [ ] `MarketplaceListScreen` (그리드/리스트 전환)
 - [ ] `ProductDetailScreen` + AI 검수 배지
 - [ ] `CreateProductScreen`

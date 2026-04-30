@@ -115,5 +115,9 @@ service cloud.firestore {
     match /{path=**}/posts/{postId} {
       allow read: if isAuthenticated();
     }
+
+    match /{path=**}/likes/{userId} {
+      allow read: if isAuthenticated();
+    }
   }
 }

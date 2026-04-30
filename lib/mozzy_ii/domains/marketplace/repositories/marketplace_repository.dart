@@ -153,4 +153,29 @@ class MarketplaceRepository {
       }
     });
   }
+
+  Future<List<ProductModel>> fetchSavedProductsByUser({
+    required String userId,
+    int limit = 50,
+  }) async {
+    // Note: This requires a collectionGroup index for 'likes' with userId and createdAt fields.
+    final snap = await _fs
+        .collectionGroup('likes')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .get();
+
+    final List<ProductModel> products = [];
+    for (final doc in snap.docs) {
+      final productId = doc.get('productId') as String?;
+      if (productId == null) continue;
+      
+      final product = await getProductById(productId);
+      if (product != null && !product.isDeleted) {
+        products.add(product);
+      }
+    }
+    return products;
+  }
 }

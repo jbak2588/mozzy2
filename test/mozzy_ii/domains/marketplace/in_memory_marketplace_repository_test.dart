@@ -152,5 +152,53 @@ void main() {
       final fetched = await repo.getProductById('p1');
       expect(fetched?.likesCount, 0);
     });
+
+    test('fetchSavedProductsByUser returns liked products and excludes deleted', () async {
+      final p1 = createSampleProduct(id: 'p1');
+      final p2 = createSampleProduct(id: 'p2');
+      final p3 = createSampleProduct(id: 'p3');
+      final p4 = createSampleProduct(id: 'p4', isDeleted: true);
+
+      await repo.createProduct(p1);
+      await repo.createProduct(p2);
+      await repo.createProduct(p3);
+      await repo.createProduct(p4);
+
+      await repo.likeProduct(productId: 'p1', userId: 'u1');
+      await repo.likeProduct(productId: 'p2', userId: 'u1');
+      await repo.likeProduct(productId: 'p3', userId: 'u2'); // Different user
+      await repo.likeProduct(productId: 'p4', userId: 'u1'); // Deleted product
+
+      final results = await repo.fetchSavedProductsByUser(userId: 'u1');
+      expect(results.length, 2);
+      final ids = results.map((e) => e.id).toList();
+      expect(ids, contains('p1'));
+      expect(ids, contains('p2'));
+      expect(ids, isNot(contains('p3')));
+      expect(ids, isNot(contains('p4')));
+    });
+
+    test('fetchSavedProductsByUser sorted by likedAt descending', () async {
+      final p1 = createSampleProduct(id: 'p1');
+      final p2 = createSampleProduct(id: 'p2');
+      final p3 = createSampleProduct(id: 'p3');
+
+      await repo.createProduct(p1);
+      await repo.createProduct(p2);
+      await repo.createProduct(p3);
+
+      await repo.likeProduct(productId: 'p1', userId: 'u1');
+      // No delay needed for InMemory if we use distinct timestamps, 
+      // but let's be safe. In our impl, it uses DateTime.now().
+      await Future.delayed(const Duration(milliseconds: 10));
+      await repo.likeProduct(productId: 'p2', userId: 'u1');
+      await Future.delayed(const Duration(milliseconds: 10));
+      await repo.likeProduct(productId: 'p3', userId: 'u1');
+
+      final results = await repo.fetchSavedProductsByUser(userId: 'u1');
+      expect(results[0].id, 'p3');
+      expect(results[1].id, 'p2');
+      expect(results[2].id, 'p1');
+    });
   });
 }

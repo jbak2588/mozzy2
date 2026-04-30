@@ -65,6 +65,12 @@ final productsByCategoryProvider = FutureProvider.family
       return repo.fetchByCategory(category: category);
     });
 
+final savedMarketplaceProductsProvider = FutureProvider.family
+    .autoDispose<List<ProductModel>, String>((ref, userId) async {
+  final repo = ref.read(marketplaceRepositoryProvider);
+  return repo.fetchSavedProductsByUser(userId: userId);
+});
+
 class CreateProductAction {
   final MarketplaceRepository _repo;
   CreateProductAction(this._repo);

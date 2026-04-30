@@ -172,6 +172,10 @@
     "like": "Like",
     "unlike": "Unlike",
     "saveFailed": "Failed to save",
-    "loginRequired": "Please login first"
+    "loginRequired": "Please login first",
+    "savedItems": "Saved items",
+    "noSavedItems": "No saved products yet",
+    "noSavedItemsDescription": "Products you save will appear here.",
+    "savedItemsLoadFailed": "Failed to load saved products"
   }
 }

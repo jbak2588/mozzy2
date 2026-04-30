@@ -167,11 +167,14 @@
     "selectedImages": "Foto terpilih",
     "imageUploadDeferred": "Unggah gambar akan ditambahkan pada langkah berikutnya",
     "priceFormatHint": "Contoh: 150000 atau 150.000",
-    "save": "Simpan",
     "saved": "Tersimpan",
     "like": "Suka",
     "unlike": "Batal Suka",
     "saveFailed": "Gagal menyimpan",
-    "loginRequired": "Silakan masuk terlebih dahulu"
-    }
+    "loginRequired": "Silakan masuk terlebih dahulu",
+    "savedItems": "Barang Tersimpan",
+    "noSavedItems": "Belum ada produk yang disimpan",
+    "noSavedItemsDescription": "Produk yang Anda simpan akan muncul di sini.",
+    "savedItemsLoadFailed": "Gagal memuat produk yang disimpan"
+  }
 }

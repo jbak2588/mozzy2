@@ -170,7 +170,7 @@
 - [ ] AI verification report storage / moderation queue
 - [ ] AI 검수 플로우 UI (로딩 → 결과 리포트 → 배지)
 - [x] WebP compression / image optimization
-- [x] 찜하기(Simpan) 기능
+- [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)
 - [ ] SharedMapBrowser 연동 (mapVisibility)
 
 ### 2-C. Chat (Pesan) — dart-agent

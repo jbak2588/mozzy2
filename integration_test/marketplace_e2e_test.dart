@@ -163,27 +163,46 @@ void main() {
     // Wait for state to change to Liked (Icons.favorite)
     await waitForIcon(likeButton, Icons.favorite);
 
-    // 22. Verify Liked state text
-    // Check for 'Saved' or 'Tersimpan' or the key itself if localization fails
-    bool foundLikedText = find.text('Saved').evaluate().isNotEmpty || 
-                          find.text('Tersimpan').evaluate().isNotEmpty ||
-                          find.text('저장됨').evaluate().isNotEmpty ||
-                          find.textContaining('saved').evaluate().isNotEmpty;
-    expect(foundLikedText, isTrue);
+    // 22. Go back to Marketplace List
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
 
-    // 23. Tap again to unlike
-    await waitFor(likeButton);
-    await tester.ensureVisible(likeButton);
-    await tester.tap(find.byKey(const Key('productLikeButton')));
-    // Wait for state to change back to Unliked (Icons.favorite_border)
-    await waitForIcon(likeButton, Icons.favorite_border);
+    // 23. Tap Saved Button in AppBar
+    final savedButton = find.byKey(const Key('marketplaceSavedButton'));
+    await tester.tap(savedButton);
+    await tester.pumpAndSettle();
 
-    // 24. Verify Unliked state text
-    bool foundUnlikedText = find.text('Save').evaluate().isNotEmpty || 
-                            find.text('Simpan').evaluate().isNotEmpty ||
-                            find.text('좋아요').evaluate().isNotEmpty ||
-                            find.textContaining('save').evaluate().isNotEmpty;
-    expect(foundUnlikedText, isTrue);
+    // 24. Confirm SavedMarketplaceScreen appears
+    expect(find.byKey(const Key('savedMarketplaceScreen')), findsOneWidget);
+    
+    // 25. Confirm the liked product appears in the saved list
+    await waitFor(find.text('Automated Marketplace Test Product'));
+    expect(find.byKey(const Key('savedMarketplaceList')), findsOneWidget);
+
+    // 26. Tap the product to go back to Detail
+    await tester.tap(find.text('Automated Marketplace Test Product'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('productDetailScreen')), findsOneWidget);
+
+    // 27. Unlike the product
+    final detailLikeButton = find.byKey(const Key('productLikeButton'));
+    await waitForIcon(detailLikeButton, Icons.favorite);
+    await tester.tap(detailLikeButton);
+    await waitForIcon(detailLikeButton, Icons.favorite_border);
+
+    // 28. Go back to Saved Items screen
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    
+    // 29. Verify product is gone and empty state appears
+    await waitFor(find.byKey(const Key('savedMarketplaceEmptyState')));
+    expect(find.text('Automated Marketplace Test Product'), findsNothing);
+
+    // 30. Go back to Marketplace List
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
 
     // Final settle before test exit to avoid _pendingFrame
     await boundedSettle();

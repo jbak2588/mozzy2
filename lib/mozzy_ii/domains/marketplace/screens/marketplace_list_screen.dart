@@ -26,6 +26,14 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
       key: const Key('marketplaceListScreen'),
       appBar: AppBar(
         title: Text('marketplace.title'.tr()),
+        actions: [
+          IconButton(
+            key: const Key('marketplaceSavedButton'),
+            icon: const Icon(Icons.bookmark_border),
+            tooltip: 'marketplace.savedItems'.tr(),
+            onPressed: () => context.push('/marketplace/saved'),
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(100),
           child: Column(

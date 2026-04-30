@@ -53,6 +53,7 @@ void main() {
 
     expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
     expect(find.byKey(const Key('marketplaceCreateFab')), findsOneWidget);
+    expect(find.byKey(const Key('marketplaceSavedButton')), findsOneWidget);
     expect(find.text('Kebayoran Baru, Jakarta Selatan'), findsOneWidget);
   });
 

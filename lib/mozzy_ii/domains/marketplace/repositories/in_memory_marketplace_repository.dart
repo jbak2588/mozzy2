@@ -66,14 +66,14 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     }
   }
 
-  final Map<String, Set<String>> _productLikes = {}; // productId -> Set of userIds
+  final Map<String, Map<String, DateTime>> _productLikes = {}; // productId -> {userId: likedAt}
 
   @override
   Future<bool> isProductLikedByUser({
     required String productId,
     required String userId,
   }) async {
-    return _productLikes[productId]?.contains(userId) ?? false;
+    return _productLikes[productId]?.containsKey(userId) ?? false;
   }
 
   @override
@@ -82,9 +82,9 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     required String userId,
   }) async {
     final likes = _productLikes.putIfAbsent(productId, () => {});
-    if (likes.contains(userId)) return;
+    if (likes.containsKey(userId)) return;
 
-    likes.add(userId);
+    likes[userId] = DateTime.now().toUtc();
     final p = _products[productId];
     if (p != null) {
       _products[productId] = p.copyWith(likesCount: p.likesCount + 1);
@@ -97,7 +97,7 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     required String userId,
   }) async {
     final likes = _productLikes[productId];
-    if (likes == null || !likes.contains(userId)) return;
+    if (likes == null || !likes.containsKey(userId)) return;
 
     likes.remove(userId);
     final p = _products[productId];
@@ -105,5 +105,33 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
       final newCount = (p.likesCount > 0) ? p.likesCount - 1 : 0;
       _products[productId] = p.copyWith(likesCount: newCount);
     }
+  }
+
+  @override
+  Future<List<ProductModel>> fetchSavedProductsByUser({
+    required String userId,
+    int limit = 50,
+  }) async {
+    final List<MapEntry<String, DateTime>> userLikes = [];
+    
+    for (final entry in _productLikes.entries) {
+      final productId = entry.key;
+      final likes = entry.value;
+      if (likes.containsKey(userId)) {
+        userLikes.add(MapEntry(productId, likes[userId]!));
+      }
+    }
+
+    // Sort by likedAt descending
+    userLikes.sort((a, b) => b.value.compareTo(a.value));
+
+    final List<ProductModel> products = [];
+    for (final entry in userLikes.take(limit)) {
+      final p = _products[entry.key];
+      if (p != null && !p.isDeleted) {
+        products.add(p);
+      }
+    }
+    return products;
   }
 }

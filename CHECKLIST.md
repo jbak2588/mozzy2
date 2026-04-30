@@ -164,12 +164,10 @@
 - [x] Marketplace automated integration test
 - [x] Marketplace image placeholder cleanup
 - [x] IDR price input parsing cleanup
-- [ ] Image upload
-  - [ ] IDR 가격 입력 (인도네시아식 포맷)
-  - [ ] 인도네시아 카테고리 (Electronics, Fashion, Furniture...)
-  - [ ] 거래 방식: COD (Ketemu Langsung) / Pengiriman
+- [x] Marketplace image upload foundation (Firebase Storage + Image Picker)
 - [ ] `MarketplaceAiService` Gemini 3.0 연동 + Rate Limiter
 - [ ] AI 검수 플로우 UI (로딩 → 결과 리포트 → 배지)
+- [ ] WebP compression / image optimization
 - [ ] 찜하기(Simpan) 기능
 - [ ] SharedMapBrowser 연동 (mapVisibility)
 

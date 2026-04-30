@@ -131,7 +131,13 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       } catch (e) {
         if (!mounted) return;
         debugPrint('Error during optimization/upload: $e');
-        ScaffoldMessengerService.showError(context, 'marketplace.imageUploadFailed'.tr());
+        
+        String errorKey = 'marketplace.imageUploadFailed';
+        if (e.toString().contains('optimization')) {
+          errorKey = 'marketplace.imageOptimizationFailed';
+        }
+        
+        ScaffoldMessengerService.showError(context, errorKey.tr());
         setState(() => _isSaving = false);
         return;
       }
@@ -242,10 +248,20 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: _isSaving
-                    ? const SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(color: Colors.white),
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text('marketplace.optimizingImages'.tr()),
+                        ],
                       )
                     : Text('marketplace.submit'.tr()),
               ),
@@ -274,6 +290,11 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'marketplace.imageOptimizationNote'.tr(),
+          style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic),
         ),
         const SizedBox(height: 8),
         SizedBox(

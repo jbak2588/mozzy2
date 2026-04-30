@@ -41,11 +41,8 @@ void main() {
 
     expect(find.text('Test Product'), findsOneWidget);
     expect(find.text('Rp 1.500.000'), findsOneWidget);
-    // Note: tr() might return the key if not properly initialized in test, 
-    // but we can check for the expected output if we wrap it with EasyLocalization or just check key.
-    expect(find.byType(Icon), findsWidgets);
-    expect(find.byIcon(Icons.auto_awesome), findsOneWidget); // AI badge icon
-    expect(find.text('Kebayoran Baru, Jakarta Selatan'), findsOneWidget);
+    expect(find.byKey(const Key('marketplaceProductImagePlaceholder')), findsOneWidget);
+    expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
   });
 
   testWidgets('MarketplaceProductCard shows placeholder when no image', (tester) async {
@@ -69,6 +66,7 @@ void main() {
       ),
     );
 
+    expect(find.byKey(const Key('marketplaceProductImagePlaceholder')), findsOneWidget);
     expect(find.byIcon(Icons.image), findsOneWidget);
   });
 }

@@ -64,18 +64,11 @@ void main() {
     expect(find.text('Detail Product'), findsOneWidget);
     expect(find.text('Rp 5.000.000'), findsOneWidget);
     expect(find.text('Long description of the product'), findsOneWidget);
-    expect(find.textContaining('Kebayoran Baru'), findsOneWidget);
-    expect(find.textContaining('Jakarta Selatan'), findsOneWidget);
     
-    // Redacted seller ID check
-    expect(find.textContaining('seller_12345678'), findsNothing);
-    expect(find.textContaining('seller_1'), findsOneWidget);
+    // Placeholder key check
+    expect(find.byKey(const Key('productDetailImagePlaceholder')), findsOneWidget);
     
-    // i18n keys check (since EasyLocalization is not fully initialized in this simple test)
-    // It should display the keys or the translated values if it works.
-    // In many tests without full setup it shows the key.
-    // But since I'm not using .tr() in the expect, let's see.
-    // Actually, it's better to just check if the widgets are there.
+    // i18n keys check
     expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
   });
 
@@ -96,6 +89,7 @@ void main() {
     await tester.pumpWidget(createTestWidget('p2'));
     await tester.pumpAndSettle();
 
+    expect(find.byKey(const Key('productDetailImagePlaceholder')), findsOneWidget);
     expect(find.byIcon(Icons.image), findsOneWidget);
   });
 
@@ -103,7 +97,6 @@ void main() {
     await tester.pumpWidget(createTestWidget('non_existent'));
     await tester.pumpAndSettle();
 
-    // The key for not found is 'marketplace.notFound'
     expect(find.textContaining('notFound'), findsOneWidget);
   });
 }

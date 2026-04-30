@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +38,18 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
     super.dispose();
   }
 
+  int? _parsePrice(String value) {
+    // Remove Rp, dots, commas and spaces
+    final cleaned = value
+        .replaceAll('Rp', '')
+        .replaceAll('.', '')
+        .replaceAll(',', '')
+        .trim();
+    final parsed = int.tryParse(cleaned);
+    if (parsed == null || parsed <= 0) return null;
+    return parsed;
+  }
+
   Future<void> _submit() async {
     if (_isSaving) return;
 
@@ -61,13 +72,21 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         return;
       }
 
+      final price = _parsePrice(_priceController.text);
+      if (price == null) {
+        if (!mounted) return;
+        ScaffoldMessengerService.showError(context, 'marketplace.priceInvalid'.tr());
+        setState(() => _isSaving = false);
+        return;
+      }
+
       final newProduct = ProductModel(
         id: const Uuid().v4(),
         userId: userId,
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         category: _selectedCategory,
-        price: int.parse(_priceController.text),
+        price: price,
         locationParts: location,
         geoPath: buildIndonesiaGeoPath(location),
         createdAt: DateTime.now().toUtc(),
@@ -130,14 +149,14 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                 decoration: InputDecoration(
                   labelText: 'marketplace.priceHint'.tr(),
                   prefixText: 'Rp ',
+                  hintText: 'marketplace.priceFormatHint'.tr(),
                 ),
                 keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'marketplace.priceRequired'.tr();
                   }
-                  if (int.tryParse(value) == null || int.parse(value) <= 0) {
+                  if (_parsePrice(value) == null) {
                     return 'marketplace.priceInvalid'.tr();
                   }
                   return null;
@@ -182,6 +201,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
 
   Widget _buildImagePlaceholder(BuildContext context) {
     return Container(
+      key: const Key('createProductImagePlaceholder'),
       height: 150,
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -196,7 +216,13 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
             const SizedBox(height: 8),
             Text(
               'marketplace.imagesComingSoon'.tr(),
-              style: const TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'marketplace.imageUploadDeferred'.tr(),
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
               textAlign: TextAlign.center,
             ),
           ],

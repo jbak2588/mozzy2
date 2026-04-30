@@ -144,6 +144,9 @@
     "chatSeller": "Chat seller",
     "save": "Save",
     "report": "Report",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "noImage": "No image",
+    "imageUploadDeferred": "Image upload will be added in the next step",
+    "priceFormatHint": "Example: 150000 or 150.000"
   }
 }

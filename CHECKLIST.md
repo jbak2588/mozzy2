@@ -162,6 +162,8 @@
 - [x] `ProductDetailScreen` + AI 검수 배지
 - [x] `CreateProductScreen` (foundation)
 - [x] Marketplace automated integration test
+- [x] Marketplace image placeholder cleanup
+- [x] IDR price input parsing cleanup
 - [ ] Image upload
   - [ ] IDR 가격 입력 (인도네시아식 포맷)
   - [ ] 인도네시아 카테고리 (Electronics, Fashion, Furniture...)

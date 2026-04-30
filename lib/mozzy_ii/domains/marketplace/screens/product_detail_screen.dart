@@ -92,6 +92,7 @@ class _ProductDetailContent extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
+        key: const Key('productDetailImagePlaceholder'),
         color: Colors.grey[200],
         width: double.infinity,
         child: hasImages
@@ -102,8 +103,18 @@ class _ProductDetailContent extends StatelessWidget {
                   child: Icon(Icons.broken_image, size: 64, color: Colors.grey),
                 ),
               )
-            : const Center(
-                child: Icon(Icons.image, size: 100, color: Colors.grey),
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.image, size: 100, color: Colors.grey),
+                    const SizedBox(height: 16),
+                    Text(
+                      'marketplace.noImage'.tr(),
+                      style: const TextStyle(color: Colors.grey, fontSize: 18),
+                    ),
+                  ],
+                ),
               ),
       ),
     );

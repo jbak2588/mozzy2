@@ -144,6 +144,9 @@
     "chatSeller": "Chat penjual",
     "save": "Simpan",
     "report": "Laporkan",
-    "comingSoon": "Segera hadir"
+    "comingSoon": "Segera hadir",
+    "noImage": "Tidak ada gambar",
+    "imageUploadDeferred": "Unggah gambar akan ditambahkan pada langkah berikutnya",
+    "priceFormatHint": "Contoh: 150000 atau 150.000"
   }
 }

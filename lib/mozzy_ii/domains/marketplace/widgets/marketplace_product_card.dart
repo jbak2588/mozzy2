@@ -107,9 +107,20 @@ class MarketplaceProductCard extends StatelessWidget {
   Widget _buildImage(BuildContext context) {
     if (product.imageUrls.isEmpty) {
       return Container(
+        key: const Key('marketplaceProductImagePlaceholder'),
         color: Colors.grey[200],
-        child: const Center(
-          child: Icon(Icons.image, color: Colors.grey, size: 48),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.image, color: Colors.grey, size: 48),
+              const SizedBox(height: 4),
+              Text(
+                'marketplace.noImage'.tr(),
+                style: const TextStyle(color: Colors.grey, fontSize: 10),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -119,6 +130,7 @@ class MarketplaceProductCard extends StatelessWidget {
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
         return Container(
+          key: const Key('marketplaceProductImagePlaceholder'),
           color: Colors.grey[200],
           child: const Center(
             child: Icon(Icons.broken_image, color: Colors.grey),

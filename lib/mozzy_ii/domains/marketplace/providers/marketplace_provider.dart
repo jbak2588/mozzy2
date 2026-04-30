@@ -132,6 +132,7 @@ class ToggleProductLikeAction {
     // Invalidate providers to refresh UI
     _ref.invalidate(productByIdProvider(productId));
     _ref.invalidate(productLikedByUserProvider(ProductLikeQuery(productId: productId, userId: userId)));
+    _ref.invalidate(savedMarketplaceProductsProvider(userId));
   }
 }
 

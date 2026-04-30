@@ -188,6 +188,7 @@ void main() {
     // 27. Unlike the product
     final detailLikeButton = find.byKey(const Key('productLikeButton'));
     await waitForIcon(detailLikeButton, Icons.favorite);
+    await tester.ensureVisible(detailLikeButton);
     await tester.tap(detailLikeButton);
     await waitForIcon(detailLikeButton, Icons.favorite_border);
 

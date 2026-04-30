@@ -142,7 +142,7 @@
     "likes": "관심",
     "chats": "채팅",
     "chatSeller": "판매자와 채팅하기",
-    "save": "좋아요",
+    "save": "저장",
     "report": "신고하기",
     "comingSoon": "준비 중",
     "noImage": "이미지 없음",
@@ -167,15 +167,14 @@
     "selectedImages": "선택된 이미지",
     "imageUploadDeferred": "이미지 업로드 기능은 다음 단계에서 추가됩니다",
     "priceFormatHint": "예: 150000 또는 150.000",
-    "save": "좋아요",
     "saved": "저장됨",
     "like": "좋아요",
     "unlike": "좋아요 취소",
     "saveFailed": "저장 실패",
     "loginRequired": "먼저 로그인해 주세요",
-    "savedItems": "저장된 상품",
-    "noSavedItems": "저장된 상품이 없습니다",
-    "noSavedItemsDescription": "저장한 상품들이 여기에 표시됩니다.",
-    "savedItemsLoadFailed": "저장된 상품을 불러오지 못했습니다"
+    "savedItems": "저장한 상품",
+    "noSavedItems": "저장한 상품이 없습니다",
+    "noSavedItemsDescription": "저장한 상품이 여기에 표시됩니다.",
+    "savedItemsLoadFailed": "저장한 상품을 불러오지 못했습니다"
   }
 }

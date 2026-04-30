@@ -6,6 +6,8 @@ import '../repositories/in_memory_marketplace_repository.dart';
 import '../models/product_model.dart';
 import '../services/marketplace_image_upload_service.dart';
 import '../services/in_memory_marketplace_image_upload_service.dart';
+import '../services/marketplace_image_optimization_service.dart';
+import '../services/in_memory_marketplace_image_optimization_service.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -17,6 +19,7 @@ final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
 
 final _integrationMarketplaceRepository = InMemoryMarketplaceRepository();
 final _integrationImageUploadService = InMemoryMarketplaceImageUploadService();
+final _integrationImageOptimizationService = InMemoryMarketplaceImageOptimizationService();
 
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -30,6 +33,13 @@ final marketplaceImageUploadServiceProvider = Provider<MarketplaceImageUploadSer
     return _integrationImageUploadService;
   }
   return MarketplaceImageUploadService();
+});
+
+final marketplaceImageOptimizationServiceProvider = Provider<MarketplaceImageOptimizationService>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return _integrationImageOptimizationService;
+  }
+  return MarketplaceImageOptimizationServiceImpl();
 });
 
 final productsByKecamatanProvider = FutureProvider.family

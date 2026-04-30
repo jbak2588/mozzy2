@@ -116,16 +116,21 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
 
       final productId = const Uuid().v4();
       List<String> uploadedUrls = [];
+      List<XFile> optimizedImages = [];
 
       try {
-        // Upload images first
+        // 1. Optimize images
+        optimizedImages = await ref.read(marketplaceImageOptimizationServiceProvider).optimizeProductImages(_selectedImages);
+        
+        // 2. Upload optimized images
         uploadedUrls = await ref.read(marketplaceImageUploadServiceProvider).uploadProductImages(
           productId: productId,
           sellerId: userId,
-          images: _selectedImages,
+          images: optimizedImages,
         );
       } catch (e) {
         if (!mounted) return;
+        debugPrint('Error during optimization/upload: $e');
         ScaffoldMessengerService.showError(context, 'marketplace.imageUploadFailed'.tr());
         setState(() => _isSaving = false);
         return;

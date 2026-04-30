@@ -8,6 +8,7 @@ import 'package:mozzy/mozzy_ii/domains/marketplace/screens/create_product_screen
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/services/in_memory_marketplace_image_upload_service.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/services/in_memory_marketplace_image_optimization_service.dart';
 
 class MockLocationNotifier extends LocationNotifier {
   final LocationParts _value;
@@ -41,6 +42,7 @@ void main() {
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
         marketplaceImageUploadServiceProvider.overrideWithValue(InMemoryMarketplaceImageUploadService()),
+        marketplaceImageOptimizationServiceProvider.overrideWithValue(InMemoryMarketplaceImageOptimizationService()),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
         currentMarketplaceUserIdProvider.overrideWithValue(IntegrationTestConfig.testUserId),
       ],
@@ -95,7 +97,9 @@ void main() {
     final submitButton = find.byKey(const Key('createProductSubmitButton'));
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);
-    await tester.pumpAndSettle(); 
+    await tester.pump(); // Start saving
+    await tester.pump(const Duration(milliseconds: 500)); // Wait for async flow
+    await tester.pumpAndSettle(); // Finish animations if any
 
     final products = await mockRepo.fetchByKecamatan(kecamatan: 'Kebayoran Baru');
     expect(products.any((p) => p.title == 'Product with Dots'), true);

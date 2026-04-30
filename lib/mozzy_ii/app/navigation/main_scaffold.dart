@@ -18,14 +18,6 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: 현재 활성화된 탭 컨텍스트에 맞춰 '글쓰기' 모달 표시
-        },
-        backgroundColor: const Color(0xFFCC0001),
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
         onTap: _onTap,

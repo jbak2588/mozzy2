@@ -13,10 +13,11 @@ final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   return FirebaseAuth.instance.currentUser?.uid;
 });
 
+final _integrationMarketplaceRepository = InMemoryMarketplaceRepository();
+
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {
-    // Return singleton in test mode if needed, but for now matching post_provider style
-    return InMemoryMarketplaceRepository();
+    return _integrationMarketplaceRepository;
   }
   return MarketplaceRepository();
 });

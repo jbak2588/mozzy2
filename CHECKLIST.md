@@ -161,6 +161,7 @@
 - [x] `MarketplaceListScreen` (그리드/리스트 전환)
 - [x] `ProductDetailScreen` + AI 검수 배지
 - [x] `CreateProductScreen` (foundation)
+- [x] Marketplace automated integration test
 - [ ] Image upload
   - [ ] IDR 가격 입력 (인도네시아식 포맷)
   - [ ] 인도네시아 카테고리 (Electronics, Fashion, Furniture...)

@@ -29,6 +29,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - P2-B2 MarketplaceListScreen foundation: completed
   - P2-B3 ProductDetailScreen foundation: completed
   - P2-B4 CreateProductScreen foundation: completed / analyzer verified
+  - P2-B5 Marketplace automated integration test: completed
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase
@@ -84,6 +85,7 @@ Key files implemented:
 - `flutter analyze`: passed
 - `flutter test`: passed
 - Local News integration test: passed on connected Android device
+- Marketplace integration test: passed on connected Android device
 - Human manual smoke test: pending
 
 ## 9. Known Deferred Items
@@ -91,16 +93,14 @@ Key files implemented:
 - Image upload
 - Comment likes
 - AI moderation
-- Marketplace ProductModel
-- MarketplaceRepository
 - Firebase emulator CI
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-B5 Marketplace automated integration test
+P2-B6 Marketplace image placeholder cleanup or basic manual smoke test.
 
 Reason:
-Marketplace create foundation is now implemented, but analyzer issues need to be verified in a clean environment.
+The full foundation and automated verification for Marketplace are now locked.
 
 Keep warning:
 Do not start payment, Xendit, chat, escrow, or AI verification API yet.

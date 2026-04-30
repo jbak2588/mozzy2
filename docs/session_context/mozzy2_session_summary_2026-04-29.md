@@ -6,7 +6,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
 ## 2. Latest Verified Commits
 - Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
 - Latest Marketplace Feature Commit: ff9451b7f7aa7c612f8b12bdbdb375f60ca7f8a4
-- Latest Session Handoff Commit: 72e25bb1d0f4912876c7460c04da88c87acb6506
+- Latest Session Handoff Commit: 292f4be574301f53a6d41bc5fae9223c28868762
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked
@@ -34,7 +34,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - P2-B7 Marketplace real image upload foundation: completed
   - P2-B8 Marketplace WebP compression / image optimization: completed
   - P2-B9 Marketplace AI verification API foundation: completed (SHA: ff9451b)
-  - P2-B10 Marketplace live Gemini smoke test: completed (SHA: PENDING_COMMIT)
+  - P2-B10 Marketplace live Gemini smoke test: completed (SHA: 292f4be)
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase

@@ -165,7 +165,7 @@
 - [x] Marketplace image placeholder cleanup
 - [x] IDR price input parsing cleanup
 - [x] Marketplace image upload foundation (Firebase Storage + Image Picker)
-- [ ] `MarketplaceAiService` Gemini 3.0 연동 + Rate Limiter
+- [x] AI verification API foundation (Gemini 3.0 flash)
 - [ ] AI 검수 플로우 UI (로딩 → 결과 리포트 → 배지)
 - [x] WebP compression / image optimization
 - [ ] 찜하기(Simpan) 기능

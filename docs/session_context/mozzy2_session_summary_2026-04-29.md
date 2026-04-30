@@ -5,7 +5,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
 
 ## 2. Latest Verified Commits
 - Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
-- Latest Marketplace Feature Commit: bddb6a986873088f9f4ce75f6dab9ffb9afc591f
+- Latest Marketplace Feature Commit: ff9451b7f7aa7c612f8b12bdbdb375f60ca7f8a4
 - Latest Session Handoff Commit: PENDING_COMMIT
 
 ## 3. Current Development Phase
@@ -33,6 +33,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - P2-B6 Marketplace image placeholder + IDR input cleanup: completed
   - P2-B7 Marketplace real image upload foundation: completed
   - P2-B8 Marketplace WebP compression / image optimization: completed
+  - P2-B9 Marketplace AI verification API foundation: completed
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase
@@ -52,7 +53,7 @@ To bypass the real Google UI and Firebase calls during automated E2E testing, an
 - **GoogleSignInConfig skip**: It skips the physical initialization of Google Sign-In missing Client ID exceptions in tests.
 - **Deterministic location**: In test mode, an `effectiveLocationProvider` intercepts location requests, emitting a static Jakarta location (`Kebayoran Baru, Jakarta Selatan, Senayan`).
 - **InMemoryPostRepository / InMemoryCommentRepository**: In-memory fake repositories replace the actual `PostRepository` and `CommentRepository` within Riverpod DI to allow CRUD without interacting with Firebase or needing real auth permissions.
-- **Why this does not affect production**: These mocks are strictly walled behind the compile-time flag or `bool.fromEnvironment` check, seamlessly switching to live Firebase mechanisms when compiled normally.
+- **Marketplace Mocks**: `InMemoryMarketplaceRepository`, `InMemoryMarketplaceImageUploadService`, `InMemoryMarketplaceImageOptimizationService`, and `InMemoryMarketplaceAiVerificationService` are used in test mode.
 
 ## 6. Local News Implemented Files
 Key files implemented:
@@ -86,45 +87,34 @@ Key files implemented:
 
 ## 8. Test Status
 - `flutter analyze`: passed
-- `flutter test`: passed
+- `flutter test`: passed (74 marketplace tests)
 - Local News integration test: passed on connected Android device
 - Marketplace integration test: passed on connected Android device
 - Human manual smoke test: pending
 
 ## 9. Known Deferred Items
 - Human manual Android smoke test
-- Image upload
+- Image upload (Local News)
 - Comment likes
-- AI moderation
+- AI moderation (Local News)
 - Firebase emulator CI
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-B8 Marketplace AI Verification API (Gemini 3.0 image analysis)
+P2-B10 Live Gemini AI verification smoke test (Manual with real key)
 
 Reason:
-Image upload foundation is now locked and verified. AI verification is the next logical step to enhance trust in the marketplace.
+AI verification foundation is now locked and verified with fake service. Testing with a real key manually will confirm the prompt effectiveness and JSON parsing in a real-world scenario.
 
 Keep warning:
-Do not start payment, Xendit, chat, escrow, or AI verification API yet.
+Do not start payment, Xendit, chat, or escrow yet.
+Do not commit real GEMINI_API_KEY.
 
 ## 11. Rules for Future AI Sessions
 - Do not duplicate `domains/news` into `domains/local_news`.
-- Do not hardcode GOOGLE_WEB_CLIENT_ID.
+- Do not hardcode GOOGLE_WEB_CLIENT_ID or GEMINI_API_KEY.
 - Do not remove integration test mode.
 - Do not mark manual Android smoke test as passed unless a human actually confirms.
 - Always update CHECKLIST.md and Sprint Guide.
 - Always run analyze/test/integration test before commit.
 - Always commit and push with clear message.
-## 12. Session Summary Regeneration Trigger
-Regenerate or update this session summary when:
-- A new chat session starts
-- CHECKLIST.md or Sprint Guide changes
-- A phase report is created
-- A new feature commit is pushed
-- Context/token limit is approaching
-- Before switching from Local News to Marketplace
-ing
-- Before switching from Local News to Marketplace
-imit is approaching
-- Before switching from Local News to Marketplace

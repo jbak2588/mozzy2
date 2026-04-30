@@ -5,8 +5,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
 
 ## 2. Latest Verified Commits
 - Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
-- Latest Marketplace Feature Commit: 0171a3b34a7a1b932a5a8fbbd5f9740307e02123
-- Latest Session Handoff Commit: 0171a3b34a7a1b932a5a8fbbd5f9740307e02123
+- Latest Marketplace Feature Commit: c20aabdff9b1baee041b1c26829be12fb05680c5
+- Latest Session Handoff Commit: f9bf390558b3879be4a991873130d22c83c27181
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked
@@ -30,6 +30,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - P2-B3 ProductDetailScreen foundation: completed
   - P2-B4 CreateProductScreen foundation: completed / analyzer verified
   - P2-B5 Marketplace automated integration test: completed
+  - P2-B6 Marketplace image placeholder + IDR input cleanup: completed
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase

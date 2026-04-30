@@ -218,39 +218,79 @@ class _ProductDetailContent extends StatelessWidget {
   }
 
   Widget _buildAiVerification(BuildContext context) {
+    final statusColor = product.isAiVerified ? Colors.green : (product.aiVerificationStatus == 'failed' ? Colors.red : Colors.orange);
+    final bgColor = product.isAiVerified ? Colors.green[50] : (product.aiVerificationStatus == 'failed' ? Colors.red[50] : Colors.orange[50]);
+    final borderColor = product.isAiVerified ? Colors.green[100] : (product.aiVerificationStatus == 'failed' ? Colors.red[100] : Colors.orange[100]);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.red[50],
+        color: bgColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red[100]!),
+        border: Border.all(color: borderColor!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome, color: Colors.red),
+              Icon(Icons.auto_awesome, color: statusColor),
               const SizedBox(width: 8),
               Text(
                 'marketplace.aiVerified'.tr(),
-                style: const TextStyle(
-                  color: Colors.red,
+                style: TextStyle(
+                  color: statusColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Spacer(),
               if (product.isAiVerified)
-                const Icon(Icons.check_circle, color: Colors.red)
+                Icon(Icons.check_circle, color: statusColor)
+              else if (product.aiVerificationStatus == 'failed')
+                Icon(Icons.error_outline, color: statusColor)
               else
                 const Icon(Icons.help_outline, color: Colors.grey),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            '${'marketplace.aiStatus'.tr()}: ${product.aiVerificationStatus}',
-            style: const TextStyle(fontSize: 14),
-          ),
+          const SizedBox(height: 12),
+          _buildAiRow('marketplace.aiStatus'.tr(), product.aiVerificationStatus),
+          if (product.aiVerificationScore != null)
+            _buildAiRow('marketplace.aiScore'.tr(), '${(product.aiVerificationScore! * 100).toStringAsFixed(0)}%'),
+          if (product.aiConditionLabel != null)
+            _buildAiRow('marketplace.aiCondition'.tr(), product.aiConditionLabel!),
+          if (product.aiSuggestedCategory != null)
+            _buildAiRow('marketplace.aiSuggestedCategory'.tr(), product.aiSuggestedCategory!),
+          if (product.aiVerificationSummary != null && product.aiVerificationSummary!.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              'marketplace.aiSummary'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            Text(
+              product.aiVerificationSummary!,
+              style: const TextStyle(fontSize: 13),
+            ),
+          ],
+          if (product.aiDetectedIssues.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              'marketplace.aiDetectedIssues'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.red),
+            ),
+            ...product.aiDetectedIssues.map((issue) => Text('• $issue', style: const TextStyle(fontSize: 12, color: Colors.red))),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAiRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Text('$label: ', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+          Text(value, style: const TextStyle(fontSize: 13)),
         ],
       ),
     );

@@ -9,6 +9,7 @@ import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/services/in_memory_marketplace_image_upload_service.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/services/in_memory_marketplace_image_optimization_service.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/services/in_memory_marketplace_ai_verification_service.dart';
 
 class MockLocationNotifier extends LocationNotifier {
   final LocationParts _value;
@@ -43,6 +44,7 @@ void main() {
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
         marketplaceImageUploadServiceProvider.overrideWithValue(InMemoryMarketplaceImageUploadService()),
         marketplaceImageOptimizationServiceProvider.overrideWithValue(InMemoryMarketplaceImageOptimizationService()),
+        marketplaceAiVerificationServiceProvider.overrideWithValue(InMemoryMarketplaceAiVerificationService()),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
         currentMarketplaceUserIdProvider.overrideWithValue(IntegrationTestConfig.testUserId),
       ],

@@ -8,6 +8,9 @@ import '../services/marketplace_image_upload_service.dart';
 import '../services/in_memory_marketplace_image_upload_service.dart';
 import '../services/marketplace_image_optimization_service.dart';
 import '../services/in_memory_marketplace_image_optimization_service.dart';
+import '../services/marketplace_ai_verification_service.dart';
+import '../services/gemini_marketplace_ai_verification_service.dart';
+import '../services/in_memory_marketplace_ai_verification_service.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -20,6 +23,7 @@ final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
 final _integrationMarketplaceRepository = InMemoryMarketplaceRepository();
 final _integrationImageUploadService = InMemoryMarketplaceImageUploadService();
 final _integrationImageOptimizationService = InMemoryMarketplaceImageOptimizationService();
+final _integrationAiVerificationService = InMemoryMarketplaceAiVerificationService();
 
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -40,6 +44,13 @@ final marketplaceImageOptimizationServiceProvider = Provider<MarketplaceImageOpt
     return _integrationImageOptimizationService;
   }
   return MarketplaceImageOptimizationServiceImpl();
+});
+
+final marketplaceAiVerificationServiceProvider = Provider<MarketplaceAiVerificationService>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return _integrationAiVerificationService;
+  }
+  return GeminiMarketplaceAiVerificationService();
 });
 
 final productsByKecamatanProvider = FutureProvider.family

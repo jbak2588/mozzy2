@@ -117,7 +117,9 @@ void main() {
     
     // AI Status Section check
     expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
-    expect(find.textContaining('not_requested'), findsOneWidget);
+    expect(find.textContaining('passed'), findsAtLeast(1));
+    expect(find.textContaining('92%'), findsOneWidget);
+    expect(find.textContaining('AI verification passed in integration mode'), findsOneWidget);
 
     // Test completed successfully
   });

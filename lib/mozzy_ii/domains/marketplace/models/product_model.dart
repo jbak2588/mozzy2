@@ -80,6 +80,12 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @Default('ID') String countryCode,
     @Default(false) bool isAiVerified,
     @Default('not_requested') String aiVerificationStatus,
+    double? aiVerificationScore,
+    String? aiVerificationSummary,
+    @Default([]) List<String> aiDetectedIssues,
+    String? aiSuggestedCategory,
+    String? aiConditionLabel,
+    @OptionalSafeDateTimeConverter() DateTime? aiVerifiedAt,
 
     @SafeDateTimeConverter() required DateTime createdAt,
     @OptionalSafeDateTimeConverter() DateTime? updatedAt,

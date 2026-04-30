@@ -29,6 +29,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
 
   String _selectedCategory = 'electronics';
   bool _isSaving = false;
+  String _savingStatus = 'optimizing'; // optimizing | uploading | verifying
   List<XFile> _selectedImages = [];
 
   final _categories = [
@@ -117,20 +118,38 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       final productId = const Uuid().v4();
       List<String> uploadedUrls = [];
       List<XFile> optimizedImages = [];
+      dynamic aiVerificationResult; // We use dynamic to avoid importing result model if not needed, but better to use it.
 
       try {
         // 1. Optimize images
+        setState(() => _savingStatus = 'optimizing');
         optimizedImages = await ref.read(marketplaceImageOptimizationServiceProvider).optimizeProductImages(_selectedImages);
         
         // 2. Upload optimized images
+        setState(() => _savingStatus = 'uploading');
         uploadedUrls = await ref.read(marketplaceImageUploadServiceProvider).uploadProductImages(
           productId: productId,
           sellerId: userId,
           images: optimizedImages,
         );
+
+        // 3. AI Verification (Foundation)
+        setState(() => _savingStatus = 'verifying');
+        try {
+          aiVerificationResult = await ref.read(marketplaceAiVerificationServiceProvider).verifyProductImages(
+            productId: productId,
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
+            category: _selectedCategory,
+            imageUrls: uploadedUrls,
+          );
+        } catch (e) {
+          debugPrint('AI verification failed (non-blocking): $e');
+          // Fallback to error status
+        }
       } catch (e) {
         if (!mounted) return;
-        debugPrint('Error during optimization/upload: $e');
+        debugPrint('Error during optimization/upload/AI: $e');
         
         String errorKey = 'marketplace.imageUploadFailed';
         if (e.toString().contains('optimization')) {
@@ -153,6 +172,14 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         locationParts: location,
         geoPath: buildIndonesiaGeoPath(location),
         createdAt: DateTime.now().toUtc(),
+        isAiVerified: aiVerificationResult?.status == 'passed',
+        aiVerificationStatus: aiVerificationResult?.status ?? 'needs_review',
+        aiVerificationScore: aiVerificationResult?.score,
+        aiVerificationSummary: aiVerificationResult?.summary,
+        aiDetectedIssues: aiVerificationResult?.detectedIssues ?? [],
+        aiSuggestedCategory: aiVerificationResult?.suggestedCategory,
+        aiConditionLabel: aiVerificationResult?.conditionLabel,
+        aiVerifiedAt: aiVerificationResult != null ? DateTime.now().toUtc() : null,
       );
 
       try {
@@ -260,7 +287,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          Text('marketplace.optimizingImages'.tr()),
+                          Text(_getSavingStatusText()),
                         ],
                       )
                     : Text('marketplace.submit'.tr()),
@@ -270,6 +297,19 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         ),
       ),
     );
+  }
+
+  String _getSavingStatusText() {
+    switch (_savingStatus) {
+      case 'optimizing':
+        return 'marketplace.optimizingImages'.tr();
+      case 'uploading':
+        return 'common.loading'.tr(); // Or a specific key
+      case 'verifying':
+        return 'marketplace.verifyingWithAi'.tr();
+      default:
+        return 'common.loading'.tr();
+    }
   }
 
   Widget _buildImagePicker(BuildContext context) {

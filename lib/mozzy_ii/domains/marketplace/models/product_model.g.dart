@@ -40,6 +40,18 @@ _ProductModel _$ProductModelFromJson(
   isAiVerified: json['isAiVerified'] as bool? ?? false,
   aiVerificationStatus:
       json['aiVerificationStatus'] as String? ?? 'not_requested',
+  aiVerificationScore: (json['aiVerificationScore'] as num?)?.toDouble(),
+  aiVerificationSummary: json['aiVerificationSummary'] as String?,
+  aiDetectedIssues:
+      (json['aiDetectedIssues'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  aiSuggestedCategory: json['aiSuggestedCategory'] as String?,
+  aiConditionLabel: json['aiConditionLabel'] as String?,
+  aiVerifiedAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['aiVerifiedAt'],
+  ),
   createdAt: const SafeDateTimeConverter().fromJson(json['createdAt']),
   updatedAt: const OptionalSafeDateTimeConverter().fromJson(json['updatedAt']),
   isDeleted: json['isDeleted'] as bool? ?? false,
@@ -69,6 +81,14 @@ Map<String, dynamic> _$ProductModelToJson(
   'countryCode': instance.countryCode,
   'isAiVerified': instance.isAiVerified,
   'aiVerificationStatus': instance.aiVerificationStatus,
+  'aiVerificationScore': instance.aiVerificationScore,
+  'aiVerificationSummary': instance.aiVerificationSummary,
+  'aiDetectedIssues': instance.aiDetectedIssues,
+  'aiSuggestedCategory': instance.aiSuggestedCategory,
+  'aiConditionLabel': instance.aiConditionLabel,
+  'aiVerifiedAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.aiVerifiedAt,
+  ),
   'createdAt': const SafeDateTimeConverter().toJson(instance.createdAt),
   'updatedAt': const OptionalSafeDateTimeConverter().toJson(instance.updatedAt),
   'isDeleted': instance.isDeleted,

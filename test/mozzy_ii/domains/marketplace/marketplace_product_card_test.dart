@@ -69,4 +69,29 @@ void main() {
     expect(find.byKey(const Key('marketplaceProductImagePlaceholder')), findsOneWidget);
     expect(find.byIcon(Icons.image), findsOneWidget);
   });
+
+  testWidgets('MarketplaceProductCard displays likesCount when > 0', (tester) async {
+    final product = ProductModel(
+      id: 'p3',
+      userId: 'u1',
+      title: 'Liked Product',
+      description: 'Desc',
+      category: 'electronics',
+      price: 1000,
+      geoPath: 'ID/Jakarta',
+      createdAt: DateTime.now(),
+      likesCount: 5,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: MarketplaceProductCard(product: product),
+        ),
+      ),
+    );
+
+    expect(find.text('5'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsOneWidget);
+  });
 }

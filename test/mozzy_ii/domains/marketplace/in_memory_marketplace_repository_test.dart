@@ -104,5 +104,53 @@ void main() {
       expect(results[1].id, 'p3');
       expect(results[2].id, 'p1');
     });
+
+    test('likeProduct increments likesCount and isProductLikedByUser returns true', () async {
+      final p1 = createSampleProduct(id: 'p1');
+      await repo.createProduct(p1);
+
+      await repo.likeProduct(productId: 'p1', userId: 'u1');
+      
+      final fetched = await repo.getProductById('p1');
+      expect(fetched?.likesCount, 1);
+      
+      final isLiked = await repo.isProductLikedByUser(productId: 'p1', userId: 'u1');
+      expect(isLiked, isTrue);
+    });
+
+    test('duplicate like does not double-increment', () async {
+      final p1 = createSampleProduct(id: 'p1');
+      await repo.createProduct(p1);
+
+      await repo.likeProduct(productId: 'p1', userId: 'u1');
+      await repo.likeProduct(productId: 'p1', userId: 'u1');
+      
+      final fetched = await repo.getProductById('p1');
+      expect(fetched?.likesCount, 1);
+    });
+
+    test('unlikeProduct decrements likesCount', () async {
+      final p1 = createSampleProduct(id: 'p1');
+      await repo.createProduct(p1);
+
+      await repo.likeProduct(productId: 'p1', userId: 'u1');
+      await repo.unlikeProduct(productId: 'p1', userId: 'u1');
+      
+      final fetched = await repo.getProductById('p1');
+      expect(fetched?.likesCount, 0);
+      
+      final isLiked = await repo.isProductLikedByUser(productId: 'p1', userId: 'u1');
+      expect(isLiked, isFalse);
+    });
+
+    test('unlike below zero is prevented', () async {
+      final p1 = createSampleProduct(id: 'p1');
+      await repo.createProduct(p1);
+
+      await repo.unlikeProduct(productId: 'p1', userId: 'u1');
+      
+      final fetched = await repo.getProductById('p1');
+      expect(fetched?.likesCount, 0);
+    });
   });
 }

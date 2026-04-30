@@ -19,10 +19,11 @@ void main() {
     mockRepo = InMemoryMarketplaceRepository();
   });
 
-  Widget createTestWidget(String productId) {
+  Widget createTestWidget(String productId, {String? userId = 'test-user-id'}) {
     return ProviderScope(
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
+        currentMarketplaceUserIdProvider.overrideWithValue(userId),
       ],
       child: MaterialApp(
         home: ProductDetailScreen(productId: productId),
@@ -98,5 +99,43 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('notFound'), findsOneWidget);
+  });
+
+  testWidgets('toggles like button when tapped', (tester) async {
+    final product = ProductModel(
+      id: 'p1',
+      userId: 'u1',
+      title: 'Like Test Product',
+      description: 'Desc',
+      category: 'electronics',
+      price: 1000,
+      geoPath: 'ID/Jakarta',
+      createdAt: DateTime.now(),
+    );
+    await mockRepo.createProduct(product);
+
+    await tester.pumpWidget(createTestWidget('p1'));
+    await tester.pumpAndSettle();
+
+    final likeButton = find.byKey(const Key('productLikeButton'));
+    expect(likeButton, findsOneWidget);
+
+    // Ensure visible before tapping
+    await tester.ensureVisible(likeButton);
+    await tester.pumpAndSettle();
+
+    // Initial state: not liked
+    await tester.tap(likeButton);
+    await tester.pumpAndSettle();
+
+    final isLiked = await mockRepo.isProductLikedByUser(productId: 'p1', userId: 'test-user-id');
+    expect(isLiked, isTrue);
+
+    // Tap again to unlike
+    await tester.tap(likeButton);
+    await tester.pumpAndSettle();
+
+    final isLikedAgain = await mockRepo.isProductLikedByUser(productId: 'p1', userId: 'test-user-id');
+    expect(isLikedAgain, isFalse);
   });
 }

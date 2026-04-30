@@ -80,3 +80,55 @@ final productByIdProvider = FutureProvider.family.autoDispose<ProductModel?, Str
   final repo = ref.read(marketplaceRepositoryProvider);
   return repo.getProductById(productId);
 });
+
+class ProductLikeQuery {
+  final String productId;
+  final String userId;
+  const ProductLikeQuery({required this.productId, required this.userId});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProductLikeQuery &&
+          runtimeType == other.runtimeType &&
+          productId == other.productId &&
+          userId == other.userId;
+
+  @override
+  int get hashCode => productId.hashCode ^ userId.hashCode;
+}
+
+final productLikedByUserProvider =
+    FutureProvider.family.autoDispose<bool, ProductLikeQuery>((ref, query) {
+  final repo = ref.read(marketplaceRepositoryProvider);
+  return repo.isProductLikedByUser(
+    productId: query.productId,
+    userId: query.userId,
+  );
+});
+
+class ToggleProductLikeAction {
+  final MarketplaceRepository _repo;
+  final Ref _ref;
+  ToggleProductLikeAction(this._repo, this._ref);
+
+  Future<void> call({
+    required String productId,
+    required String userId,
+    required bool currentlyLiked,
+  }) async {
+    if (currentlyLiked) {
+      await _repo.unlikeProduct(productId: productId, userId: userId);
+    } else {
+      await _repo.likeProduct(productId: productId, userId: userId);
+    }
+
+    // Invalidate providers to refresh UI
+    _ref.invalidate(productByIdProvider(productId));
+    _ref.invalidate(productLikedByUserProvider(ProductLikeQuery(productId: productId, userId: userId)));
+  }
+}
+
+final toggleProductLikeProvider = Provider<ToggleProductLikeAction>((ref) {
+  return ToggleProductLikeAction(ref.read(marketplaceRepositoryProvider), ref);
+});

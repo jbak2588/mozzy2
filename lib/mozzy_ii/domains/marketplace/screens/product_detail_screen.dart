@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../../../core/config/integration_test_config.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../trust/widgets/trust_score_badge.dart';
 import '../providers/marketplace_provider.dart';
@@ -30,7 +31,11 @@ class ProductDetailScreen extends ConsumerWidget {
           }
           return _ProductDetailContent(product: product);
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Center(
+          child: IntegrationTestConfig.enabled
+              ? const Text('Loading...')
+              : const CircularProgressIndicator(),
+        ),
         error: (err, _) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -49,13 +54,21 @@ class ProductDetailScreen extends ConsumerWidget {
   }
 }
 
-class _ProductDetailContent extends StatelessWidget {
+class _ProductDetailContent extends ConsumerWidget {
   final ProductModel product;
 
   const _ProductDetailContent({required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(currentMarketplaceUserIdProvider);
+    final likedAsync = userId != null
+        ? ref.watch(productLikedByUserProvider(ProductLikeQuery(
+            productId: product.id,
+            userId: userId,
+          )))
+        : const AsyncValue.data(false);
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +89,7 @@ class _ProductDetailContent extends StatelessWidget {
                 const SizedBox(height: 32),
                 _buildStats(context),
                 const SizedBox(height: 32),
-                _buildActions(context),
+                _buildActions(context, ref, likedAsync.value ?? false),
                 const SizedBox(height: 32),
               ],
             ),
@@ -318,7 +331,9 @@ class _ProductDetailContent extends StatelessWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context) {
+  Widget _buildActions(BuildContext context, WidgetRef ref, bool isLiked) {
+    final userId = ref.watch(currentMarketplaceUserIdProvider);
+
     return Column(
       children: [
         SizedBox(
@@ -340,9 +355,23 @@ class _ProductDetailContent extends StatelessWidget {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: null, // Placeholder: Disabled
-                icon: const Icon(Icons.favorite_border),
-                label: Text('marketplace.save'.tr()),
+                key: const Key('productLikeButton'),
+                onPressed: () async {
+                  if (userId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('marketplace.loginRequired'.tr())),
+                    );
+                    return;
+                  }
+                  await ref.read(toggleProductLikeProvider)(
+                    productId: product.id,
+                    userId: userId,
+                    currentlyLiked: isLiked,
+                  );
+                },
+                icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? Colors.red : null),
+                label: Text(isLiked ? 'marketplace.saved'.tr() : 'marketplace.save'.tr()),
               ),
             ),
             const SizedBox(width: 12),

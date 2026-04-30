@@ -166,6 +166,12 @@
     "removeImage": "Hapus foto",
     "selectedImages": "Foto terpilih",
     "imageUploadDeferred": "Unggah gambar akan ditambahkan pada langkah berikutnya",
-    "priceFormatHint": "Contoh: 150000 또는 150.000"
+    "priceFormatHint": "Contoh: 150000 atau 150.000",
+    "save": "Simpan",
+    "saved": "Tersimpan",
+    "like": "Suka",
+    "unlike": "Batal Suka",
+    "saveFailed": "Gagal menyimpan",
+    "loginRequired": "Silakan masuk terlebih dahulu"
     }
-    }
+}

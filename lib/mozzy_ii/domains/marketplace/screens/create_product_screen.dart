@@ -278,14 +278,16 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          ),
+                          IntegrationTestConfig.enabled
+                              ? const Icon(Icons.sync, color: Colors.white)
+                              : const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
                           const SizedBox(width: 12),
                           Text(_getSavingStatusText()),
                         ],

@@ -65,4 +65,45 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
       );
     }
   }
+
+  final Map<String, Set<String>> _productLikes = {}; // productId -> Set of userIds
+
+  @override
+  Future<bool> isProductLikedByUser({
+    required String productId,
+    required String userId,
+  }) async {
+    return _productLikes[productId]?.contains(userId) ?? false;
+  }
+
+  @override
+  Future<void> likeProduct({
+    required String productId,
+    required String userId,
+  }) async {
+    final likes = _productLikes.putIfAbsent(productId, () => {});
+    if (likes.contains(userId)) return;
+
+    likes.add(userId);
+    final p = _products[productId];
+    if (p != null) {
+      _products[productId] = p.copyWith(likesCount: p.likesCount + 1);
+    }
+  }
+
+  @override
+  Future<void> unlikeProduct({
+    required String productId,
+    required String userId,
+  }) async {
+    final likes = _productLikes[productId];
+    if (likes == null || !likes.contains(userId)) return;
+
+    likes.remove(userId);
+    final p = _products[productId];
+    if (p != null) {
+      final newCount = (p.likesCount > 0) ? p.likesCount - 1 : 0;
+      _products[productId] = p.copyWith(likesCount: newCount);
+    }
+  }
 }

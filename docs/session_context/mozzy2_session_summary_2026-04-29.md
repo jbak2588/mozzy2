@@ -35,6 +35,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - P2-B8 Marketplace WebP compression / image optimization: completed
   - P2-B9 Marketplace AI verification API foundation: completed (SHA: ff9451b)
   - P2-B10 Marketplace live Gemini smoke test: completed (SHA: 292f4be)
+  - P2-B11 AI verification report storage: implementation started
+  - P2-B12 Marketplace Simpan/Like foundation: completed
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase

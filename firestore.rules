@@ -93,6 +93,16 @@ service cloud.firestore {
         && request.resource.data.sellerId == resource.data.sellerId; // immutable sellerId
 
       allow delete: if isAuthenticated() && resource.data.sellerId == request.auth.uid;
+
+      match /likes/{userId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated()
+          && request.auth.uid == userId
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.productId == productId;
+        allow delete: if isAuthenticated() && request.auth.uid == userId;
+        allow update: if false;
+      }
     }
 
     // [3] 채팅 (추후 확장 예정)

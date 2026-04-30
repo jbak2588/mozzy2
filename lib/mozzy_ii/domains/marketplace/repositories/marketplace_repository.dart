@@ -90,4 +90,67 @@ class MarketplaceRepository {
       'updatedAt': now,
     }, SetOptions(merge: true));
   }
+
+  // --- Like Methods ---
+
+  Future<bool> isProductLikedByUser({
+    required String productId,
+    required String userId,
+  }) async {
+    final doc = await productsCollection
+        .doc(productId)
+        .collection('likes')
+        .doc(userId)
+        .get();
+    return doc.exists;
+  }
+
+  Future<void> likeProduct({
+    required String productId,
+    required String userId,
+  }) async {
+    final productRef = productsCollection.doc(productId);
+    final likeRef = productRef.collection('likes').doc(userId);
+
+    await _fs.runTransaction((transaction) async {
+      final likeSnapshot = await transaction.get(likeRef);
+      if (likeSnapshot.exists) return;
+
+      transaction.set(likeRef, {
+        'userId': userId,
+        'productId': productId,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      transaction.update(productRef, {
+        'likesCount': FieldValue.increment(1),
+      });
+    });
+  }
+
+  Future<void> unlikeProduct({
+    required String productId,
+    required String userId,
+  }) async {
+    final productRef = productsCollection.doc(productId);
+    final likeRef = productRef.collection('likes').doc(userId);
+
+    await _fs.runTransaction((transaction) async {
+      final likeSnapshot = await transaction.get(likeRef);
+      if (!likeSnapshot.exists) return;
+
+      transaction.delete(likeRef);
+
+      // likesCount should never be below 0. 
+      // Firestore increment doesn't have min check, so we manually check current value.
+      final productSnapshot = await transaction.get(productRef);
+      final currentLikes = (productSnapshot.data() as Map<String, dynamic>?)?['likesCount'] ?? 0;
+      
+      if (currentLikes > 0) {
+        transaction.update(productRef, {
+          'likesCount': FieldValue.increment(-1),
+        });
+      }
+    });
+  }
 }

@@ -70,6 +70,15 @@ class MarketplaceProductCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      if (product.likesCount > 0) ...[
+                        const SizedBox(width: 4),
+                        const Icon(Icons.favorite, size: 10, color: Colors.grey),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${product.likesCount}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
                     ],
                   ),
                   if (product.isAiVerified) ...[

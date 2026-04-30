@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/config/integration_test_config.dart';
 import '../../../geo/providers/location_provider.dart';
 import '../../../geo/models/location_parts.dart';
 import '../providers/marketplace_provider.dart';
@@ -123,7 +124,11 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
           final productsAsync = ref.watch(productsByKecamatanProvider(kecamatan));
           return _buildProductGrid(productsAsync);
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => Center(
+          child: IntegrationTestConfig.enabled
+              ? const Text('Loading Location...')
+              : const CircularProgressIndicator(),
+        ),
         error: (err, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +182,11 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => Center(
+        child: IntegrationTestConfig.enabled
+            ? const Text('Loading Products...')
+            : const CircularProgressIndicator(),
+      ),
       error: (err, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

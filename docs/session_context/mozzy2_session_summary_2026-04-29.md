@@ -97,10 +97,10 @@ Key files implemented:
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-B6 Marketplace image placeholder cleanup or basic manual smoke test.
+P2-B7 Marketplace real image upload foundation
 
 Reason:
-The full foundation and automated verification for Marketplace are now locked.
+The UI/data cleanup is now locked and verified.
 
 Keep warning:
 Do not start payment, Xendit, chat, escrow, or AI verification API yet.
@@ -120,4 +120,8 @@ Regenerate or update this session summary when:
 - A phase report is created
 - A new feature commit is pushed
 - Context/token limit is approaching
+- Before switching from Local News to Marketplace
+ing
+- Before switching from Local News to Marketplace
+imit is approaching
 - Before switching from Local News to Marketplace

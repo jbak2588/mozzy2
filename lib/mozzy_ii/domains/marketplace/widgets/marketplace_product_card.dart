@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../trust/widgets/trust_score_badge.dart';
-import '../../../geo/models/location_parts.dart';
 import '../models/product_model.dart';
 
 class MarketplaceProductCard extends StatelessWidget {

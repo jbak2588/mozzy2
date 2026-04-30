@@ -64,7 +64,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
         );
       },
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
     );
   }
 
@@ -87,7 +87,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (_, index) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final cat = categories[index];
           final isSelected = _selectedCategory == cat;
@@ -119,7 +119,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
           return _buildProductGrid(productsAsync);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(
+        error: (err, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -173,7 +173,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(
+      error: (err, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

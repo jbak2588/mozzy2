@@ -159,7 +159,7 @@
 - [x] `MarketplaceRepository` foundation
 - [x] `InMemoryMarketplaceRepository`
 - [x] `MarketplaceListScreen` (그리드/리스트 전환)
-- [ ] `ProductDetailScreen` + AI 검수 배지
+- [x] `ProductDetailScreen` + AI 검수 배지
 - [ ] `CreateProductScreen`
   - [ ] 이미지 업로드 (최대 5장, WebP 압축)
   - [ ] IDR 가격 입력 (인도네시아식 포맷)

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/models/product_model.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/widgets/marketplace_product_card.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 
 void main() {

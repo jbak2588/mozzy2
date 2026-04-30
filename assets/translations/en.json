@@ -132,6 +132,18 @@
       "vehicles": "Vehicles",
       "books": "Books",
       "other": "Other"
-    }
+    },
+    "detailTitle": "Product Detail",
+    "notFound": "Product not found",
+    "description": "Description",
+    "seller": "Seller",
+    "createdAt": "Posted at",
+    "views": "Views",
+    "likes": "Likes",
+    "chats": "Chats",
+    "chatSeller": "Chat seller",
+    "save": "Save",
+    "report": "Report",
+    "comingSoon": "Coming soon"
   }
 }

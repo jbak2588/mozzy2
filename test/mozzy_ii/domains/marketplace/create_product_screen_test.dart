@@ -7,6 +7,7 @@ import 'package:mozzy/mozzy_ii/domains/marketplace/repositories/in_memory_market
 import 'package:mozzy/mozzy_ii/domains/marketplace/screens/create_product_screen.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/services/in_memory_marketplace_image_upload_service.dart';
 
 class MockLocationNotifier extends LocationNotifier {
   final LocationParts _value;
@@ -39,6 +40,7 @@ void main() {
     return ProviderScope(
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
+        marketplaceImageUploadServiceProvider.overrideWithValue(InMemoryMarketplaceImageUploadService()),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
         currentMarketplaceUserIdProvider.overrideWithValue(IntegrationTestConfig.testUserId),
       ],
@@ -58,25 +60,24 @@ void main() {
     expect(find.byKey(const Key('createProductPriceField')), findsOneWidget);
     expect(find.byKey(const Key('createProductCategoryDropdown')), findsOneWidget);
     expect(find.byKey(const Key('createProductSubmitButton')), findsOneWidget);
-    expect(find.byKey(const Key('createProductImagePlaceholder')), findsOneWidget);
+    expect(find.byKey(const Key('createProductAddImageButton')), findsOneWidget);
   });
 
-  testWidgets('creates product when form is valid (digits only)', (tester) async {
+  testWidgets('shows validation error if no image is selected', (tester) async {
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('createProductTitleField')), 'New Test Product');
-    await tester.enterText(find.byKey(const Key('createProductDescriptionField')), 'A great product');
+    await tester.enterText(find.byKey(const Key('createProductTitleField')), 'Test Product');
+    await tester.enterText(find.byKey(const Key('createProductDescriptionField')), 'Desc');
     await tester.enterText(find.byKey(const Key('createProductPriceField')), '150000');
     
     final submitButton = find.byKey(const Key('createProductSubmitButton'));
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);
-    await tester.pumpAndSettle(); 
+    await tester.pumpAndSettle();
 
-    final products = await mockRepo.fetchByKecamatan(kecamatan: 'Kebayoran Baru');
-    expect(products.length, 1);
-    expect(products.first.price, 150000);
+    // Check for imageRequired error key
+    expect(find.textContaining('imageRequired'), findsWidgets);
   });
 
   testWidgets('creates product when form is valid (with dots)', (tester) async {
@@ -87,6 +88,10 @@ void main() {
     await tester.enterText(find.byKey(const Key('createProductDescriptionField')), 'Desc');
     await tester.enterText(find.byKey(const Key('createProductPriceField')), '1.500.000');
     
+    // Inject image
+    await tester.longPress(find.byKey(const Key('createProductAddImageButton')));
+    await tester.pumpAndSettle();
+
     final submitButton = find.byKey(const Key('createProductSubmitButton'));
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);

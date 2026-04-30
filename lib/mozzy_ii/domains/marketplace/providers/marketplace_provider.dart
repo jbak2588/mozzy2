@@ -4,6 +4,8 @@ import '../../../core/config/integration_test_config.dart';
 import '../repositories/marketplace_repository.dart';
 import '../repositories/in_memory_marketplace_repository.dart';
 import '../models/product_model.dart';
+import '../services/marketplace_image_upload_service.dart';
+import '../services/in_memory_marketplace_image_upload_service.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -14,12 +16,20 @@ final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
 });
 
 final _integrationMarketplaceRepository = InMemoryMarketplaceRepository();
+final _integrationImageUploadService = InMemoryMarketplaceImageUploadService();
 
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {
     return _integrationMarketplaceRepository;
   }
   return MarketplaceRepository();
+});
+
+final marketplaceImageUploadServiceProvider = Provider<MarketplaceImageUploadService>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return _integrationImageUploadService;
+  }
+  return MarketplaceImageUploadService();
 });
 
 final productsByKecamatanProvider = FutureProvider.family

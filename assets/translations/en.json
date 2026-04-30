@@ -146,6 +146,12 @@
     "report": "Report",
     "comingSoon": "Coming soon",
     "noImage": "No image",
+    "addImages": "Add images",
+    "imageRequired": "Please add at least one image",
+    "imageLimit": "You can add up to 5 images",
+    "imageUploadFailed": "Image upload failed",
+    "removeImage": "Remove image",
+    "selectedImages": "Selected images",
     "imageUploadDeferred": "Image upload will be added in the next step",
     "priceFormatHint": "Example: 150000 or 150.000"
   }

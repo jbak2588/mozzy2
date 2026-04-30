@@ -45,7 +45,12 @@ void main() {
     // 6. Confirm CreateProductScreen appears
     expect(find.byKey(const Key('createProductScreen')), findsOneWidget);
 
-    // 7. Submit empty form
+    // 6.1. Select an image (long press for fake injection in integration mode)
+    await tester.longPress(find.byKey(const Key('createProductAddImageButton')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('createProductImagePreview_0')), findsOneWidget);
+
+    // 7. Submit empty form (title/description/price still missing)
     await tester.tap(find.byKey(const Key('createProductSubmitButton')));
     await tester.pumpAndSettle();
     

@@ -1,8 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/config/integration_test_config.dart';
 import '../repositories/marketplace_repository.dart';
 import '../repositories/in_memory_marketplace_repository.dart';
 import '../models/product_model.dart';
+
+final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return IntegrationTestConfig.testUserId;
+  }
+  // This will throw if not logged in. The UI should prevent this.
+  return FirebaseAuth.instance.currentUser?.uid;
+});
 
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {

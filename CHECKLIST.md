@@ -160,8 +160,8 @@
 - [x] `InMemoryMarketplaceRepository`
 - [x] `MarketplaceListScreen` (그리드/리스트 전환)
 - [x] `ProductDetailScreen` + AI 검수 배지
-- [ ] `CreateProductScreen`
-  - [ ] 이미지 업로드 (최대 5장, WebP 압축)
+- [x] `CreateProductScreen` (foundation)
+- [ ] Image upload
   - [ ] IDR 가격 입력 (인도네시아식 포맷)
   - [ ] 인도네시아 카테고리 (Electronics, Fashion, Furniture...)
   - [ ] 거래 방식: COD (Ketemu Langsung) / Pengiriman

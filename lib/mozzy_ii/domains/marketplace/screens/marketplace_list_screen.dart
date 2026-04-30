@@ -38,7 +38,12 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
       body: _buildBody(locationState),
       floatingActionButton: FloatingActionButton(
         key: const Key('marketplaceCreateFab'),
-        onPressed: () => context.push('/marketplace/create'),
+        onPressed: () async {
+          await context.push('/marketplace/create');
+          // Refresh lists after returning from create screen
+          ref.invalidate(productsByKecamatanProvider);
+          ref.invalidate(productsByCategoryProvider);
+        },
         child: const Icon(Icons.add),
       ),
     );

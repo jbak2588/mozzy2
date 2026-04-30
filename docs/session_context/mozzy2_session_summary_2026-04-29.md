@@ -5,8 +5,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
 
 ## 2. Latest Verified Commits
 - Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
-- Latest Marketplace Feature Commit: 6d5b456d9111775546e57aea0d997c17fbd69c06
-- Latest Session Handoff Commit: 6d5b456d9111775546e57aea0d997c17fbd69c06
+- Latest Marketplace Feature Commit: 0171a3b34a7a1b932a5a8fbbd5f9740307e02123
+- Latest Session Handoff Commit: 0171a3b34a7a1b932a5a8fbbd5f9740307e02123
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked

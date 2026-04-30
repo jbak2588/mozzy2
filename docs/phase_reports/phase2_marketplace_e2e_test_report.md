@@ -45,3 +45,6 @@
 
 ## 7. Next Task
 P2-B6: Marketplace image placeholder cleanup or basic manual smoke test.
+
+## 8. Latest Commit
+- SHA: 0171a3b34a7a1b932a5a8fbbd5f9740307e02123

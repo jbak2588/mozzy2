@@ -34,10 +34,10 @@
 - Uses `createProductProvider` (wrapper around `MarketplaceRepository`).
 - Invalidates list providers (`productsByKecamatanProvider`, `productsByCategoryProvider`) after successful creation to ensure UI refresh.
 
-## 6. Known Issues (Analyzer)
-- **Persistent Analyzer Error**: `flutter analyze` reports `creation_with_non_type` for `CreateProductScreen` in `app_router.dart`. 
-- **Status**: The class exists in `lib/mozzy_ii/domains/marketplace/screens/create_product_screen.dart` and is correctly imported, but the analyzer fails to resolve it even after `flutter clean` and absolute import fixes.
-- **Impact**: Code compiles and runs (according to logic), but analyzer blocks automated CI/test flow for this specific file.
+## Analyzer Status
+- Status: Resolved
+- `flutter analyze`: Passed
+- Fix: Standardized to relative imports in `app_router.dart` and fixed `deprecated_member_use` in `create_product_screen.dart`.
 
 ## 7. Tests
 - `create_product_screen_test.dart`:

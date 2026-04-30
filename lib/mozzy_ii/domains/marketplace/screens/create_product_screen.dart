@@ -146,7 +146,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 key: const Key('createProductCategoryDropdown'),
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: InputDecoration(labelText: 'marketplace.selectCategory'.tr()),
                 items: _categories.map((cat) => DropdownMenuItem(
                   value: cat,

@@ -166,6 +166,8 @@
 - [x] IDR price input parsing cleanup
 - [x] Marketplace image upload foundation (Firebase Storage + Image Picker)
 - [x] AI verification API foundation (Gemini 3.0 flash)
+- [x] Live Gemini API smoke test
+- [ ] AI verification report storage / moderation queue
 - [ ] AI 검수 플로우 UI (로딩 → 결과 리포트 → 배지)
 - [x] WebP compression / image optimization
 - [ ] 찜하기(Simpan) 기능

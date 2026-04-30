@@ -82,29 +82,46 @@ Rules:
       }
 
       final data = jsonDecode(response.body);
-      final String? textResponse = data['candidates']?[0]?['content']?[0]?['parts']?[0]?['text'];
+      final String? textResponse = data['candidates']?[0]?['content']?['parts']?[0]?['text'];
 
       if (textResponse == null) {
         return _errorResult(productId, 'Empty response from AI', 'error');
       }
 
-      final Map<String, dynamic> aiJson = jsonDecode(textResponse);
+      // Robust JSON parsing: strip markdown fences if present
+      String cleanedJson = textResponse.trim();
+      if (cleanedJson.startsWith('```')) {
+        final lines = cleanedJson.split('\n');
+        if (lines.length >= 2) {
+          // Remove first line (```json) and last line (```)
+          cleanedJson = lines.sublist(1, lines.length - 1).join('\n').trim();
+        }
+      }
+
+      final Map<String, dynamic> aiJson = jsonDecode(cleanedJson);
 
       return AiVerificationResult(
         id: const Uuid().v4(),
         productId: productId,
-        status: aiJson['status'] ?? 'needs_review',
+        status: _normalizeStatus(aiJson['status']),
         score: (aiJson['score'] as num?)?.toDouble() ?? 0.0,
         summary: aiJson['summary'] ?? '',
         detectedIssues: List<String>.from(aiJson['detectedIssues'] ?? []),
         suggestedCategory: aiJson['suggestedCategory'],
         conditionLabel: aiJson['conditionLabel'],
-        rawResponse: textResponse,
+        rawResponse: cleanedJson,
         createdAt: DateTime.now().toUtc(),
       );
     } catch (e) {
-      return _errorResult(productId, 'Exception: $e', 'error');
+      return _errorResult(productId, 'Verification failed: parsing error or timeout', 'error');
     }
+  }
+
+  String _normalizeStatus(dynamic status) {
+    final s = status?.toString().toLowerCase();
+    if (s == 'passed') return 'passed';
+    if (s == 'failed') return 'failed';
+    return 'needs_review';
   }
 
   AiVerificationResult _errorResult(String productId, String summary, String status) {

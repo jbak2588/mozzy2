@@ -127,9 +127,11 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | P2-B5 | **Marketplace automated integration test** | Product List -> Detail -> Create E2E flow | test | 자동화 테스트 패스 | ☑ |
 | P2-B6 | **Marketplace UI/Data Cleanup** | Image placeholder UX / IDR input parsing / Key standardization | dart | 통합 테스트 통과 | ☑ |
 | P2-B7 | **Marketplace real image upload foundation** | Firebase Storage / Image Picker / WebP compression | dart | 이미지 업로드 성공 | ☑ |
-| P2-B8 | **Marketplace AI Verification API** | Gemini 3.0 image analysis | ai | 검수 결과 JSON 파싱 | □ |
+| P2-B8 | **Marketplace AI Verification API** | Gemini 3.0 image analysis | ai | 검수 결과 JSON 파싱 | ☑ |
 | P2-B9 | **Marketplace WebP compression** | Image optimization | dart·perf | 이미지 크기 감소 | ☑ |
-| P2-U13 | **MarketplaceAiService** | Gemini3.0 이미지 분석 / 인도네시아어 프롬프트 / RateLimiter 10/분 | ai | AI 검수 결과 JSON 파싱 | □ |
+| P2-B10 | **Live Gemini AI Smoke Test** | Real API connectivity / Parsing / Parsing bug fix | ai·test | 실연동 스모크 테스트 패스 | ☑ |
+| P2-B11 | **AI verification report storage** | Detailed report collection / Moderation queue | firestore | 리포트 데이터 저장 구조 | □ |
+| P2-U13 | **MarketplaceAiService** | Gemini3.0 이미지 분석 / 인도네시아어 프롬프트 / RateLimiter 10/분 | ai | AI 검수 결과 JSON 파싱 | ☑ |
 | P2-U14 | **AI 검수 UI 플로우** | AiVerificationSheet / 로딩 → 결과 리포트 → 'Terverifikasi AI' 배지 | dart·ai | AI 검수 플로우 완료 | □ |
 | P2-U15 | **Marketplace 인덱스** | used\_items 인덱스 18개 / GeoHash 인덱스 / Security Rules | firestore | 18개 인덱스 배포 | □ |
 | P2-U16 | **ChatRoomModel·MessageModel** | Freezed / participants / unreadCount / lastMessage | dart | 직렬화 테스트 | □ |

@@ -6,7 +6,7 @@ This document summarizes the current Mozzy2 development state for future AI sess
 ## 2. Latest Verified Commits
 - Latest Local News Feature Commit: 51340cf132b5d7efa22205dbb855038918fd3f4e
 - Latest Marketplace Feature Commit: ff9451b7f7aa7c612f8b12bdbdb375f60ca7f8a4
-- Latest Session Handoff Commit: PENDING_COMMIT
+- Latest Session Handoff Commit: 72e25bb1d0f4912876c7460c04da88c87acb6506
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked
@@ -33,7 +33,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
   - P2-B6 Marketplace image placeholder + IDR input cleanup: completed
   - P2-B7 Marketplace real image upload foundation: completed
   - P2-B8 Marketplace WebP compression / image optimization: completed
-  - P2-B9 Marketplace AI verification API foundation: completed
+  - P2-B9 Marketplace AI verification API foundation: completed (SHA: ff9451b)
+  - P2-B10 Marketplace live Gemini smoke test: completed (SHA: PENDING_COMMIT)
 
 ## 4. Confirmed Architecture
 - Flutter + Firebase
@@ -101,10 +102,10 @@ Key files implemented:
 
 ## 10. Next Recommended Task
 Recommended next task:
-P2-B10 Live Gemini AI verification smoke test (Manual with real key)
+P2-B11 AI verification report storage / moderation queue foundation
 
 Reason:
-AI verification foundation is now locked and verified with fake service. Testing with a real key manually will confirm the prompt effectiveness and JSON parsing in a real-world scenario.
+Live API connectivity and parsing bug are fixed. The next step is to design how to store the full AI verification report history and how an admin might review it if the status is `needs_review`.
 
 Keep warning:
 Do not start payment, Xendit, chat, or escrow yet.
@@ -118,3 +119,12 @@ Do not commit real GEMINI_API_KEY.
 - Always update CHECKLIST.md and Sprint Guide.
 - Always run analyze/test/integration test before commit.
 - Always commit and push with clear message.
+
+## 12. Session Summary Regeneration Trigger
+Regenerate or update this session summary when:
+- A new chat session starts
+- CHECKLIST.md or Sprint Guide changes
+- A phase report is created
+- A new feature commit is pushed
+- Context/token limit is approaching
+- Before switching to a new domain or major feature

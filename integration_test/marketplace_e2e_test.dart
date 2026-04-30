@@ -145,10 +145,14 @@ void main() {
     expect(find.text('Rp 150.000'), findsWidgets);
     
     // AI Status Section check
-    expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
-    expect(find.textContaining('passed'), findsAtLeast(1));
-    expect(find.textContaining('92%'), findsOneWidget);
-    expect(find.textContaining('AI verification passed in integration mode'), findsOneWidget);
+    await waitFor(find.byIcon(Icons.auto_awesome));
+    await waitFor(find.textContaining('passed'));
+    await waitFor(find.textContaining('92'));
+    await waitFor(find.textContaining('AI verification passed in integration mode'));
+    
+    // AI Report History check
+    await waitFor(find.byKey(const Key('aiVerificationReportSection')));
+    expect(find.textContaining('AI verification passed in integration mode'), findsWidgets);
 
     // 20. Verify Like button initial state
     final likeButton = find.byKey(const Key('productLikeButton'));

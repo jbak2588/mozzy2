@@ -130,7 +130,7 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | P2-B8 | **Marketplace AI Verification API** | Gemini 3.0 image analysis | ai | 검수 결과 JSON 파싱 | ☑ |
 | P2-B9 | **Marketplace WebP compression** | Image optimization | dart·perf | 이미지 크기 감소 | ☑ |
 | P2-B10 | **Live Gemini AI Smoke Test** | Real API connectivity / Parsing / Parsing bug fix | ai·test | 실연동 스모크 테스트 패스 | ☑ |
-| P2-B11 | **AI verification report storage** | Detailed report collection / Moderation queue | firestore | 리포트 데이터 저장 구조 | □ |
+| P2-B11 | **AI verification report storage** | Detailed report collection / Moderation queue | firestore | 리포트 데이터 저장 구조 | ☑ |
 | P2-B12 | **Marketplace Simpan/Like foundation** | Toggle like/unlike + likesCount display | dart | E2E verified | ☑ |
 | P2-B13 | **Marketplace saved items screen** | List of liked products | dart | UI rendering | ☑ |
 | P2-B14 | **Admin review UI foundation** | Review queue for AI results | dart | UI rendering | □ |

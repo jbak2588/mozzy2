@@ -175,6 +175,11 @@
     "savedItems": "저장한 상품",
     "noSavedItems": "저장한 상품이 없습니다",
     "noSavedItemsDescription": "저장한 상품이 여기에 표시됩니다.",
-    "savedItemsLoadFailed": "저장한 상품을 불러오지 못했습니다"
+    "savedItemsLoadFailed": "저장한 상품을 불러오지 못했습니다",
+    "aiReportHistory": "AI 검증 이력",
+    "noAiReportYet": "AI 리포트가 없습니다",
+    "aiReportSaved": "AI 리포트가 저장되었습니다",
+    "aiReviewQueued": "검토 대기열로 전송되었습니다",
+    "aiReviewQueue": "AI 검토 대기열"
   }
 }

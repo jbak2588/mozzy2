@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/repositories/in_memory_marketplace_repository.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/providers/marketplace_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/screens/product_detail_screen.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/models/ai_verification_report_model.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/repositories/in_memory_ai_verification_report_repository.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/models/product_model.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   late InMemoryMarketplaceRepository mockRepo;
+  late InMemoryAiVerificationReportRepository mockReportRepo;
 
   setUpAll(() async {
     await initializeDateFormatting('id_ID', null);
@@ -17,6 +20,7 @@ void main() {
 
   setUp(() {
     mockRepo = InMemoryMarketplaceRepository();
+    mockReportRepo = InMemoryAiVerificationReportRepository();
   });
 
   Widget createTestWidget(String productId, {String? userId = 'test-user-id'}) {
@@ -24,6 +28,7 @@ void main() {
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
         currentMarketplaceUserIdProvider.overrideWithValue(userId),
+        aiVerificationReportRepositoryProvider.overrideWithValue(mockReportRepo),
       ],
       child: MaterialApp(
         home: ProductDetailScreen(productId: productId),
@@ -71,6 +76,37 @@ void main() {
     
     // i18n keys check
     expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
+
+  });
+
+  testWidgets('shows AI verification report history when available', (tester) async {
+    final product = ProductModel(
+      id: 'p1',
+      userId: 's1',
+      title: 'Product',
+      description: 'Desc',
+      category: 'electronics',
+      price: 1000,
+      geoPath: 'ID/Jakarta',
+      createdAt: DateTime.now(),
+    );
+    await mockRepo.createProduct(product);
+
+    final report = AiVerificationReportModel(
+      id: 'r1',
+      productId: 'p1',
+      sellerId: 's1',
+      status: 'passed',
+      summary: 'Mock AI Summary',
+      createdAt: DateTime.now(),
+    );
+    await mockReportRepo.saveReport(report);
+
+    await tester.pumpWidget(createTestWidget('p1'));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('aiVerificationReportSection')), findsOneWidget);
+    expect(find.text('Mock AI Summary'), findsOneWidget);
   });
 
   testWidgets('shows placeholder image if imageUrls empty', (tester) async {

@@ -175,6 +175,11 @@
     "savedItems": "Saved items",
     "noSavedItems": "No saved products yet",
     "noSavedItemsDescription": "Products you save will appear here.",
-    "savedItemsLoadFailed": "Failed to load saved products"
+    "savedItemsLoadFailed": "Failed to load saved products",
+    "aiReportHistory": "AI verification history",
+    "noAiReportYet": "No AI report yet",
+    "aiReportSaved": "AI report saved",
+    "aiReviewQueued": "Sent to review queue",
+    "aiReviewQueue": "AI review queue"
   }
 }

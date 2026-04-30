@@ -6,6 +6,7 @@ import '../../../core/utils/formatters.dart';
 import '../../../trust/widgets/trust_score_badge.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/product_model.dart';
+import '../models/ai_verification_report_model.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({
@@ -86,6 +87,8 @@ class _ProductDetailContent extends ConsumerWidget {
                 _buildSellerInfo(context),
                 const Divider(height: 32),
                 _buildAiVerification(context),
+                const Divider(height: 32),
+                _buildAiReportHistory(context, ref),
                 const SizedBox(height: 32),
                 _buildStats(context),
                 const SizedBox(height: 32),
@@ -305,6 +308,55 @@ class _ProductDetailContent extends ConsumerWidget {
           Text('$label: ', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
           Text(value, style: const TextStyle(fontSize: 13)),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAiReportHistory(BuildContext context, WidgetRef ref) {
+    final reportsAsync = ref.watch(aiReportsByProductProvider(product.id));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'marketplace.aiReportHistory'.tr(),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        const SizedBox(height: 8),
+        reportsAsync.when(
+          data: (reports) {
+            if (reports.isEmpty) {
+              return Text(
+                'marketplace.noAiReportYet'.tr(),
+                style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+              );
+            }
+            return Column(
+              key: const Key('aiVerificationReportSection'),
+              children: reports.map((report) => _buildReportItem(context, report)).toList(),
+            );
+          },
+          loading: () => const Center(child: LinearProgressIndicator()),
+          error: (err, _) => Text('common.error'.tr()),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReportItem(BuildContext context, AiVerificationReportModel report) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        dense: true,
+        title: Text(report.summary),
+        subtitle: Text(
+          '${MozzyFormatters.formatDateID(report.createdAt)} | ${report.status.toUpperCase()}',
+          style: const TextStyle(fontSize: 11),
+        ),
+        trailing: Text(
+          '${(report.score * 100).toStringAsFixed(0)}%',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

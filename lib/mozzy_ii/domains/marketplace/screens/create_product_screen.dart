@@ -10,6 +10,7 @@ import '../../../core/utils/scaffold_messenger_service.dart';
 import '../../../geo/providers/location_provider.dart';
 import '../../../geo/utils/geo_path_builder.dart';
 import '../models/product_model.dart';
+import '../models/ai_verification_report_model.dart';
 import '../providers/marketplace_provider.dart';
 import 'package:flutter/foundation.dart';
 import '../../../core/config/integration_test_config.dart';
@@ -184,6 +185,30 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
 
       try {
         await ref.read(createProductProvider).call(newProduct);
+
+        // 4. Save AI Report (Non-blocking)
+        if (aiVerificationResult != null) {
+          try {
+            final report = AiVerificationReportModel(
+              id: const Uuid().v4(),
+              productId: productId,
+              sellerId: userId,
+              status: aiVerificationResult.status,
+              score: aiVerificationResult.score,
+              summary: aiVerificationResult.summary,
+              detectedIssues: aiVerificationResult.detectedIssues,
+              suggestedCategory: aiVerificationResult.suggestedCategory,
+              conditionLabel: aiVerificationResult.conditionLabel,
+              createdAt: DateTime.now().toUtc(),
+            );
+
+            final reportRepo = ref.read(aiVerificationReportRepositoryProvider);
+            await reportRepo.saveReport(report);
+            await reportRepo.enqueueReviewIfNeeded(report: report);
+          } catch (e) {
+            debugPrint('Error saving AI report: $e');
+          }
+        }
         
         // Invalidate lists so they refresh
         ref.invalidate(productsByKecamatanProvider);

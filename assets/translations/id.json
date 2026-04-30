@@ -175,6 +175,11 @@
     "savedItems": "Barang Tersimpan",
     "noSavedItems": "Belum ada produk yang disimpan",
     "noSavedItemsDescription": "Produk yang Anda simpan akan muncul di sini.",
-    "savedItemsLoadFailed": "Gagal memuat produk yang disimpan"
+    "savedItemsLoadFailed": "Gagal memuat produk yang disimpan",
+    "aiReportHistory": "Riwayat verifikasi AI",
+    "noAiReportYet": "Belum ada laporan AI",
+    "aiReportSaved": "Laporan AI disimpan",
+    "aiReviewQueued": "Dikirim ke antrian peninjauan",
+    "aiReviewQueue": "Antrian peninjauan AI"
   }
 }

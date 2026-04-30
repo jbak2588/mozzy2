@@ -11,6 +11,10 @@ import '../services/in_memory_marketplace_image_optimization_service.dart';
 import '../services/marketplace_ai_verification_service.dart';
 import '../services/gemini_marketplace_ai_verification_service.dart';
 import '../services/in_memory_marketplace_ai_verification_service.dart';
+import '../repositories/ai_verification_report_repository.dart';
+import '../repositories/in_memory_ai_verification_report_repository.dart';
+import '../models/ai_verification_report_model.dart';
+import '../models/ai_review_queue_item_model.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -24,6 +28,7 @@ final _integrationMarketplaceRepository = InMemoryMarketplaceRepository();
 final _integrationImageUploadService = InMemoryMarketplaceImageUploadService();
 final _integrationImageOptimizationService = InMemoryMarketplaceImageOptimizationService();
 final _integrationAiVerificationService = InMemoryMarketplaceAiVerificationService();
+final _integrationAiVerificationReportRepository = InMemoryAiVerificationReportRepository();
 
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -53,6 +58,13 @@ final marketplaceAiVerificationServiceProvider = Provider<MarketplaceAiVerificat
   return GeminiMarketplaceAiVerificationService();
 });
 
+final aiVerificationReportRepositoryProvider = Provider<AiVerificationReportRepository>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return _integrationAiVerificationReportRepository;
+  }
+  return AiVerificationReportRepository();
+});
+
 final productsByKecamatanProvider = FutureProvider.family
     .autoDispose<List<ProductModel>, String>((ref, kecamatan) async {
       final repo = ref.read(marketplaceRepositoryProvider);
@@ -69,6 +81,20 @@ final savedMarketplaceProductsProvider = FutureProvider.family
     .autoDispose<List<ProductModel>, String>((ref, userId) async {
   final repo = ref.read(marketplaceRepositoryProvider);
   return repo.fetchSavedProductsByUser(userId: userId);
+});
+
+final aiReportsByProductProvider =
+    FutureProvider.family.autoDispose<List<AiVerificationReportModel>, String>(
+  (ref, productId) {
+    final repo = ref.read(aiVerificationReportRepositoryProvider);
+    return repo.fetchReportsByProduct(productId);
+  },
+);
+
+final aiReviewQueueProvider =
+    FutureProvider.autoDispose<List<AiReviewQueueItemModel>>((ref) {
+  final repo = ref.read(aiVerificationReportRepositoryProvider);
+  return repo.fetchOpenReviewQueue(limit: 50);
 });
 
 class CreateProductAction {

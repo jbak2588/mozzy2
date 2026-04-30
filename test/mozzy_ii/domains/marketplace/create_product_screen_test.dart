@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mozzy/mozzy_ii/core/config/integration_test_config.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/providers/marketplace_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/repositories/in_memory_marketplace_repository.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/repositories/in_memory_ai_verification_report_repository.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/screens/create_product_screen.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
@@ -20,10 +21,12 @@ class MockLocationNotifier extends LocationNotifier {
 
 void main() {
   late InMemoryMarketplaceRepository mockRepo;
+  late InMemoryAiVerificationReportRepository mockReportRepo;
   late LocationParts testLocation;
 
   setUp(() {
     mockRepo = InMemoryMarketplaceRepository();
+    mockReportRepo = InMemoryAiVerificationReportRepository();
     testLocation = const LocationParts(
       countryCode: 'ID',
       latitude: 0,
@@ -47,6 +50,7 @@ void main() {
         marketplaceAiVerificationServiceProvider.overrideWithValue(InMemoryMarketplaceAiVerificationService()),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
         currentMarketplaceUserIdProvider.overrideWithValue(IntegrationTestConfig.testUserId),
+        aiVerificationReportRepositoryProvider.overrideWithValue(mockReportRepo),
       ],
       child: const MaterialApp(
         home: CreateProductScreen(),
@@ -107,6 +111,11 @@ void main() {
     expect(products.any((p) => p.title == 'Product with Dots'), true);
     final p = products.firstWhere((p) => p.title == 'Product with Dots');
     expect(p.price, 1500000);
+
+    // Verify AI Report was saved
+    final reports = await mockReportRepo.fetchReportsByProduct(p.id);
+    expect(reports, isNotEmpty);
+    expect(reports.first.productId, p.id);
   });
 
   testWidgets('shows validation error for invalid price', (tester) async {

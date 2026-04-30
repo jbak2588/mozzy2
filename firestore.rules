@@ -103,6 +103,20 @@ service cloud.firestore {
         allow delete: if isAuthenticated() && request.auth.uid == userId;
         allow update: if false;
       }
+
+      match /ai_reports/{reportId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated()
+          && request.resource.data.sellerId == request.auth.uid
+          && request.resource.data.productId == productId;
+        allow update, delete: if false;
+      }
+    }
+
+    match /countries/{country}/domains/marketplace/ai_review_queue/{queueId} {
+      allow create: if isAuthenticated()
+        && request.resource.data.sellerId == request.auth.uid;
+      allow read, update, delete: if false;
     }
 
     // [3] 채팅 (추후 확장 예정)

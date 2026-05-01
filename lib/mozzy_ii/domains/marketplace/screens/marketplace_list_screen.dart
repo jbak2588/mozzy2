@@ -33,13 +33,20 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
             tooltip: 'marketplace.savedItems'.tr(),
             onPressed: () => context.push('/marketplace/saved'),
           ),
-          if (ref.watch(canViewMarketplaceAdminReviewProvider))
+          if (ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
             IconButton(
               key: const Key('marketplaceAdminReviewButton'),
               icon: const Icon(Icons.admin_panel_settings_outlined),
               tooltip: 'marketplace.adminReview'.tr(),
               onPressed: () => context.push('/marketplace/admin-review'),
             ),
+            IconButton(
+              key: const Key('marketplaceAdminAuditLogButton'),
+              icon: const Icon(Icons.history_outlined),
+              tooltip: 'marketplace.adminAuditLog'.tr(),
+              onPressed: () => context.push('/marketplace/admin-audit-logs'),
+            ),
+          ],
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(100),

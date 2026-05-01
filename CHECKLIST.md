@@ -174,7 +174,8 @@
 - [x] Server-side admin claims / role source foundation
 - [x] Admin audit log foundation
 - [x] Production admin claims assignment script
-- [ ] Admin audit log UI
+- [x] Admin audit log UI
+- [ ] Admin role management UI (Phase 3)
 - [x] Admin role enforcement
 - [x] WebP compression / image optimization
 - [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)

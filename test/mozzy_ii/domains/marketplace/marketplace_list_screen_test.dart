@@ -71,6 +71,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceAdminReviewButton')), findsOneWidget);
+    expect(find.byKey(const Key('marketplaceAdminAuditLogButton')), findsOneWidget);
 
     await tester.pumpWidget(ProviderScope(
       overrides: [
@@ -82,6 +83,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceAdminReviewButton')), findsNothing);
+    expect(find.byKey(const Key('marketplaceAdminAuditLogButton')), findsNothing);
   });
 
   testWidgets('MarketplaceListScreen shows category chips', (tester) async {

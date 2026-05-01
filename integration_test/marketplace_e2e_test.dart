@@ -225,6 +225,17 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
 
+    // 32. Verify Admin Audit Log UI (P2-B20)
+    final auditBtn = find.byKey(const Key('marketplaceAdminAuditLogButton'));
+    expect(auditBtn, findsOneWidget);
+    await tester.tap(auditBtn);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('adminAuditLogScreen')), findsOneWidget);
+
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
+
     // Final settle before test exit to avoid _pendingFrame
     await boundedSettle();
     await tester.pump(const Duration(seconds: 1));

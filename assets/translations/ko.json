@@ -212,6 +212,14 @@
     "auditActionReject": "거절됨",
     "auditActionDismiss": "무시됨",
     "auditLogSaved": "감사 로그가 저장되었습니다",
-    "auditLogFailed": "감사 로그 저장 실패"
+    "auditLogFailed": "감사 로그 저장 실패",
+    "auditLogLoadFailed": "감사 로그를 불러오지 못했습니다",
+    "noAuditLogs": "감사 로그가 없습니다",
+    "auditAction": "작업",
+    "auditDecision": "결정",
+    "auditReviewerRole": "검토자 권한",
+    "auditQueueItem": "대기열 항목",
+    "auditProduct": "상품",
+    "auditNote": "노트"
   }
 }

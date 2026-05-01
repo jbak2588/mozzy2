@@ -212,6 +212,14 @@
     "auditActionReject": "Ditolak",
     "auditActionDismiss": "Diabaikan",
     "auditLogSaved": "Log audit disimpan",
-    "auditLogFailed": "Gagal menyimpan log audit"
+    "auditLogFailed": "Gagal menyimpan log audit",
+    "auditLogLoadFailed": "Gagal memuat log audit",
+    "noAuditLogs": "Belum ada log audit",
+    "auditAction": "Aksi",
+    "auditDecision": "Keputusan",
+    "auditReviewerRole": "Peran peninjau",
+    "auditQueueItem": "Item antrian",
+    "auditProduct": "Produk",
+    "auditNote": "Catatan"
   }
 }

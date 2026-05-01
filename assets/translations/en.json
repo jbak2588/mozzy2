@@ -212,6 +212,14 @@
     "auditActionReject": "Rejected",
     "auditActionDismiss": "Dismissed",
     "auditLogSaved": "Audit log saved",
-    "auditLogFailed": "Failed to save audit log"
+    "auditLogFailed": "Failed to save audit log",
+    "auditLogLoadFailed": "Failed to load audit logs",
+    "noAuditLogs": "No audit logs yet",
+    "auditAction": "Action",
+    "auditDecision": "Decision",
+    "auditReviewerRole": "Reviewer role",
+    "auditQueueItem": "Queue item",
+    "auditProduct": "Product",
+    "auditNote": "Note"
   }
 }

@@ -18,6 +18,35 @@ class AdminReviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final canView = ref.watch(canViewMarketplaceAdminReviewProvider);
+
+    if (!canView) {
+      return Scaffold(
+        appBar: AppBar(title: Text('marketplace.adminReview'.tr())),
+        body: Center(
+          key: const Key('adminReviewAccessDenied'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.lock_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text(
+                'marketplace.adminAccessDenied'.tr(),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text('marketplace.adminAccessDeniedDesc'.tr()),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => context.pop(),
+                child: Text('common.back'.tr()),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final queueAsync = ref.watch(aiReviewQueueProvider);
 
     return Scaffold(

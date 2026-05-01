@@ -15,6 +15,7 @@ import '../repositories/ai_verification_report_repository.dart';
 import '../repositories/in_memory_ai_verification_report_repository.dart';
 import '../models/ai_verification_report_model.dart';
 import '../models/ai_review_queue_item_model.dart';
+import '../models/admin_role_model.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -22,6 +23,21 @@ final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   }
   // This will throw if not logged in. The UI should prevent this.
   return FirebaseAuth.instance.currentUser?.uid;
+});
+
+final marketplaceAdminRoleProvider = Provider<MarketplaceAdminRole>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return MarketplaceAdminRole.admin;
+  }
+
+  // Foundation only:
+  // In production/release, default to none until server-side role source is added.
+  return MarketplaceAdminRole.none;
+});
+
+final canViewMarketplaceAdminReviewProvider = Provider<bool>((ref) {
+  final role = ref.watch(marketplaceAdminRoleProvider);
+  return role.canViewReviewQueue;
 });
 
 final _integrationMarketplaceRepository = InMemoryMarketplaceRepository();

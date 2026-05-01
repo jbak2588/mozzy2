@@ -5,6 +5,7 @@ import 'package:mozzy/mozzy_ii/domains/marketplace/repositories/in_memory_ai_ver
 import 'package:mozzy/mozzy_ii/domains/marketplace/providers/marketplace_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/screens/admin_review_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/models/ai_verification_report_model.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/models/admin_role_model.dart';
 
 void main() {
   late InMemoryAiVerificationReportRepository mockRepo;
@@ -17,6 +18,7 @@ void main() {
     return ProviderScope(
       overrides: [
         aiVerificationReportRepositoryProvider.overrideWithValue(mockRepo),
+        marketplaceAdminRoleProvider.overrideWithValue(MarketplaceAdminRole.admin),
       ],
       child: const MaterialApp(
         home: AdminReviewScreen(),
@@ -73,5 +75,20 @@ void main() {
     expect(find.byType(ElevatedButton), findsNothing);
     expect(find.text('Approve'), findsNothing);
     expect(find.text('Reject'), findsNothing);
+  });
+
+  testWidgets('AdminReviewScreen shows access denied when unauthorized', (tester) async {
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        marketplaceAdminRoleProvider.overrideWithValue(MarketplaceAdminRole.none),
+      ],
+      child: const MaterialApp(
+        home: AdminReviewScreen(),
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('adminReviewAccessDenied')), findsOneWidget);
+    expect(find.textContaining('Access Denied'), findsNothing); // Translations might not be loaded, check for key or logic
   });
 }

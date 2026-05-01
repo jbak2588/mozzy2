@@ -190,6 +190,14 @@
     "reviewStatus": "검토 상태",
     "needsReview": "검토 필요",
     "reviewFailed": "실패",
-    "reviewError": "오류"
+    "reviewError": "오류",
+    "adminAccessDenied": "접근 거부됨",
+    "adminAccessDeniedDesc": "이 영역에 접근할 권한이 없습니다.",
+    "role": {
+      "none": "권한 없음",
+      "reviewer": "검토자",
+      "admin": "관리자",
+      "superAdmin": "최고 관리자"
+    }
   }
 }

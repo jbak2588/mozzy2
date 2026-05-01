@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
@@ -34,7 +33,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
             tooltip: 'marketplace.savedItems'.tr(),
             onPressed: () => context.push('/marketplace/saved'),
           ),
-          if (kDebugMode || IntegrationTestConfig.enabled)
+          if (ref.watch(canViewMarketplaceAdminReviewProvider))
             IconButton(
               key: const Key('marketplaceAdminReviewButton'),
               icon: const Icon(Icons.admin_panel_settings_outlined),

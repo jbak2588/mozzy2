@@ -190,6 +190,14 @@
     "reviewStatus": "Review status",
     "needsReview": "Needs review",
     "reviewFailed": "Failed",
-    "reviewError": "Error"
+    "reviewError": "Error",
+    "adminAccessDenied": "Access Denied",
+    "adminAccessDeniedDesc": "You do not have permission to access this area.",
+    "role": {
+      "none": "None",
+      "reviewer": "Reviewer",
+      "admin": "Admin",
+      "superAdmin": "Super Admin"
+    }
   }
 }

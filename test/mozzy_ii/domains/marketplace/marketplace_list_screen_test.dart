@@ -7,6 +7,7 @@ import 'package:mozzy/mozzy_ii/domains/marketplace/screens/marketplace_list_scre
 import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/models/product_model.dart';
+import 'package:mozzy/mozzy_ii/domains/marketplace/models/admin_role_model.dart';
 
 class MockLocationNotifier extends LocationNotifier {
   final LocationParts _value;
@@ -56,8 +57,31 @@ void main() {
     expect(find.byKey(const Key('marketplaceSavedButton')), findsOneWidget);
     expect(find.text('Kebayoran Baru, Jakarta Selatan'), findsOneWidget);
     
-    // Admin button should appear in debug/test mode
+    // By default in test environment it might be none or admin depending on how provider is set
+  });
+
+  testWidgets('MarketplaceListScreen shows admin button only when authorized', (tester) async {
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        marketplaceRepositoryProvider.overrideWithValue(mockRepo),
+        locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
+        marketplaceAdminRoleProvider.overrideWithValue(MarketplaceAdminRole.admin),
+      ],
+      child: const MaterialApp(home: MarketplaceListScreen()),
+    ));
+    await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceAdminReviewButton')), findsOneWidget);
+
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        marketplaceRepositoryProvider.overrideWithValue(mockRepo),
+        locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
+        marketplaceAdminRoleProvider.overrideWithValue(MarketplaceAdminRole.none),
+      ],
+      child: const MaterialApp(home: MarketplaceListScreen()),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('marketplaceAdminReviewButton')), findsNothing);
   });
 
   testWidgets('MarketplaceListScreen shows category chips', (tester) async {

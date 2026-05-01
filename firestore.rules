@@ -116,6 +116,9 @@ service cloud.firestore {
     match /countries/{country}/domains/marketplace/ai_review_queue/{queueId} {
       allow create: if isAuthenticated()
         && request.resource.data.sellerId == request.auth.uid;
+      
+      // Future: allow read, update if request.auth.token.admin == true
+      // Current: access gated by UI role enforcement (P2-B16 foundation)
       allow read, update, delete: if false;
     }
 

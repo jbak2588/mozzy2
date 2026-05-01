@@ -190,6 +190,14 @@
     "reviewStatus": "Status peninjauan",
     "needsReview": "Perlu ditinjau",
     "reviewFailed": "Gagal",
-    "reviewError": "Error"
+    "reviewError": "Error",
+    "adminAccessDenied": "Akses Ditolak",
+    "adminAccessDeniedDesc": "Anda tidak memiliki izin untuk mengakses area ini.",
+    "role": {
+      "none": "Bukan Admin",
+      "reviewer": "Peninjau",
+      "admin": "Admin",
+      "superAdmin": "Super Admin"
+    }
   }
 }

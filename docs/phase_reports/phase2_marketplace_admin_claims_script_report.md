@@ -34,7 +34,7 @@ Implementation of a secure, local administrative utility for managing Firebase C
 - **Marketplace E2E**: Skipped because P2-B19 added an external admin script/docs only and did not change Flutter runtime code.
 
 ## 📦 Commit Information
-- **Feature Commit**: `PENDING_UNTIL_COMMIT`
+- **Feature Commit**: `861145f63478739c57624625e418300186597aed`
 - **Docs Commit**: `PENDING_UNTIL_COMMIT`
 
 ## 🚀 Next Steps

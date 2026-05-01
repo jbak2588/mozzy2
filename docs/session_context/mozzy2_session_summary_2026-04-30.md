@@ -6,7 +6,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
 ## 2. Latest Verified Commits
 - Feature P2-B13 Foundation Commit: 6485f17e86b68b466f9dbe76273307d399382887
 - i18n Hotfix & Stability Commit: 1a1bdf6f5eb78c6d06dee9cc3293cedf973c2bb0
-- P2-B14 Admin Review UI Commit: beb58aa (Latest)
+- P2-B14 Admin Review UI Commit: beb58aa
+- P2-B16 Admin Role Enforcement Commit: d803915 (Latest)
 - P2-B11 AI Report Storage Commit: 9e7c99b80e8bf3b524309115a207f92af2d46b12
 
 ## 3. Current Development Phase
@@ -27,11 +28,16 @@ This document summarizes the current Mozzy2 development state for future AI sess
     - Index: `ai_review_queue` (reviewStatus ASC, createdAt DESC) added.
     - Integration: `CreateProductScreen` saves detailed report and enqueues review (non-blocking).
     - UI: `ProductDetailScreen` shows AI report history section.
-29:   - P2-B14 Admin Review UI Foundation: **COMPLETED**
-30:     - UI: `AdminReviewScreen` created with AI review queue visualization.
-31:     - Route: `/marketplace/admin-review` added.
-32:     - Access: Debug/Integration only entry point in `MarketplaceListScreen`.
-33:     - Localization: Added to all 3 languages.
+  - P2-B14 Admin Review UI Foundation: **COMPLETED**
+    - UI: `AdminReviewScreen` created with AI review queue visualization.
+    - Route: `/marketplace/admin-review` added.
+    - Access: Debug/Integration only entry point in `MarketplaceListScreen`.
+    - Localization: Added to all 3 languages.
+  - P2-B16 Admin Role Enforcement: **COMPLETED**
+    - Model: `MarketplaceAdminRole` enum and extensions.
+    - Provider: `marketplaceAdminRoleProvider` (defaults to none in production, admin in test).
+    - Security: UI access guards on entry points and screens.
+    - i18n: Added access denied and role keys.
 
 ## 4. Architecture & Test Mode
 - **Collection Group Query**: Used for cross-document "likes" retrieval.
@@ -40,13 +46,16 @@ This document summarizes the current Mozzy2 development state for future AI sess
 
 ## 5. Verification Results
 - `flutter analyze`: Passed (No issues found)
-- `flutter test`: Passed (93/93 tests passed)
+- `flutter test`: Passed (101/101 tests passed)
 - Marketplace E2E Integration Test: **PASSED** on device `RR8N109B4JM`.
+  - Scenario: Admin Review access guard and visibility verified.
   - Scenario: Create -> Like -> Saved List -> Unlike -> Empty List flow verified.
   - Scenario: Create -> Verify AI Report in Detail flow verified.
 
 ## 6. Documented Reports
 - `docs/phase_reports/phase2_marketplace_saved_items_report.md`
+- `docs/phase_reports/phase2_marketplace_admin_role_enforcement_report.md`
+- `docs/phase_reports/phase2_marketplace_admin_review_ui_report.md`
 - `docs/phase_reports/phase2_marketplace_ai_report_storage_report.md`
 - `CHECKLIST.md` and `Sprint Guide` updated.
 
@@ -54,9 +63,6 @@ This document summarizes the current Mozzy2 development state for future AI sess
 **P2-B15 Admin approve/reject actions**
 - Implement mutation logic for resolving queue items.
 - Add approve/reject buttons to `AdminReviewScreen` or detail view.
-
-**P2-B16 Admin role enforcement**
-- Restrict admin routes to authorized users only.
 
 ## 8. Reminders for Future Sessions
 - Do not commit real API keys (Gemini/Google).

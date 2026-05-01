@@ -119,6 +119,35 @@ class AiVerificationReportRepository {
     }
   }
 
+  /// 검토 항목 처리 (승인/거절/무시)
+  Future<void> resolveReviewItem({
+    required String itemId,
+    required String reviewerId,
+    required String decision, // approved | rejected | dismissed
+    String? note,
+  }) async {
+    try {
+      final now = DateTime.now().toUtc();
+      await _firestore
+          .collection('countries')
+          .doc('ID')
+          .collection('domains')
+          .doc('marketplace')
+          .collection('ai_review_queue')
+          .doc(itemId)
+          .update({
+        'reviewStatus': decision == 'dismissed' ? 'dismissed' : 'resolved',
+        'reviewerId': reviewerId,
+        'reviewerDecision': decision,
+        'reviewerNote': note,
+        'resolvedAt': now,
+      });
+    } catch (e) {
+      debugPrint('Error resolving AI review item: $e');
+      rethrow;
+    }
+  }
+
   String _determinePriority(AiVerificationReportModel report) {
     if (report.status == 'error') return 'high';
     if (report.score < 0.3) return 'high';

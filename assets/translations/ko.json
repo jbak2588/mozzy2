@@ -198,6 +198,11 @@
       "reviewer": "검토자",
       "admin": "관리자",
       "superAdmin": "최고 관리자"
-    }
+    },
+    "approve": "승인",
+    "reject": "거절",
+    "dismiss": "무시",
+    "actionSuccess": "처리가 완료되었습니다",
+    "actionFailed": "처리에 실패했습니다"
   }
 }

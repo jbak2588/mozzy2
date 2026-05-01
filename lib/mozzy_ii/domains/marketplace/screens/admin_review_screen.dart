@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/config/integration_test_config.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/ai_review_queue_item_model.dart';
+import '../models/admin_role_model.dart';
 
 class AdminReviewScreen extends ConsumerWidget {
   const AdminReviewScreen({super.key});
@@ -19,6 +20,7 @@ class AdminReviewScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final canView = ref.watch(canViewMarketplaceAdminReviewProvider);
+    final canModerate = ref.watch(marketplaceAdminRoleProvider).canModerate;
 
     if (!canView) {
       return Scaffold(
@@ -85,7 +87,7 @@ class AdminReviewScreen extends ConsumerWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final item = items[index];
-              return _buildQueueItemCard(context, item);
+              return _buildQueueItemCard(context, ref, item, canModerate);
             },
           );
         },
@@ -111,7 +113,43 @@ class AdminReviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildQueueItemCard(BuildContext context, AiReviewQueueItemModel item) {
+  Future<void> _handleAction(
+    BuildContext context,
+    WidgetRef ref,
+    AiReviewQueueItemModel item,
+    String action,
+  ) async {
+    final controller = ref.read(adminReviewActionControllerProvider);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      if (action == 'approve') {
+        await controller.approve(item.id, item.productId);
+      } else if (action == 'reject') {
+        await controller.reject(item.id, item.productId);
+      } else if (action == 'dismiss') {
+        await controller.dismiss(item.id);
+      }
+
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('marketplace.actionSuccess'.tr())),
+      );
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text('marketplace.actionFailed'.tr()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Widget _buildQueueItemCard(
+    BuildContext context,
+    WidgetRef ref,
+    AiReviewQueueItemModel item,
+    bool canModerate,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -154,6 +192,40 @@ class AdminReviewScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              if (canModerate)
+                Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.end,
+                      children: [
+                        TextButton(
+                          key: Key('dismissBtn_${item.id}'),
+                          onPressed: () => _handleAction(context, ref, item, 'dismiss'),
+                          child: Text('marketplace.dismiss'.tr()),
+                        ),
+                        OutlinedButton(
+                          key: Key('rejectBtn_${item.id}'),
+                          onPressed: () => _handleAction(context, ref, item, 'reject'),
+                          style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                          child: Text('marketplace.reject'.tr()),
+                        ),
+                        ElevatedButton(
+                          key: Key('approveBtn_${item.id}'),
+                          onPressed: () => _handleAction(context, ref, item, 'approve'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Text('marketplace.approve'.tr()),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

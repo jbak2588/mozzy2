@@ -198,6 +198,11 @@
       "reviewer": "Reviewer",
       "admin": "Admin",
       "superAdmin": "Super Admin"
-    }
+    },
+    "approve": "Approve",
+    "reject": "Reject",
+    "dismiss": "Dismiss",
+    "actionSuccess": "Action successful",
+    "actionFailed": "Action failed"
   }
 }

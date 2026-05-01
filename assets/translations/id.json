@@ -198,6 +198,11 @@
       "reviewer": "Peninjau",
       "admin": "Admin",
       "superAdmin": "Super Admin"
-    }
+    },
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "dismiss": "Abaikan",
+    "actionSuccess": "Tindakan berhasil",
+    "actionFailed": "Tindakan gagal"
   }
 }

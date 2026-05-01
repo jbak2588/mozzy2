@@ -181,3 +181,79 @@ class ToggleProductLikeAction {
 final toggleProductLikeProvider = Provider<ToggleProductLikeAction>((ref) {
   return ToggleProductLikeAction(ref.read(marketplaceRepositoryProvider), ref);
 });
+
+class AdminReviewActionController {
+  final AiVerificationReportRepository _aiRepo;
+  final MarketplaceRepository _marketRepo;
+  final Ref _ref;
+
+  AdminReviewActionController(this._aiRepo, this._marketRepo, this._ref);
+
+  Future<void> approve(String itemId, String productId) async {
+    final role = _ref.read(marketplaceAdminRoleProvider);
+    if (!role.canModerate) throw Exception('Unauthorized');
+
+    final reviewerId = _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
+
+    await _aiRepo.resolveReviewItem(
+      itemId: itemId,
+      reviewerId: reviewerId,
+      decision: 'approved',
+    );
+
+    await _marketRepo.updateProductAiStatus(
+      productId: productId,
+      isVerified: true,
+      status: 'passed',
+    );
+
+    _ref.invalidate(aiReviewQueueProvider);
+    _ref.invalidate(productByIdProvider(productId));
+  }
+
+  Future<void> reject(String itemId, String productId, {String? note}) async {
+    final role = _ref.read(marketplaceAdminRoleProvider);
+    if (!role.canModerate) throw Exception('Unauthorized');
+
+    final reviewerId = _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
+
+    await _aiRepo.resolveReviewItem(
+      itemId: itemId,
+      reviewerId: reviewerId,
+      decision: 'rejected',
+      note: note,
+    );
+
+    await _marketRepo.updateProductAiStatus(
+      productId: productId,
+      isVerified: false,
+      status: 'failed',
+    );
+
+    _ref.invalidate(aiReviewQueueProvider);
+    _ref.invalidate(productByIdProvider(productId));
+  }
+
+  Future<void> dismiss(String itemId) async {
+    final role = _ref.read(marketplaceAdminRoleProvider);
+    if (!role.canModerate) throw Exception('Unauthorized');
+
+    final reviewerId = _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
+
+    await _aiRepo.resolveReviewItem(
+      itemId: itemId,
+      reviewerId: reviewerId,
+      decision: 'dismissed',
+    );
+
+    _ref.invalidate(aiReviewQueueProvider);
+  }
+}
+
+final adminReviewActionControllerProvider = Provider<AdminReviewActionController>((ref) {
+  return AdminReviewActionController(
+    ref.read(aiVerificationReportRepositoryProvider),
+    ref.read(marketplaceRepositoryProvider),
+    ref,
+  );
+});

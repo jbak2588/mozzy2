@@ -18,7 +18,8 @@ mixin _$AiReviewQueueItemModel {
  String get id; String get productId; String get sellerId; String get reportId; String get status;// needs_review | failed | error
  String get reason; String get priority;// low | normal | high | urgent
  DateTime get createdAt; DateTime? get resolvedAt; String get reviewStatus;// open | resolved | dismissed
- String? get assignedTo;
+ String? get assignedTo; String? get reviewerId; String? get reviewerDecision;// approved | rejected | dismissed
+ String? get reviewerNote;
 /// Create a copy of AiReviewQueueItemModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +32,16 @@ $AiReviewQueueItemModelCopyWith<AiReviewQueueItemModel> get copyWith => _$AiRevi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiReviewQueueItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.reportId, reportId) || other.reportId == reportId)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.reviewStatus, reviewStatus) || other.reviewStatus == reviewStatus)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiReviewQueueItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.reportId, reportId) || other.reportId == reportId)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.reviewStatus, reviewStatus) || other.reviewStatus == reviewStatus)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo)&&(identical(other.reviewerId, reviewerId) || other.reviewerId == reviewerId)&&(identical(other.reviewerDecision, reviewerDecision) || other.reviewerDecision == reviewerDecision)&&(identical(other.reviewerNote, reviewerNote) || other.reviewerNote == reviewerNote));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,productId,sellerId,reportId,status,reason,priority,createdAt,resolvedAt,reviewStatus,assignedTo);
+int get hashCode => Object.hash(runtimeType,id,productId,sellerId,reportId,status,reason,priority,createdAt,resolvedAt,reviewStatus,assignedTo,reviewerId,reviewerDecision,reviewerNote);
 
 @override
 String toString() {
-  return 'AiReviewQueueItemModel(id: $id, productId: $productId, sellerId: $sellerId, reportId: $reportId, status: $status, reason: $reason, priority: $priority, createdAt: $createdAt, resolvedAt: $resolvedAt, reviewStatus: $reviewStatus, assignedTo: $assignedTo)';
+  return 'AiReviewQueueItemModel(id: $id, productId: $productId, sellerId: $sellerId, reportId: $reportId, status: $status, reason: $reason, priority: $priority, createdAt: $createdAt, resolvedAt: $resolvedAt, reviewStatus: $reviewStatus, assignedTo: $assignedTo, reviewerId: $reviewerId, reviewerDecision: $reviewerDecision, reviewerNote: $reviewerNote)';
 }
 
 
@@ -51,7 +52,7 @@ abstract mixin class $AiReviewQueueItemModelCopyWith<$Res>  {
   factory $AiReviewQueueItemModelCopyWith(AiReviewQueueItemModel value, $Res Function(AiReviewQueueItemModel) _then) = _$AiReviewQueueItemModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String productId, String sellerId, String reportId, String status, String reason, String priority, DateTime createdAt, DateTime? resolvedAt, String reviewStatus, String? assignedTo
+ String id, String productId, String sellerId, String reportId, String status, String reason, String priority, DateTime createdAt, DateTime? resolvedAt, String reviewStatus, String? assignedTo, String? reviewerId, String? reviewerDecision, String? reviewerNote
 });
 
 
@@ -68,7 +69,7 @@ class _$AiReviewQueueItemModelCopyWithImpl<$Res>
 
 /// Create a copy of AiReviewQueueItemModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? productId = null,Object? sellerId = null,Object? reportId = null,Object? status = null,Object? reason = null,Object? priority = null,Object? createdAt = null,Object? resolvedAt = freezed,Object? reviewStatus = null,Object? assignedTo = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? productId = null,Object? sellerId = null,Object? reportId = null,Object? status = null,Object? reason = null,Object? priority = null,Object? createdAt = null,Object? resolvedAt = freezed,Object? reviewStatus = null,Object? assignedTo = freezed,Object? reviewerId = freezed,Object? reviewerDecision = freezed,Object? reviewerNote = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
@@ -81,6 +82,9 @@ as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: 
 as DateTime,resolvedAt: freezed == resolvedAt ? _self.resolvedAt : resolvedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,reviewStatus: null == reviewStatus ? _self.reviewStatus : reviewStatus // ignore: cast_nullable_to_non_nullable
 as String,assignedTo: freezed == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
+as String?,reviewerId: freezed == reviewerId ? _self.reviewerId : reviewerId // ignore: cast_nullable_to_non_nullable
+as String?,reviewerDecision: freezed == reviewerDecision ? _self.reviewerDecision : reviewerDecision // ignore: cast_nullable_to_non_nullable
+as String?,reviewerNote: freezed == reviewerNote ? _self.reviewerNote : reviewerNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -166,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String productId,  String sellerId,  String reportId,  String status,  String reason,  String priority,  DateTime createdAt,  DateTime? resolvedAt,  String reviewStatus,  String? assignedTo)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String productId,  String sellerId,  String reportId,  String status,  String reason,  String priority,  DateTime createdAt,  DateTime? resolvedAt,  String reviewStatus,  String? assignedTo,  String? reviewerId,  String? reviewerDecision,  String? reviewerNote)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AiReviewQueueItemModel() when $default != null:
-return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.status,_that.reason,_that.priority,_that.createdAt,_that.resolvedAt,_that.reviewStatus,_that.assignedTo);case _:
+return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.status,_that.reason,_that.priority,_that.createdAt,_that.resolvedAt,_that.reviewStatus,_that.assignedTo,_that.reviewerId,_that.reviewerDecision,_that.reviewerNote);case _:
   return orElse();
 
 }
@@ -187,10 +191,10 @@ return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.sta
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String productId,  String sellerId,  String reportId,  String status,  String reason,  String priority,  DateTime createdAt,  DateTime? resolvedAt,  String reviewStatus,  String? assignedTo)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String productId,  String sellerId,  String reportId,  String status,  String reason,  String priority,  DateTime createdAt,  DateTime? resolvedAt,  String reviewStatus,  String? assignedTo,  String? reviewerId,  String? reviewerDecision,  String? reviewerNote)  $default,) {final _that = this;
 switch (_that) {
 case _AiReviewQueueItemModel():
-return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.status,_that.reason,_that.priority,_that.createdAt,_that.resolvedAt,_that.reviewStatus,_that.assignedTo);case _:
+return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.status,_that.reason,_that.priority,_that.createdAt,_that.resolvedAt,_that.reviewStatus,_that.assignedTo,_that.reviewerId,_that.reviewerDecision,_that.reviewerNote);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +211,10 @@ return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.sta
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String productId,  String sellerId,  String reportId,  String status,  String reason,  String priority,  DateTime createdAt,  DateTime? resolvedAt,  String reviewStatus,  String? assignedTo)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String productId,  String sellerId,  String reportId,  String status,  String reason,  String priority,  DateTime createdAt,  DateTime? resolvedAt,  String reviewStatus,  String? assignedTo,  String? reviewerId,  String? reviewerDecision,  String? reviewerNote)?  $default,) {final _that = this;
 switch (_that) {
 case _AiReviewQueueItemModel() when $default != null:
-return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.status,_that.reason,_that.priority,_that.createdAt,_that.resolvedAt,_that.reviewStatus,_that.assignedTo);case _:
+return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.status,_that.reason,_that.priority,_that.createdAt,_that.resolvedAt,_that.reviewStatus,_that.assignedTo,_that.reviewerId,_that.reviewerDecision,_that.reviewerNote);case _:
   return null;
 
 }
@@ -222,7 +226,7 @@ return $default(_that.id,_that.productId,_that.sellerId,_that.reportId,_that.sta
 @JsonSerializable()
 
 class _AiReviewQueueItemModel extends AiReviewQueueItemModel {
-  const _AiReviewQueueItemModel({required this.id, required this.productId, required this.sellerId, required this.reportId, required this.status, this.reason = '', this.priority = 'normal', required this.createdAt, this.resolvedAt, this.reviewStatus = 'open', this.assignedTo}): super._();
+  const _AiReviewQueueItemModel({required this.id, required this.productId, required this.sellerId, required this.reportId, required this.status, this.reason = '', this.priority = 'normal', required this.createdAt, this.resolvedAt, this.reviewStatus = 'open', this.assignedTo, this.reviewerId, this.reviewerDecision, this.reviewerNote}): super._();
   factory _AiReviewQueueItemModel.fromJson(Map<String, dynamic> json) => _$AiReviewQueueItemModelFromJson(json);
 
 @override final  String id;
@@ -239,6 +243,10 @@ class _AiReviewQueueItemModel extends AiReviewQueueItemModel {
 @override@JsonKey() final  String reviewStatus;
 // open | resolved | dismissed
 @override final  String? assignedTo;
+@override final  String? reviewerId;
+@override final  String? reviewerDecision;
+// approved | rejected | dismissed
+@override final  String? reviewerNote;
 
 /// Create a copy of AiReviewQueueItemModel
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +261,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiReviewQueueItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.reportId, reportId) || other.reportId == reportId)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.reviewStatus, reviewStatus) || other.reviewStatus == reviewStatus)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiReviewQueueItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.sellerId, sellerId) || other.sellerId == sellerId)&&(identical(other.reportId, reportId) || other.reportId == reportId)&&(identical(other.status, status) || other.status == status)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.reviewStatus, reviewStatus) || other.reviewStatus == reviewStatus)&&(identical(other.assignedTo, assignedTo) || other.assignedTo == assignedTo)&&(identical(other.reviewerId, reviewerId) || other.reviewerId == reviewerId)&&(identical(other.reviewerDecision, reviewerDecision) || other.reviewerDecision == reviewerDecision)&&(identical(other.reviewerNote, reviewerNote) || other.reviewerNote == reviewerNote));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,productId,sellerId,reportId,status,reason,priority,createdAt,resolvedAt,reviewStatus,assignedTo);
+int get hashCode => Object.hash(runtimeType,id,productId,sellerId,reportId,status,reason,priority,createdAt,resolvedAt,reviewStatus,assignedTo,reviewerId,reviewerDecision,reviewerNote);
 
 @override
 String toString() {
-  return 'AiReviewQueueItemModel(id: $id, productId: $productId, sellerId: $sellerId, reportId: $reportId, status: $status, reason: $reason, priority: $priority, createdAt: $createdAt, resolvedAt: $resolvedAt, reviewStatus: $reviewStatus, assignedTo: $assignedTo)';
+  return 'AiReviewQueueItemModel(id: $id, productId: $productId, sellerId: $sellerId, reportId: $reportId, status: $status, reason: $reason, priority: $priority, createdAt: $createdAt, resolvedAt: $resolvedAt, reviewStatus: $reviewStatus, assignedTo: $assignedTo, reviewerId: $reviewerId, reviewerDecision: $reviewerDecision, reviewerNote: $reviewerNote)';
 }
 
 
@@ -273,7 +281,7 @@ abstract mixin class _$AiReviewQueueItemModelCopyWith<$Res> implements $AiReview
   factory _$AiReviewQueueItemModelCopyWith(_AiReviewQueueItemModel value, $Res Function(_AiReviewQueueItemModel) _then) = __$AiReviewQueueItemModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String productId, String sellerId, String reportId, String status, String reason, String priority, DateTime createdAt, DateTime? resolvedAt, String reviewStatus, String? assignedTo
+ String id, String productId, String sellerId, String reportId, String status, String reason, String priority, DateTime createdAt, DateTime? resolvedAt, String reviewStatus, String? assignedTo, String? reviewerId, String? reviewerDecision, String? reviewerNote
 });
 
 
@@ -290,7 +298,7 @@ class __$AiReviewQueueItemModelCopyWithImpl<$Res>
 
 /// Create a copy of AiReviewQueueItemModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? productId = null,Object? sellerId = null,Object? reportId = null,Object? status = null,Object? reason = null,Object? priority = null,Object? createdAt = null,Object? resolvedAt = freezed,Object? reviewStatus = null,Object? assignedTo = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? productId = null,Object? sellerId = null,Object? reportId = null,Object? status = null,Object? reason = null,Object? priority = null,Object? createdAt = null,Object? resolvedAt = freezed,Object? reviewStatus = null,Object? assignedTo = freezed,Object? reviewerId = freezed,Object? reviewerDecision = freezed,Object? reviewerNote = freezed,}) {
   return _then(_AiReviewQueueItemModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
@@ -303,6 +311,9 @@ as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: 
 as DateTime,resolvedAt: freezed == resolvedAt ? _self.resolvedAt : resolvedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,reviewStatus: null == reviewStatus ? _self.reviewStatus : reviewStatus // ignore: cast_nullable_to_non_nullable
 as String,assignedTo: freezed == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
+as String?,reviewerId: freezed == reviewerId ? _self.reviewerId : reviewerId // ignore: cast_nullable_to_non_nullable
+as String?,reviewerDecision: freezed == reviewerDecision ? _self.reviewerDecision : reviewerDecision // ignore: cast_nullable_to_non_nullable
+as String?,reviewerNote: freezed == reviewerNote ? _self.reviewerNote : reviewerNote // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

@@ -22,6 +22,9 @@ _AiReviewQueueItemModel _$AiReviewQueueItemModelFromJson(
       : DateTime.parse(json['resolvedAt'] as String),
   reviewStatus: json['reviewStatus'] as String? ?? 'open',
   assignedTo: json['assignedTo'] as String?,
+  reviewerId: json['reviewerId'] as String?,
+  reviewerDecision: json['reviewerDecision'] as String?,
+  reviewerNote: json['reviewerNote'] as String?,
 );
 
 Map<String, dynamic> _$AiReviewQueueItemModelToJson(
@@ -38,4 +41,7 @@ Map<String, dynamic> _$AiReviewQueueItemModelToJson(
   'resolvedAt': instance.resolvedAt?.toIso8601String(),
   'reviewStatus': instance.reviewStatus,
   'assignedTo': instance.assignedTo,
+  'reviewerId': instance.reviewerId,
+  'reviewerDecision': instance.reviewerDecision,
+  'reviewerNote': instance.reviewerNote,
 };

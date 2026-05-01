@@ -134,8 +134,10 @@ Ver 1.0  |  2026년 4월 26일  |  Confidential
 | P2-B12 | **Marketplace Simpan/Like foundation** | Toggle like/unlike + likesCount display | dart | E2E verified | ☑ |
 | P2-B13 | **Marketplace saved items screen** | List of liked products | dart | UI rendering | ☑ |
 | P2-B14 | **Admin review UI foundation** | Review queue for AI results | dart | UI rendering | ☑ |
-| P2-B15 | **Admin approve/reject actions** | Resolving queue items | dart | Mutation logic | □ |
+| P2-B15 | **Admin approve/reject actions** | Resolving queue items | dart | Mutation logic | ☑ |
 | P2-B16 | **Admin role enforcement** | Role-based access control (Foundation) | dart | Access guard | ☑ |
+| P2-B17 | **Server-side admin claims** | Firebase Custom Claims / role source | security·deploy | Admin-only Firestore write | □ |
+| P2-B18 | **Admin audit log** | Tracking moderation actions | firestore·dart | Audit collection records | □ |
 | P2-U13 | **MarketplaceAiService** | Gemini3.0 이미지 분석 / 인도네시아어 프롬프트 / RateLimiter 10/분 | ai | AI 검수 결과 JSON 파싱 | ☑ |
 | P2-U14 | **AI 검수 UI 플로우** | AiVerificationSheet / 로딩 → 결과 리포트 → 'Terverifikasi AI' 배지 | dart·ai | AI 검수 플로우 완료 | □ |
 | P2-U15 | **Marketplace 인덱스** | used\_items 인덱스 18개 / GeoHash 인덱스 / Security Rules | firestore | 18개 인덱스 배포 | □ |

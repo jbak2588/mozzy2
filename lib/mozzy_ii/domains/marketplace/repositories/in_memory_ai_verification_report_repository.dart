@@ -67,6 +67,25 @@ class InMemoryAiVerificationReportRepository implements AiVerificationReportRepo
     return sorted.take(limit).toList();
   }
 
+  @override
+  Future<void> resolveReviewItem({
+    required String itemId,
+    required String reviewerId,
+    required String decision, // approved | rejected | dismissed
+    String? note,
+  }) async {
+    final item = _queue[itemId];
+    if (item == null) return;
+
+    _queue[itemId] = item.copyWith(
+      reviewStatus: decision == 'dismissed' ? 'dismissed' : 'resolved',
+      reviewerId: reviewerId,
+      reviewerDecision: decision,
+      reviewerNote: note,
+      resolvedAt: DateTime.now().toUtc(),
+    );
+  }
+
   // 테스트를 위한 편의용
   List<AiReviewQueueItemModel> get queueItems => _queue.values.toList();
   

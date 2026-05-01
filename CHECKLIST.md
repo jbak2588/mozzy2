@@ -170,7 +170,9 @@
 - [x] AI verification report storage / moderation queue
 - [x] AI moderation queue foundation
 - [x] Admin review UI foundation
-- [ ] Admin approve/reject actions
+- [x] Admin approve/reject actions foundation
+- [ ] Server-side admin claims / role source
+- [ ] Admin audit log
 - [x] Admin role enforcement
 - [x] WebP compression / image optimization
 - [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)

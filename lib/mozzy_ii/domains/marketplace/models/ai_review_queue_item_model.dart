@@ -26,6 +26,9 @@ abstract class AiReviewQueueItemModel with _$AiReviewQueueItemModel {
     DateTime? resolvedAt,
     @Default('open') String reviewStatus, // open | resolved | dismissed
     String? assignedTo,
+    String? reviewerId,
+    String? reviewerDecision, // approved | rejected | dismissed
+    String? reviewerNote,
   }) = _AiReviewQueueItemModel;
 
   factory AiReviewQueueItemModel.fromJson(Map<String, dynamic> json) =>

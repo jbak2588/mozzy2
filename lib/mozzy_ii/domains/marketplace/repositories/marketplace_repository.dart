@@ -91,6 +91,20 @@ class MarketplaceRepository {
     }, SetOptions(merge: true));
   }
 
+  Future<void> updateProductAiStatus({
+    required String productId,
+    required bool isVerified,
+    required String status,
+  }) async {
+    final now = DateTime.now().toUtc();
+    await productsCollection.doc(productId).update({
+      'isAiVerified': isVerified,
+      'aiVerificationStatus': status,
+      'aiVerifiedAt': now,
+      'updatedAt': now,
+    });
+  }
+
   // --- Like Methods ---
 
   Future<bool> isProductLikedByUser({

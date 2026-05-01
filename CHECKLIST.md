@@ -179,6 +179,7 @@
 - [x] Admin role enforcement
 - [x] WebP compression / image optimization
 - [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)
+- [x] Marketplace production readiness review
 - [ ] SharedMapBrowser 연동 (mapVisibility)
 
 ### 2-C. Chat (Pesan) — dart-agent

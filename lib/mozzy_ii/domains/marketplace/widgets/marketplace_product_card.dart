@@ -8,10 +8,7 @@ import '../models/product_model.dart';
 class MarketplaceProductCard extends StatelessWidget {
   final ProductModel product;
 
-  const MarketplaceProductCard({
-    super.key,
-    required this.product,
-  });
+  const MarketplaceProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +20,7 @@ class MarketplaceProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: _buildImage(context),
-            ),
+            Expanded(child: _buildImage(context)),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -60,7 +55,11 @@ class MarketplaceProductCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, size: 12, color: Colors.grey),
+                      const Icon(
+                        Icons.location_on,
+                        size: 12,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(width: 2),
                       Expanded(
                         child: Text(
@@ -72,7 +71,11 @@ class MarketplaceProductCard extends StatelessWidget {
                       ),
                       if (product.likesCount > 0) ...[
                         const SizedBox(width: 4),
-                        const Icon(Icons.favorite, size: 10, color: Colors.grey),
+                        const Icon(
+                          Icons.favorite,
+                          size: 10,
+                          color: Colors.grey,
+                        ),
                         const SizedBox(width: 2),
                         Text(
                           '${product.likesCount}',
@@ -85,7 +88,11 @@ class MarketplaceProductCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.auto_awesome, size: 12, color: Colors.red),
+                        const Icon(
+                          Icons.auto_awesome,
+                          size: 12,
+                          color: Colors.red,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           'marketplace.aiVerified'.tr(),
@@ -97,7 +104,8 @@ class MarketplaceProductCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ] else if (product.aiVerificationStatus != 'not_requested') ...[
+                  ] else if (product.aiVerificationStatus !=
+                      'not_requested') ...[
                     const SizedBox(height: 4),
                     Text(
                       '${'marketplace.aiStatus'.tr()}: ${product.aiVerificationStatus}',

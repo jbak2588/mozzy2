@@ -11,8 +11,9 @@ void main() {
       ProviderScope(
         overrides: [
           currentCommentUserIdProvider.overrideWith((ref) => 'u1'),
-          visibleTopLevelCommentsProvider(const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'))
-              .overrideWith((ref) => []),
+          visibleTopLevelCommentsProvider(
+            const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'),
+          ).overrideWith((ref) => []),
         ],
         child: const MaterialApp(
           home: Scaffold(
@@ -44,10 +45,16 @@ void main() {
       ProviderScope(
         overrides: [
           currentCommentUserIdProvider.overrideWith((ref) => 'u1'),
-          visibleTopLevelCommentsProvider(const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'))
-              .overrideWith((ref) => [comment]),
-          visibleRepliesByCommentProvider(const VisibleRepliesQuery(postId: 'p1', parentCommentId: 'c1', currentUserId: 'u1'))
-              .overrideWith((ref) => []),
+          visibleTopLevelCommentsProvider(
+            const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'),
+          ).overrideWith((ref) => [comment]),
+          visibleRepliesByCommentProvider(
+            const VisibleRepliesQuery(
+              postId: 'p1',
+              parentCommentId: 'c1',
+              currentUserId: 'u1',
+            ),
+          ).overrideWith((ref) => []),
         ],
         child: const MaterialApp(
           home: Scaffold(
@@ -64,7 +71,9 @@ void main() {
     expect(find.byKey(const Key('secretBadge_c1')), findsNothing);
   });
 
-  testWidgets('CommentsSection renders secret badge for secret comments', (tester) async {
+  testWidgets('CommentsSection renders secret badge for secret comments', (
+    tester,
+  ) async {
     final comment = CommentModel(
       id: 'c1',
       postId: 'p1',
@@ -78,10 +87,16 @@ void main() {
       ProviderScope(
         overrides: [
           currentCommentUserIdProvider.overrideWith((ref) => 'u1'),
-          visibleTopLevelCommentsProvider(const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'))
-              .overrideWith((ref) => [comment]),
-          visibleRepliesByCommentProvider(const VisibleRepliesQuery(postId: 'p1', parentCommentId: 'c1', currentUserId: 'u1'))
-              .overrideWith((ref) => []),
+          visibleTopLevelCommentsProvider(
+            const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'),
+          ).overrideWith((ref) => [comment]),
+          visibleRepliesByCommentProvider(
+            const VisibleRepliesQuery(
+              postId: 'p1',
+              parentCommentId: 'c1',
+              currentUserId: 'u1',
+            ),
+          ).overrideWith((ref) => []),
         ],
         child: const MaterialApp(
           home: Scaffold(
@@ -120,10 +135,16 @@ void main() {
       ProviderScope(
         overrides: [
           currentCommentUserIdProvider.overrideWith((ref) => 'u1'),
-          visibleTopLevelCommentsProvider(const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'))
-              .overrideWith((ref) => [comment]),
-          visibleRepliesByCommentProvider(const VisibleRepliesQuery(postId: 'p1', parentCommentId: 'c1', currentUserId: 'u1'))
-              .overrideWith((ref) => [reply]),
+          visibleTopLevelCommentsProvider(
+            const VisibleCommentsQuery(postId: 'p1', currentUserId: 'u1'),
+          ).overrideWith((ref) => [comment]),
+          visibleRepliesByCommentProvider(
+            const VisibleRepliesQuery(
+              postId: 'p1',
+              parentCommentId: 'c1',
+              currentUserId: 'u1',
+            ),
+          ).overrideWith((ref) => [reply]),
         ],
         child: const MaterialApp(
           home: Scaffold(

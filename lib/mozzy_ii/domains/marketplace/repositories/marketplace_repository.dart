@@ -136,9 +136,7 @@ class MarketplaceRepository {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      transaction.update(productRef, {
-        'likesCount': FieldValue.increment(1),
-      });
+      transaction.update(productRef, {'likesCount': FieldValue.increment(1)});
     });
   }
 
@@ -155,11 +153,12 @@ class MarketplaceRepository {
 
       transaction.delete(likeRef);
 
-      // likesCount should never be below 0. 
+      // likesCount should never be below 0.
       // Firestore increment doesn't have min check, so we manually check current value.
       final productSnapshot = await transaction.get(productRef);
-      final currentLikes = (productSnapshot.data() as Map<String, dynamic>?)?['likesCount'] ?? 0;
-      
+      final currentLikes =
+          (productSnapshot.data() as Map<String, dynamic>?)?['likesCount'] ?? 0;
+
       if (currentLikes > 0) {
         transaction.update(productRef, {
           'likesCount': FieldValue.increment(-1),
@@ -184,7 +183,7 @@ class MarketplaceRepository {
     for (final doc in snap.docs) {
       final productId = doc.get('productId') as String?;
       if (productId == null) continue;
-      
+
       final product = await getProductById(productId);
       if (product != null && !product.isDeleted) {
         products.add(product);

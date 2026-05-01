@@ -19,7 +19,8 @@ class CreateProductScreen extends ConsumerStatefulWidget {
   const CreateProductScreen({super.key});
 
   @override
-  ConsumerState<CreateProductScreen> createState() => _CreateProductScreenState();
+  ConsumerState<CreateProductScreen> createState() =>
+      _CreateProductScreenState();
 }
 
 class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
@@ -34,7 +35,14 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
   List<XFile> _selectedImages = [];
 
   final _categories = [
-    'electronics', 'fashion', 'home', 'baby', 'sports', 'vehicles', 'books', 'other'
+    'electronics',
+    'fashion',
+    'home',
+    'baby',
+    'sports',
+    'vehicles',
+    'books',
+    'other',
   ];
 
   @override
@@ -86,7 +94,10 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
 
     if (_formKey.currentState!.validate()) {
       if (_selectedImages.isEmpty) {
-        ScaffoldMessengerService.showError(context, 'marketplace.imageRequired'.tr());
+        ScaffoldMessengerService.showError(
+          context,
+          'marketplace.imageRequired'.tr(),
+        );
         return;
       }
 
@@ -95,7 +106,10 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       final userId = ref.read(currentMarketplaceUserIdProvider);
       if (userId == null) {
         if (!mounted) return;
-        ScaffoldMessengerService.showError(context, 'marketplace.loginRequired'.tr());
+        ScaffoldMessengerService.showError(
+          context,
+          'marketplace.loginRequired'.tr(),
+        );
         setState(() => _isSaving = false);
         return;
       }
@@ -103,7 +117,10 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       final location = await ref.read(locationProvider.future);
       if (location == null) {
         if (!mounted) return;
-        ScaffoldMessengerService.showError(context, 'marketplace.locationRequired'.tr());
+        ScaffoldMessengerService.showError(
+          context,
+          'marketplace.locationRequired'.tr(),
+        );
         setState(() => _isSaving = false);
         return;
       }
@@ -111,7 +128,10 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       final price = _parsePrice(_priceController.text);
       if (price == null) {
         if (!mounted) return;
-        ScaffoldMessengerService.showError(context, 'marketplace.priceInvalid'.tr());
+        ScaffoldMessengerService.showError(
+          context,
+          'marketplace.priceInvalid'.tr(),
+        );
         setState(() => _isSaving = false);
         return;
       }
@@ -119,31 +139,38 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       final productId = const Uuid().v4();
       List<String> uploadedUrls = [];
       List<XFile> optimizedImages = [];
-      dynamic aiVerificationResult; // We use dynamic to avoid importing result model if not needed, but better to use it.
+      dynamic
+      aiVerificationResult; // We use dynamic to avoid importing result model if not needed, but better to use it.
 
       try {
         // 1. Optimize images
         setState(() => _savingStatus = 'optimizing');
-        optimizedImages = await ref.read(marketplaceImageOptimizationServiceProvider).optimizeProductImages(_selectedImages);
-        
+        optimizedImages = await ref
+            .read(marketplaceImageOptimizationServiceProvider)
+            .optimizeProductImages(_selectedImages);
+
         // 2. Upload optimized images
         setState(() => _savingStatus = 'uploading');
-        uploadedUrls = await ref.read(marketplaceImageUploadServiceProvider).uploadProductImages(
-          productId: productId,
-          sellerId: userId,
-          images: optimizedImages,
-        );
+        uploadedUrls = await ref
+            .read(marketplaceImageUploadServiceProvider)
+            .uploadProductImages(
+              productId: productId,
+              sellerId: userId,
+              images: optimizedImages,
+            );
 
         // 3. AI Verification (Foundation)
         setState(() => _savingStatus = 'verifying');
         try {
-          aiVerificationResult = await ref.read(marketplaceAiVerificationServiceProvider).verifyProductImages(
-            productId: productId,
-            title: _titleController.text.trim(),
-            description: _descriptionController.text.trim(),
-            category: _selectedCategory,
-            imageUrls: uploadedUrls,
-          );
+          aiVerificationResult = await ref
+              .read(marketplaceAiVerificationServiceProvider)
+              .verifyProductImages(
+                productId: productId,
+                title: _titleController.text.trim(),
+                description: _descriptionController.text.trim(),
+                category: _selectedCategory,
+                imageUrls: uploadedUrls,
+              );
         } catch (e) {
           debugPrint('AI verification failed (non-blocking): $e');
           // Fallback to error status
@@ -151,12 +178,12 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       } catch (e) {
         if (!mounted) return;
         debugPrint('Error during optimization/upload/AI: $e');
-        
+
         String errorKey = 'marketplace.imageUploadFailed';
         if (e.toString().contains('optimization')) {
           errorKey = 'marketplace.imageOptimizationFailed';
         }
-        
+
         ScaffoldMessengerService.showError(context, errorKey.tr());
         setState(() => _isSaving = false);
         return;
@@ -180,7 +207,9 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         aiDetectedIssues: aiVerificationResult?.detectedIssues ?? [],
         aiSuggestedCategory: aiVerificationResult?.suggestedCategory,
         aiConditionLabel: aiVerificationResult?.conditionLabel,
-        aiVerifiedAt: aiVerificationResult != null ? DateTime.now().toUtc() : null,
+        aiVerifiedAt: aiVerificationResult != null
+            ? DateTime.now().toUtc()
+            : null,
       );
 
       try {
@@ -209,17 +238,23 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
             debugPrint('Error saving AI report: $e');
           }
         }
-        
+
         // Invalidate lists so they refresh
         ref.invalidate(productsByKecamatanProvider);
         ref.invalidate(productsByCategoryProvider);
 
         if (!mounted) return;
-        ScaffoldMessengerService.showSuccess(context, 'marketplace.createSuccess'.tr());
+        ScaffoldMessengerService.showSuccess(
+          context,
+          'marketplace.createSuccess'.tr(),
+        );
         if (mounted) context.pop();
       } catch (e) {
         if (!mounted) return;
-        ScaffoldMessengerService.showError(context, 'marketplace.createFailed'.tr());
+        ScaffoldMessengerService.showError(
+          context,
+          'marketplace.createFailed'.tr(),
+        );
         setState(() => _isSaving = false);
       }
     }
@@ -229,9 +264,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: const Key('createProductScreen'),
-      appBar: AppBar(
-        title: Text('marketplace.createTitle'.tr()),
-      ),
+      appBar: AppBar(title: Text('marketplace.createTitle'.tr())),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -244,18 +277,24 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
               TextFormField(
                 key: const Key('createProductTitleField'),
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'marketplace.titleHint'.tr()),
+                decoration: InputDecoration(
+                  labelText: 'marketplace.titleHint'.tr(),
+                ),
                 validator: (value) => (value == null || value.trim().isEmpty)
-                    ? 'marketplace.titleRequired'.tr() : null,
+                    ? 'marketplace.titleRequired'.tr()
+                    : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 key: const Key('createProductDescriptionField'),
                 controller: _descriptionController,
-                decoration: InputDecoration(labelText: 'marketplace.descriptionHint'.tr()),
+                decoration: InputDecoration(
+                  labelText: 'marketplace.descriptionHint'.tr(),
+                ),
                 maxLines: 5,
                 validator: (value) => (value == null || value.trim().isEmpty)
-                    ? 'marketplace.descriptionRequired'.tr() : null,
+                    ? 'marketplace.descriptionRequired'.tr()
+                    : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -281,11 +320,17 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
               DropdownButtonFormField<String>(
                 key: const Key('createProductCategoryDropdown'),
                 initialValue: _selectedCategory,
-                decoration: InputDecoration(labelText: 'marketplace.selectCategory'.tr()),
-                items: _categories.map((cat) => DropdownMenuItem(
-                  value: cat,
-                  child: Text('marketplace.category.$cat'.tr()),
-                )).toList(),
+                decoration: InputDecoration(
+                  labelText: 'marketplace.selectCategory'.tr(),
+                ),
+                items: _categories
+                    .map(
+                      (cat) => DropdownMenuItem(
+                        value: cat,
+                        child: Text('marketplace.category.$cat'.tr()),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   if (value != null) {
                     setState(() => _selectedCategory = value);
@@ -361,7 +406,11 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         const SizedBox(height: 8),
         Text(
           'marketplace.imageOptimizationNote'.tr(),
-          style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic),
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+            fontStyle: FontStyle.italic,
+          ),
         ),
         const SizedBox(height: 8),
         SizedBox(
@@ -369,7 +418,8 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
           child: ListView.builder(
             key: const Key('createProductImagePreviewList'),
             scrollDirection: Axis.horizontal,
-            itemCount: _selectedImages.length + (_selectedImages.length < 5 ? 1 : 0),
+            itemCount:
+                _selectedImages.length + (_selectedImages.length < 5 ? 1 : 0),
             itemBuilder: (context, index) {
               if (index == _selectedImages.length) {
                 return _buildAddImageButton();
@@ -451,11 +501,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                 color: Colors.black54,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.close,
-                size: 16,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.close, size: 16, color: Colors.white),
             ),
           ),
         ),

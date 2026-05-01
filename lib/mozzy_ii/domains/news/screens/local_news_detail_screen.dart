@@ -17,15 +17,11 @@ class LocalNewsDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       key: const Key('localNewsDetailScreen'),
-      appBar: AppBar(
-        title: const Text('news.detailTitle').tr(),
-      ),
+      appBar: AppBar(title: const Text('news.detailTitle').tr()),
       body: postAsync.when(
         data: (post) {
           if (post == null) {
-            return Center(
-              child: const Text('news.notFound').tr(),
-            );
+            return Center(child: const Text('news.notFound').tr());
           }
 
           return SingleChildScrollView(
@@ -40,7 +36,8 @@ class LocalNewsDetailScreen extends ConsumerWidget {
                     child: Image.network(
                       post.imageUrls.first,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey.shade300),
+                      errorBuilder: (context, error, stackTrace) =>
+                          Container(color: Colors.grey.shade300),
                     ),
                   )
                 else
@@ -48,16 +45,23 @@ class LocalNewsDetailScreen extends ConsumerWidget {
                     height: 200,
                     width: double.infinity,
                     color: Colors.grey.shade300,
-                    child: const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey)),
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
                 const SizedBox(height: 16),
-                Chip(
-                  label: Text(post.category),
-                ),
+                Chip(label: Text(post.category)),
                 const SizedBox(height: 8),
                 Text(
                   post.title,
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -69,19 +73,25 @@ class LocalNewsDetailScreen extends ConsumerWidget {
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  post.content,
-                  style: const TextStyle(fontSize: 16),
-                ),
+                Text(post.content, style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('${'news.signal'.tr()}: ${post.signalScore.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12)),
-                    Text('${'news.scope'.tr()}: ${post.geoScope.name}', style: const TextStyle(fontSize: 12)),
+                    Text(
+                      '${'news.signal'.tr()}: ${post.signalScore.toStringAsFixed(2)}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    Text(
+                      '${'news.scope'.tr()}: ${post.geoScope.name}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
-                Text('Trust Score: ${post.trustScore.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12)),
+                Text(
+                  'Trust Score: ${post.trustScore.toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 12),
+                ),
                 const SizedBox(height: 24),
                 const Divider(),
                 const SizedBox(height: 16),

@@ -17,13 +17,16 @@ void main() {
     });
 
     test('formatAddress returns standard format', () {
-      expect(service.formatAddress(address, AddressDetail.standard), 'Coblong, Bandung');
+      expect(
+        service.formatAddress(address, AddressDetail.standard),
+        'Coblong, Bandung',
+      );
     });
 
     test('formatAddress returns full format', () {
       expect(
-        service.formatAddress(address, AddressDetail.full), 
-        'Dago, Coblong, Bandung, Jawa Barat'
+        service.formatAddress(address, AddressDetail.full),
+        'Dago, Coblong, Bandung, Jawa Barat',
       );
     });
   });

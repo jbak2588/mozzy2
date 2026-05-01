@@ -14,9 +14,7 @@ class SavedMarketplaceScreen extends ConsumerWidget {
 
     return Scaffold(
       key: const Key('savedMarketplaceScreen'),
-      appBar: AppBar(
-        title: Text('marketplace.savedItems'.tr()),
-      ),
+      appBar: AppBar(title: Text('marketplace.savedItems'.tr())),
       body: userId == null
           ? _buildLoginRequired()
           : _buildSavedList(ref, userId),
@@ -24,13 +22,13 @@ class SavedMarketplaceScreen extends ConsumerWidget {
   }
 
   Widget _buildLoginRequired() {
-    return Center(
-      child: Text('marketplace.loginRequired'.tr()),
-    );
+    return Center(child: Text('marketplace.loginRequired'.tr()));
   }
 
   Widget _buildSavedList(WidgetRef ref, String userId) {
-    final savedProductsAsync = ref.watch(savedMarketplaceProductsProvider(userId));
+    final savedProductsAsync = ref.watch(
+      savedMarketplaceProductsProvider(userId),
+    );
 
     return savedProductsAsync.when(
       data: (products) {
@@ -42,7 +40,10 @@ class SavedMarketplaceScreen extends ConsumerWidget {
               children: [
                 Text(
                   'marketplace.noSavedItems'.tr(),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text('marketplace.noSavedItemsDescription'.tr()),
@@ -79,7 +80,8 @@ class SavedMarketplaceScreen extends ConsumerWidget {
             Text('marketplace.savedItemsLoadFailed'.tr()),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => ref.invalidate(savedMarketplaceProductsProvider(userId)),
+              onPressed: () =>
+                  ref.invalidate(savedMarketplaceProductsProvider(userId)),
               child: Text('common.retry'.tr()),
             ),
           ],

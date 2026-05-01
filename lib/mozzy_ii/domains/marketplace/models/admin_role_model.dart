@@ -5,12 +5,7 @@
 // Purpose       : Marketplace 관리자 권한 모델 및 권한 로직 정의.
 // ============================================================================
 
-enum MarketplaceAdminRole {
-  none,
-  reviewer,
-  admin,
-  superAdmin,
-}
+enum MarketplaceAdminRole { none, reviewer, admin, superAdmin }
 
 extension MarketplaceAdminRoleX on MarketplaceAdminRole {
   bool get canViewReviewQueue =>

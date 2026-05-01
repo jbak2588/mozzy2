@@ -17,24 +17,16 @@ class CrossLinkSection extends StatelessWidget {
         children: [
           Text(
             'news.relatedLocalItems'.tr(),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'news.crossLinkDescription'.tr(),
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.black54),
           ),
           const SizedBox(height: 16),
           // TODO: Add marketplace, stores, together cross links here in the future
-          const Center(
-            child: Icon(Icons.link, size: 32, color: Colors.grey),
-          ),
+          const Center(child: Icon(Icons.link, size: 32, color: Colors.grey)),
         ],
       ),
     );

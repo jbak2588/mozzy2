@@ -10,7 +10,7 @@ class MozzyTheme {
 
   static ThemeData get lightTheme {
     final baseTheme = ThemeData.light(useMaterial3: true);
-    
+
     return baseTheme.copyWith(
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryRed,
@@ -19,10 +19,9 @@ class MozzyTheme {
         surface: backgroundLight,
       ),
       // 전역 폰트를 Nunito Sans로 설정
-      textTheme: GoogleFonts.nunitoSansTextTheme(baseTheme.textTheme).apply(
-        bodyColor: textPrimary,
-        displayColor: textPrimary,
-      ),
+      textTheme: GoogleFonts.nunitoSansTextTheme(
+        baseTheme.textTheme,
+      ).apply(bodyColor: textPrimary, displayColor: textPrimary),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
         foregroundColor: textPrimary,
@@ -34,9 +33,7 @@ class MozzyTheme {
           backgroundColor: primaryRed,
           foregroundColor: Colors.white,
           minimumSize: const Size(88, 48), // 터치 영역 최소 48dp 기준 준수
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),

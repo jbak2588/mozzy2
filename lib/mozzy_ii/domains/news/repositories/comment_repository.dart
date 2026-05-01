@@ -55,15 +55,22 @@ class CommentRepository {
     String? parentCommentId,
     required int limit,
   }) async {
-    Query baseQuery = getCommentsCollection(postId).where('isDeleted', isEqualTo: false);
+    Query baseQuery = getCommentsCollection(
+      postId,
+    ).where('isDeleted', isEqualTo: false);
 
     if (parentCommentId == null) {
       baseQuery = baseQuery.where('parentCommentId', isNull: true);
     } else {
-      baseQuery = baseQuery.where('parentCommentId', isEqualTo: parentCommentId);
+      baseQuery = baseQuery.where(
+        'parentCommentId',
+        isEqualTo: parentCommentId,
+      );
     }
 
-    final publicQuery = baseQuery.where('isSecret', isEqualTo: false).orderBy('createdAt', descending: false);
+    final publicQuery = baseQuery
+        .where('isSecret', isEqualTo: false)
+        .orderBy('createdAt', descending: false);
     final secretQuery = baseQuery
         .where('isSecret', isEqualTo: true)
         .where('visibleToUserIds', arrayContains: currentUserId)
@@ -79,18 +86,24 @@ class CommentRepository {
       uniqueDocs[doc.id] = doc;
     }
 
-    final results = uniqueDocs.values
-        .map((d) => CommentModel.fromJson({
-              ...d.data() as Map<String, dynamic>,
-              'id': d.id,
-            }))
-        .toList()
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final results =
+        uniqueDocs.values
+            .map(
+              (d) => CommentModel.fromJson({
+                ...d.data() as Map<String, dynamic>,
+                'id': d.id,
+              }),
+            )
+            .toList()
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     return results.take(limit).toList();
   }
 
-  Future<List<CommentModel>> fetchTopLevelComments(String postId, {int limit = 50}) async {
+  Future<List<CommentModel>> fetchTopLevelComments(
+    String postId, {
+    int limit = 50,
+  }) async {
     final query = getCommentsCollection(postId)
         .where('isDeleted', isEqualTo: false)
         .where('parentCommentId', isNull: true)
@@ -99,10 +112,12 @@ class CommentRepository {
 
     final snap = await query.get();
     return snap.docs
-        .map((d) => CommentModel.fromJson({
-              ...d.data() as Map<String, dynamic>,
-              'id': d.id,
-            }))
+        .map(
+          (d) => CommentModel.fromJson({
+            ...d.data() as Map<String, dynamic>,
+            'id': d.id,
+          }),
+        )
         .toList();
   }
 
@@ -119,10 +134,12 @@ class CommentRepository {
 
     final snap = await query.get();
     return snap.docs
-        .map((d) => CommentModel.fromJson({
-              ...d.data() as Map<String, dynamic>,
-              'id': d.id,
-            }))
+        .map(
+          (d) => CommentModel.fromJson({
+            ...d.data() as Map<String, dynamic>,
+            'id': d.id,
+          }),
+        )
         .toList();
   }
 

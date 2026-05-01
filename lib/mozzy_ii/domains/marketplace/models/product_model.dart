@@ -32,7 +32,8 @@ class SafeDateTimeConverter implements JsonConverter<DateTime, dynamic> {
   dynamic toJson(DateTime object) => object.toUtc().toIso8601String();
 }
 
-class OptionalSafeDateTimeConverter implements JsonConverter<DateTime?, dynamic> {
+class OptionalSafeDateTimeConverter
+    implements JsonConverter<DateTime?, dynamic> {
   const OptionalSafeDateTimeConverter();
 
   @override
@@ -58,14 +59,15 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
 
   const factory ProductModel({
     required String id,
-    @JsonKey(name: 'sellerId') required String userId, // MozzyPostContract uses userId
+    @JsonKey(name: 'sellerId')
+    required String userId, // MozzyPostContract uses userId
     required String title,
     required String description,
     required String category,
     required int price,
     @Default('IDR') String currencyCode,
     @Default([]) List<String> imageUrls,
-    
+
     // MozzyPostContract 구현 필드
     @Default(GeoScope.neighborhood) GeoScope geoScope,
     @Default(ReachMode.localOnly) ReachMode reachMode,
@@ -96,7 +98,7 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @Default(0) int chatsCount,
   }) = _ProductModel;
 
-  // Alias for MozzyPostContract compatibility if needed, 
+  // Alias for MozzyPostContract compatibility if needed,
   // but we already mapped sellerId to userId in the factory.
   String get sellerId => userId;
 

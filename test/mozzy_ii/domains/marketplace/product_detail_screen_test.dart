@@ -28,15 +28,17 @@ void main() {
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
         currentMarketplaceUserIdProvider.overrideWithValue(userId),
-        aiVerificationReportRepositoryProvider.overrideWithValue(mockReportRepo),
+        aiVerificationReportRepositoryProvider.overrideWithValue(
+          mockReportRepo,
+        ),
       ],
-      child: MaterialApp(
-        home: ProductDetailScreen(productId: productId),
-      ),
+      child: MaterialApp(home: ProductDetailScreen(productId: productId)),
     );
   }
 
-  testWidgets('renders ProductDetailScreen and shows product info', (tester) async {
+  testWidgets('renders ProductDetailScreen and shows product info', (
+    tester,
+  ) async {
     final product = ProductModel(
       id: 'p1',
       userId: 'seller_12345678',
@@ -70,16 +72,20 @@ void main() {
     expect(find.text('Detail Product'), findsOneWidget);
     expect(find.text('Rp 5.000.000'), findsOneWidget);
     expect(find.text('Long description of the product'), findsOneWidget);
-    
+
     // Placeholder key check
-    expect(find.byKey(const Key('productDetailImagePlaceholder')), findsOneWidget);
-    
+    expect(
+      find.byKey(const Key('productDetailImagePlaceholder')),
+      findsOneWidget,
+    );
+
     // i18n keys check
     expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
-
   });
 
-  testWidgets('shows AI verification report history when available', (tester) async {
+  testWidgets('shows AI verification report history when available', (
+    tester,
+  ) async {
     final product = ProductModel(
       id: 'p1',
       userId: 's1',
@@ -105,12 +111,15 @@ void main() {
     await tester.pumpWidget(createTestWidget('p1'));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('aiVerificationReportSection')), findsOneWidget);
+    expect(
+      find.byKey(const Key('aiVerificationReportSection')),
+      findsOneWidget,
+    );
     expect(find.text('Mock AI Summary'), findsOneWidget);
   });
 
   testWidgets('shows placeholder image if imageUrls empty', (tester) async {
-     final product = ProductModel(
+    final product = ProductModel(
       id: 'p2',
       userId: 'u2',
       title: 'No Image Product',
@@ -126,7 +135,10 @@ void main() {
     await tester.pumpWidget(createTestWidget('p2'));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('productDetailImagePlaceholder')), findsOneWidget);
+    expect(
+      find.byKey(const Key('productDetailImagePlaceholder')),
+      findsOneWidget,
+    );
     expect(find.byIcon(Icons.image), findsOneWidget);
   });
 
@@ -164,14 +176,20 @@ void main() {
     await tester.tap(likeButton);
     await tester.pumpAndSettle();
 
-    final isLiked = await mockRepo.isProductLikedByUser(productId: 'p1', userId: 'test-user-id');
+    final isLiked = await mockRepo.isProductLikedByUser(
+      productId: 'p1',
+      userId: 'test-user-id',
+    );
     expect(isLiked, isTrue);
 
     // Tap again to unlike
     await tester.tap(likeButton);
     await tester.pumpAndSettle();
 
-    final isLikedAgain = await mockRepo.isProductLikedByUser(productId: 'p1', userId: 'test-user-id');
+    final isLikedAgain = await mockRepo.isProductLikedByUser(
+      productId: 'p1',
+      userId: 'test-user-id',
+    );
     expect(isLikedAgain, isFalse);
   });
 }

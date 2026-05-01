@@ -32,7 +32,9 @@ void main() {
 
     test('returns none when no claims are present', () async {
       when(mockAuth.currentUser).thenReturn(mockUser);
-      when(mockUser.getIdTokenResult(any)).thenAnswer((_) async => mockTokenResult);
+      when(
+        mockUser.getIdTokenResult(any),
+      ).thenAnswer((_) async => mockTokenResult);
       when(mockTokenResult.claims).thenReturn(null);
 
       final role = await roleSource.getCurrentRole();
@@ -51,18 +53,28 @@ void main() {
 
       for (final entry in scenarios.entries) {
         when(mockAuth.currentUser).thenReturn(mockUser);
-        when(mockUser.getIdTokenResult(any)).thenAnswer((_) async => mockTokenResult);
-        when(mockTokenResult.claims).thenReturn({'marketplaceAdminRole': entry.key});
+        when(
+          mockUser.getIdTokenResult(any),
+        ).thenAnswer((_) async => mockTokenResult);
+        when(
+          mockTokenResult.claims,
+        ).thenReturn({'marketplaceAdminRole': entry.key});
 
         final role = await roleSource.getCurrentRole();
 
-        expect(role, entry.value, reason: 'Failed for claim value: ${entry.key}');
+        expect(
+          role,
+          entry.value,
+          reason: 'Failed for claim value: ${entry.key}',
+        );
       }
     });
 
     test('returns none on exception', () async {
       when(mockAuth.currentUser).thenReturn(mockUser);
-      when(mockUser.getIdTokenResult(any)).thenThrow(Exception('Network error'));
+      when(
+        mockUser.getIdTokenResult(any),
+      ).thenThrow(Exception('Network error'));
 
       final role = await roleSource.getCurrentRole();
 

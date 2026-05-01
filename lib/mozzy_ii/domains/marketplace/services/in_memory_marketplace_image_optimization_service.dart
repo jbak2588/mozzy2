@@ -8,7 +8,8 @@
 import 'package:image_picker/image_picker.dart';
 import 'marketplace_image_optimization_service.dart';
 
-class InMemoryMarketplaceImageOptimizationService implements MarketplaceImageOptimizationService {
+class InMemoryMarketplaceImageOptimizationService
+    implements MarketplaceImageOptimizationService {
   @override
   Future<List<XFile>> optimizeProductImages(List<XFile> images) async {
     if (images.isEmpty) {

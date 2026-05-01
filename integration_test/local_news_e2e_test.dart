@@ -6,7 +6,9 @@ import 'package:mozzy/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Local News List-Create-Detail E2E Flow', (WidgetTester tester) async {
+  testWidgets('Local News List-Create-Detail E2E Flow', (
+    WidgetTester tester,
+  ) async {
     // 1. Start app
     app.main();
     await tester.pumpAndSettle();
@@ -33,7 +35,7 @@ void main() {
 
     // 3. Confirm LocalNewsListScreen appears
     expect(find.byKey(const Key('localNewsListScreen')), findsOneWidget);
-    
+
     // 4. Tap Create FAB
     await tester.tap(find.byKey(const Key('localNewsCreateFab')));
     await tester.pumpAndSettle();
@@ -44,12 +46,15 @@ void main() {
     // 6. Empty Submit to see validation
     await tester.tap(find.byKey(const Key('createPostSubmitButton')));
     await tester.pumpAndSettle();
-    
+
     // Should show titleRequired snackbar (we can just verify it stays on create screen)
     expect(find.byKey(const Key('createPostScreen')), findsOneWidget);
 
     // 7. Enter Title
-    await tester.enterText(find.byKey(const Key('createPostTitleField')), 'Smoke Test Local News');
+    await tester.enterText(
+      find.byKey(const Key('createPostTitleField')),
+      'Smoke Test Local News',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pump(const Duration(seconds: 2));
@@ -57,12 +62,18 @@ void main() {
 
     // 8. Empty content submit
     await tester.ensureVisible(find.byKey(const Key('createPostSubmitButton')));
-    await tester.tap(find.byKey(const Key('createPostSubmitButton')), warnIfMissed: false);
+    await tester.tap(
+      find.byKey(const Key('createPostSubmitButton')),
+      warnIfMissed: false,
+    );
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('createPostScreen')), findsOneWidget);
 
     // 9. Enter Content
-    await tester.enterText(find.byKey(const Key('createPostContentField')), 'This is an automated integration test post from Flutter.');
+    await tester.enterText(
+      find.byKey(const Key('createPostContentField')),
+      'This is an automated integration test post from Flutter.',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pump(const Duration(seconds: 2));
@@ -73,8 +84,11 @@ void main() {
 
     // 11. Submit
     await tester.ensureVisible(find.byKey(const Key('createPostSubmitButton')));
-    await tester.tap(find.byKey(const Key('createPostSubmitButton')), warnIfMissed: false);
-    
+    await tester.tap(
+      find.byKey(const Key('createPostSubmitButton')),
+      warnIfMissed: false,
+    );
+
     // Wait for pop to happen
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
@@ -93,7 +107,10 @@ void main() {
 
     // 16. Confirm detail info appears
     expect(find.text('Smoke Test Local News'), findsWidgets);
-    expect(find.text('This is an automated integration test post from Flutter.'), findsWidgets);
+    expect(
+      find.text('This is an automated integration test post from Flutter.'),
+      findsWidgets,
+    );
 
     // 17. Confirm comments section
     // Scroll down if needed
@@ -105,7 +122,10 @@ void main() {
     expect(find.byKey(const Key('commentInputField')), findsOneWidget);
 
     // 18. Enter comment
-    await tester.enterText(find.byKey(const Key('commentInputField')), 'Automated integration test comment');
+    await tester.enterText(
+      find.byKey(const Key('commentInputField')),
+      'Automated integration test comment',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
@@ -118,9 +138,16 @@ void main() {
     expect(find.text('Automated integration test comment'), findsOneWidget);
 
     // 21. Tap reply button
-    final replyButtonFinder = find.byWidgetPredicate(
-      (widget) => widget.key != null && widget.key is ValueKey && (widget.key as ValueKey).value.toString().startsWith('commentReplyButton_'),
-    ).first;
+    final replyButtonFinder = find
+        .byWidgetPredicate(
+          (widget) =>
+              widget.key != null &&
+              widget.key is ValueKey &&
+              (widget.key as ValueKey).value.toString().startsWith(
+                'commentReplyButton_',
+              ),
+        )
+        .first;
     await tester.ensureVisible(replyButtonFinder);
     await tester.tap(replyButtonFinder);
     await tester.pumpAndSettle();
@@ -129,7 +156,10 @@ void main() {
     expect(find.byKey(const Key('replyModeLabel')), findsOneWidget);
 
     // 23. Enter reply comment
-    await tester.enterText(find.byKey(const Key('commentInputField')), 'Automated integration test reply');
+    await tester.enterText(
+      find.byKey(const Key('commentInputField')),
+      'Automated integration test reply',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();

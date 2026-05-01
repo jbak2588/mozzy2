@@ -37,11 +37,11 @@ void main() {
         overrides: [
           postByIdProvider('post-1').overrideWith((ref) => testPost),
           currentCommentUserIdProvider.overrideWith((ref) => 'u1'),
-          visibleTopLevelCommentsProvider(const VisibleCommentsQuery(postId: 'post-1', currentUserId: 'u1')).overrideWith((ref) => []),
+          visibleTopLevelCommentsProvider(
+            const VisibleCommentsQuery(postId: 'post-1', currentUserId: 'u1'),
+          ).overrideWith((ref) => []),
         ],
-        child: const MaterialApp(
-          home: LocalNewsDetailScreen(postId: 'post-1'),
-        ),
+        child: const MaterialApp(home: LocalNewsDetailScreen(postId: 'post-1')),
       ),
     );
 
@@ -54,15 +54,13 @@ void main() {
     expect(find.byType(CrossLinkSection), findsOneWidget);
   });
 
-  testWidgets('LocalNewsDetailScreen shows not found when post is null', (tester) async {
+  testWidgets('LocalNewsDetailScreen shows not found when post is null', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          postByIdProvider('post-1').overrideWith((ref) => null),
-        ],
-        child: const MaterialApp(
-          home: LocalNewsDetailScreen(postId: 'post-1'),
-        ),
+        overrides: [postByIdProvider('post-1').overrideWith((ref) => null)],
+        child: const MaterialApp(home: LocalNewsDetailScreen(postId: 'post-1')),
       ),
     );
 

@@ -37,23 +37,42 @@ void main() {
       expect(reports.first.id, 'r1');
     });
 
-    test('fetchReportsByProduct returns sorted by createdAt descending', () async {
-      final r1 = createSampleReport(id: 'r1', productId: 'p1', createdAt: DateTime.utc(2026, 1, 1));
-      final r2 = createSampleReport(id: 'r2', productId: 'p1', createdAt: DateTime.utc(2026, 1, 3));
-      final r3 = createSampleReport(id: 'r3', productId: 'p1', createdAt: DateTime.utc(2026, 1, 2));
+    test(
+      'fetchReportsByProduct returns sorted by createdAt descending',
+      () async {
+        final r1 = createSampleReport(
+          id: 'r1',
+          productId: 'p1',
+          createdAt: DateTime.utc(2026, 1, 1),
+        );
+        final r2 = createSampleReport(
+          id: 'r2',
+          productId: 'p1',
+          createdAt: DateTime.utc(2026, 1, 3),
+        );
+        final r3 = createSampleReport(
+          id: 'r3',
+          productId: 'p1',
+          createdAt: DateTime.utc(2026, 1, 2),
+        );
 
-      await repo.saveReport(r1);
-      await repo.saveReport(r2);
-      await repo.saveReport(r3);
+        await repo.saveReport(r1);
+        await repo.saveReport(r2);
+        await repo.saveReport(r3);
 
-      final reports = await repo.fetchReportsByProduct('p1');
-      expect(reports[0].id, 'r2');
-      expect(reports[1].id, 'r3');
-      expect(reports[2].id, 'r1');
-    });
+        final reports = await repo.fetchReportsByProduct('p1');
+        expect(reports[0].id, 'r2');
+        expect(reports[1].id, 'r3');
+        expect(reports[2].id, 'r1');
+      },
+    );
 
     test('passed report does not create queue item', () async {
-      final r1 = createSampleReport(id: 'r1', productId: 'p1', status: 'passed');
+      final r1 = createSampleReport(
+        id: 'r1',
+        productId: 'p1',
+        status: 'passed',
+      );
       await repo.enqueueReviewIfNeeded(report: r1);
 
       final queue = await repo.fetchOpenReviewQueue();
@@ -61,7 +80,11 @@ void main() {
     });
 
     test('needs_review report creates queue item', () async {
-      final r1 = createSampleReport(id: 'r1', productId: 'p1', status: 'needs_review');
+      final r1 = createSampleReport(
+        id: 'r1',
+        productId: 'p1',
+        status: 'needs_review',
+      );
       await repo.enqueueReviewIfNeeded(report: r1);
 
       final queue = await repo.fetchOpenReviewQueue();
@@ -72,7 +95,11 @@ void main() {
     });
 
     test('failed report creates queue item', () async {
-      final r1 = createSampleReport(id: 'r1', productId: 'p1', status: 'failed');
+      final r1 = createSampleReport(
+        id: 'r1',
+        productId: 'p1',
+        status: 'failed',
+      );
       await repo.enqueueReviewIfNeeded(report: r1);
 
       final queue = await repo.fetchOpenReviewQueue();
@@ -90,9 +117,19 @@ void main() {
     });
 
     test('fetchOpenReviewQueue returns only open items and sorted', () async {
-      final r1 = createSampleReport(id: 'r1', productId: 'p1', status: 'needs_review', createdAt: DateTime.utc(2026, 1, 1));
-      final r2 = createSampleReport(id: 'r2', productId: 'p2', status: 'failed', createdAt: DateTime.utc(2026, 1, 2));
-      
+      final r1 = createSampleReport(
+        id: 'r1',
+        productId: 'p1',
+        status: 'needs_review',
+        createdAt: DateTime.utc(2026, 1, 1),
+      );
+      final r2 = createSampleReport(
+        id: 'r2',
+        productId: 'p2',
+        status: 'failed',
+        createdAt: DateTime.utc(2026, 1, 2),
+      );
+
       await repo.enqueueReviewIfNeeded(report: r1);
       await Future.delayed(const Duration(milliseconds: 10));
       await repo.enqueueReviewIfNeeded(report: r2);

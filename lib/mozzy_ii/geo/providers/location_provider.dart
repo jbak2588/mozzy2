@@ -62,7 +62,9 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
     final locationService = ref.read(indonesiaLocationServiceProvider);
     try {
       final idAddress = await locationService.reverseGeocode(position);
-      final geoFirePoint = GeoFirePoint(GeoPoint(position.latitude, position.longitude));
+      final geoFirePoint = GeoFirePoint(
+        GeoPoint(position.latitude, position.longitude),
+      );
 
       return LocationParts(
         countryCode: 'ID',
@@ -84,6 +86,7 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
   }
 }
 
-final locationProvider = AsyncNotifierProvider<LocationNotifier, LocationParts?>(
-  () => LocationNotifier(),
-);
+final locationProvider =
+    AsyncNotifierProvider<LocationNotifier, LocationParts?>(
+      () => LocationNotifier(),
+    );

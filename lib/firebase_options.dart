@@ -70,9 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '149673701591',
     projectId: 'mozzy-v2',
     storageBucket: 'mozzy-v2.firebasestorage.app',
-    androidClientId: '149673701591-l9t5usl2d1tjueclcbql220lbppqudju.apps.googleusercontent.com',
-    iosClientId: '149673701591-bk436mnn06h9tt8ml8e56qcfei52b1j9.apps.googleusercontent.com',
+    androidClientId:
+        '149673701591-l9t5usl2d1tjueclcbql220lbppqudju.apps.googleusercontent.com',
+    iosClientId:
+        '149673701591-bk436mnn06h9tt8ml8e56qcfei52b1j9.apps.googleusercontent.com',
     iosBundleId: 'com.humantric.mozzy2',
   );
-
 }

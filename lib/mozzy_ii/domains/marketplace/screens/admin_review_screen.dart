@@ -56,7 +56,8 @@ class AdminReviewScreen extends ConsumerWidget {
               Text('marketplace.adminRoleLoadFailed'.tr()),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () => ref.invalidate(marketplaceAdminRoleAsyncProvider),
+                onPressed: () =>
+                    ref.invalidate(marketplaceAdminRoleAsyncProvider),
                 child: Text('common.retry'.tr()),
               ),
             ],
@@ -93,8 +94,11 @@ class AdminReviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildQueueView(BuildContext context, WidgetRef ref, bool canModerate) {
-
+  Widget _buildQueueView(
+    BuildContext context,
+    WidgetRef ref,
+    bool canModerate,
+  ) {
     final queueAsync = ref.watch(aiReviewQueueProvider);
 
     return Scaffold(
@@ -116,7 +120,11 @@ class AdminReviewScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.check_circle_outline, size: 64, color: Colors.grey),
+                  const Icon(
+                    Icons.check_circle_outline,
+                    size: 64,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'marketplace.noReviewItems'.tr(),
@@ -185,12 +193,9 @@ class AdminReviewScreen extends ConsumerWidget {
       if (e.toString().contains('auditLogFailed')) {
         messageKey = 'marketplace.auditLogFailed';
       }
-      
+
       scaffoldMessenger.showSnackBar(
-        SnackBar(
-          content: Text(messageKey.tr()),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(messageKey.tr()), backgroundColor: Colors.red),
       );
     }
   }
@@ -238,7 +243,9 @@ class AdminReviewScreen extends ConsumerWidget {
                 children: [
                   _buildPriorityBadge(item.priority),
                   Text(
-                    DateFormat('yyyy-MM-dd HH:mm').format(item.createdAt.toLocal()),
+                    DateFormat(
+                      'yyyy-MM-dd HH:mm',
+                    ).format(item.createdAt.toLocal()),
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
@@ -255,18 +262,23 @@ class AdminReviewScreen extends ConsumerWidget {
                       children: [
                         TextButton(
                           key: Key('dismissBtn_${item.id}'),
-                          onPressed: () => _handleAction(context, ref, item, 'dismiss'),
+                          onPressed: () =>
+                              _handleAction(context, ref, item, 'dismiss'),
                           child: Text('marketplace.dismiss'.tr()),
                         ),
                         OutlinedButton(
                           key: Key('rejectBtn_${item.id}'),
-                          onPressed: () => _handleAction(context, ref, item, 'reject'),
-                          style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                          onPressed: () =>
+                              _handleAction(context, ref, item, 'reject'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
                           child: Text('marketplace.reject'.tr()),
                         ),
                         ElevatedButton(
                           key: Key('approveBtn_${item.id}'),
-                          onPressed: () => _handleAction(context, ref, item, 'approve'),
+                          onPressed: () =>
+                              _handleAction(context, ref, item, 'approve'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             foregroundColor: Colors.white,
@@ -315,7 +327,11 @@ class AdminReviewScreen extends ConsumerWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: color,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -341,7 +357,11 @@ class AdminReviewScreen extends ConsumerWidget {
         const SizedBox(width: 4),
         Text(
           '${'marketplace.reviewPriority'.tr()}: $priority',
-          style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: color,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );

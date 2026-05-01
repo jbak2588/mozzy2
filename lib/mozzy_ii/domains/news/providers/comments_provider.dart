@@ -30,7 +30,10 @@ class VisibleCommentsQuery {
   final String postId;
   final String currentUserId;
 
-  const VisibleCommentsQuery({required this.postId, required this.currentUserId});
+  const VisibleCommentsQuery({
+    required this.postId,
+    required this.currentUserId,
+  });
 
   @override
   bool operator ==(Object other) =>
@@ -45,7 +48,10 @@ class VisibleCommentsQuery {
 }
 
 @riverpod
-Future<List<CommentModel>> visibleTopLevelComments(Ref ref, VisibleCommentsQuery query) async {
+Future<List<CommentModel>> visibleTopLevelComments(
+  Ref ref,
+  VisibleCommentsQuery query,
+) async {
   final repo = ref.read(commentRepositoryProvider);
   return repo.fetchVisibleTopLevelComments(
     postId: query.postId,
@@ -58,7 +64,11 @@ class VisibleRepliesQuery {
   final String parentCommentId;
   final String currentUserId;
 
-  const VisibleRepliesQuery({required this.postId, required this.parentCommentId, required this.currentUserId});
+  const VisibleRepliesQuery({
+    required this.postId,
+    required this.parentCommentId,
+    required this.currentUserId,
+  });
 
   @override
   bool operator ==(Object other) =>
@@ -70,11 +80,15 @@ class VisibleRepliesQuery {
           currentUserId == other.currentUserId;
 
   @override
-  int get hashCode => postId.hashCode ^ parentCommentId.hashCode ^ currentUserId.hashCode;
+  int get hashCode =>
+      postId.hashCode ^ parentCommentId.hashCode ^ currentUserId.hashCode;
 }
 
 @riverpod
-Future<List<CommentModel>> visibleRepliesByComment(Ref ref, VisibleRepliesQuery query) async {
+Future<List<CommentModel>> visibleRepliesByComment(
+  Ref ref,
+  VisibleRepliesQuery query,
+) async {
   final repo = ref.read(commentRepositoryProvider);
   return repo.fetchVisibleReplies(
     postId: query.postId,

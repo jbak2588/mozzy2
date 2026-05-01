@@ -14,7 +14,7 @@ class AiVerificationReportRepository {
   final FirebaseFirestore _firestore;
 
   AiVerificationReportRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// AI 리포트 저장 (상품 하위 컬렉션)
   Future<void> saveReport(AiVerificationReportModel report) async {
@@ -136,12 +136,12 @@ class AiVerificationReportRepository {
           .collection('ai_review_queue')
           .doc(itemId)
           .update({
-        'reviewStatus': decision == 'dismissed' ? 'dismissed' : 'resolved',
-        'reviewerId': reviewerId,
-        'reviewerDecision': decision,
-        'reviewerNote': note,
-        'resolvedAt': now,
-      });
+            'reviewStatus': decision == 'dismissed' ? 'dismissed' : 'resolved',
+            'reviewerId': reviewerId,
+            'reviewerDecision': decision,
+            'reviewerNote': note,
+            'resolvedAt': now,
+          });
     } catch (e) {
       debugPrint('Error resolving AI review item: $e');
       rethrow;

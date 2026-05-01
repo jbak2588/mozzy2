@@ -45,16 +45,24 @@ void main() {
     return ProviderScope(
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
-        marketplaceImageUploadServiceProvider.overrideWithValue(InMemoryMarketplaceImageUploadService()),
-        marketplaceImageOptimizationServiceProvider.overrideWithValue(InMemoryMarketplaceImageOptimizationService()),
-        marketplaceAiVerificationServiceProvider.overrideWithValue(InMemoryMarketplaceAiVerificationService()),
+        marketplaceImageUploadServiceProvider.overrideWithValue(
+          InMemoryMarketplaceImageUploadService(),
+        ),
+        marketplaceImageOptimizationServiceProvider.overrideWithValue(
+          InMemoryMarketplaceImageOptimizationService(),
+        ),
+        marketplaceAiVerificationServiceProvider.overrideWithValue(
+          InMemoryMarketplaceAiVerificationService(),
+        ),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
-        currentMarketplaceUserIdProvider.overrideWithValue(IntegrationTestConfig.testUserId),
-        aiVerificationReportRepositoryProvider.overrideWithValue(mockReportRepo),
+        currentMarketplaceUserIdProvider.overrideWithValue(
+          IntegrationTestConfig.testUserId,
+        ),
+        aiVerificationReportRepositoryProvider.overrideWithValue(
+          mockReportRepo,
+        ),
       ],
-      child: const MaterialApp(
-        home: CreateProductScreen(),
-      ),
+      child: const MaterialApp(home: CreateProductScreen()),
     );
   }
 
@@ -64,21 +72,39 @@ void main() {
 
     expect(find.byKey(const Key('createProductScreen')), findsOneWidget);
     expect(find.byKey(const Key('createProductTitleField')), findsOneWidget);
-    expect(find.byKey(const Key('createProductDescriptionField')), findsOneWidget);
+    expect(
+      find.byKey(const Key('createProductDescriptionField')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('createProductPriceField')), findsOneWidget);
-    expect(find.byKey(const Key('createProductCategoryDropdown')), findsOneWidget);
+    expect(
+      find.byKey(const Key('createProductCategoryDropdown')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('createProductSubmitButton')), findsOneWidget);
-    expect(find.byKey(const Key('createProductAddImageButton')), findsOneWidget);
+    expect(
+      find.byKey(const Key('createProductAddImageButton')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('shows validation error if no image is selected', (tester) async {
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('createProductTitleField')), 'Test Product');
-    await tester.enterText(find.byKey(const Key('createProductDescriptionField')), 'Desc');
-    await tester.enterText(find.byKey(const Key('createProductPriceField')), '150000');
-    
+    await tester.enterText(
+      find.byKey(const Key('createProductTitleField')),
+      'Test Product',
+    );
+    await tester.enterText(
+      find.byKey(const Key('createProductDescriptionField')),
+      'Desc',
+    );
+    await tester.enterText(
+      find.byKey(const Key('createProductPriceField')),
+      '150000',
+    );
+
     final submitButton = find.byKey(const Key('createProductSubmitButton'));
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);
@@ -92,12 +118,23 @@ void main() {
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('createProductTitleField')), 'Product with Dots');
-    await tester.enterText(find.byKey(const Key('createProductDescriptionField')), 'Desc');
-    await tester.enterText(find.byKey(const Key('createProductPriceField')), '1.500.000');
-    
+    await tester.enterText(
+      find.byKey(const Key('createProductTitleField')),
+      'Product with Dots',
+    );
+    await tester.enterText(
+      find.byKey(const Key('createProductDescriptionField')),
+      'Desc',
+    );
+    await tester.enterText(
+      find.byKey(const Key('createProductPriceField')),
+      '1.500.000',
+    );
+
     // Inject image
-    await tester.longPress(find.byKey(const Key('createProductAddImageButton')));
+    await tester.longPress(
+      find.byKey(const Key('createProductAddImageButton')),
+    );
     await tester.pumpAndSettle();
 
     final submitButton = find.byKey(const Key('createProductSubmitButton'));
@@ -107,7 +144,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500)); // Wait for async flow
     await tester.pumpAndSettle(); // Finish animations if any
 
-    final products = await mockRepo.fetchByKecamatan(kecamatan: 'Kebayoran Baru');
+    final products = await mockRepo.fetchByKecamatan(
+      kecamatan: 'Kebayoran Baru',
+    );
     expect(products.any((p) => p.title == 'Product with Dots'), true);
     final p = products.firstWhere((p) => p.title == 'Product with Dots');
     expect(p.price, 1500000);
@@ -122,8 +161,11 @@ void main() {
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('createProductPriceField')), 'abc');
-    
+    await tester.enterText(
+      find.byKey(const Key('createProductPriceField')),
+      'abc',
+    );
+
     final submitButton = find.byKey(const Key('createProductSubmitButton'));
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);

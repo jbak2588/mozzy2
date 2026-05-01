@@ -17,37 +17,46 @@ void main() {
 
   setUp(() {
     mockRepo = InMemoryAiVerificationReportRepository();
-    mockRoleSource = InMemoryMarketplaceAdminRoleSource(MarketplaceAdminRole.admin);
+    mockRoleSource = InMemoryMarketplaceAdminRoleSource(
+      MarketplaceAdminRole.admin,
+    );
     mockAuditRepo = InMemoryAdminAuditLogRepository();
   });
 
-  Widget createTestWidget({MarketplaceAdminRole role = MarketplaceAdminRole.admin}) {
+  Widget createTestWidget({
+    MarketplaceAdminRole role = MarketplaceAdminRole.admin,
+  }) {
     mockRoleSource.setRole(role);
     return ProviderScope(
       overrides: [
         aiVerificationReportRepositoryProvider.overrideWithValue(mockRepo),
-        marketplaceRepositoryProvider.overrideWithValue(InMemoryMarketplaceRepository()),
+        marketplaceRepositoryProvider.overrideWithValue(
+          InMemoryMarketplaceRepository(),
+        ),
         adminAuditLogRepositoryProvider.overrideWithValue(mockAuditRepo),
         marketplaceAdminRoleSourceProvider.overrideWithValue(mockRoleSource),
         currentMarketplaceUserIdProvider.overrideWithValue('test_admin_id'),
       ],
-      child: const MaterialApp(
-        home: AdminReviewScreen(),
-      ),
+      child: const MaterialApp(home: AdminReviewScreen()),
     );
   }
 
-  testWidgets('AdminReviewScreen renders and shows empty state when queue is empty', (tester) async {
-    await tester.pumpWidget(createTestWidget());
-    await tester.pump(); // Start async role check
-    await tester.pump(); // Complete async role check
-    await tester.pumpAndSettle();
+  testWidgets(
+    'AdminReviewScreen renders and shows empty state when queue is empty',
+    (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pump(); // Start async role check
+      await tester.pump(); // Complete async role check
+      await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('adminReviewScreen')), findsOneWidget);
-    expect(find.byKey(const Key('adminReviewEmptyState')), findsOneWidget);
-  });
+      expect(find.byKey(const Key('adminReviewScreen')), findsOneWidget);
+      expect(find.byKey(const Key('adminReviewEmptyState')), findsOneWidget);
+    },
+  );
 
-  testWidgets('AdminReviewScreen shows items when queue is not empty', (tester) async {
+  testWidgets('AdminReviewScreen shows items when queue is not empty', (
+    tester,
+  ) async {
     final report = AiVerificationReportModel(
       id: 'r1',
       productId: 'p1',
@@ -68,7 +77,9 @@ void main() {
     expect(find.text('Product ID: p1'), findsOneWidget);
   });
 
-  testWidgets('AdminReviewScreen shows buttons when canModerate is true', (tester) async {
+  testWidgets('AdminReviewScreen shows buttons when canModerate is true', (
+    tester,
+  ) async {
     final report = AiVerificationReportModel(
       id: 'r1',
       productId: 'p1',
@@ -90,39 +101,44 @@ void main() {
     expect(find.byKey(const Key('dismissBtn_r1')), findsOneWidget);
   });
 
-  testWidgets('AdminReviewScreen handles approve action and records audit log', (tester) async {
-    final report = AiVerificationReportModel(
-      id: 'r1',
-      productId: 'p1',
-      sellerId: 's1',
-      status: 'needs_review',
-      summary: 'Manual check needed',
-      createdAt: DateTime.now(),
-    );
-    await mockRepo.saveReport(report);
-    await mockRepo.enqueueReviewIfNeeded(report: report);
+  testWidgets(
+    'AdminReviewScreen handles approve action and records audit log',
+    (tester) async {
+      final report = AiVerificationReportModel(
+        id: 'r1',
+        productId: 'p1',
+        sellerId: 's1',
+        status: 'needs_review',
+        summary: 'Manual check needed',
+        createdAt: DateTime.now(),
+      );
+      await mockRepo.saveReport(report);
+      await mockRepo.enqueueReviewIfNeeded(report: report);
 
-    await tester.pumpWidget(createTestWidget());
-    await tester.pump(); // role check
-    await tester.pump(); // role check
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestWidget());
+      await tester.pump(); // role check
+      await tester.pump(); // role check
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('approveBtn_r1')));
-    await tester.pump(); // Start the async action
-    await tester.pumpAndSettle(); // Wait for it to complete
+      await tester.tap(find.byKey(const Key('approveBtn_r1')));
+      await tester.pump(); // Start the async action
+      await tester.pumpAndSettle(); // Wait for it to complete
 
-    // Verify it's resolved in mockRepo
-    final items = await mockRepo.fetchOpenReviewQueue();
-    expect(items.any((i) => i.id == 'r1'), isFalse);
+      // Verify it's resolved in mockRepo
+      final items = await mockRepo.fetchOpenReviewQueue();
+      expect(items.any((i) => i.id == 'r1'), isFalse);
 
-    // Verify audit log
-    expect(mockAuditRepo.logs.length, 1);
-    expect(mockAuditRepo.logs.first.action, 'approve');
-    expect(mockAuditRepo.logs.first.queueItemId, 'r1');
-    expect(mockAuditRepo.logs.first.reviewerId, 'test_admin_id');
-  });
+      // Verify audit log
+      expect(mockAuditRepo.logs.length, 1);
+      expect(mockAuditRepo.logs.first.action, 'approve');
+      expect(mockAuditRepo.logs.first.queueItemId, 'r1');
+      expect(mockAuditRepo.logs.first.reviewerId, 'test_admin_id');
+    },
+  );
 
-  testWidgets('AdminReviewScreen handles reject action and records audit log', (tester) async {
+  testWidgets('AdminReviewScreen handles reject action and records audit log', (
+    tester,
+  ) async {
     final report = AiVerificationReportModel(
       id: 'r1',
       productId: 'p1',
@@ -140,39 +156,44 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('rejectBtn_r1')));
-    await tester.pump(); 
-    await tester.pumpAndSettle(); 
+    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(mockAuditRepo.logs.length, 1);
     expect(mockAuditRepo.logs.first.action, 'reject');
   });
 
-  testWidgets('AdminReviewScreen handles dismiss action and records audit log', (tester) async {
-    final report = AiVerificationReportModel(
-      id: 'r1',
-      productId: 'p1',
-      sellerId: 's1',
-      status: 'needs_review',
-      summary: 'Manual check needed',
-      createdAt: DateTime.now(),
-    );
-    await mockRepo.saveReport(report);
-    await mockRepo.enqueueReviewIfNeeded(report: report);
+  testWidgets(
+    'AdminReviewScreen handles dismiss action and records audit log',
+    (tester) async {
+      final report = AiVerificationReportModel(
+        id: 'r1',
+        productId: 'p1',
+        sellerId: 's1',
+        status: 'needs_review',
+        summary: 'Manual check needed',
+        createdAt: DateTime.now(),
+      );
+      await mockRepo.saveReport(report);
+      await mockRepo.enqueueReviewIfNeeded(report: report);
 
-    await tester.pumpWidget(createTestWidget());
-    await tester.pump(); // role check
-    await tester.pump(); // role check
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(createTestWidget());
+      await tester.pump(); // role check
+      await tester.pump(); // role check
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('dismissBtn_r1')));
-    await tester.pump(); 
-    await tester.pumpAndSettle(); 
+      await tester.tap(find.byKey(const Key('dismissBtn_r1')));
+      await tester.pump();
+      await tester.pumpAndSettle();
 
-    expect(mockAuditRepo.logs.length, 1);
-    expect(mockAuditRepo.logs.first.action, 'dismiss');
-  });
+      expect(mockAuditRepo.logs.length, 1);
+      expect(mockAuditRepo.logs.first.action, 'dismiss');
+    },
+  );
 
-  testWidgets('AdminReviewScreen shows access denied when unauthorized', (tester) async {
+  testWidgets('AdminReviewScreen shows access denied when unauthorized', (
+    tester,
+  ) async {
     await tester.pumpWidget(createTestWidget(role: MarketplaceAdminRole.none));
     await tester.pump(); // role check
     await tester.pump(); // role check

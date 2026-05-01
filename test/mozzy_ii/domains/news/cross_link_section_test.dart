@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:mozzy/mozzy_ii/domains/news/widgets/cross_link_section.dart';
 
 void main() {
-  testWidgets('CrossLinkSection shows title, description and icon', (tester) async {
+  testWidgets('CrossLinkSection shows title, description and icon', (
+    tester,
+  ) async {
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: CrossLinkSection(),
-        ),
-      ),
+      const MaterialApp(home: Scaffold(body: CrossLinkSection())),
     );
 
     expect(find.text('news.relatedLocalItems'), findsOneWidget);

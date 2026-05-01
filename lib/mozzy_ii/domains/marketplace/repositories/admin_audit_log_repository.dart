@@ -16,9 +16,7 @@ abstract class AdminAuditLogRepository {
     int limit = 20,
   });
 
-  Future<List<AdminAuditLogModel>> fetchRecentAuditLogs({
-    int limit = 50,
-  });
+  Future<List<AdminAuditLogModel>> fetchRecentAuditLogs({int limit = 50});
 
   factory AdminAuditLogRepository() = FirestoreAdminAuditLogRepository;
 }
@@ -27,10 +25,10 @@ class FirestoreAdminAuditLogRepository implements AdminAuditLogRepository {
   final FirebaseFirestore _firestore;
 
   FirestoreAdminAuditLogRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
-  CollectionReference<Map<String, dynamic>> get _collection =>
-      _firestore.collection('countries/ID/domains/marketplace/admin_audit_logs');
+  CollectionReference<Map<String, dynamic>> get _collection => _firestore
+      .collection('countries/ID/domains/marketplace/admin_audit_logs');
 
   @override
   Future<void> recordModerationAction(AdminAuditLogModel log) async {

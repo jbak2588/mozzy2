@@ -11,7 +11,8 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
   }
 
   @override
-  CollectionReference get productsCollection => throw UnimplementedError('InMemory: no collection ref');
+  CollectionReference get productsCollection =>
+      throw UnimplementedError('InMemory: no collection ref');
 
   @override
   Future<String> createProduct(ProductModel product) async {
@@ -31,7 +32,11 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     DocumentSnapshot? startAfter,
   }) async {
     final list = _products.values
-        .where((p) => !p.isDeleted && p.locationParts?.idAddress?.kecamatan == kecamatan)
+        .where(
+          (p) =>
+              !p.isDeleted &&
+              p.locationParts?.idAddress?.kecamatan == kecamatan,
+        )
         .toList();
     list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return list.take(limit).toList();
@@ -84,7 +89,8 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     }
   }
 
-  final Map<String, Map<String, DateTime>> _productLikes = {}; // productId -> {userId: likedAt}
+  final Map<String, Map<String, DateTime>> _productLikes =
+      {}; // productId -> {userId: likedAt}
 
   @override
   Future<bool> isProductLikedByUser({
@@ -131,7 +137,7 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     int limit = 50,
   }) async {
     final List<MapEntry<String, DateTime>> userLikes = [];
-    
+
     for (final entry in _productLikes.entries) {
       final productId = entry.key;
       final likes = entry.value;

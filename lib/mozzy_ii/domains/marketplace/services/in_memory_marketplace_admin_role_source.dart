@@ -18,7 +18,9 @@ class InMemoryMarketplaceAdminRoleSource implements MarketplaceAdminRoleSource {
   }
 
   @override
-  Future<MarketplaceAdminRole> getCurrentRole({bool forceRefresh = false}) async {
+  Future<MarketplaceAdminRole> getCurrentRole({
+    bool forceRefresh = false,
+  }) async {
     return _role;
   }
 }

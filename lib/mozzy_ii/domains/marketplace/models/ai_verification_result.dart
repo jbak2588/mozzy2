@@ -17,7 +17,8 @@ abstract class AiVerificationResult with _$AiVerificationResult {
   const factory AiVerificationResult({
     required String id,
     required String productId,
-    required String status, // passed | failed | needs_review | pending | not_requested | error
+    required String
+    status, // passed | failed | needs_review | pending | not_requested | error
     @Default(0.0) double score,
     @Default('') String summary,
     @Default([]) List<String> detectedIssues,

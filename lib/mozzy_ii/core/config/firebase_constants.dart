@@ -13,7 +13,7 @@ class FirebaseConstants {
   // [2] Sub Collections (Path-Sharding)
   static const String domains = 'domains';
   static const String posts = 'posts';
-  
+
   // [3] Chat
   static const String chatRooms = 'chat_rooms';
   static const String messages = 'messages';

@@ -22,24 +22,24 @@ final currentUserIdProvider = Provider<String?>((ref) {
 // Indirection to make location easily overrideable in tests.
 final effectiveLocationProvider =
     Provider.autoDispose<AsyncValue<LocationParts?>>((ref) {
-  if (IntegrationTestConfig.enabled) {
-    return AsyncData(
-      LocationParts(
-        countryCode: 'ID',
-        latitude: -6.2278,
-        longitude: 106.8016,
-        geoHash: 'qqguw',
-        idAddress: const IndonesiaGeoAddress(
-          provinsi: 'DKI Jakarta',
-          kabupaten: 'Jakarta Selatan',
-          kecamatan: 'Kebayoran Baru',
-          kelurahan: 'Senayan',
-        ),
-      ),
-    );
-  }
-  return ref.watch(locationProvider);
-});
+      if (IntegrationTestConfig.enabled) {
+        return AsyncData(
+          LocationParts(
+            countryCode: 'ID',
+            latitude: -6.2278,
+            longitude: 106.8016,
+            geoHash: 'qqguw',
+            idAddress: const IndonesiaGeoAddress(
+              provinsi: 'DKI Jakarta',
+              kabupaten: 'Jakarta Selatan',
+              kecamatan: 'Kebayoran Baru',
+              kelurahan: 'Senayan',
+            ),
+          ),
+        );
+      }
+      return ref.watch(locationProvider);
+    });
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});

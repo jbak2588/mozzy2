@@ -12,7 +12,8 @@ class MarketplaceListScreen extends ConsumerStatefulWidget {
   const MarketplaceListScreen({super.key});
 
   @override
-  ConsumerState<MarketplaceListScreen> createState() => _MarketplaceListScreenState();
+  ConsumerState<MarketplaceListScreen> createState() =>
+      _MarketplaceListScreenState();
 }
 
 class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
@@ -75,7 +76,8 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
   Widget _buildLocationHeader(AsyncValue<LocationParts?> locationState) {
     return locationState.when(
       data: (loc) {
-        final kecamatan = loc?.idAddress?.kecamatan ?? 'marketplace.locationUnavailable'.tr();
+        final kecamatan =
+            loc?.idAddress?.kecamatan ?? 'marketplace.locationUnavailable'.tr();
         final kabupaten = loc?.idAddress?.kabupaten ?? '';
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -119,7 +121,9 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
         itemBuilder: (context, index) {
           final cat = categories[index];
           final isSelected = _selectedCategory == cat;
-          final label = cat == 'all' ? 'marketplace.all'.tr() : 'marketplace.category.$cat'.tr();
+          final label = cat == 'all'
+              ? 'marketplace.all'.tr()
+              : 'marketplace.category.$cat'.tr();
 
           return ChoiceChip(
             label: Text(label),
@@ -143,7 +147,9 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
           if (kecamatan == null) {
             return Center(child: Text('marketplace.locationUnavailable'.tr()));
           }
-          final productsAsync = ref.watch(productsByKecamatanProvider(kecamatan));
+          final productsAsync = ref.watch(
+            productsByKecamatanProvider(kecamatan),
+          );
           return _buildProductGrid(productsAsync);
         },
         loading: () => Center(
@@ -165,7 +171,9 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
         ),
       );
     } else {
-      final productsAsync = ref.watch(productsByCategoryProvider(_selectedCategory));
+      final productsAsync = ref.watch(
+        productsByCategoryProvider(_selectedCategory),
+      );
       return _buildProductGrid(productsAsync);
     }
   }
@@ -180,7 +188,10 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
               children: [
                 Text(
                   'marketplace.emptyTitle'.tr(),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text('marketplace.emptyDescription'.tr()),

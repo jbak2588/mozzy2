@@ -25,7 +25,7 @@ void main() {
       );
 
       await repo.recordModerationAction(log);
-      
+
       final recent = await repo.fetchRecentAuditLogs();
       expect(recent.length, 1);
       expect(recent.first.id, 'l1');
@@ -59,7 +59,7 @@ void main() {
 
       await repo.recordModerationAction(log1);
       await repo.recordModerationAction(log2);
-      
+
       final p1Logs = await repo.fetchAuditLogsByProduct(productId: 'p1');
       expect(p1Logs.length, 1);
       expect(p1Logs.first.productId, 'p1');
@@ -94,7 +94,7 @@ void main() {
 
       await repo.recordModerationAction(log1);
       await repo.recordModerationAction(log2);
-      
+
       final recent = await repo.fetchRecentAuditLogs();
       expect(recent.first.id, 'l2');
       expect(recent.last.id, 'l1');

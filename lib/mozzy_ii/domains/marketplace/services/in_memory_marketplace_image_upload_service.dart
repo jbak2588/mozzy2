@@ -8,7 +8,8 @@
 import 'package:image_picker/image_picker.dart';
 import 'marketplace_image_upload_service.dart';
 
-class InMemoryMarketplaceImageUploadService implements MarketplaceImageUploadService {
+class InMemoryMarketplaceImageUploadService
+    implements MarketplaceImageUploadService {
   @override
   Future<List<String>> uploadProductImages({
     required String productId,

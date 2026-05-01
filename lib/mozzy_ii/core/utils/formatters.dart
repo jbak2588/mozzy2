@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 class MozzyFormatters {
   /// 인도네시아 루피아(IDR) 포맷팅 (예: Rp 1.500.000)
   static String formatIDR(dynamic amount) {
-    if (amount == null) return 'Rp 0';
+    if (amount == null) {
+      return 'Rp 0';
+    }
     final formatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp ',
@@ -15,8 +17,12 @@ class MozzyFormatters {
   /// 인도네시아 루피아 요약 포맷팅 (예: 1,5Jt, 500Rb)
   /// Jt = Juta (Million), Rb = Ribu (Thousand)
   static String formatIDRCompact(dynamic amount) {
-    if (amount == null) return '0';
-    final double value = amount is num ? amount.toDouble() : double.tryParse(amount.toString()) ?? 0;
+    if (amount == null) {
+      return '0';
+    }
+    final double value = amount is num
+        ? amount.toDouble()
+        : double.tryParse(amount.toString()) ?? 0;
 
     if (value >= 1000000) {
       return '${(value / 1000000).toStringAsFixed(value % 1000000 == 0 ? 0 : 1).replaceAll('.', ',')}Jt';
@@ -39,13 +45,19 @@ class MozzyFormatters {
     final difference = now.difference(date);
 
     if (locale == 'id') {
-      if (difference.inMinutes < 1) return 'Baru saja';
-      if (difference.inMinutes < 60) return '${difference.inMinutes} menit yang lalu';
+      if (difference.inMinutes < 1) {
+        return 'Baru saja';
+      }
+      if (difference.inMinutes < 60) {
+        return '${difference.inMinutes} menit yang lalu';
+      }
       if (difference.inHours < 24) return '${difference.inHours} jam yang lalu';
       if (difference.inDays < 7) return '${difference.inDays} hari yang lalu';
       return formatDateID(date);
     } else {
-      if (difference.inMinutes < 1) return 'Just now';
+      if (difference.inMinutes < 1) {
+        return 'Just now';
+      }
       if (difference.inMinutes < 60) return '${difference.inMinutes} mins ago';
       if (difference.inHours < 24) return '${difference.inHours} hours ago';
       if (difference.inDays < 7) return '${difference.inDays} days ago';

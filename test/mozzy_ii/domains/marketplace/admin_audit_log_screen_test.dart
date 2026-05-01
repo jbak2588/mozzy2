@@ -31,9 +31,7 @@ void main() {
         if (auditRepo != null)
           adminAuditLogRepositoryProvider.overrideWithValue(auditRepo),
       ],
-      child: const MaterialApp(
-        home: AdminAuditLogScreen(),
-      ),
+      child: const MaterialApp(home: AdminAuditLogScreen()),
     );
   }
 
@@ -45,7 +43,10 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('adminAuditLogAccessDenied')), findsOneWidget);
+      expect(
+        find.byKey(const Key('adminAuditLogAccessDenied')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows empty state when no logs exist', (tester) async {

@@ -6,18 +6,10 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             eachDependency {
-                if (requested.group == "org.jetbrains.kotlin") {
-                    useVersion("2.3.0")
-                }
                 if (requested.group == "androidx.core" && (requested.name == "core" || requested.name == "core-ktx")) {
                     useVersion("1.13.1")
                 }
             }
-            force("org.jetbrains.kotlin:kotlin-stdlib:2.3.0")
-            force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.0")
-            force("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.3.0")
-            force("org.jetbrains.kotlin:kotlin-stdlib-common:2.3.0")
-            force("org.jetbrains.kotlin:kotlin-reflect:2.3.0")
             force("androidx.core:core:1.13.1")
             force("androidx.core:core-ktx:1.13.1")
         }

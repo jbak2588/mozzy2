@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 
 /// 인도네시아 현지화된 신뢰 등급 열거형
 enum TrustLevel {
-  anggotaBaru,      // Anggota Baru (New Member)
-  terpercaya,       // Terpercaya (Trusted)
-  terverifikasi,    // Terverifikasi (Verified)
-  heroLokal;        // Hero Lokal (Local Hero)
+  anggotaBaru, // Anggota Baru (New Member)
+  terpercaya, // Terpercaya (Trusted)
+  terverifikasi, // Terverifikasi (Verified)
+  heroLokal; // Hero Lokal (Local Hero)
 
   /// 점수에 따른 등급 판별
   static TrustLevel fromScore(double score) {

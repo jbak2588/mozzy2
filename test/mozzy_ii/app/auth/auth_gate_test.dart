@@ -10,19 +10,18 @@ import 'package:mockito/annotations.dart';
 import 'auth_gate_test.mocks.dart';
 
 void main() {
-  setUp(() {
-  });
+  setUp(() {});
 
   Widget createWidget({required ProviderContainer container}) {
     return UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(
-        home: AuthGate(),
-      ),
+      child: const MaterialApp(home: AuthGate()),
     );
   }
 
-  testWidgets('Shows loading indicator when authState is loading', (tester) async {
+  testWidgets('Shows loading indicator when authState is loading', (
+    tester,
+  ) async {
     final container = ProviderContainer(
       overrides: [
         authStateProvider.overrideWith((ref) => const Stream.empty()),
@@ -35,9 +34,7 @@ void main() {
 
   testWidgets('Shows LoginScreen when user is null', (tester) async {
     final container = ProviderContainer(
-      overrides: [
-        authStateProvider.overrideWith((ref) => Stream.value(null)),
-      ],
+      overrides: [authStateProvider.overrideWith((ref) => Stream.value(null))],
     );
 
     await tester.pumpWidget(createWidget(container: container));

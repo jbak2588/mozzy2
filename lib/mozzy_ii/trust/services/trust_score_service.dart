@@ -29,7 +29,8 @@ class TrustScoreService extends _$TrustScoreService {
           .get();
 
       if (doc.exists) {
-        return (doc.data()?[FirebaseConstants.fieldTrustScore] ?? 0.0) as double;
+        return (doc.data()?[FirebaseConstants.fieldTrustScore] ?? 0.0)
+            as double;
       }
       return 0.0;
     } catch (e) {
@@ -42,14 +43,11 @@ class TrustScoreService extends _$TrustScoreService {
   Future<void> updateTrustScore(double newScore) async {
     final userId = this.userId;
     state = const AsyncValue.loading();
-    
+
     state = await AsyncValue.guard(() async {
-      await _firestore
-          .collection(FirebaseConstants.users)
-          .doc(userId)
-          .set({
-            FirebaseConstants.fieldTrustScore: newScore,
-          }, SetOptions(merge: true));
+      await _firestore.collection(FirebaseConstants.users).doc(userId).set({
+        FirebaseConstants.fieldTrustScore: newScore,
+      }, SetOptions(merge: true));
       return newScore;
     });
   }

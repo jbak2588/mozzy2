@@ -9,7 +9,11 @@ class CommentsSection extends ConsumerStatefulWidget {
   final String postId;
   final String postOwnerId;
 
-  const CommentsSection({super.key, required this.postId, required this.postOwnerId});
+  const CommentsSection({
+    super.key,
+    required this.postId,
+    required this.postOwnerId,
+  });
 
   @override
   ConsumerState<CommentsSection> createState() => _CommentsSectionState();
@@ -33,17 +37,17 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
   Future<void> _submitComment() async {
     final content = _controller.text.trim();
     if (content.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('news.commentRequired'.tr())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('news.commentRequired'.tr())));
       return;
     }
 
     final userId = ref.read(currentCommentUserIdProvider);
     if (userId.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('news.loginRequired'.tr())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('news.loginRequired'.tr())));
       return;
     }
 
@@ -84,7 +88,7 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
       _focusNode.unfocus();
 
       final parentIdToInvalidate = _replyingToCommentId;
-      
+
       setState(() {
         _replyingToCommentId = null;
         _replyingToOwnerId = null;
@@ -92,13 +96,21 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
       });
 
       if (parentIdToInvalidate == null) {
-        ref.invalidate(visibleTopLevelCommentsProvider(VisibleCommentsQuery(postId: widget.postId, currentUserId: userId)));
+        ref.invalidate(
+          visibleTopLevelCommentsProvider(
+            VisibleCommentsQuery(postId: widget.postId, currentUserId: userId),
+          ),
+        );
       } else {
-        ref.invalidate(visibleRepliesByCommentProvider(VisibleRepliesQuery(
-          postId: widget.postId,
-          parentCommentId: parentIdToInvalidate,
-          currentUserId: userId,
-        )));
+        ref.invalidate(
+          visibleRepliesByCommentProvider(
+            VisibleRepliesQuery(
+              postId: widget.postId,
+              parentCommentId: parentIdToInvalidate,
+              currentUserId: userId,
+            ),
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -132,7 +144,11 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
   @override
   Widget build(BuildContext context) {
     final userId = ref.watch(currentCommentUserIdProvider);
-    final commentsAsync = ref.watch(visibleTopLevelCommentsProvider(VisibleCommentsQuery(postId: widget.postId, currentUserId: userId)));
+    final commentsAsync = ref.watch(
+      visibleTopLevelCommentsProvider(
+        VisibleCommentsQuery(postId: widget.postId, currentUserId: userId),
+      ),
+    );
 
     return Column(
       key: const Key('commentsSection'),
@@ -151,8 +167,10 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
             if (comments.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text('news.noCommentsYet'.tr(),
-                    style: const TextStyle(color: Colors.grey)),
+                child: Text(
+                  'news.noCommentsYet'.tr(),
+                  style: const TextStyle(color: Colors.grey),
+                ),
               );
             }
             return ListView.builder(
@@ -190,7 +208,9 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
                       Text(
                         'news.replyingTo'.tr(),
                         style: const TextStyle(
-                            fontStyle: FontStyle.italic, color: Colors.blue),
+                          fontStyle: FontStyle.italic,
+                          color: Colors.blue,
+                        ),
                       ),
                       const Spacer(),
                       InkWell(
@@ -199,7 +219,7 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
                           'news.cancelReply'.tr(),
                           style: const TextStyle(color: Colors.red),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -208,7 +228,8 @@ class _CommentsSectionState extends ConsumerState<CommentsSection> {
                   Checkbox(
                     key: const Key('commentSecretToggle'),
                     value: _isSecret,
-                    onChanged: (val) => setState(() => _isSecret = val ?? false),
+                    onChanged: (val) =>
+                        setState(() => _isSecret = val ?? false),
                   ),
                   Text('news.secret'.tr()),
                   const SizedBox(width: 8),
@@ -263,11 +284,15 @@ class _CommentItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repliesAsync = ref.watch(visibleRepliesByCommentProvider(VisibleRepliesQuery(
-      postId: comment.postId,
-      parentCommentId: comment.id,
-      currentUserId: currentUserId,
-    )));
+    final repliesAsync = ref.watch(
+      visibleRepliesByCommentProvider(
+        VisibleRepliesQuery(
+          postId: comment.postId,
+          parentCommentId: comment.id,
+          currentUserId: currentUserId,
+        ),
+      ),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -278,7 +303,12 @@ class _CommentItem extends ConsumerWidget {
               if (comment.isSecret)
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: Icon(Icons.lock, size: 16, color: Colors.amber, key: Key('secretBadge_${comment.id}')),
+                  child: Icon(
+                    Icons.lock,
+                    size: 16,
+                    color: Colors.amber,
+                    key: Key('secretBadge_${comment.id}'),
+                  ),
                 ),
               Expanded(child: Text(comment.content)),
             ],
@@ -298,10 +328,12 @@ class _CommentItem extends ConsumerWidget {
                   child: Text(
                     'news.reply'.tr(),
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
           trailing: Text('Trust: ${comment.trustScore.toStringAsFixed(1)}'),
@@ -320,7 +352,12 @@ class _CommentItem extends ConsumerWidget {
                         if (r.isSecret)
                           Padding(
                             padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(Icons.lock, size: 14, color: Colors.amber, key: Key('secretBadge_${r.id}')),
+                            child: Icon(
+                              Icons.lock,
+                              size: 14,
+                              color: Colors.amber,
+                              key: Key('secretBadge_${r.id}'),
+                            ),
                           ),
                         Expanded(child: Text(r.content)),
                       ],

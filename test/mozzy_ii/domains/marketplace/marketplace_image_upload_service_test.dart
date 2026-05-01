@@ -11,10 +11,7 @@ void main() {
 
   group('InMemoryMarketplaceImageUploadService', () {
     test('uploadProductImages returns fake URLs with correct count', () async {
-      final images = [
-        XFile('path/to/img1.jpg'),
-        XFile('path/to/img2.jpg'),
-      ];
+      final images = [XFile('path/to/img1.jpg'), XFile('path/to/img2.jpg')];
 
       final urls = await service.uploadProductImages(
         productId: 'prod123',
@@ -27,16 +24,19 @@ void main() {
       expect(urls[1], 'https://example.test/marketplace/prod123/image_1.jpg');
     });
 
-    test('uploadProductImages throws ArgumentError if images is empty', () async {
-      expect(
-        () => service.uploadProductImages(
-          productId: 'prod123',
-          sellerId: 'user456',
-          images: [],
-        ),
-        throwsArgumentError,
-      );
-    });
+    test(
+      'uploadProductImages throws ArgumentError if images is empty',
+      () async {
+        expect(
+          () => service.uploadProductImages(
+            productId: 'prod123',
+            sellerId: 'user456',
+            images: [],
+          ),
+          throwsArgumentError,
+        );
+      },
+    );
 
     test('uploadProductImages throws ArgumentError if images > 5', () async {
       final images = List.generate(6, (i) => XFile('path/to/img$i.jpg'));

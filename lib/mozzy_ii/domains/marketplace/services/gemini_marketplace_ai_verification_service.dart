@@ -12,11 +12,12 @@ import '../ai/marketplace_ai_config.dart';
 import '../models/ai_verification_result.dart';
 import 'marketplace_ai_verification_service.dart';
 
-class GeminiMarketplaceAiVerificationService implements MarketplaceAiVerificationService {
+class GeminiMarketplaceAiVerificationService
+    implements MarketplaceAiVerificationService {
   final http.Client _client;
 
   GeminiMarketplaceAiVerificationService([http.Client? client])
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   @override
   Future<AiVerificationResult> verifyProductImages({
@@ -32,9 +33,11 @@ class GeminiMarketplaceAiVerificationService implements MarketplaceAiVerificatio
     }
 
     final model = MarketplaceAiConfig.geminiModel;
-    final url = 'https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey';
+    final url =
+        'https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent?key=$apiKey';
 
-    final prompt = '''
+    final prompt =
+        '''
 You are verifying a marketplace listing for a hyperlocal Indonesian app (Mozzy).
 Check whether the product evidence (title, description, category) appears consistent and safe.
 Note: Images are provided as URLs. If you cannot access them, rely on the text metadata.
@@ -60,29 +63,34 @@ Rules:
 ''';
 
     try {
-      final response = await _client.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'contents': [
-            {
-              'parts': [
-                {'text': prompt}
-              ]
-            }
-          ],
-          'generationConfig': {
-            'responseMimeType': 'application/json',
-          }
-        }),
-      ).timeout(const Duration(seconds: 10));
+      final response = await _client
+          .post(
+            Uri.parse(url),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'contents': [
+                {
+                  'parts': [
+                    {'text': prompt},
+                  ],
+                },
+              ],
+              'generationConfig': {'responseMimeType': 'application/json'},
+            }),
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) {
-        return _errorResult(productId, 'API Error: ${response.statusCode}', 'error');
+        return _errorResult(
+          productId,
+          'API Error: ${response.statusCode}',
+          'error',
+        );
       }
 
       final data = jsonDecode(response.body);
-      final String? textResponse = data['candidates']?[0]?['content']?['parts']?[0]?['text'];
+      final String? textResponse =
+          data['candidates']?[0]?['content']?['parts']?[0]?['text'];
 
       if (textResponse == null) {
         return _errorResult(productId, 'Empty response from AI', 'error');
@@ -113,7 +121,11 @@ Rules:
         createdAt: DateTime.now().toUtc(),
       );
     } catch (e) {
-      return _errorResult(productId, 'Verification failed: parsing error or timeout', 'error');
+      return _errorResult(
+        productId,
+        'Verification failed: parsing error or timeout',
+        'error',
+      );
     }
   }
 
@@ -124,7 +136,11 @@ Rules:
     return 'needs_review';
   }
 
-  AiVerificationResult _errorResult(String productId, String summary, String status) {
+  AiVerificationResult _errorResult(
+    String productId,
+    String summary,
+    String status,
+  ) {
     return AiVerificationResult(
       id: const Uuid().v4(),
       productId: productId,

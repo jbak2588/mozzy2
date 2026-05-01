@@ -51,7 +51,8 @@ class AdminAuditLogScreen extends ConsumerWidget {
               Text('marketplace.adminRoleLoadFailed'.tr()),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () => ref.invalidate(marketplaceAdminRoleAsyncProvider),
+                onPressed: () =>
+                    ref.invalidate(marketplaceAdminRoleAsyncProvider),
                 child: Text('common.retry'.tr()),
               ),
             ],
@@ -161,7 +162,9 @@ class AdminAuditLogScreen extends ConsumerWidget {
               children: [
                 _buildActionChip(log.action),
                 Text(
-                  DateFormat('yyyy-MM-dd HH:mm').format(log.createdAt.toLocal()),
+                  DateFormat(
+                    'yyyy-MM-dd HH:mm',
+                  ).format(log.createdAt.toLocal()),
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
@@ -169,8 +172,15 @@ class AdminAuditLogScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             _buildDetailRow('marketplace.auditProduct'.tr(), log.productId),
             _buildDetailRow('marketplace.auditQueueItem'.tr(), log.queueItemId),
-            _buildDetailRow('marketplace.auditReviewerRole'.tr(), log.reviewerRole),
-            _buildDetailRow('marketplace.auditDecision'.tr(), log.decision, isHighlight: true),
+            _buildDetailRow(
+              'marketplace.auditReviewerRole'.tr(),
+              log.reviewerRole,
+            ),
+            _buildDetailRow(
+              'marketplace.auditDecision'.tr(),
+              log.decision,
+              isHighlight: true,
+            ),
             if (log.noteSummary != null && log.noteSummary!.isNotEmpty)
               _buildDetailRow('marketplace.auditNote'.tr(), log.noteSummary!),
           ],
@@ -204,18 +214,26 @@ class AdminAuditLogScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(color: color),
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: color,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
-  Widget _buildDetailRow(String label, String value, {bool isHighlight = false}) {
+  Widget _buildDetailRow(
+    String label,
+    String value, {
+    bool isHighlight = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(

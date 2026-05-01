@@ -11,10 +11,7 @@ void main() {
 
   group('InMemoryMarketplaceImageOptimizationService', () {
     test('optimizeProductImages returns input images unchanged', () async {
-      final images = [
-        XFile('path/to/img1.jpg'),
-        XFile('path/to/img2.jpg'),
-      ];
+      final images = [XFile('path/to/img1.jpg'), XFile('path/to/img2.jpg')];
 
       final optimized = await service.optimizeProductImages(images);
 
@@ -23,19 +20,16 @@ void main() {
       expect(optimized[1].path, 'path/to/img2.jpg');
     });
 
-    test('optimizeProductImages throws ArgumentError if images is empty', () async {
-      expect(
-        () => service.optimizeProductImages([]),
-        throwsArgumentError,
-      );
-    });
+    test(
+      'optimizeProductImages throws ArgumentError if images is empty',
+      () async {
+        expect(() => service.optimizeProductImages([]), throwsArgumentError);
+      },
+    );
 
     test('optimizeProductImages throws ArgumentError if images > 5', () async {
       final images = List.generate(6, (i) => XFile('path/to/img$i.jpg'));
-      expect(
-        () => service.optimizeProductImages(images),
-        throwsArgumentError,
-      );
+      expect(() => service.optimizeProductImages(images), throwsArgumentError);
     });
   });
 }

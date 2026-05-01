@@ -13,7 +13,7 @@ class MarketplaceImageUploadService {
   final FirebaseStorage _storage;
 
   MarketplaceImageUploadService([FirebaseStorage? storage])
-      : _storage = storage ?? FirebaseStorage.instance;
+    : _storage = storage ?? FirebaseStorage.instance;
 
   /// 여러 이미지를 업로드하고 다운로드 URL 리스트를 반환합니다.
   Future<List<String>> uploadProductImages({
@@ -34,12 +34,12 @@ class MarketplaceImageUploadService {
       final image = images[i];
       final fileName = 'image_$i.jpg'; // Simple naming for now
       final path = 'marketplace/products/$sellerId/$productId/$fileName';
-      
+
       final ref = _storage.ref().child(path);
-      
+
       // Platform-safe upload
       final uploadTask = ref.putFile(File(image.path));
-      
+
       final snapshot = await uploadTask;
       final url = await snapshot.ref.getDownloadURL();
       downloadUrls.add(url);

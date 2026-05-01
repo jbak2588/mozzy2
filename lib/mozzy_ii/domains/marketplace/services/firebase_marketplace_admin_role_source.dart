@@ -13,21 +13,23 @@ class FirebaseMarketplaceAdminRoleSource implements MarketplaceAdminRoleSource {
   final FirebaseAuth _auth;
 
   FirebaseMarketplaceAdminRoleSource({FirebaseAuth? auth})
-      : _auth = auth ?? FirebaseAuth.instance;
+    : _auth = auth ?? FirebaseAuth.instance;
 
   @override
-  Future<MarketplaceAdminRole> getCurrentRole({bool forceRefresh = false}) async {
+  Future<MarketplaceAdminRole> getCurrentRole({
+    bool forceRefresh = false,
+  }) async {
     final user = _auth.currentUser;
     if (user == null) return MarketplaceAdminRole.none;
 
     try {
       final tokenResult = await user.getIdTokenResult(forceRefresh);
       final claims = tokenResult.claims;
-      
+
       if (claims == null) return MarketplaceAdminRole.none;
 
       final roleValue = claims['marketplaceAdminRole'] as String?;
-      
+
       if (roleValue == null) return MarketplaceAdminRole.none;
 
       return _mapStringToRole(roleValue);

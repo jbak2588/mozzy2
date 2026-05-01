@@ -11,9 +11,7 @@ void main() {
   Widget createTestWidget(ProviderContainer container) {
     return UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(
-        home: SavedMarketplaceScreen(),
-      ),
+      child: const MaterialApp(home: SavedMarketplaceScreen()),
     );
   }
 
@@ -51,9 +49,7 @@ void main() {
 
     testWidgets('shows login required if userId is null', (tester) async {
       final container = ProviderContainer(
-        overrides: [
-          currentMarketplaceUserIdProvider.overrideWithValue(null),
-        ],
+        overrides: [currentMarketplaceUserIdProvider.overrideWithValue(null)],
       );
 
       await tester.pumpWidget(createTestWidget(container));
@@ -74,7 +70,10 @@ void main() {
       await tester.pumpWidget(createTestWidget(container));
       await tester.pumpAndSettle();
 
-      expect(find.byKey(const Key('savedMarketplaceEmptyState')), findsOneWidget);
+      expect(
+        find.byKey(const Key('savedMarketplaceEmptyState')),
+        findsOneWidget,
+      );
       expect(find.text('marketplace.noSavedItems'), findsOneWidget);
     });
 

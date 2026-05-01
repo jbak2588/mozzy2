@@ -9,7 +9,8 @@ import 'package:uuid/uuid.dart';
 import '../models/ai_verification_result.dart';
 import 'marketplace_ai_verification_service.dart';
 
-class InMemoryMarketplaceAiVerificationService implements MarketplaceAiVerificationService {
+class InMemoryMarketplaceAiVerificationService
+    implements MarketplaceAiVerificationService {
   @override
   Future<AiVerificationResult> verifyProductImages({
     required String productId,
@@ -20,7 +21,7 @@ class InMemoryMarketplaceAiVerificationService implements MarketplaceAiVerificat
   }) async {
     // 1초 지연 후 결정론적 결과 반환
     await Future.delayed(const Duration(seconds: 1));
-    
+
     return AiVerificationResult(
       id: const Uuid().v4(),
       productId: productId,

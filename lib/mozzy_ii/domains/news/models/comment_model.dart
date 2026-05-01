@@ -23,7 +23,8 @@ class SafeDateTimeConverter implements JsonConverter<DateTime, dynamic> {
   dynamic toJson(DateTime object) => object.toUtc().toIso8601String();
 }
 
-class OptionalSafeDateTimeConverter implements JsonConverter<DateTime?, dynamic> {
+class OptionalSafeDateTimeConverter
+    implements JsonConverter<DateTime?, dynamic> {
   const OptionalSafeDateTimeConverter();
 
   @override
@@ -66,5 +67,6 @@ abstract class CommentModel with _$CommentModel {
 
   bool get isReply => parentCommentId != null && parentCommentId!.isNotEmpty;
 
-  factory CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
+  factory CommentModel.fromJson(Map<String, dynamic> json) =>
+      _$CommentModelFromJson(json);
 }

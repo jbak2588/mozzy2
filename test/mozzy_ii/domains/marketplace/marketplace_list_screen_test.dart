@@ -42,9 +42,7 @@ void main() {
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
       ],
-      child: const MaterialApp(
-        home: MarketplaceListScreen(),
-      ),
+      child: const MaterialApp(home: MarketplaceListScreen()),
     );
   }
 
@@ -56,34 +54,57 @@ void main() {
     expect(find.byKey(const Key('marketplaceCreateFab')), findsOneWidget);
     expect(find.byKey(const Key('marketplaceSavedButton')), findsOneWidget);
     expect(find.text('Kebayoran Baru, Jakarta Selatan'), findsOneWidget);
-    
+
     // By default in test environment it might be none or admin depending on how provider is set
   });
 
-  testWidgets('MarketplaceListScreen shows admin button only when authorized', (tester) async {
-    await tester.pumpWidget(ProviderScope(
-      overrides: [
-        marketplaceRepositoryProvider.overrideWithValue(mockRepo),
-        locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
-        marketplaceAdminRoleProvider.overrideWithValue(MarketplaceAdminRole.admin),
-      ],
-      child: const MaterialApp(home: MarketplaceListScreen()),
-    ));
+  testWidgets('MarketplaceListScreen shows admin button only when authorized', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          marketplaceRepositoryProvider.overrideWithValue(mockRepo),
+          locationProvider.overrideWith(
+            () => MockLocationNotifier(testLocation),
+          ),
+          marketplaceAdminRoleProvider.overrideWithValue(
+            MarketplaceAdminRole.admin,
+          ),
+        ],
+        child: const MaterialApp(home: MarketplaceListScreen()),
+      ),
+    );
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('marketplaceAdminReviewButton')), findsOneWidget);
-    expect(find.byKey(const Key('marketplaceAdminAuditLogButton')), findsOneWidget);
+    expect(
+      find.byKey(const Key('marketplaceAdminReviewButton')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('marketplaceAdminAuditLogButton')),
+      findsOneWidget,
+    );
 
-    await tester.pumpWidget(ProviderScope(
-      overrides: [
-        marketplaceRepositoryProvider.overrideWithValue(mockRepo),
-        locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
-        marketplaceAdminRoleProvider.overrideWithValue(MarketplaceAdminRole.none),
-      ],
-      child: const MaterialApp(home: MarketplaceListScreen()),
-    ));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          marketplaceRepositoryProvider.overrideWithValue(mockRepo),
+          locationProvider.overrideWith(
+            () => MockLocationNotifier(testLocation),
+          ),
+          marketplaceAdminRoleProvider.overrideWithValue(
+            MarketplaceAdminRole.none,
+          ),
+        ],
+        child: const MaterialApp(home: MarketplaceListScreen()),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceAdminReviewButton')), findsNothing);
-    expect(find.byKey(const Key('marketplaceAdminAuditLogButton')), findsNothing);
+    expect(
+      find.byKey(const Key('marketplaceAdminAuditLogButton')),
+      findsNothing,
+    );
   });
 
   testWidgets('MarketplaceListScreen shows category chips', (tester) async {

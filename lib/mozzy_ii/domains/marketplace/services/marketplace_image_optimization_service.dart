@@ -13,7 +13,8 @@ abstract class MarketplaceImageOptimizationService {
   Future<List<XFile>> optimizeProductImages(List<XFile> images);
 }
 
-class MarketplaceImageOptimizationServiceImpl implements MarketplaceImageOptimizationService {
+class MarketplaceImageOptimizationServiceImpl
+    implements MarketplaceImageOptimizationService {
   @override
   Future<List<XFile>> optimizeProductImages(List<XFile> images) async {
     if (images.isEmpty) {
@@ -29,7 +30,10 @@ class MarketplaceImageOptimizationServiceImpl implements MarketplaceImageOptimiz
 
     for (int i = 0; i < images.length; i++) {
       final image = images[i];
-      final targetPath = p.join(tempDir.path, 'marketplace_${timestamp}_$i.webp');
+      final targetPath = p.join(
+        tempDir.path,
+        'marketplace_${timestamp}_$i.webp',
+      );
 
       final result = await FlutterImageCompress.compressAndGetFile(
         image.path,

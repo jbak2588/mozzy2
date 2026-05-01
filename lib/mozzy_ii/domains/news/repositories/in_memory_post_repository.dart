@@ -11,7 +11,8 @@ class InMemoryPostRepository implements PostRepository {
   }
 
   @override
-  CollectionReference get postsCollection => throw UnimplementedError('InMemory: no collection ref');
+  CollectionReference get postsCollection =>
+      throw UnimplementedError('InMemory: no collection ref');
 
   @override
   Future<void> createPost(PostModel post) async {
@@ -30,7 +31,9 @@ class InMemoryPostRepository implements PostRepository {
     DocumentSnapshot? startAfter,
   }) async {
     final list = _posts.values
-        .where((p) => !p.isDeleted && p.location.idAddress?.kecamatan == kecamatan)
+        .where(
+          (p) => !p.isDeleted && p.location.idAddress?.kecamatan == kecamatan,
+        )
         .toList();
     list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return list.take(limit).toList();
@@ -57,7 +60,9 @@ class InMemoryPostRepository implements PostRepository {
     DocumentSnapshot? startAfter,
   }) async {
     final list = _posts.values
-        .where((p) => !p.isDeleted && p.location.idAddress?.kecamatan == kecamatan)
+        .where(
+          (p) => !p.isDeleted && p.location.idAddress?.kecamatan == kecamatan,
+        )
         .where((p) => category == 'all' || p.category == category)
         .toList();
     list.sort((a, b) => b.createdAt.compareTo(a.createdAt));

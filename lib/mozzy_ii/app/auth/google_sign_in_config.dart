@@ -19,4 +19,3 @@ class GoogleSignInConfig {
     await GoogleSignIn.instance.initialize(serverClientId: webClientId);
   }
 }
-

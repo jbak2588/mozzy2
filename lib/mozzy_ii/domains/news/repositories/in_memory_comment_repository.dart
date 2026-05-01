@@ -9,14 +9,17 @@ class InMemoryCommentRepository implements CommentRepository {
   String commentsCollectionPath(String postId, [String? country]) => '';
 
   @override
-  CollectionReference<Object?> getCommentsCollection(String postId) => throw UnimplementedError('Not used in memory');
+  CollectionReference<Object?> getCommentsCollection(String postId) =>
+      throw UnimplementedError('Not used in memory');
 
   @override
   Future<void> createComment(CommentModel comment) async {
     _commentsByPost.putIfAbsent(comment.postId, () => []);
-    
+
     // Check if exists to mimic merge
-    final index = _commentsByPost[comment.postId]!.indexWhere((c) => c.id == comment.id);
+    final index = _commentsByPost[comment.postId]!.indexWhere(
+      (c) => c.id == comment.id,
+    );
     if (index >= 0) {
       _commentsByPost[comment.postId]![index] = comment;
     } else {
@@ -43,34 +46,54 @@ class InMemoryCommentRepository implements CommentRepository {
     return _fetchVisible(postId, currentUserId, parentCommentId, limit);
   }
 
-  List<CommentModel> _fetchVisible(String postId, String currentUserId, String? parentCommentId, int limit) {
+  List<CommentModel> _fetchVisible(
+    String postId,
+    String currentUserId,
+    String? parentCommentId,
+    int limit,
+  ) {
     final comments = _commentsByPost[postId] ?? [];
-    
+
     final filtered = comments.where((c) {
-      if (c.isDeleted) return false;
-      if (parentCommentId == null) {
-        if (c.parentCommentId != null && c.parentCommentId!.isNotEmpty) return false;
-      } else {
-        if (c.parentCommentId != parentCommentId) return false;
+      if (c.isDeleted) {
+        return false;
       }
-      
+      if (parentCommentId == null) {
+        if (c.parentCommentId != null && c.parentCommentId!.isNotEmpty) {
+          return false;
+        }
+      } else {
+        if (c.parentCommentId != parentCommentId) {
+          return false;
+        }
+      }
+
       if (c.isSecret) {
         return c.visibleToUserIds.contains(currentUserId);
       }
       return true;
     }).toList();
-    
+
     filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    
+
     return filtered.take(limit).toList();
   }
 
   @override
-  Future<List<CommentModel>> fetchTopLevelComments(String postId, {int limit = 50}) async {
-    final comments = _commentsByPost[postId] ?? [];  
-    final filtered = comments.where((c) => !c.isDeleted && (c.parentCommentId == null || c.parentCommentId!.isEmpty)).toList();
+  Future<List<CommentModel>> fetchTopLevelComments(
+    String postId, {
+    int limit = 50,
+  }) async {
+    final comments = _commentsByPost[postId] ?? [];
+    final filtered = comments
+        .where(
+          (c) =>
+              !c.isDeleted &&
+              (c.parentCommentId == null || c.parentCommentId!.isEmpty),
+        )
+        .toList();
     filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    
+
     if (filtered.length > limit) {
       return filtered.sublist(0, limit);
     }
@@ -84,10 +107,12 @@ class InMemoryCommentRepository implements CommentRepository {
     int limit = 50,
   }) async {
     final comments = _commentsByPost[postId] ?? [];
-    
-    final filtered = comments.where((c) => !c.isDeleted && c.parentCommentId == parentCommentId).toList();
+
+    final filtered = comments
+        .where((c) => !c.isDeleted && c.parentCommentId == parentCommentId)
+        .toList();
     filtered.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    
+
     if (filtered.length > limit) {
       return filtered.sublist(0, limit);
     }
@@ -101,7 +126,7 @@ class InMemoryCommentRepository implements CommentRepository {
   }) async {
     final comments = _commentsByPost[postId] ?? [];
     final index = comments.indexWhere((c) => c.id == commentId);
-    
+
     if (index >= 0) {
       final old = comments[index];
       comments[index] = old.copyWith(

@@ -10,7 +10,8 @@ import '../models/ai_verification_report_model.dart';
 import '../models/ai_review_queue_item_model.dart';
 import 'ai_verification_report_repository.dart';
 
-class InMemoryAiVerificationReportRepository implements AiVerificationReportRepository {
+class InMemoryAiVerificationReportRepository
+    implements AiVerificationReportRepository {
   final Map<String, List<AiVerificationReportModel>> _reports = {};
   final Map<String, AiReviewQueueItemModel> _queue = {};
 
@@ -60,10 +61,10 @@ class InMemoryAiVerificationReportRepository implements AiVerificationReportRepo
     final openItems = _queue.values
         .where((item) => item.reviewStatus == 'open')
         .toList();
-    
+
     final sorted = openItems
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    
+
     return sorted.take(limit).toList();
   }
 
@@ -88,7 +89,7 @@ class InMemoryAiVerificationReportRepository implements AiVerificationReportRepo
 
   // 테스트를 위한 편의용
   List<AiReviewQueueItemModel> get queueItems => _queue.values.toList();
-  
+
   void clear() {
     _reports.clear();
     _queue.clear();

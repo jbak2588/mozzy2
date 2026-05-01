@@ -33,7 +33,7 @@ class LocationPermissionScreen extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () async {
                   final permission = await Geolocator.requestPermission();
-                  if (permission == LocationPermission.whileInUse || 
+                  if (permission == LocationPermission.whileInUse ||
                       permission == LocationPermission.always) {
                     // 권한 획득 시 provider 갱신
                     ref.invalidate(locationProvider);
@@ -44,7 +44,10 @@ class LocationPermissionScreen extends ConsumerWidget {
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 50),
                 ),
-                child: const Text('Aktifkan Lokasi', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Aktifkan Lokasi',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 16),
               TextButton(

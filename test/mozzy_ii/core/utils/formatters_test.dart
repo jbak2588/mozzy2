@@ -38,7 +38,7 @@ void main() {
 
     test('formatRelativeTime returns correct strings in id', () {
       final now = DateTime.now();
-      
+
       final justNow = now.subtract(const Duration(seconds: 30));
       expect(MozzyFormatters.formatRelativeTime(justNow), 'Baru saja');
 
@@ -54,12 +54,18 @@ void main() {
 
     test('formatRelativeTime returns correct strings in en', () {
       final now = DateTime.now();
-      
+
       final justNow = now.subtract(const Duration(seconds: 30));
-      expect(MozzyFormatters.formatRelativeTime(justNow, locale: 'en'), 'Just now');
+      expect(
+        MozzyFormatters.formatRelativeTime(justNow, locale: 'en'),
+        'Just now',
+      );
 
       final minsAgo = now.subtract(const Duration(minutes: 5));
-      expect(MozzyFormatters.formatRelativeTime(minsAgo, locale: 'en'), '5 mins ago');
+      expect(
+        MozzyFormatters.formatRelativeTime(minsAgo, locale: 'en'),
+        '5 mins ago',
+      );
     });
   });
 }

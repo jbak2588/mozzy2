@@ -6,7 +6,9 @@ import 'package:mozzy/main.dart' as app;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Marketplace List-Create-Detail E2E Flow', (WidgetTester tester) async {
+  testWidgets('Marketplace List-Create-Detail E2E Flow', (
+    WidgetTester tester,
+  ) async {
     // Helper to settle UI with timeout protection
     Future<void> boundedSettle() async {
       for (var i = 0; i < 15; i++) {
@@ -15,7 +17,10 @@ void main() {
     }
 
     // Helper to wait for a specific widget to appear (handles loading states)
-    Future<void> waitFor(Finder finder, {Duration timeout = const Duration(seconds: 10)}) async {
+    Future<void> waitFor(
+      Finder finder, {
+      Duration timeout = const Duration(seconds: 10),
+    }) async {
       final end = DateTime.now().add(timeout);
       while (DateTime.now().isBefore(end)) {
         if (finder.evaluate().isNotEmpty) return;
@@ -28,7 +33,11 @@ void main() {
     }
 
     // Helper to wait for a specific icon inside a widget (handles state updates)
-    Future<void> waitForIcon(Finder parent, IconData icon, {Duration timeout = const Duration(seconds: 10)}) async {
+    Future<void> waitForIcon(
+      Finder parent,
+      IconData icon, {
+      Duration timeout = const Duration(seconds: 10),
+    }) async {
       final end = DateTime.now().add(timeout);
       final finder = find.descendant(of: parent, matching: find.byIcon(icon));
       while (DateTime.now().isBefore(end)) {
@@ -66,7 +75,7 @@ void main() {
 
     // 3. Confirm MarketplaceListScreen appears
     expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
-    
+
     // 4. Verify category chips appear (at least 'all')
     expect(find.byType(ChoiceChip), findsAtLeast(1));
 
@@ -80,19 +89,27 @@ void main() {
     expect(find.byKey(const Key('createProductScreen')), findsOneWidget);
 
     // 6.1. Select an image (long press for fake injection in integration mode)
-    await tester.longPress(find.byKey(const Key('createProductAddImageButton')));
+    await tester.longPress(
+      find.byKey(const Key('createProductAddImageButton')),
+    );
     await tester.pumpAndSettle();
-    expect(find.byKey(const Key('createProductImagePreview_0')), findsOneWidget);
+    expect(
+      find.byKey(const Key('createProductImagePreview_0')),
+      findsOneWidget,
+    );
 
     // 7. Submit empty form (title/description/price still missing)
     await tester.tap(find.byKey(const Key('createProductSubmitButton')));
     await tester.pumpAndSettle();
-    
+
     // Should show validation error (we can verify it stays on create screen)
     expect(find.byKey(const Key('createProductScreen')), findsOneWidget);
 
     // 8. Enter Title only
-    await tester.enterText(find.byKey(const Key('createProductTitleField')), 'Automated Marketplace Test Product');
+    await tester.enterText(
+      find.byKey(const Key('createProductTitleField')),
+      'Automated Marketplace Test Product',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
@@ -103,7 +120,10 @@ void main() {
     expect(find.byKey(const Key('createProductScreen')), findsOneWidget);
 
     // 10. Enter Description
-    await tester.enterText(find.byKey(const Key('createProductDescriptionField')), 'This is an automated marketplace integration test product.');
+    await tester.enterText(
+      find.byKey(const Key('createProductDescriptionField')),
+      'This is an automated marketplace integration test product.',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
@@ -114,7 +134,10 @@ void main() {
     expect(find.byKey(const Key('createProductScreen')), findsOneWidget);
 
     // 12. Enter Price
-    await tester.enterText(find.byKey(const Key('createProductPriceField')), '150000');
+    await tester.enterText(
+      find.byKey(const Key('createProductPriceField')),
+      '150000',
+    );
     await tester.testTextInput.receiveAction(TextInputAction.done);
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
@@ -122,7 +145,7 @@ void main() {
     // 13. Select Category (optional, electronics is default)
     // 14. Submit
     await tester.tap(find.byKey(const Key('createProductSubmitButton')));
-    
+
     // Wait for pop to happen and list to refresh
     await tester.pumpAndSettle(const Duration(seconds: 2));
 
@@ -141,18 +164,26 @@ void main() {
 
     // 19. Confirm detail info appears
     expect(find.text('Automated Marketplace Test Product'), findsWidgets);
-    expect(find.text('This is an automated marketplace integration test product.'), findsWidgets);
+    expect(
+      find.text('This is an automated marketplace integration test product.'),
+      findsWidgets,
+    );
     expect(find.text('Rp 150.000'), findsWidgets);
-    
+
     // AI Status Section check
     await waitFor(find.byIcon(Icons.auto_awesome));
     await waitFor(find.textContaining('passed'));
     await waitFor(find.textContaining('92'));
-    await waitFor(find.textContaining('AI verification passed in integration mode'));
-    
+    await waitFor(
+      find.textContaining('AI verification passed in integration mode'),
+    );
+
     // AI Report History check
     await waitFor(find.byKey(const Key('aiVerificationReportSection')));
-    expect(find.textContaining('AI verification passed in integration mode'), findsWidgets);
+    expect(
+      find.textContaining('AI verification passed in integration mode'),
+      findsWidgets,
+    );
 
     // 20. Verify Like button initial state
     final likeButton = find.byKey(const Key('productLikeButton'));
@@ -179,7 +210,7 @@ void main() {
 
     // 24. Confirm SavedMarketplaceScreen appears
     expect(find.byKey(const Key('savedMarketplaceScreen')), findsOneWidget);
-    
+
     // 25. Confirm the liked product appears in the saved list
     await waitFor(find.text('Automated Marketplace Test Product'));
     expect(find.byKey(const Key('savedMarketplaceList')), findsOneWidget);
@@ -199,7 +230,7 @@ void main() {
     // 28. Go back to Saved Items screen
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
-    
+
     // 29. Verify product is gone and empty state appears
     await waitFor(find.byKey(const Key('savedMarketplaceEmptyState')));
     expect(find.text('Automated Marketplace Test Product'), findsNothing);
@@ -215,12 +246,12 @@ void main() {
     await tester.tap(adminBtn);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('adminReviewScreen')), findsOneWidget);
-    
+
     // Check if empty state or list appears (depends on test state)
     // In this E2E, we created a product but it passed AI in integration mode,
     // so the queue should be empty unless we manually enqueued it.
     // We'll just check the screen key.
-    
+
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);

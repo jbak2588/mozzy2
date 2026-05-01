@@ -9,10 +9,12 @@ class SharedMapBrowserScreen extends ConsumerStatefulWidget {
   const SharedMapBrowserScreen({super.key});
 
   @override
-  ConsumerState<SharedMapBrowserScreen> createState() => _SharedMapBrowserScreenState();
+  ConsumerState<SharedMapBrowserScreen> createState() =>
+      _SharedMapBrowserScreenState();
 }
 
-class _SharedMapBrowserScreenState extends ConsumerState<SharedMapBrowserScreen> {
+class _SharedMapBrowserScreenState
+    extends ConsumerState<SharedMapBrowserScreen> {
   MapFilter _currentFilter = MapFilter.all;
   GoogleMapController? _mapController;
 
@@ -23,10 +25,10 @@ class _SharedMapBrowserScreenState extends ConsumerState<SharedMapBrowserScreen>
 
     // 기본 자카르타 좌표 (fallback)
     final initialPosition = const LatLng(-6.200000, 106.816666);
-    
+
     // 사용자의 실제 위치가 로드되었으면 그 좌표를 사용
     final targetPosition = locationAsync.when(
-      data: (location) => location != null 
+      data: (location) => location != null
           ? LatLng(location.latitude, location.longitude)
           : initialPosition,
       loading: () => initialPosition,
@@ -68,10 +70,14 @@ class _SharedMapBrowserScreenState extends ConsumerState<SharedMapBrowserScreen>
                         filter.name.toUpperCase(),
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black87,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
-                      selectedColor: const Color(0xFFCC0001), // Mozzy Primary Red
+                      selectedColor: const Color(
+                        0xFFCC0001,
+                      ), // Mozzy Primary Red
                       checkmarkColor: Colors.white,
                       onSelected: (bool selected) {
                         setState(() {
@@ -114,7 +120,11 @@ class _SharedMapBrowserScreenState extends ConsumerState<SharedMapBrowserScreen>
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   boxShadow: [
-                    BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 0),
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                    ),
                   ],
                 ),
                 child: ListView.builder(
@@ -140,7 +150,10 @@ class _SharedMapBrowserScreenState extends ConsumerState<SharedMapBrowserScreen>
                               children: [
                                 Text(
                                   'Hasil di sekitar Anda', // 주변 검색 결과
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
@@ -150,10 +163,19 @@ class _SharedMapBrowserScreenState extends ConsumerState<SharedMapBrowserScreen>
                       );
                     }
                     return ListTile(
-                      leading: const CircleAvatar(backgroundColor: Color(0xFFFFF5F5), child: Icon(Icons.place, color: Color(0xFFCC0001))),
+                      leading: const CircleAvatar(
+                        backgroundColor: Color(0xFFFFF5F5),
+                        child: Icon(Icons.place, color: Color(0xFFCC0001)),
+                      ),
                       title: Text('Item $_currentFilter $index'),
                       subtitle: const Text('Kecamatan Coblong • 500m'),
-                      trailing: const Text('Rp 50.000', style: TextStyle(color: Color(0xFFCC0001), fontWeight: FontWeight.bold)),
+                      trailing: const Text(
+                        'Rp 50.000',
+                        style: TextStyle(
+                          color: Color(0xFFCC0001),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     );
                   },
                 ),

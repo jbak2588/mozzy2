@@ -22,7 +22,7 @@ class TrustScoreBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final level = TrustLevel.fromScore(score);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -33,11 +33,7 @@ class TrustScoreBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            _getIconForLevel(level),
-            size: 14,
-            color: level.color,
-          ),
+          Icon(_getIconForLevel(level), size: 14, color: level.color),
           if (showLabel) ...[
             const SizedBox(width: 4),
             Text(

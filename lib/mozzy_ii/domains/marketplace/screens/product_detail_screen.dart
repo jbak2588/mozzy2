@@ -9,10 +9,7 @@ import '../models/product_model.dart';
 import '../models/ai_verification_report_model.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
-  const ProductDetailScreen({
-    super.key,
-    required this.productId,
-  });
+  const ProductDetailScreen({super.key, required this.productId});
 
   final String productId;
 
@@ -22,9 +19,7 @@ class ProductDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       key: const Key('productDetailScreen'),
-      appBar: AppBar(
-        title: Text('marketplace.detailTitle'.tr()),
-      ),
+      appBar: AppBar(title: Text('marketplace.detailTitle'.tr())),
       body: productAsync.when(
         data: (product) {
           if (product == null) {
@@ -64,10 +59,11 @@ class _ProductDetailContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(currentMarketplaceUserIdProvider);
     final likedAsync = userId != null
-        ? ref.watch(productLikedByUserProvider(ProductLikeQuery(
-            productId: product.id,
-            userId: userId,
-          )))
+        ? ref.watch(
+            productLikedByUserProvider(
+              ProductLikeQuery(productId: product.id, userId: userId),
+            ),
+          )
         : const AsyncValue.data(false);
 
     return SingleChildScrollView(
@@ -147,8 +143,8 @@ class _ProductDetailContent extends ConsumerWidget {
               child: Text(
                 product.title,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 8),
@@ -206,7 +202,9 @@ class _ProductDetailContent extends ConsumerWidget {
 
   Widget _buildSellerInfo(BuildContext context) {
     final sellerId = product.userId;
-    final displayId = sellerId.length > 8 ? '${sellerId.substring(0, 8)}...' : sellerId;
+    final displayId = sellerId.length > 8
+        ? '${sellerId.substring(0, 8)}...'
+        : sellerId;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,9 +232,21 @@ class _ProductDetailContent extends ConsumerWidget {
   }
 
   Widget _buildAiVerification(BuildContext context) {
-    final statusColor = product.isAiVerified ? Colors.green : (product.aiVerificationStatus == 'failed' ? Colors.red : Colors.orange);
-    final bgColor = product.isAiVerified ? Colors.green[50] : (product.aiVerificationStatus == 'failed' ? Colors.red[50] : Colors.orange[50]);
-    final borderColor = product.isAiVerified ? Colors.green[100] : (product.aiVerificationStatus == 'failed' ? Colors.red[100] : Colors.orange[100]);
+    final statusColor = product.isAiVerified
+        ? Colors.green
+        : (product.aiVerificationStatus == 'failed'
+              ? Colors.red
+              : Colors.orange);
+    final bgColor = product.isAiVerified
+        ? Colors.green[50]
+        : (product.aiVerificationStatus == 'failed'
+              ? Colors.red[50]
+              : Colors.orange[50]);
+    final borderColor = product.isAiVerified
+        ? Colors.green[100]
+        : (product.aiVerificationStatus == 'failed'
+              ? Colors.red[100]
+              : Colors.orange[100]);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -269,14 +279,27 @@ class _ProductDetailContent extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 12),
-          _buildAiRow('marketplace.aiStatus'.tr(), product.aiVerificationStatus),
+          _buildAiRow(
+            'marketplace.aiStatus'.tr(),
+            product.aiVerificationStatus,
+          ),
           if (product.aiVerificationScore != null)
-            _buildAiRow('marketplace.aiScore'.tr(), '${(product.aiVerificationScore! * 100).toStringAsFixed(0)}%'),
+            _buildAiRow(
+              'marketplace.aiScore'.tr(),
+              '${(product.aiVerificationScore! * 100).toStringAsFixed(0)}%',
+            ),
           if (product.aiConditionLabel != null)
-            _buildAiRow('marketplace.aiCondition'.tr(), product.aiConditionLabel!),
+            _buildAiRow(
+              'marketplace.aiCondition'.tr(),
+              product.aiConditionLabel!,
+            ),
           if (product.aiSuggestedCategory != null)
-            _buildAiRow('marketplace.aiSuggestedCategory'.tr(), product.aiSuggestedCategory!),
-          if (product.aiVerificationSummary != null && product.aiVerificationSummary!.isNotEmpty) ...[
+            _buildAiRow(
+              'marketplace.aiSuggestedCategory'.tr(),
+              product.aiSuggestedCategory!,
+            ),
+          if (product.aiVerificationSummary != null &&
+              product.aiVerificationSummary!.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
               'marketplace.aiSummary'.tr(),
@@ -291,9 +314,18 @@ class _ProductDetailContent extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               'marketplace.aiDetectedIssues'.tr(),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.red),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Colors.red,
+              ),
             ),
-            ...product.aiDetectedIssues.map((issue) => Text('• $issue', style: const TextStyle(fontSize: 12, color: Colors.red))),
+            ...product.aiDetectedIssues.map(
+              (issue) => Text(
+                '• $issue',
+                style: const TextStyle(fontSize: 12, color: Colors.red),
+              ),
+            ),
           ],
         ],
       ),
@@ -305,7 +337,10 @@ class _ProductDetailContent extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          Text('$label: ', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+          Text(
+            '$label: ',
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          ),
           Text(value, style: const TextStyle(fontSize: 13)),
         ],
       ),
@@ -328,12 +363,17 @@ class _ProductDetailContent extends ConsumerWidget {
             if (reports.isEmpty) {
               return Text(
                 'marketplace.noAiReportYet'.tr(),
-                style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
               );
             }
             return Column(
               key: const Key('aiVerificationReportSection'),
-              children: reports.map((report) => _buildReportItem(context, report)).toList(),
+              children: reports
+                  .map((report) => _buildReportItem(context, report))
+                  .toList(),
             );
           },
           loading: () => const Center(child: LinearProgressIndicator()),
@@ -343,7 +383,10 @@ class _ProductDetailContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildReportItem(BuildContext context, AiVerificationReportModel report) {
+  Widget _buildReportItem(
+    BuildContext context,
+    AiVerificationReportModel report,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -365,9 +408,21 @@ class _ProductDetailContent extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildStatItem(Icons.visibility_outlined, product.viewsCount.toString(), 'marketplace.views'.tr()),
-        _buildStatItem(Icons.favorite_border, product.likesCount.toString(), 'marketplace.likes'.tr()),
-        _buildStatItem(Icons.chat_bubble_outline, product.chatsCount.toString(), 'marketplace.chats'.tr()),
+        _buildStatItem(
+          Icons.visibility_outlined,
+          product.viewsCount.toString(),
+          'marketplace.views'.tr(),
+        ),
+        _buildStatItem(
+          Icons.favorite_border,
+          product.likesCount.toString(),
+          'marketplace.likes'.tr(),
+        ),
+        _buildStatItem(
+          Icons.chat_bubble_outline,
+          product.chatsCount.toString(),
+          'marketplace.chats'.tr(),
+        ),
       ],
     );
   }
@@ -421,9 +476,13 @@ class _ProductDetailContent extends ConsumerWidget {
                     currentlyLiked: isLiked,
                   );
                 },
-                icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border,
-                    color: isLiked ? Colors.red : null),
-                label: Text(isLiked ? 'marketplace.saved'.tr() : 'marketplace.save'.tr()),
+                icon: Icon(
+                  isLiked ? Icons.favorite : Icons.favorite_border,
+                  color: isLiked ? Colors.red : null,
+                ),
+                label: Text(
+                  isLiked ? 'marketplace.saved'.tr() : 'marketplace.save'.tr(),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -439,7 +498,10 @@ class _ProductDetailContent extends ConsumerWidget {
         const SizedBox(height: 16),
         Text(
           'marketplace.comingSoon'.tr(),
-          style: const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+          style: const TextStyle(
+            color: Colors.grey,
+            fontStyle: FontStyle.italic,
+          ),
         ),
       ],
     );

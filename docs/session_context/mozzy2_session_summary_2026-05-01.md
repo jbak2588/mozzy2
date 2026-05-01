@@ -19,7 +19,7 @@ Performed staging audit and connectivity check. Verification is currently **PART
 - [Checklist (P2-B22 updated)](file:///e:/hni-project/mozzy/CHECKLIST.md)
 
 ### 📦 Commit Information
-- **Latest Marketplace Verification Commit**: [PLACEHOLDER_SHA]
+- **Latest Marketplace Verification Commit**: `355fb21622c4305fc6be0ea4c2f62aab47e7572a`
 
 ### 🚀 Next Step
 - **Credentials Provisioning**: Provide staging secrets to unblock end-to-end verification.

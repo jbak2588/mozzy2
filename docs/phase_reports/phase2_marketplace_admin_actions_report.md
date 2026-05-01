@@ -42,7 +42,7 @@ Implementation of administrative moderation actions for the AI review queue, all
 
 ## 📦 Commit Information
 - **Feature Commit**: `1c979dc1dd3eafadab2ae895e32cc6be5d62e6b2`
-- **Docs Commit**: `PENDING_UNTIL_COMMIT`
+- **Docs Commit**: `e65312181b1daa321f0e159503b9af81875323f6`
 
 ## 🚀 Next Steps
 - **P2-B17**: Implementation of Firebase Custom Claims for production role validation.

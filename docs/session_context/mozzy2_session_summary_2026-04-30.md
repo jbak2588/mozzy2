@@ -6,7 +6,8 @@ This document summarizes the current Mozzy2 development state for future AI sess
 ## 2. Latest Verified Commits
 - Feature P2-B13 Foundation Commit: 6485f17e86b68b466f9dbe76273307d399382887
 - i18n Hotfix & Stability Commit: 1a1bdf6f5eb78c6d06dee9cc3293cedf973c2bb0
-- P2-B11 AI Report Storage Commit: 9e7c99b80e8bf3b524309115a207f92af2d46b12 (Latest)
+- P2-B14 Admin Review UI Commit: beb58aa (Latest)
+- P2-B11 AI Report Storage Commit: 9e7c99b80e8bf3b524309115a207f92af2d46b12
 
 ## 3. Current Development Phase
 - Phase 1: Completed / locked

@@ -52,4 +52,4 @@
 ## 5. 결론 (Conclusion)
 - P2-B14 Admin Review UI Foundation 완료.
 - 관리자용 대기열 확인 기능이 안전하게(Debug/Test 전용) 마켓플레이스 도메인에 통합됨.
-- **Latest Commit SHA**: [FEATURE_SHA_HERE]
+- **Latest Commit SHA**: beb58aa

@@ -173,7 +173,8 @@
 - [x] Admin approve/reject actions foundation
 - [x] Server-side admin claims / role source foundation
 - [x] Admin audit log foundation
-- [ ] Production admin claims assignment script
+- [x] Production admin claims assignment script
+- [ ] Admin audit log UI
 - [x] Admin role enforcement
 - [x] WebP compression / image optimization
 - [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)

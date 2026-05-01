@@ -62,3 +62,18 @@ After claims are updated on the server:
 - The user's ID token must be refreshed for the client to see the changes.
 - In the Mozzy app, this can be forced by calling `user.getIdTokenResult(true)`.
 - Alternatively, the user can re-login.
+
+## 🧰 Local Utility Script (P2-B19)
+
+A secure local utility is provided in `tools/admin_claims/` to manage these claims without writing custom code every time.
+
+### Quick Start
+1. `cd tools/admin_claims`
+2. `npm install`
+3. `$env:GOOGLE_APPLICATION_CREDENTIALS="path/to/service-account.json"`
+4. `node marketplace_admin_claims.js set --uid <UID> --role admin --dry-run`
+
+### Best Practices
+- **Always use `--dry-run`** first to see the resulting JSON claims.
+- **Merge Logic**: The script preserves other custom claims (e.g., `premiumUser`) and only modifies the `marketplaceAdminRole` key.
+- **Audit**: Every claim change should be documented or requested via an internal ticket/process.

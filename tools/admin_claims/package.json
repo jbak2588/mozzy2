@@ -1,0 +1,15 @@
+{
+  "name": "mozzy-marketplace-admin-claims",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "Secure local utility for managing Mozzy marketplace admin custom claims.",
+  "main": "marketplace_admin_claims.js",
+  "scripts": {
+    "check": "node --check marketplace_admin_claims.js",
+    "help": "node marketplace_admin_claims.js --help"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}

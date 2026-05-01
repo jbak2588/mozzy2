@@ -41,7 +41,7 @@ Implementation of administrative moderation actions for the AI review queue, all
 - **Build**: Successfully ran `build_runner` for model and provider generation.
 
 ## 📦 Commit Information
-- **Feature Commit**: `PENDING_UNTIL_COMMIT`
+- **Feature Commit**: `1c979dc1dd3eafadab2ae895e32cc6be5d62e6b2`
 - **Docs Commit**: `PENDING_UNTIL_COMMIT`
 
 ## 🚀 Next Steps

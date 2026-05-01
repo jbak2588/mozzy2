@@ -21,6 +21,15 @@ Performed live staging audit. Verification is currently **PARTIAL / BLOCKED** du
 ### 📦 Commit Information
 - **Latest Marketplace Verification Commit**: `f1051d32d943c6983fe82ca7eef39ed85a8f0484`
 
+## New Chat Handoff
+See `docs/session_context/mozzy2_new_chat_handoff_2026-05-01.md`.
+
+Current next task:
+P2-B22-C Google Login DEVELOPER_ERROR diagnosis.
+
+Important correction:
+SHA-1 appears to match Firebase Console. Do not assume SHA-1 mismatch only. Device timestamp/timezone and OAuth config must be checked.
+
 ### 🚀 Next Step
 - **SHA-1 Registration**: Register debug SHA-1 in Firebase Console for the staging project.
 - **Google Login Retry**: Re-verify live flow once `DEVELOPER_ERROR` is resolved.

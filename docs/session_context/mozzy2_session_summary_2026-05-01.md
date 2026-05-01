@@ -16,10 +16,11 @@ Implemented the mutation logic and UI for marketplace moderation.
 
 ### 🔗 References
 - [Phase 2 Marketplace Admin Actions Report](file:///e:/hni-project/mozzy/docs/phase_reports/phase2_marketplace_admin_actions_report.md)
-- [Checklist (P2-B15 marked)](file:///e:/hni-project/mozzy/CHECKLIST.md)
+- [Checklist (P2-B15/B17 marked)](file:///e:/hni-project/mozzy/CHECKLIST.md)
 
 ### 📦 Commit Information
-- **Latest Marketplace Feature Commit**: `1c979dc1dd3eafadab2ae895e32cc6be5d62e6b2`
+- **Latest Marketplace Feature Commit**: `PENDING_UNTIL_COMMIT`
 
 ### 🚀 Next Step
-- **P2-B17**: Integration of Firebase Custom Claims for production-ready role management.
+- **P2-B18**: Implementation of Admin Audit Logs for tracking moderation actions.
+- **P2-B19**: Production script for assigning admin claims via Admin SDK.

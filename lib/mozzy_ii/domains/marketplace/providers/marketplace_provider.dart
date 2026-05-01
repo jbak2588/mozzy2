@@ -16,6 +16,9 @@ import '../repositories/in_memory_ai_verification_report_repository.dart';
 import '../models/ai_verification_report_model.dart';
 import '../models/ai_review_queue_item_model.dart';
 import '../models/admin_role_model.dart';
+import '../services/marketplace_admin_role_source.dart';
+import '../services/firebase_marketplace_admin_role_source.dart';
+import '../services/in_memory_marketplace_admin_role_source.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -25,14 +28,25 @@ final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   return FirebaseAuth.instance.currentUser?.uid;
 });
 
+final marketplaceAdminRoleSourceProvider = Provider<MarketplaceAdminRoleSource>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return InMemoryMarketplaceAdminRoleSource(MarketplaceAdminRole.admin);
+  }
+  return FirebaseMarketplaceAdminRoleSource();
+});
+
+final marketplaceAdminRoleAsyncProvider = FutureProvider.autoDispose<MarketplaceAdminRole>((ref) async {
+  final source = ref.watch(marketplaceAdminRoleSourceProvider);
+  return source.getCurrentRole();
+});
+
 final marketplaceAdminRoleProvider = Provider<MarketplaceAdminRole>((ref) {
   if (IntegrationTestConfig.enabled) {
     return MarketplaceAdminRole.admin;
   }
 
-  // Foundation only:
-  // In production/release, default to none until server-side role source is added.
-  return MarketplaceAdminRole.none;
+  // Sync fallback: Use the last known value from the async provider if available
+  return ref.watch(marketplaceAdminRoleAsyncProvider).value ?? MarketplaceAdminRole.none;
 });
 
 final canViewMarketplaceAdminReviewProvider = Provider<bool>((ref) {
@@ -190,8 +204,12 @@ class AdminReviewActionController {
   AdminReviewActionController(this._aiRepo, this._marketRepo, this._ref);
 
   Future<void> approve(String itemId, String productId) async {
-    final role = _ref.read(marketplaceAdminRoleProvider);
-    if (!role.canModerate) throw Exception('Unauthorized');
+    final source = _ref.read(marketplaceAdminRoleSourceProvider);
+    final role = await source.getCurrentRole(forceRefresh: true);
+    
+    if (!role.canModerate) {
+      throw StateError('Admin moderation permission required.');
+    }
 
     final reviewerId = _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
 
@@ -212,8 +230,12 @@ class AdminReviewActionController {
   }
 
   Future<void> reject(String itemId, String productId, {String? note}) async {
-    final role = _ref.read(marketplaceAdminRoleProvider);
-    if (!role.canModerate) throw Exception('Unauthorized');
+    final source = _ref.read(marketplaceAdminRoleSourceProvider);
+    final role = await source.getCurrentRole(forceRefresh: true);
+    
+    if (!role.canModerate) {
+      throw StateError('Admin moderation permission required.');
+    }
 
     final reviewerId = _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
 
@@ -235,8 +257,12 @@ class AdminReviewActionController {
   }
 
   Future<void> dismiss(String itemId) async {
-    final role = _ref.read(marketplaceAdminRoleProvider);
-    if (!role.canModerate) throw Exception('Unauthorized');
+    final source = _ref.read(marketplaceAdminRoleSourceProvider);
+    final role = await source.getCurrentRole(forceRefresh: true);
+    
+    if (!role.canModerate) {
+      throw StateError('Admin moderation permission required.');
+    }
 
     final reviewerId = _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
 

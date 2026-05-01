@@ -202,7 +202,10 @@
     "approve": "승인",
     "reject": "거절",
     "dismiss": "무시",
-    "actionSuccess": "처리가 완료되었습니다",
-    "actionFailed": "처리에 실패했습니다"
+    "actionSuccess": "처리 완료",
+    "actionFailed": "처리 실패",
+    "adminRoleLoading": "관리자 권한 확인 중...",
+    "adminRoleLoadFailed": "관리자 권한 확인 실패",
+    "adminClaimMissing": "관리자 권한이 없습니다"
   }
 }

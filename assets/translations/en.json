@@ -203,6 +203,9 @@
     "reject": "Reject",
     "dismiss": "Dismiss",
     "actionSuccess": "Action successful",
-    "actionFailed": "Action failed"
+    "actionFailed": "Action failed",
+    "adminRoleLoading": "Checking admin role...",
+    "adminRoleLoadFailed": "Failed to check admin role",
+    "adminClaimMissing": "Admin claim is missing"
   }
 }

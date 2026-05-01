@@ -202,7 +202,10 @@
     "approve": "Setujui",
     "reject": "Tolak",
     "dismiss": "Abaikan",
-    "actionSuccess": "Tindakan berhasil",
-    "actionFailed": "Tindakan gagal"
+    "actionSuccess": "Aksi berhasil",
+    "actionFailed": "Aksi gagal",
+    "adminRoleLoading": "Memeriksa peran admin...",
+    "adminRoleLoadFailed": "Gagal memeriksa peran admin",
+    "adminClaimMissing": "Klaim admin tidak ditemukan"
   }
 }

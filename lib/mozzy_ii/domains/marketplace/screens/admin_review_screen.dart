@@ -19,35 +19,81 @@ class AdminReviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final canView = ref.watch(canViewMarketplaceAdminReviewProvider);
-    final canModerate = ref.watch(marketplaceAdminRoleProvider).canModerate;
+    final roleAsync = ref.watch(marketplaceAdminRoleAsyncProvider);
 
-    if (!canView) {
-      return Scaffold(
+    return roleAsync.when(
+      data: (role) {
+        final canView = role.canViewReviewQueue;
+        final canModerate = role.canModerate;
+
+        if (!canView) {
+          return _buildAccessDenied(context);
+        }
+
+        return _buildQueueView(context, ref, canModerate);
+      },
+      loading: () => Scaffold(
         appBar: AppBar(title: Text('marketplace.adminReview'.tr())),
         body: Center(
-          key: const Key('adminReviewAccessDenied'),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 64, color: Colors.red),
+              const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              Text(
-                'marketplace.adminAccessDenied'.tr(),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              Text('marketplace.adminRoleLoading'.tr()),
+            ],
+          ),
+        ),
+      ),
+      error: (err, stack) => Scaffold(
+        appBar: AppBar(title: Text('marketplace.adminReview'.tr())),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('marketplace.adminRoleLoadFailed'.tr()),
               const SizedBox(height: 8),
-              Text('marketplace.adminAccessDeniedDesc'.tr()),
-              const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () => context.pop(),
-                child: Text('common.back'.tr()),
+                onPressed: () => ref.invalidate(marketplaceAdminRoleAsyncProvider),
+                child: Text('common.retry'.tr()),
               ),
             ],
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  Widget _buildAccessDenied(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('marketplace.adminReview'.tr())),
+      body: Center(
+        key: const Key('adminReviewAccessDenied'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.lock_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text(
+              'marketplace.adminAccessDenied'.tr(),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text('marketplace.adminAccessDeniedDesc'.tr()),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () => context.pop(),
+              child: Text('common.back'.tr()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQueueView(BuildContext context, WidgetRef ref, bool canModerate) {
 
     final queueAsync = ref.watch(aiReviewQueueProvider);
 

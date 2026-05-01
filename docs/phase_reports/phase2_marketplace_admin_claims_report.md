@@ -43,7 +43,7 @@ Implementation of a secure, server-side admin role foundation using Firebase Cus
 
 ## 📦 Commit Information
 - **Feature Commit**: `f578ef81427dd1ff2df05d5d1962229356226af4`
-- **Docs Commit**: `PENDING_UNTIL_COMMIT`
+- **Docs Commit**: `d0a40345f0ea0620af5c445cc84e7e272d085c7c`
 
 ## 🚀 Next Steps
 - **P2-B18**: Implementation of persistent Admin Audit Logs.

@@ -1,61 +1,49 @@
 # Phase 2 Marketplace Staging Firebase Verification Report
 
 ## 📋 Scope
-This report documents the verification of the Marketplace domain against a real staging Firebase environment.
+This report documents the live verification of the Marketplace domain against a real staging Firebase environment.
 
 ## 🔐 Environment Variables Presence
 | Variable | Status | Note |
 | :--- | :---: | :--- |
-| `GEMINI_API_KEY` | ✅ **PRESENT** | [REDACTED] |
-| `GOOGLE_WEB_CLIENT_ID` | ❌ **MISSING** | Required for Staging Google Login verification. |
-| `GOOGLE_APPLICATION_CREDENTIALS` | ❌ **MISSING** | Required for Custom Claims assignment verification. |
-| `MOZZY_STAGING_ADMIN_TEST_UID` | ❌ **MISSING** | Required for Admin Role verification. |
-
-## 🛠️ GitHub Actions CI/CD Status
-- **Status**: ✅ **SUCCESS** (Verified for commit `3923759`)
-- **Note**: Recent documentation pushes are in progress, but core logic pipeline is stable.
-
-## 🧪 Local Baseline Validation
-- **Analyze**: PASSED.
-- **Tests**: PASSED (114/114).
-- **Release Build**: PASSED (Verified locally).
+| `GEMINI_API_KEY` | ✅ **PRESENT** | Verified in environment. |
+| `GOOGLE_WEB_CLIENT_ID` | ✅ **PRESENT** | Passed via dart-define. |
+| `GOOGLE_APPLICATION_CREDENTIALS` | ✅ **PRESENT** | Path: `C:\Users\OWNER\secure\firebase\mozzy-v2-firebase-adminsdk-fbsvc-154d887479.json` |
+| `MOZZY_STAGING_ADMIN_TEST_UID` | ✅ **PRESENT** | `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1` |
 
 ## 👮 Admin Claims Script Verification
-- **Dry-Run Logic**: Verified. The script correctly merges claims and uses `marketplaceAdminRole` key.
-- **Real Execution**: ❌ **BLOCKED** due to missing `GOOGLE_APPLICATION_CREDENTIALS`.
+- **Status**: ✅ **SUCCESS**
+- **Result**: `marketplaceAdminRole` set to `admin` for UID `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1`.
+- **Verification**: `node marketplace_admin_claims.js get` confirmed the claim is present on the staging Firebase server.
 
 ## 🌐 Google Login Verification
-- **Status**: ❌ **BLOCKED** due to missing `GOOGLE_WEB_CLIENT_ID`.
+- **Status**: ❌ **BLOCKED**
+- **Error**: `DEVELOPER_ERROR` (ConnectionResult{statusCode=DEVELOPER_ERROR})
+- **Cause**: The SHA-1 of the debug environment (`1D:CF:F3:B9:3B:1D:54:7F:4D:4B:D2:21:0A:90:69:B6:4A:AC:46:3F`) likely needs to be registered in the Firebase Console for the staging project.
 
-## 🔐 Firestore Rules Verification (Dry Review)
-- **Status**: ✅ **PASSED**
-- Rules correctly enforce:
-    - Owner-only product mutations.
-    - Role-based access for AI review queue and audit logs.
-    - Immutability of audit logs and AI reports.
+## 🔐 Firestore Rules Verification (Live)
+- **Status**: ✅ **PASSED (Dry review confirmed)**
+- **Note**: Live verification of specific product/queue behavior is blocked by Google Login failure.
 
 ## 📦 Product Creation & Storage Result
-- **Image Optimization**: Verified via unit tests and local logic review.
-- **Storage Pathing**: Logic verified to use `/marketplace/{userId}/{productId}/{fileName}`.
-- **Real Upload**: ❌ **BLOCKED** (Requires authenticated session).
+- **Status**: ❌ **BLOCKED** (Requires authenticated session).
 
 ## 🤖 Gemini Live Verification
-- **Status**: ❌ **NOT RUN** (Depends on product creation flow).
-- **Logic**: The integration is ready for `gemini-3-flash-preview` and handles JSON response parsing correctly.
+- **Status**: ❌ **NOT RUN** (Requires authenticated session to trigger from UI).
 
 ## 🚀 E2E Coverage Result
 - **Status**: ✅ **PASSED** (Integration Mode)
-- **Real Staging Flow**: ❌ **BLOCKED** (Requires credentials).
+- **Staging Live Flow**: ❌ **BLOCKED** (Requires Google Login success).
 
 ## 🔧 Issues & Blockers
-1. **Missing Credentials**: Verification of real staging flows (Auth, Storage, Live Gemini) is blocked by the absence of local environment secrets.
-2. **Admin Claims**: Assignment cannot be verified without a service account JSON.
+1. **Google Login Blocker**: `DEVELOPER_ERROR` prevents proceeding with the live verification flow on the device.
+2. **SHA-1 Registration**: Action required to add the provided SHA-1 to the staging Firebase project settings.
 
 ## ✅ Verification Decision
 **PARTIALLY VERIFIED / BLOCKED**
-- The codebase is architecturally ready for staging.
-- Security rules and logic chains are verified via dry review and integration tests.
-- **Action Required**: Provide the missing staging credentials to complete the end-to-end live verification.
+- **Verified**: Admin Claims assignment and script integrity.
+- **Blocked**: Google Login, Storage upload, and Gemini live verification.
+- **Action Required**: Register SHA-1 `1D:CF:F3:B9:3B:1D:54:7F:4D:4B:D2:21:0A:90:69:B6:4A:AC:46:3F` in Firebase Console and retry.
 
 ---
-*Report generated on 2026-05-01 by Antigravity AI.*
+*Report updated on 2026-05-01 by Antigravity AI.*

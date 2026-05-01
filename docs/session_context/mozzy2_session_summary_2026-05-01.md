@@ -1,26 +1,27 @@
 # Mozzy Session Summary - 2026-05-01
 
-## 🎯 Completed Task: P2-B22 Marketplace Staging Firebase Verification
-Performed staging audit and connectivity check. Verification is currently **PARTIAL / BLOCKED** due to missing staging credentials.
+## 🎯 Completed Task: P2-B22 Marketplace Staging Firebase Live Verification
+Performed live staging audit. Verification is currently **PARTIAL / BLOCKED** due to Google Login `DEVELOPER_ERROR`.
 
 ### 🏗️ Key Implementations
-- **Security Rules Audit**: Verified Firestore rules for staging safety (Owner-only, RBAC).
-- **Logic Verification**: Confirmed image optimization, storage pathing, and admin claim merging logic.
-- **Environment Audit**: Identified missing `GOOGLE_WEB_CLIENT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` as blockers for end-to-end live testing.
-- **Documentation**: Created full Phase 2 Marketplace Staging Firebase Verification Report.
+- **Admin Role Assignment**: Successfully assigned `admin` role to staging test UID `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1` using the claims script.
+- **Claims Verification**: Confirmed via script that custom claims are correctly set on the Firebase staging server.
+- **Keystore Audit**: Extracted debug SHA-1 (`1D:CF:F3:B9:3B:1D:54:7F:4D:4B:D2:21:0A:90:69:B6:4A:AC:46:3F`) for Firebase Console registration.
+- **Documentation**: Updated Phase 2 Marketplace Staging Firebase Verification Report.
 
 ### 🧪 Test Results
-- **Baseline Validation**: Format/Analyze/Test/Build passed.
-- **E2E Test**: Passed in integration mode.
-- **Staging Auth/Storage**: BLOCKED (Missing credentials).
+- **Admin Claims Script**: SUCCESS.
+- **Baseline Validation**: Format/Analyze/Test passed.
+- **Staging Google Login**: BLOCKED (`DEVELOPER_ERROR`).
 
 ### 🔗 References
 - [Marketplace Staging Verification Report](file:///e:/hni-project/mozzy/docs/phase_reports/phase2_marketplace_staging_firebase_verification_report.md)
 - [Checklist (P2-B22 updated)](file:///e:/hni-project/mozzy/CHECKLIST.md)
 
 ### 📦 Commit Information
-- **Latest Marketplace Verification Commit**: `355fb21622c4305fc6be0ea4c2f62aab47e7572a`
+- **Latest Marketplace Verification Commit**: [PLACEHOLDER_SHA]
 
 ### 🚀 Next Step
-- **Credentials Provisioning**: Provide staging secrets to unblock end-to-end verification.
+- **SHA-1 Registration**: Register debug SHA-1 in Firebase Console for the staging project.
+- **Google Login Retry**: Re-verify live flow once `DEVELOPER_ERROR` is resolved.
 - **P2-B23**: Payment / Xendit planning gate.

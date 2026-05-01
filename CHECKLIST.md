@@ -180,7 +180,7 @@
 - [x] WebP compression / image optimization
 - [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)
 - [x] Marketplace production readiness review
-- [ ] Marketplace staging Firebase verification (Blocked: Credentials)
+- [ ] Marketplace staging Firebase verification (Blocked: Google Login DEVELOPER_ERROR)
 - [ ] Payment / Xendit planning gate
 - [ ] Chat integration planning gate
 - [ ] SharedMapBrowser 연동 (mapVisibility)

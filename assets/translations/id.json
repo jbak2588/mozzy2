@@ -180,6 +180,16 @@
     "noAiReportYet": "Belum ada laporan AI",
     "aiReportSaved": "Laporan AI disimpan",
     "aiReviewQueued": "Dikirim ke antrian peninjauan",
-    "aiReviewQueue": "Antrian peninjauan AI"
+    "aiReviewQueue": "Antrian peninjauan AI",
+    "adminReview": "Peninjauan Admin",
+    "adminReviewLoadFailed": "Gagal memuat antrian peninjauan",
+    "reviewQueue": "Antrian Peninjauan",
+    "noReviewItems": "Tidak ada item yang perlu ditinjau",
+    "reviewReason": "Alasan",
+    "reviewPriority": "Prioritas",
+    "reviewStatus": "Status peninjauan",
+    "needsReview": "Perlu ditinjau",
+    "reviewFailed": "Gagal",
+    "reviewError": "Error"
   }
 }

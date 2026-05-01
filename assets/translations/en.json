@@ -180,6 +180,16 @@
     "noAiReportYet": "No AI report yet",
     "aiReportSaved": "AI report saved",
     "aiReviewQueued": "Sent to review queue",
-    "aiReviewQueue": "AI review queue"
+    "aiReviewQueue": "AI review queue",
+    "adminReview": "Admin review",
+    "adminReviewLoadFailed": "Failed to load review queue",
+    "reviewQueue": "Review queue",
+    "noReviewItems": "No items need review",
+    "reviewReason": "Reason",
+    "reviewPriority": "Priority",
+    "reviewStatus": "Review status",
+    "needsReview": "Needs review",
+    "reviewFailed": "Failed",
+    "reviewError": "Error"
   }
 }

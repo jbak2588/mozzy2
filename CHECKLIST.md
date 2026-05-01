@@ -169,9 +169,9 @@
 - [x] Live Gemini API smoke test
 - [x] AI verification report storage / moderation queue
 - [x] AI moderation queue foundation
-- [ ] Admin review UI
-- [ ] Payment / Xendit
-- [ ] Chat integration
+- [x] Admin review UI foundation
+- [ ] Admin approve/reject actions
+- [ ] Admin role enforcement
 - [x] WebP compression / image optimization
 - [x] 찜하기(Simpan) 기능 & 저장한 상품 화면 (P2-B13)
 - [ ] SharedMapBrowser 연동 (mapVisibility)

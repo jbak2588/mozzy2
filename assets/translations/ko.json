@@ -180,6 +180,16 @@
     "noAiReportYet": "AI 리포트가 없습니다",
     "aiReportSaved": "AI 리포트가 저장되었습니다",
     "aiReviewQueued": "검토 대기열로 전송되었습니다",
-    "aiReviewQueue": "AI 검토 대기열"
+    "aiReviewQueue": "AI 검토 대기열",
+    "adminReview": "관리자 검토",
+    "adminReviewLoadFailed": "검토 대기열을 불러오지 못했습니다",
+    "reviewQueue": "검토 대기열",
+    "noReviewItems": "검토할 항목이 없습니다",
+    "reviewReason": "사유",
+    "reviewPriority": "우선순위",
+    "reviewStatus": "검토 상태",
+    "needsReview": "검토 필요",
+    "reviewFailed": "실패",
+    "reviewError": "오류"
   }
 }

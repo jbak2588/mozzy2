@@ -16,6 +16,7 @@ import '../../domains/marketplace/screens/create_product_screen.dart';
 import '../../domains/marketplace/screens/marketplace_list_screen.dart';
 import '../../domains/marketplace/screens/product_detail_screen.dart';
 import '../../domains/marketplace/screens/saved_marketplace_screen.dart';
+import '../../domains/marketplace/screens/admin_review_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -78,6 +79,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'saved',
                     builder: (context, state) => const SavedMarketplaceScreen(),
+                  ),
+                  GoRoute(
+                    path: 'admin-review',
+                    builder: (context, state) => const AdminReviewScreen(),
                   ),
                   GoRoute(
                     path: ':productId',

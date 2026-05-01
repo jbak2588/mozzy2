@@ -26,6 +26,11 @@ This document summarizes the current Mozzy2 development state for future AI sess
     - Index: `ai_review_queue` (reviewStatus ASC, createdAt DESC) added.
     - Integration: `CreateProductScreen` saves detailed report and enqueues review (non-blocking).
     - UI: `ProductDetailScreen` shows AI report history section.
+29:   - P2-B14 Admin Review UI Foundation: **COMPLETED**
+30:     - UI: `AdminReviewScreen` created with AI review queue visualization.
+31:     - Route: `/marketplace/admin-review` added.
+32:     - Access: Debug/Integration only entry point in `MarketplaceListScreen`.
+33:     - Localization: Added to all 3 languages.
 
 ## 4. Architecture & Test Mode
 - **Collection Group Query**: Used for cross-document "likes" retrieval.
@@ -45,9 +50,12 @@ This document summarizes the current Mozzy2 development state for future AI sess
 - `CHECKLIST.md` and `Sprint Guide` updated.
 
 ## 7. Next Recommended Task
-**P2-B14 Admin review UI foundation**
-- Build the `AdminReviewScreen` using the queue from P2-B11.
-- Implement review status updates (approve/reject logic foundation).
+**P2-B15 Admin approve/reject actions**
+- Implement mutation logic for resolving queue items.
+- Add approve/reject buttons to `AdminReviewScreen` or detail view.
+
+**P2-B16 Admin role enforcement**
+- Restrict admin routes to authorized users only.
 
 ## 8. Reminders for Future Sessions
 - Do not commit real API keys (Gemini/Google).

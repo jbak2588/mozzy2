@@ -209,6 +209,22 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
 
+    // 31. Verify Admin Review UI Foundation (P2-B14)
+    final adminBtn = find.byKey(const Key('marketplaceAdminReviewButton'));
+    expect(adminBtn, findsOneWidget);
+    await tester.tap(adminBtn);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('adminReviewScreen')), findsOneWidget);
+    
+    // Check if empty state or list appears (depends on test state)
+    // In this E2E, we created a product but it passed AI in integration mode,
+    // so the queue should be empty unless we manually enqueued it.
+    // We'll just check the screen key.
+    
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('marketplaceListScreen')), findsOneWidget);
+
     // Final settle before test exit to avoid _pendingFrame
     await boundedSettle();
     await tester.pump(const Duration(seconds: 1));

@@ -19,7 +19,7 @@ Performed live staging audit. Verification is currently **PARTIAL / BLOCKED** du
 - [Checklist (P2-B22 updated)](file:///e:/hni-project/mozzy/CHECKLIST.md)
 
 ### 📦 Commit Information
-- **Latest Marketplace Verification Commit**: [PLACEHOLDER_SHA]
+- **Latest Marketplace Verification Commit**: `f1051d32d943c6983fe82ca7eef39ed85a8f0484`
 
 ### 🚀 Next Step
 - **SHA-1 Registration**: Register debug SHA-1 in Firebase Console for the staging project.

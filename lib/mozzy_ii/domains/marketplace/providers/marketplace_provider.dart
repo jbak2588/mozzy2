@@ -16,6 +16,9 @@ import '../repositories/in_memory_ai_verification_report_repository.dart';
 import '../models/ai_verification_report_model.dart';
 import '../models/ai_review_queue_item_model.dart';
 import '../models/admin_role_model.dart';
+import '../models/admin_audit_log_model.dart';
+import '../repositories/admin_audit_log_repository.dart';
+import '../repositories/in_memory_admin_audit_log_repository.dart';
 import '../services/marketplace_admin_role_source.dart';
 import '../services/firebase_marketplace_admin_role_source.dart';
 import '../services/in_memory_marketplace_admin_role_source.dart';
@@ -59,6 +62,7 @@ final _integrationImageUploadService = InMemoryMarketplaceImageUploadService();
 final _integrationImageOptimizationService = InMemoryMarketplaceImageOptimizationService();
 final _integrationAiVerificationService = InMemoryMarketplaceAiVerificationService();
 final _integrationAiVerificationReportRepository = InMemoryAiVerificationReportRepository();
+final _integrationAdminAuditLogRepository = InMemoryAdminAuditLogRepository();
 
 final marketplaceRepositoryProvider = Provider<MarketplaceRepository>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -95,6 +99,13 @@ final aiVerificationReportRepositoryProvider = Provider<AiVerificationReportRepo
   return AiVerificationReportRepository();
 });
 
+final adminAuditLogRepositoryProvider = Provider<AdminAuditLogRepository>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return _integrationAdminAuditLogRepository;
+  }
+  return AdminAuditLogRepository();
+});
+
 final productsByKecamatanProvider = FutureProvider.family
     .autoDispose<List<ProductModel>, String>((ref, kecamatan) async {
       final repo = ref.read(marketplaceRepositoryProvider);
@@ -125,6 +136,20 @@ final aiReviewQueueProvider =
     FutureProvider.autoDispose<List<AiReviewQueueItemModel>>((ref) {
   final repo = ref.read(aiVerificationReportRepositoryProvider);
   return repo.fetchOpenReviewQueue(limit: 50);
+});
+
+final adminAuditLogsByProductProvider =
+    FutureProvider.family.autoDispose<List<AdminAuditLogModel>, String>(
+  (ref, productId) {
+    final repo = ref.read(adminAuditLogRepositoryProvider);
+    return repo.fetchAuditLogsByProduct(productId: productId);
+  },
+);
+
+final recentAdminAuditLogsProvider =
+    FutureProvider.autoDispose<List<AdminAuditLogModel>>((ref) {
+  final repo = ref.read(adminAuditLogRepositoryProvider);
+  return repo.fetchRecentAuditLogs(limit: 50);
 });
 
 class CreateProductAction {
@@ -199,9 +224,10 @@ final toggleProductLikeProvider = Provider<ToggleProductLikeAction>((ref) {
 class AdminReviewActionController {
   final AiVerificationReportRepository _aiRepo;
   final MarketplaceRepository _marketRepo;
+  final AdminAuditLogRepository _auditRepo;
   final Ref _ref;
 
-  AdminReviewActionController(this._aiRepo, this._marketRepo, this._ref);
+  AdminReviewActionController(this._aiRepo, this._marketRepo, this._auditRepo, this._ref);
 
   Future<void> approve(String itemId, String productId) async {
     final source = _ref.read(marketplaceAdminRoleSourceProvider);
@@ -224,6 +250,26 @@ class AdminReviewActionController {
       isVerified: true,
       status: 'passed',
     );
+
+    // Record audit log
+    try {
+      await _auditRepo.recordModerationAction(AdminAuditLogModel(
+        id: 'log_appr_${DateTime.now().millisecondsSinceEpoch}_$itemId',
+        action: 'approve',
+        queueItemId: itemId,
+        productId: productId,
+        reviewerId: reviewerId,
+        reviewerRole: role.name,
+        previousReviewStatus: 'open',
+        newReviewStatus: 'resolved',
+        decision: 'approved',
+        createdAt: DateTime.now(),
+      ));
+    } catch (e) {
+      // In foundation, we log and continue, but notify the UI via an exception if we want to be strict.
+      // The user asked to show action failed in UI if audit fails.
+      throw Exception('auditLogFailed');
+    }
 
     _ref.invalidate(aiReviewQueueProvider);
     _ref.invalidate(productByIdProvider(productId));
@@ -252,11 +298,30 @@ class AdminReviewActionController {
       status: 'failed',
     );
 
+    // Record audit log
+    try {
+      await _auditRepo.recordModerationAction(AdminAuditLogModel(
+        id: 'log_reje_${DateTime.now().millisecondsSinceEpoch}_$itemId',
+        action: 'reject',
+        queueItemId: itemId,
+        productId: productId,
+        reviewerId: reviewerId,
+        reviewerRole: role.name,
+        previousReviewStatus: 'open',
+        newReviewStatus: 'resolved',
+        decision: 'rejected',
+        noteSummary: note,
+        createdAt: DateTime.now(),
+      ));
+    } catch (e) {
+      throw Exception('auditLogFailed');
+    }
+
     _ref.invalidate(aiReviewQueueProvider);
     _ref.invalidate(productByIdProvider(productId));
   }
 
-  Future<void> dismiss(String itemId) async {
+  Future<void> dismiss(String itemId, String productId) async {
     final source = _ref.read(marketplaceAdminRoleSourceProvider);
     final role = await source.getCurrentRole(forceRefresh: true);
     
@@ -272,6 +337,24 @@ class AdminReviewActionController {
       decision: 'dismissed',
     );
 
+    // Record audit log
+    try {
+      await _auditRepo.recordModerationAction(AdminAuditLogModel(
+        id: 'log_dism_${DateTime.now().millisecondsSinceEpoch}_$itemId',
+        action: 'dismiss',
+        queueItemId: itemId,
+        productId: productId,
+        reviewerId: reviewerId,
+        reviewerRole: role.name,
+        previousReviewStatus: 'open',
+        newReviewStatus: 'dismissed',
+        decision: 'dismissed',
+        createdAt: DateTime.now(),
+      ));
+    } catch (e) {
+      throw Exception('auditLogFailed');
+    }
+
     _ref.invalidate(aiReviewQueueProvider);
   }
 }
@@ -280,6 +363,7 @@ final adminReviewActionControllerProvider = Provider<AdminReviewActionController
   return AdminReviewActionController(
     ref.read(aiVerificationReportRepositoryProvider),
     ref.read(marketplaceRepositoryProvider),
+    ref.read(adminAuditLogRepositoryProvider),
     ref,
   );
 });

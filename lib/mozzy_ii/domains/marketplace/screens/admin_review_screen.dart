@@ -174,16 +174,21 @@ class AdminReviewScreen extends ConsumerWidget {
       } else if (action == 'reject') {
         await controller.reject(item.id, item.productId);
       } else if (action == 'dismiss') {
-        await controller.dismiss(item.id);
+        await controller.dismiss(item.id, item.productId);
       }
 
       scaffoldMessenger.showSnackBar(
         SnackBar(content: Text('marketplace.actionSuccess'.tr())),
       );
     } catch (e) {
+      String messageKey = 'marketplace.actionFailed';
+      if (e.toString().contains('auditLogFailed')) {
+        messageKey = 'marketplace.auditLogFailed';
+      }
+      
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text('marketplace.actionFailed'.tr()),
+          content: Text(messageKey.tr()),
           backgroundColor: Colors.red,
         ),
       );

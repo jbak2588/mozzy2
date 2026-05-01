@@ -206,6 +206,12 @@
     "actionFailed": "처리 실패",
     "adminRoleLoading": "관리자 권한 확인 중...",
     "adminRoleLoadFailed": "관리자 권한 확인 실패",
-    "adminClaimMissing": "관리자 권한이 없습니다"
+    "adminClaimMissing": "관리자 권한이 없습니다",
+    "adminAuditLog": "관리자 감사 로그",
+    "auditActionApprove": "승인됨",
+    "auditActionReject": "거절됨",
+    "auditActionDismiss": "무시됨",
+    "auditLogSaved": "감사 로그가 저장되었습니다",
+    "auditLogFailed": "감사 로그 저장 실패"
   }
 }

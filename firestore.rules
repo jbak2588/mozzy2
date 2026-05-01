@@ -136,6 +136,12 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /countries/{country}/domains/marketplace/admin_audit_logs/{logId} {
+      allow read: if canViewMarketplaceReviewQueue();
+      allow create: if canModerateMarketplaceReviewQueue();
+      allow update, delete: if false;
+    }
+
     // [3] 채팅 (추후 확장 예정)
     match /chat_rooms/{roomId} {
       allow read, write: if isAuthenticated() 

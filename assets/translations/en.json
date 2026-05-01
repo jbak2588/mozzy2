@@ -206,6 +206,12 @@
     "actionFailed": "Action failed",
     "adminRoleLoading": "Checking admin role...",
     "adminRoleLoadFailed": "Failed to check admin role",
-    "adminClaimMissing": "Admin claim is missing"
+    "adminClaimMissing": "Admin claim is missing",
+    "adminAuditLog": "Admin audit log",
+    "auditActionApprove": "Approved",
+    "auditActionReject": "Rejected",
+    "auditActionDismiss": "Dismissed",
+    "auditLogSaved": "Audit log saved",
+    "auditLogFailed": "Failed to save audit log"
   }
 }

@@ -206,6 +206,12 @@
     "actionFailed": "Aksi gagal",
     "adminRoleLoading": "Memeriksa peran admin...",
     "adminRoleLoadFailed": "Gagal memeriksa peran admin",
-    "adminClaimMissing": "Klaim admin tidak ditemukan"
+    "adminClaimMissing": "Klaim admin tidak ditemukan",
+    "adminAuditLog": "Log audit admin",
+    "auditActionApprove": "Disetujui",
+    "auditActionReject": "Ditolak",
+    "auditActionDismiss": "Diabaikan",
+    "auditLogSaved": "Log audit disimpan",
+    "auditLogFailed": "Gagal menyimpan log audit"
   }
 }

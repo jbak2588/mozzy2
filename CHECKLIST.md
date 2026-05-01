@@ -172,7 +172,7 @@
 - [x] Admin review UI foundation
 - [x] Admin approve/reject actions foundation
 - [x] Server-side admin claims / role source foundation
-- [ ] Admin audit log
+- [x] Admin audit log foundation
 - [ ] Production admin claims assignment script
 - [x] Admin role enforcement
 - [x] WebP compression / image optimization

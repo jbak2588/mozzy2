@@ -17,6 +17,16 @@ class UserRepository {
     final doc = await _users.doc(uid).get();
     if (!doc.exists) return null;
     final data = doc.data() as Map<String, dynamic>;
+
+    // ignore: avoid_print
+    print('[UserRepository] doc exists for $uid');
+    // ignore: avoid_print
+    print('[UserRepository] createdAt type: ${data['createdAt']?.runtimeType}');
+    // ignore: avoid_print
+    print('[UserRepository] updatedAt type: ${data['updatedAt']?.runtimeType}');
+    // ignore: avoid_print
+    print('[UserRepository] lastLoginAt type: ${data['lastLoginAt']?.runtimeType}');
+
     // ensure uid included
     return UserModel.fromJson({...data, 'uid': uid});
   }

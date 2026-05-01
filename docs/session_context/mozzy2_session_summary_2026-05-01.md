@@ -1,36 +1,25 @@
-# Mozzy Session Summary - 2026-05-01
+### Session Summary: Marketplace Staging Firebase Verification & Auth Diagnosis (P2-B22)
 
-## 🎯 Completed Task: P2-B22 Marketplace Staging Firebase Live Verification
-Performed live staging audit. Verification is currently **PARTIAL / BLOCKED** due to Google Login `DEVELOPER_ERROR`.
+This session focused on diagnosing and resolving a crash in the Google Authentication flow on a physical Android device.
 
-### 🏗️ Key Implementations
-- **Admin Role Assignment**: Successfully assigned `admin` role to staging test UID `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1` using the claims script.
-- **Claims Verification**: Confirmed via script that custom claims are correctly set on the Firebase staging server.
-- **Keystore Audit**: Extracted debug SHA-1 (`1D:CF:F3:B9:3B:1D:54:7F:4D:4B:D2:21:0A:90:69:B6:4A:AC:46:3F`) for Firebase Console registration.
-- **Documentation**: Updated Phase 2 Marketplace Staging Firebase Verification Report.
+#### 1. Key Accomplishments
+*   **Verification Infrastructure**: Successfully assigned `admin` custom claims to the staging test UID.
+*   **Root Cause Identified**: Discovered that the crash after Google account selection was due to a `Timestamp` to `String` casting error in `UserModel.fromJson`.
+*   **Timestamp Hotfix applied**: Modified `UserModel` to use a custom DateTime converter that handles Firestore `Timestamp`, `DateTime`, and ISO `String` values.
+*   **Unit Test Verification**: Added `test/mozzy_ii/domains/users/user_model_timestamp_test.dart` and confirmed all parsing scenarios (Timestamp, ISO String, DateTime, null) pass.
+*   **Diagnostic Logging**: Implemented detailed logging in `AuthService`, `GoogleSignInConfig`, and `UserRepository` to monitor live runs.
 
-### 🧪 Test Results
-- **Admin Claims Script**: SUCCESS.
-- **Baseline Validation**: Format/Analyze/Test passed.
-- **Staging Google Login**: BLOCKED (`DEVELOPER_ERROR`).
+#### 2. Environmental & Project Context
+*   **Repository Constraints**: Locked to `e:\hni-project\mozzy` on branch `main`.
+*   **Active Device**: Samsung SM A715F (RR8N109B4JM), running Android 13.
+*   **SHA Fingerprints**: Verified matching between debug keystore and Firebase Console.
 
-### 🔗 References
-- [Marketplace Staging Verification Report](file:///e:/hni-project/mozzy/docs/phase_reports/phase2_marketplace_staging_firebase_verification_report.md)
-- [Checklist (P2-B22 updated)](file:///e:/hni-project/mozzy/CHECKLIST.md)
+#### 3. Current Status
+*   **Status**: **RESOLVED (Pending Live Confirmation)**
+*   **Blocker Removed**: The `Timestamp is not a subtype of String` crash is eliminated.
+*   **Next Gate**: Resume Marketplace live verification (Product creation, Storage, Gemini).
 
-### 📦 Commit Information
-- **Latest Marketplace Verification Commit**: `f1051d32d943c6983fe82ca7eef39ed85a8f0484`
-
-## New Chat Handoff
-See `docs/session_context/mozzy2_new_chat_handoff_2026-05-01.md`.
-
-Current next task:
-P2-B22-C Google Login DEVELOPER_ERROR diagnosis.
-
-Important correction:
-SHA-1 appears to match Firebase Console. Do not assume SHA-1 mismatch only. Device timestamp/timezone and OAuth config must be checked.
-
-### 🚀 Next Step
-- **SHA-1 Registration**: Register debug SHA-1 in Firebase Console for the staging project.
-- **Google Login Retry**: Re-verify live flow once `DEVELOPER_ERROR` is resolved.
-- **P2-B23**: Payment / Xendit planning gate.
+#### 4. Next Steps
+1.  **Live Handoff**: User to perform live login on the device to confirm the fix.
+2.  **Marketplace Verification**: Proceed with Phase 2B-22 live feature tests.
+3.  **Payment Planning**: Once login is confirmed stable, start P2-B23 planning.

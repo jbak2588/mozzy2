@@ -1,72 +1,28 @@
-# Mozzy Indonesia - New Chat Session Handoff (2026-05-01)
+# Mozzy New Chat Handoff - 2026-05-01 (Timestamp Hotfix)
 
-## 🎯 Project Identity
-- **Project Folder**: `E:\hni-project\mozzy`
-- **GitHub Repository**: `github.com/jbak2588/mozzy2`
-- **Branch**: `main`
-- **Note**: Work ONLY in the above paths. Do not modify `bling` or `mozzy-v6` shell branches.
+## 🎯 Current Task: P2-B22 Marketplace Staging Firebase Live Verification
 
-## 📦 Latest Commits
-- `f1051d32d943c6983fe82ca7eef39ed85a8f0484`: test(marketplace): record staging Firebase live verification results
-- `a39fd3bccea866c5972716e5491110cfd174d4cc`: docs(session): record completed staging Firebase verification commit
+## ⚠️ Critical Context
+The Google Login `DEVELOPER_ERROR` was found to be secondary to a **Firestore Timestamp parsing crash**. After account selection, the app would crash when trying to parse the `users` document because Firestore `Timestamp` objects were being cast to `String` in `UserModel.fromJson`.
 
-## ✅ Completed Marketplace Milestones
-- **Core UI/Logic**: `ProductModel`, `MarketplaceRepository`, `MarketplaceListScreen`, `ProductDetailScreen`, `CreateProductScreen`.
-- **Media**: Image upload foundation, **WebP optimization** (compression & resizing).
-- **AI Integration**: **Gemini 3.0 Flash** verification, AI report storage, live Gemini smoke test passed.
-- **User Engagement**: **Simpan/Like** functionality, **Saved Items** screen.
-- **Admin Infrastructure**:
-    - AI review moderation queue.
-    - **Admin Review UI** (Approve/Reject/Dismiss actions).
-    - **Admin Custom Claims** role source (Firebase auth).
-    - **Admin Audit Log** storage & UI.
-    - **Admin Claims Assignment Script** (Node.js/Firebase Admin SDK).
-- **Quality Assurance**: Automated integration tests (E2E), full production readiness review.
+## ✅ Hotfix Applied
+- **UserModel Update**: Added `_dateTimeFromJson` and `_dateTimeToJson` helpers to handle `Timestamp`, `DateTime`, and `String` inputs.
+- **Riverpod/json_serializable**: Re-ran `build_runner` to apply changes to `user_model.g.dart`.
+- **Validation**: Added unit test `test/mozzy_ii/domains/users/user_model_timestamp_test.dart`. **PASS**.
 
-## 🛠️ Current Active Task: P2-B22 Marketplace Staging Firebase Verification
-- **Status**: ⚠️ **PARTIAL / BLOCKED**
-- **Goal**: Verify end-to-end functionality in a real staging Firebase environment.
-- **Admin Verification**: ✅ **SUCCESS**. Admin role `admin` assigned to staging test UID.
-- **Auth Verification**: ❌ **BLOCKED**.
+## 🚀 Next Steps (Action Plan)
+1.  **Live Login**: Run the app and select a Google account.
+2.  **Verify UI**: Ensure the app proceeds to `/home` after login without the `Timestamp` error.
+3.  **Marketplace Flow**:
+    - Create a product (Marketplace -> Add Product).
+    - Verify image upload to Firebase Storage.
+    - Verify Gemini AI screening triggers (Check moderation queue).
+4.  **Admin Review**: Verify admin test user can see/act on the moderation queue.
 
-## 🛑 Google Login Blocker Details
-- **Error**: `DEVELOPER_ERROR` (statusCode=10).
-- **Device**: Physical Android device (SM A715F / RR8N109B4JM).
-- **Extracted SHA-1**: `1D:CF:F3:B9:3B:1D:54:7F:4D:4B:D2:21:0A:90:69:B6:4A:AC:46:3F`.
-- **Critical Context**:
-    - The extracted SHA-1 reportedly **already matches** the one registered in the Firebase Console.
-    - A **timestamp-related error** was observed on the physical device screen.
-    - **Do not assume only SHA-1 mismatch.**
+## 🔑 Environment Variables Required
+- `GEMINI_API_KEY`: [IN_ENV]
+- `GOOGLE_WEB_CLIENT_ID`: `149673701591-oml428ssc9hon7mla0rvsn6e528hgdv9.apps.googleusercontent.com`
+- `MOZZY_STAGING_ADMIN_TEST_UID`: `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1`
 
-### Next Diagnostic Steps:
-1.  **Device Clock**: Verify if the phone's date/time/timezone are set to "Automatic".
-2.  **SHA-256**: Ensure SHA-256 is also registered in the Firebase Console.
-3.  **Config Sync**: Re-download and place a fresh `google-services.json` after any SHA changes.
-4.  **Identity Match**: Double-check `applicationId` / package name matching between Firebase and `app/build.gradle`.
-5.  **Web Client ID**: Verify `GOOGLE_WEB_CLIENT_ID` passed via dart-define matches the one in the staging project's OAuth clients.
-6.  **Provider Status**: Confirm Google Auth provider is enabled in Firebase Console.
-7.  **Cache/Cleanup**: Perform a full app uninstall, reinstall, and possibly clear Play Services cache on the device.
-
-## 🔐 Required Environment Variables
-(Secrets are present in the local environment; do not print values)
-- `GOOGLE_WEB_CLIENT_ID`
-- `GEMINI_API_KEY`
-- `GOOGLE_APPLICATION_CREDENTIALS`
-- `MOZZY_STAGING_ADMIN_TEST_UID`
-
-## 🚀 Next Recommended Task
-- **P2-B22-C**: Google Login `DEVELOPER_ERROR` diagnosis.
-- **Gate**: Do not start **P2-B23 Payment / Xendit** until staging login is unblocked.
-
-## 💻 Commands for Next Session
-```powershell
-cd e:\hni-project\mozzy
-git status --short --branch
-git log --oneline -12
-# Verify env vars
-if ($env:GOOGLE_WEB_CLIENT_ID) { "GOOGLE_WEB_CLIENT_ID=PRESENT" }
-# Check device connectivity
-flutter devices
-# Run app with defines
-flutter run -d RR8N109B4JM --dart-define=GOOGLE_WEB_CLIENT_ID=$env:GOOGLE_WEB_CLIENT_ID --dart-define=GEMINI_API_KEY=$env:GEMINI_API_KEY
-```
+## 📦 Reference Commits
+- Fix Commit: `fix(auth): handle Firestore timestamp fields in user model` (to be committed)

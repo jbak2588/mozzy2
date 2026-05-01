@@ -1,7 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 
 part 'user_model.g.dart';
+
+DateTime _dateTimeFromJson(Object? value) {
+  if (value is Timestamp) {
+    return value.toDate().toUtc();
+  }
+  if (value is DateTime) {
+    return value.toUtc();
+  }
+  if (value is String) {
+    return DateTime.parse(value).toUtc();
+  }
+  throw FormatException('Unsupported DateTime value: $value');
+}
+
+Object _dateTimeToJson(DateTime value) {
+  return Timestamp.fromDate(value.toUtc());
+}
+
+DateTime? _nullableDateTimeFromJson(Object? value) {
+  if (value == null) return null;
+  return _dateTimeFromJson(value);
+}
+
+Object? _nullableDateTimeToJson(DateTime? value) {
+  if (value == null) return null;
+  return Timestamp.fromDate(value.toUtc());
+}
 
 @JsonSerializable(explicitToJson: true)
 class UserModel {
@@ -14,8 +42,14 @@ class UserModel {
   final LocationParts? locationParts;
   final double trustScore;
   final String trustLevel;
+
+  @JsonKey(fromJson: _dateTimeFromJson, toJson: _dateTimeToJson)
   final DateTime createdAt;
+
+  @JsonKey(fromJson: _dateTimeFromJson, toJson: _dateTimeToJson)
   final DateTime updatedAt;
+
+  @JsonKey(fromJson: _nullableDateTimeFromJson, toJson: _nullableDateTimeToJson)
   final DateTime? lastLoginAt;
 
   const UserModel({

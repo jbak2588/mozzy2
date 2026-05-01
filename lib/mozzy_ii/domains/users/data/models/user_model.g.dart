@@ -18,11 +18,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       : LocationParts.fromJson(json['locationParts'] as Map<String, dynamic>),
   trustScore: (json['trustScore'] as num).toDouble(),
   trustLevel: json['trustLevel'] as String,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: DateTime.parse(json['updatedAt'] as String),
-  lastLoginAt: json['lastLoginAt'] == null
-      ? null
-      : DateTime.parse(json['lastLoginAt'] as String),
+  createdAt: _dateTimeFromJson(json['createdAt']),
+  updatedAt: _dateTimeFromJson(json['updatedAt']),
+  lastLoginAt: _nullableDateTimeFromJson(json['lastLoginAt']),
 );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -35,7 +33,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
   'locationParts': instance.locationParts?.toJson(),
   'trustScore': instance.trustScore,
   'trustLevel': instance.trustLevel,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
-  'lastLoginAt': instance.lastLoginAt?.toIso8601String(),
+  'createdAt': _dateTimeToJson(instance.createdAt),
+  'updatedAt': _dateTimeToJson(instance.updatedAt),
+  'lastLoginAt': _nullableDateTimeToJson(instance.lastLoginAt),
 };

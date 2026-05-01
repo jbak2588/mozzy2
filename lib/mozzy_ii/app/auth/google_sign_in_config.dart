@@ -10,6 +10,13 @@ class GoogleSignInConfig {
   static Future<void> initialize() async {
     if (IntegrationTestConfig.enabled) return;
 
+    // ignore: avoid_print
+    print('DEBUG: Loading GOOGLE_WEB_CLIENT_ID... length: ${webClientId.length}');
+    if (webClientId.isNotEmpty) {
+      // ignore: avoid_print
+      print('DEBUG: Web Client ID start: ${webClientId.substring(0, 12)}...');
+    }
+
     if (webClientId.isEmpty) {
       throw StateError(
         'GOOGLE_WEB_CLIENT_ID is missing. Run with --dart-define=\'GOOGLE_WEB_CLIENT_ID=<WEB_CLIENT_ID>\'.',

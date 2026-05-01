@@ -42,7 +42,7 @@ Implementation of a secure, server-side admin role foundation using Firebase Cus
 - **Marketplace E2E**: Passed on SM A715F. Integration mode correctly defaults to `admin` role.
 
 ## 📦 Commit Information
-- **Feature Commit**: `PENDING_UNTIL_COMMIT`
+- **Feature Commit**: `f578ef81427dd1ff2df05d5d1962229356226af4`
 - **Docs Commit**: `PENDING_UNTIL_COMMIT`
 
 ## 🚀 Next Steps

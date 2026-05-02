@@ -31,46 +31,58 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
 
   /// 기기의 GPS를 사용하여 현재 위치 가져오기 및 역지오코딩 수행
   Future<LocationParts?> _fetchCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // 1. 위치 서비스 활성화 여부 확인
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return null; // 위치 서비스 비활성화
-    }
-
-    // 2. 권한 확인 및 요청
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return null; // 권한 거부됨
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return null; // 영구 거부됨
-    }
-
-    // 3. 현재 위치 가져오기
-    final position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-        timeLimit: Duration(seconds: 5),
-      ),
-    ).timeout(const Duration(seconds: 5));
-
-    // 4. 역지오코딩을 통해 주소 정보 획득
-    final locationService = ref.read(indonesiaLocationServiceProvider);
     try {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      // 1. 위치 서비스 활성화 여부 확인
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (kDebugMode) debugPrint('[LocationProvider] service disabled');
+        return null; // 위치 서비스 비활성화
+      }
+
+      // 2. 권한 확인 및 요청
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (kDebugMode) debugPrint('[LocationProvider] permission denied');
+          return null; // 권한 거부됨
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (kDebugMode) debugPrint('[LocationProvider] permission denied forever');
+        return null; // 영구 거부됨
+      }
+
+      // 3. 현재 위치 가져오기 (Timeout 5s)
+      if (kDebugMode) debugPrint('[LocationProvider] requesting position...');
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 5),
+        ),
+      ).timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          throw Exception('GPS timeout');
+        },
+      );
+
+      // 4. 역지오코딩을 통해 주소 정보 획득 (Timeout 5s)
+      if (kDebugMode) debugPrint('[LocationProvider] reverse geocoding...');
+      final locationService = ref.read(indonesiaLocationServiceProvider);
       final idAddress = await locationService
           .reverseGeocode(position)
           .timeout(const Duration(seconds: 5));
+
       final geoFirePoint = GeoFirePoint(
         GeoPoint(position.latitude, position.longitude),
       );
 
+      if (kDebugMode) debugPrint('[LocationProvider] success');
       return LocationParts(
         countryCode: 'ID',
         idAddress: idAddress,
@@ -79,8 +91,9 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
         geoHash: geoFirePoint.geohash,
       );
     } catch (e) {
-      // 역지오코딩 실패 시 좌표만 반환하거나 처리
-      debugPrint('Location processing or reverse geocoding failed: $e');
+      if (kDebugMode) {
+        debugPrint('[LocationProvider] error or timeout: $e');
+      }
       return null;
     }
   }

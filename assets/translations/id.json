@@ -12,7 +12,8 @@
     "search": "Cari",
     "loading": "Memuat...",
     "error": "Terjadi kesalahan",
-    "retry": "Coba lagi"
+    "retry": "Coba lagi",
+    "timeout": "Waktu koneksi habis. Silakan coba lagi."
   },
   "auth": {
     "login": "Masuk",

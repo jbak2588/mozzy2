@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/product_model.dart';
 
 class MarketplaceRepository {
@@ -18,16 +19,30 @@ class MarketplaceRepository {
       _fs.collection(productsCollectionPath());
 
   Future<String> createProduct(ProductModel product) async {
-    final docRef = productsCollection.doc(product.id);
-    await docRef.set(product.toJson());
-    return docRef.id;
+    try {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] creating product ${product.id}');
+      final docRef = productsCollection.doc(product.id);
+      await docRef.set(product.toJson()).timeout(const Duration(seconds: 10));
+      return docRef.id;
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] createProduct error: $e');
+      rethrow;
+    }
   }
 
   Future<ProductModel?> getProductById(String productId) async {
-    final doc = await productsCollection.doc(productId).get();
-    if (!doc.exists) return null;
-    final data = doc.data() as Map<String, dynamic>;
-    return ProductModel.fromJson({...data, 'id': doc.id});
+    try {
+      final doc = await productsCollection
+          .doc(productId)
+          .get()
+          .timeout(const Duration(seconds: 10));
+      if (!doc.exists) return null;
+      final data = doc.data() as Map<String, dynamic>;
+      return ProductModel.fromJson({...data, 'id': doc.id});
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] getProductById error: $e');
+      return null;
+    }
   }
 
   Future<List<ProductModel>> fetchByKecamatan({
@@ -35,23 +50,29 @@ class MarketplaceRepository {
     int limit = 20,
     DocumentSnapshot? startAfter,
   }) async {
-    Query query = productsCollection
-        .where('isDeleted', isEqualTo: false)
-        .where('locationParts.idAddress.kecamatan', isEqualTo: kecamatan)
-        .orderBy('createdAt', descending: true)
-        .limit(limit);
+    try {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] fetching by kecamatan: $kecamatan');
+      Query query = productsCollection
+          .where('isDeleted', isEqualTo: false)
+          .where('locationParts.idAddress.kecamatan', isEqualTo: kecamatan)
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
 
-    if (startAfter != null) query = query.startAfterDocument(startAfter);
+      if (startAfter != null) query = query.startAfterDocument(startAfter);
 
-    final snap = await query.get();
-    return snap.docs
-        .map(
-          (d) => ProductModel.fromJson({
-            ...d.data() as Map<String, dynamic>,
-            'id': d.id,
-          }),
-        )
-        .toList();
+      final snap = await query.get().timeout(const Duration(seconds: 10));
+      return snap.docs
+          .map(
+            (d) => ProductModel.fromJson({
+              ...d.data() as Map<String, dynamic>,
+              'id': d.id,
+            }),
+          )
+          .toList();
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] fetchByKecamatan error: $e');
+      rethrow;
+    }
   }
 
   Future<List<ProductModel>> fetchByCategory({
@@ -59,36 +80,54 @@ class MarketplaceRepository {
     int limit = 20,
     DocumentSnapshot? startAfter,
   }) async {
-    Query query = productsCollection
-        .where('isDeleted', isEqualTo: false)
-        .where('category', isEqualTo: category)
-        .orderBy('createdAt', descending: true)
-        .limit(limit);
+    try {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] fetching by category: $category');
+      Query query = productsCollection
+          .where('isDeleted', isEqualTo: false)
+          .where('category', isEqualTo: category)
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
 
-    if (startAfter != null) query = query.startAfterDocument(startAfter);
+      if (startAfter != null) query = query.startAfterDocument(startAfter);
 
-    final snap = await query.get();
-    return snap.docs
-        .map(
-          (d) => ProductModel.fromJson({
-            ...d.data() as Map<String, dynamic>,
-            'id': d.id,
-          }),
-        )
-        .toList();
+      final snap = await query.get().timeout(const Duration(seconds: 10));
+      return snap.docs
+          .map(
+            (d) => ProductModel.fromJson({
+              ...d.data() as Map<String, dynamic>,
+              'id': d.id,
+            }),
+          )
+          .toList();
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] fetchByCategory error: $e');
+      rethrow;
+    }
   }
 
   Future<void> updateProduct(ProductModel product) async {
-    final docRef = productsCollection.doc(product.id);
-    await docRef.set(product.toJson(), SetOptions(merge: true));
+    try {
+      final docRef = productsCollection.doc(product.id);
+      await docRef
+          .set(product.toJson(), SetOptions(merge: true))
+          .timeout(const Duration(seconds: 10));
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] updateProduct error: $e');
+      rethrow;
+    }
   }
 
   Future<void> softDeleteProduct(String productId) async {
-    final now = DateTime.now().toUtc();
-    await productsCollection.doc(productId).set({
-      'isDeleted': true,
-      'updatedAt': now,
-    }, SetOptions(merge: true));
+    try {
+      final now = DateTime.now().toUtc();
+      await productsCollection.doc(productId).set({
+        'isDeleted': true,
+        'updatedAt': now,
+      }, SetOptions(merge: true)).timeout(const Duration(seconds: 10));
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] softDeleteProduct error: $e');
+      rethrow;
+    }
   }
 
   Future<void> updateProductAiStatus({
@@ -96,13 +135,18 @@ class MarketplaceRepository {
     required bool isVerified,
     required String status,
   }) async {
-    final now = DateTime.now().toUtc();
-    await productsCollection.doc(productId).update({
-      'isAiVerified': isVerified,
-      'aiVerificationStatus': status,
-      'aiVerifiedAt': now,
-      'updatedAt': now,
-    });
+    try {
+      final now = DateTime.now().toUtc();
+      await productsCollection.doc(productId).update({
+        'isAiVerified': isVerified,
+        'aiVerificationStatus': status,
+        'aiVerifiedAt': now,
+        'updatedAt': now,
+      }).timeout(const Duration(seconds: 10));
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] updateProductAiStatus error: $e');
+      rethrow;
+    }
   }
 
   // --- Like Methods ---

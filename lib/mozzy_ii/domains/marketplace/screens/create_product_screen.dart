@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
+import 'dart:async';
 
 import '../../../core/utils/scaffold_messenger_service.dart';
 import '../../../geo/providers/location_provider.dart';
@@ -139,15 +140,17 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       final productId = const Uuid().v4();
       List<String> uploadedUrls = [];
       List<XFile> optimizedImages = [];
-      dynamic
-      aiVerificationResult; // We use dynamic to avoid importing result model if not needed, but better to use it.
+      dynamic aiVerificationResult;
 
       try {
         // 1. Optimize images
+        if (kDebugMode) debugPrint('[CreateProduct] submit start productId=$productId');
         setState(() => _savingStatus = 'optimizing');
         optimizedImages = await ref
             .read(marketplaceImageOptimizationServiceProvider)
-            .optimizeProductImages(_selectedImages);
+            .optimizeProductImages(_selectedImages)
+            .timeout(const Duration(seconds: 30));
+        if (kDebugMode) debugPrint('[CreateProduct] optimizing done optimized=${optimizedImages.length}');
 
         // 2. Upload optimized images
         setState(() => _savingStatus = 'uploading');
@@ -157,10 +160,13 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
               productId: productId,
               sellerId: userId,
               images: optimizedImages,
-            );
+            )
+            .timeout(const Duration(seconds: 60));
+        if (kDebugMode) debugPrint('[CreateProduct] uploading done urls=${uploadedUrls.length}');
 
         // 3. AI Verification (Foundation)
         setState(() => _savingStatus = 'verifying');
+        if (kDebugMode) debugPrint('[CreateProduct] ai verification start');
         try {
           aiVerificationResult = await ref
               .read(marketplaceAiVerificationServiceProvider)
@@ -170,7 +176,9 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                 description: _descriptionController.text.trim(),
                 category: _selectedCategory,
                 imageUrls: uploadedUrls,
-              );
+              )
+              .timeout(const Duration(seconds: 15));
+          if (kDebugMode) debugPrint('[CreateProduct] ai verification done status=${aiVerificationResult?.status}');
         } catch (e) {
           debugPrint('AI verification failed (non-blocking): $e');
           // Fallback to error status
@@ -180,7 +188,9 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         debugPrint('Error during optimization/upload/AI: $e');
 
         String errorKey = 'marketplace.imageUploadFailed';
-        if (e.toString().contains('optimization')) {
+        if (e is TimeoutException) {
+          errorKey = 'common.timeout'; // Need to ensure this key exists or use fallback
+        } else if (e.toString().contains('optimization')) {
           errorKey = 'marketplace.imageOptimizationFailed';
         }
 
@@ -213,7 +223,12 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
       );
 
       try {
-        await ref.read(createProductProvider).call(newProduct);
+        if (kDebugMode) debugPrint('[CreateProduct] firestore create start');
+        await ref
+            .read(createProductProvider)
+            .call(newProduct)
+            .timeout(const Duration(seconds: 15));
+        if (kDebugMode) debugPrint('[CreateProduct] firestore create done');
 
         // 4. Save AI Report (Non-blocking)
         if (aiVerificationResult != null) {

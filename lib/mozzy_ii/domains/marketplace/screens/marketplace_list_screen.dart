@@ -145,7 +145,21 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
         data: (loc) {
           final kecamatan = loc?.idAddress?.kecamatan;
           if (kecamatan == null) {
-            return Center(child: Text('marketplace.locationUnavailable'.tr()));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.location_off, size: 48, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  Text('marketplace.locationUnavailable'.tr()),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => ref.invalidate(locationProvider),
+                    child: Text('marketplace.retry'.tr()),
+                  ),
+                ],
+              ),
+            );
           }
           final productsAsync = ref.watch(
             productsByKecamatanProvider(kecamatan),
@@ -153,15 +167,27 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
           return _buildProductGrid(productsAsync);
         },
         loading: () => Center(
-          child: IntegrationTestConfig.enabled
-              ? const Text('Loading Location...')
-              : const CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Text(
+                IntegrationTestConfig.enabled
+                    ? 'Loading Location...'
+                    : 'marketplace.detectingLocation'.tr(),
+              ),
+            ],
+          ),
         ),
         error: (err, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
               Text('common.error'.tr()),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => ref.invalidate(locationProvider),
                 child: Text('marketplace.retry'.tr()),

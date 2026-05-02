@@ -7,6 +7,7 @@
 
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MarketplaceImageUploadService {
@@ -31,18 +32,28 @@ class MarketplaceImageUploadService {
     final List<String> downloadUrls = [];
 
     for (int i = 0; i < images.length; i++) {
-      final image = images[i];
-      final fileName = 'image_$i.jpg'; // Simple naming for now
-      final path = 'marketplace/products/$sellerId/$productId/$fileName';
+      try {
+        final image = images[i];
+        final fileName = 'image_$i.jpg'; // Simple naming for now
+        final path = 'marketplace/products/$sellerId/$productId/$fileName';
 
-      final ref = _storage.ref().child(path);
+        if (kDebugMode) debugPrint('[ImageUpload] uploading $path...');
+        final ref = _storage.ref().child(path);
 
-      // Platform-safe upload
-      final uploadTask = ref.putFile(File(image.path));
+        // Platform-safe upload with timeout
+        final uploadTask = ref.putFile(File(image.path));
+        final snapshot = await uploadTask.timeout(const Duration(seconds: 30));
 
-      final snapshot = await uploadTask;
-      final url = await snapshot.ref.getDownloadURL();
-      downloadUrls.add(url);
+        if (kDebugMode) debugPrint('[ImageUpload] upload successful, getting download URL...');
+        final url = await snapshot.ref
+            .getDownloadURL()
+            .timeout(const Duration(seconds: 10));
+
+        downloadUrls.add(url);
+      } catch (e) {
+        if (kDebugMode) debugPrint('[ImageUpload] error during upload of image $i: $e');
+        rethrow;
+      }
     }
 
     return downloadUrls;

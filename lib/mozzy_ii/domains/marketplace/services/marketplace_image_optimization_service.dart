@@ -5,6 +5,7 @@
 // Purpose       : Marketplace 물품 이미지 최적화 서비스. WebP 변환 및 압축을 담당합니다.
 // ============================================================================
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -35,20 +36,30 @@ class MarketplaceImageOptimizationServiceImpl
         'marketplace_${timestamp}_$i.webp',
       );
 
-      final result = await FlutterImageCompress.compressAndGetFile(
-        image.path,
-        targetPath,
-        quality: 85,
-        minWidth: 1600,
-        minHeight: 1600,
-        format: CompressFormat.webp,
-      );
+      try {
+        if (kDebugMode) debugPrint('[ImageOpt] optimizing image $i...');
+        final result = await FlutterImageCompress.compressAndGetFile(
+          image.path,
+          targetPath,
+          quality: 85,
+          minWidth: 1600,
+          minHeight: 1600,
+          format: CompressFormat.webp,
+        ).timeout(const Duration(seconds: 10));
 
-      if (result == null) {
-        throw Exception('Image optimization failed for image at index $i');
+        if (result == null) {
+          if (kDebugMode) debugPrint('[ImageOpt] compression returned null for image $i, using original');
+          optimizedImages.add(image);
+        } else {
+          if (kDebugMode) debugPrint('[ImageOpt] image $i optimized to WebP');
+          optimizedImages.add(result);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[ImageOpt] error or timeout during optimization of image $i: $e. Using original.');
+        }
+        optimizedImages.add(image);
       }
-
-      optimizedImages.add(result);
     }
 
     return optimizedImages;

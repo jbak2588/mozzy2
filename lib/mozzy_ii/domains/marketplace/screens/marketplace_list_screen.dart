@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/foundation.dart';
 import '../../../core/config/integration_test_config.dart';
-import '../../../geo/providers/location_provider.dart';
 import '../../../geo/models/location_parts.dart';
 import '../providers/marketplace_provider.dart';
+import '../providers/marketplace_location_provider.dart';
 import '../widgets/marketplace_product_card.dart';
 
 class MarketplaceListScreen extends ConsumerStatefulWidget {
@@ -21,7 +22,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final locationState = ref.watch(locationProvider);
+    final locationState = ref.watch(effectiveMarketplaceLocationProvider);
 
     return Scaffold(
       key: const Key('marketplaceListScreen'),
@@ -73,21 +74,24 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
     );
   }
 
-  Widget _buildLocationHeader(AsyncValue<LocationParts?> locationState) {
+  Widget _buildLocationHeader(AsyncValue<LocationParts> locationState) {
     return locationState.when(
       data: (loc) {
         final kecamatan =
-            loc?.idAddress?.kecamatan ?? 'marketplace.locationUnavailable'.tr();
-        final kabupaten = loc?.idAddress?.kabupaten ?? '';
+            loc.idAddress?.kecamatan ?? 'marketplace.locationUnavailable'.tr();
+        final kabupaten = loc.idAddress?.kabupaten ?? '';
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             children: [
               const Icon(Icons.location_on, size: 16, color: Colors.red),
               const SizedBox(width: 4),
-              Text(
-                '$kecamatan, $kabupaten',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  '$kecamatan, $kabupaten',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -139,27 +143,13 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
     );
   }
 
-  Widget _buildBody(AsyncValue<LocationParts?> locationState) {
+  Widget _buildBody(AsyncValue<LocationParts> locationState) {
     if (_selectedCategory == 'all') {
       return locationState.when(
         data: (loc) {
-          final kecamatan = loc?.idAddress?.kecamatan;
-          if (kecamatan == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.location_off, size: 48, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  Text('marketplace.locationUnavailable'.tr()),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => ref.invalidate(locationProvider),
-                    child: Text('marketplace.retry'.tr()),
-                  ),
-                ],
-              ),
-            );
+          final kecamatan = loc.idAddress?.kecamatan ?? 'Kebayoran Baru';
+          if (kDebugMode) {
+            debugPrint('[MarketplaceList] effective location loaded: $kecamatan');
           }
           final productsAsync = ref.watch(
             productsByKecamatanProvider(kecamatan),
@@ -189,7 +179,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
               Text('common.error'.tr()),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.invalidate(locationProvider),
+                onPressed: () => ref.invalidate(effectiveMarketplaceLocationProvider),
                 child: Text('marketplace.retry'.tr()),
               ),
             ],

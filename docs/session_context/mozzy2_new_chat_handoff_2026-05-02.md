@@ -1,33 +1,31 @@
 # P2-B22-D Handoff: Live Staging Flow Verification
 
 ## 🎯 Current Focus
-Confirming the `UserModel` timestamp fix, resolving the local dart-define delivery, and completing the Marketplace staging verification flow on a physical device or emulator.
+Confirming the `UserModel` timestamp fix, resolving the local dart-define delivery, and completing the Marketplace staging verification flow on a physical device (SM A715F).
 
-## 🏁 State of Play
-- **Dart-Define Fix**: Resolved `GOOGLE_WEB_CLIENT_ID` delivery issue by introducing a `.local/mozzy_dev_env.json` and `run_mozzy_dev.ps1` setup.
+## 🛠️ Critical Fixes Applied
 - **Auth Fix**: `UserModel` now uses a custom `DateTime` converter. Unit tests pass. Linter warnings resolved.
 - **Bootstrap Fix**: Added a 5-second timeout and fallback logic to `authBootstrapProvider` to prevent infinite loading screens after login if location retrieval hangs.
+- **Marketplace Location Fix**: Implemented `effectiveMarketplaceLocationProvider` to ensure Marketplace features are never blocked by GPS unavailability. It prioritizes user profile location, device location, then a Jakarta Senayan fallback.
+- **Submission Fix**: Added overall phase timeouts to `CreateProductScreen` (30s optimization, 60s upload) and per-image compression fallbacks.
 - **Geo Layer Fix**: Enforced 5-second timeouts on both `Geolocator.getCurrentPosition` and `reverseGeocode` in the `LocationNotifier`.
-- **Diagnostics**: All debug prints in Auth/User repositories are wrapped in `kDebugMode`.
-- **Marketplace**: Product creation, image upload, and Gemini AI screening are implemented and ready for live testing.
-- **Repo Status**: `flutter analyze` is CLEAN.
+- **Centralized Fallback**: Created `default_indonesia_location.dart` to provide a consistent Jakarta Senayan fallback for all modules.
+- **Environment Fix**: Established `.local/mozzy_dev_env.json` and `.local/run_mozzy_dev.ps1` to ensure `GOOGLE_WEB_CLIENT_ID` is correctly delivered via `--dart-define` during local development on Windows.
 
-## 🚀 Execution Instructions for User
-1. **Prepare Device**: Ensure SM A715F or Emulator is connected.
-2. **Clean Install**: `adb uninstall com.humantric.mozzy2 && flutter clean && flutter pub get`
-3. **Run App**:
-   ```powershell
-   .\.local\run_mozzy_dev.ps1
-   ```
-4. **Login**: Perform Google Login. Verify NO CRASH.
-5. **Marketplace Flow**:
-   - Go to Marketplace -> Create Product.
-   - Upload a test item with real photos.
-   - Check if the saving status progresses through 'optimizing' -> 'uploading' -> 'verifying'.
-   - Confirm the item appears in the list and the Admin Queue (for the test admin UID).
+## 🚀 Execution Strategy
+1.  **Sync**: `git pull origin main`
+2.  **Environment**: Ensure `C:\Users\OWNER\.gemini\tmp\mozzy\memory\MEMORY.md` (or local .env) values are present in `.local/mozzy_dev_env.json`.
+3.  **Run**: Use `.\.local\run_mozzy_dev.ps1` to execute on the physical device `RR8N109B4JM`.
+4.  **Verify**:
+    - [ ] Google Login success (Admin account `F1RhoJnK...`).
+    - [ ] Marketplace list displays items for current (or fallback) kecamatan.
+    - [ ] Product creation completes (Optimizing -> Uploading -> Verifying).
+    - [ ] AI Screening result is saved to Firestore.
+    - [ ] Admin Review Queue reflects the new item.
 
-## ⚠️ Known Blockers
-- **None currently identified**. The previous timestamp crash and the dart-define delivery issues are theoretically resolved and verified internally.
+## ⚠️ Known Constraints
+- **Geolocator**: Physical devices may still take up to 5 seconds to resolve GPS; timeouts are handled gracefully but a short delay is expected.
+- **Secrets**: Do NOT commit `.local/` files or any plain-text API keys. The dart-define delivery issues are theoretically resolved and verified internally.
 
 ## 📄 Reference Documents
 - `docs/phase_reports/phase2_marketplace_staging_firebase_verification_report.md` 

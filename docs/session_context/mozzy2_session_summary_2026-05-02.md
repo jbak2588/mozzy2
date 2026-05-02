@@ -3,14 +3,14 @@
 This session focused on finalizing the fixes for the Google Login crash and preparing the Marketplace domain for live staging verification on a physical device.
 
 #### 1. Key Accomplishments
-*   **Auth Stability**: Resolved linter warnings in `AuthService` by removing unnecessary null comparisons for `googleUser`, as the return type was identified as non-nullable.
-*   **Auth Bootstrap Fix**: Resolved an infinite loading issue after Google Login by implementing a 5-second timeout in `authBootstrapProvider`. If the device location cannot be retrieved within the limit, a fallback location is used, ensuring the user always reaches the Home screen.
-*   **Geo Layer Robustness**: Added a 5-second timeout to `reverseGeocode` in `LocationNotifier` to prevent hanging during the geocoding phase of location retrieval.
-*   **Diagnostic Cleanup**: Wrapped diagnostic prints in `AuthService`, `GoogleSignInConfig`, `UserRepository`, and `AuthBootstrap` within `kDebugMode` blocks to prevent log pollution in production-like environments while retaining debug utility.
-*   **Code Readiness**: Verified that the complete Marketplace flow (Optimization -> Upload -> AI Screening -> Admin Queue) is implemented and ready for live execution.
-*   **Static Analysis**: Confirmed `flutter analyze` returns no issues across the project.
-*   **Documentation**: Updated the Phase 2 Marketplace Staging Verification Report to reflect the "Fix Applied / Pending Live Confirmation" status.
-*   **Dart-Define Delivery Fix**: Resolved the missing `GOOGLE_WEB_CLIENT_ID` error by standardizing a local-only (`.local/`) execution script and environment file. This safely bypasses PowerShell environment variable loss while avoiding secret exposure in source control.
+*   **Auth Stability**: Resolved linter warnings in `AuthService` by removing unnecessary null comparisons for `googleUser`.
+*   **Auth Bootstrap Fix**: Resolved infinite loading after Google Login by implementing a 5-second timeout in `authBootstrapProvider` with fallback to Jakarta Senayan.
+*   **Marketplace Location Fallback**: Implemented `effectiveMarketplaceLocationProvider` to ensure Marketplace features are never blocked by GPS unavailability. It prioritizes user profile location, then device location, and finally a Jakarta Senayan fallback.
+*   **Marketplace List Fix**: Updated `MarketplaceListScreen` to use the effective location, preventing the "Location Unavailable" screen from blocking the feed.
+*   **Product Creation Fix**: Updated `CreateProductScreen` to use the effective location and added overall phase timeouts (30s optimization, 60s upload) to prevent submission hangs.
+*   **Geo Layer Helper**: Centralized the Jakarta Senayan fallback location in `default_indonesia_location.dart` for cross-module consistency.
+*   **Diagnostic Cleanup**: Wrapped diagnostic prints in `kDebugMode` blocks across Auth and Marketplace modules.
+*   **Dart-Define Delivery Fix**: Standardized local-only (`.local/`) execution script and environment file for `GOOGLE_WEB_CLIENT_ID` safety.
 
 #### 2. Technical Context
 *   **Latest Commit**: `72a7ccc` (plus local changes for auth cleanup and architecture documentation).

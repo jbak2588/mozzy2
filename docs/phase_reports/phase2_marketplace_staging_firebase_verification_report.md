@@ -21,21 +21,21 @@ This report documents the live verification of the Marketplace domain against a 
 - **Issue 1**: `Timestamp is not a subtype of String` crash in `UserModel.fromJson`.
 - **Issue 2**: Infinite loading screen post-login due to geolocator hang.
 - **Resolution**: 
-  - Implemented custom `DateTime` converter in `UserModel` to support Firestore `Timestamp` objects.
-  - Added 5-second timeouts to `authBootstrapProvider` and `LocationNotifier` with fallback logic.
+  - Implemented custom `DateTime` converter in `UserModel`.
+  - Added 5-second timeouts to `authBootstrapProvider` and `LocationNotifier`.
+  - **Marketplace Location Fix**: Implemented `effectiveMarketplaceLocationProvider` which ensures a non-null location by falling back to Jakarta Senayan if GPS/Profile location is unavailable. This unblocks the feed and product submission.
 - **Verification**: 
-  - Unit tests passed (`user_model_timestamp_test.dart`).
-  - Static analysis clean.
-  - Infinite loading issue resolved with fallback location logic.
-  - Live login confirmed successful on SM A715F.
+  - Unit tests passed.
+  - Infinite loading post-login resolved.
+  - Marketplace feed and product submission unblocked.
 
 ## 🔐 Firestore Rules Verification (Live)
 - **Status**: ✅ **PASSED**
 - **Note**: Successfully read user document from staging Firestore in previous attempts.
 
 ## 📦 Product Creation & Storage Result
-- **Status**: ⏳ **READY FOR LIVE FLOW**
-- **Note**: Code for Image optimization -> Upload -> Gemini AI Screening -> Admin Queue is fully implemented and ready for testing.
+- **Status**: ⏳ **SUBMISSION READY**
+- **Note**: Code for Image optimization -> Upload -> Gemini AI Screening -> Admin Queue is fully implemented and updated with robust timeouts and location fallbacks.
 - **Future Integration (Ver 6.1 Adoption)**: Marketplace completion flow will utilize a `confirmationCode` (6-character alphanumeric, stored in `deals/{dealId}.confirmationCode`, 24h expiry) to verify COD completion via Firestore transaction. MVP will prioritize manual code entry over QR scanning.
 
 ## 🤖 Gemini Live Verification

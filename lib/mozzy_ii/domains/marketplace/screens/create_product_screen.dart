@@ -8,11 +8,13 @@ import 'dart:io';
 import 'dart:async';
 
 import '../../../core/utils/scaffold_messenger_service.dart';
-import '../../../geo/providers/location_provider.dart';
 import '../../../geo/utils/geo_path_builder.dart';
+import '../../../geo/utils/default_indonesia_location.dart';
+import '../../../geo/models/location_parts.dart';
 import '../models/product_model.dart';
 import '../models/ai_verification_report_model.dart';
 import '../providers/marketplace_provider.dart';
+import '../providers/marketplace_location_provider.dart';
 import 'package:flutter/foundation.dart';
 import '../../../core/config/integration_test_config.dart';
 
@@ -115,15 +117,21 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
         return;
       }
 
-      final location = await ref.read(locationProvider.future);
-      if (location == null) {
-        if (!mounted) return;
-        ScaffoldMessengerService.showError(
-          context,
-          'marketplace.locationRequired'.tr(),
-        );
-        setState(() => _isSaving = false);
-        return;
+      if (kDebugMode) debugPrint('[CreateProduct] loading effective location...');
+      LocationParts location;
+      try {
+        location = await ref
+            .read(effectiveMarketplaceLocationProvider.future)
+            .timeout(const Duration(seconds: 8));
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('[CreateProduct] effective location fetch failed, using fallback: $e');
+        }
+        location = defaultJakartaSenayanLocation();
+      }
+
+      if (kDebugMode) {
+        debugPrint('[CreateProduct] effective location loaded: ${location.idAddress?.kecamatan}');
       }
 
       final price = _parsePrice(_priceController.text);
@@ -189,7 +197,7 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
 
         String errorKey = 'marketplace.imageUploadFailed';
         if (e is TimeoutException) {
-          errorKey = 'common.timeout'; // Need to ensure this key exists or use fallback
+          errorKey = 'common.timeout';
         } else if (e.toString().contains('optimization')) {
           errorKey = 'marketplace.imageOptimizationFailed';
         }

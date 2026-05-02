@@ -4,8 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mozzy/mozzy_ii/domains/users/data/repositories/user_repository.dart';
 import 'package:mozzy/mozzy_ii/geo/providers/location_provider.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
-import 'package:geoflutterfire_plus/geoflutterfire_plus.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mozzy/mozzy_ii/geo/utils/default_indonesia_location.dart';
 
 /// Bootstraps user data after sign-in. Family keyed by uid so it's run once per uid.
 final authBootstrapProvider = FutureProvider.family<void, String>((
@@ -40,18 +39,7 @@ final authBootstrapProvider = FutureProvider.family<void, String>((
   }
 
   // Fallback location
-  final fallback = LocationParts(
-    countryCode: 'ID',
-    idAddress: const IndonesiaGeoAddress(
-      provinsi: 'DKI Jakarta',
-      kabupaten: 'Jakarta Selatan',
-      kecamatan: 'Kebayoran Baru',
-      kelurahan: 'Senayan',
-    ),
-    latitude: -6.2275,
-    longitude: 106.7996,
-    geoHash: GeoFirePoint(GeoPoint(-6.2275, 106.7996)).geohash,
-  );
+  final fallback = defaultJakartaSenayanLocation();
 
   // Try to get device location from provider
   if (kDebugMode) debugPrint('[AuthBootstrap] requesting device location');

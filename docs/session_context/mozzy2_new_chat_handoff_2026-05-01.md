@@ -21,7 +21,7 @@ The Google Login `DEVELOPER_ERROR` was found to be secondary to a **Firestore Ti
 
 ## 🔑 Environment Variables Required
 - `GEMINI_API_KEY`: [IN_ENV]
-- `GOOGLE_WEB_CLIENT_ID`: `149673701591-oml428ssc9hon7mla0rvsn6e528hgdv9.apps.googleusercontent.com`
+- `GOOGLE_WEB_CLIENT_ID`: PRESENT / masked as 14967370...apps.googleusercontent.com
 - `MOZZY_STAGING_ADMIN_TEST_UID`: `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1`
 
 ## 📦 Reference Commits

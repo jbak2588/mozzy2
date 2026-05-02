@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mozzy/mozzy_ii/domains/users/data/models/user_model.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
@@ -18,14 +19,16 @@ class UserRepository {
     if (!doc.exists) return null;
     final data = doc.data() as Map<String, dynamic>;
 
-    // ignore: avoid_print
-    print('[UserRepository] doc exists for $uid');
-    // ignore: avoid_print
-    print('[UserRepository] createdAt type: ${data['createdAt']?.runtimeType}');
-    // ignore: avoid_print
-    print('[UserRepository] updatedAt type: ${data['updatedAt']?.runtimeType}');
-    // ignore: avoid_print
-    print('[UserRepository] lastLoginAt type: ${data['lastLoginAt']?.runtimeType}');
+    if (kDebugMode) {
+      // ignore: avoid_print
+      print('[UserRepository] doc exists for $uid');
+      // ignore: avoid_print
+      print('[UserRepository] createdAt type: ${data['createdAt']?.runtimeType}');
+      // ignore: avoid_print
+      print('[UserRepository] updatedAt type: ${data['updatedAt']?.runtimeType}');
+      // ignore: avoid_print
+      print('[UserRepository] lastLoginAt type: ${data['lastLoginAt']?.runtimeType}');
+    }
 
     // ensure uid included
     return UserModel.fromJson({...data, 'uid': uid});

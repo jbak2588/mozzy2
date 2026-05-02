@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../core/config/integration_test_config.dart';
 
@@ -10,11 +11,13 @@ class GoogleSignInConfig {
   static Future<void> initialize() async {
     if (IntegrationTestConfig.enabled) return;
 
-    // ignore: avoid_print
-    print('DEBUG: Loading GOOGLE_WEB_CLIENT_ID... length: ${webClientId.length}');
-    if (webClientId.isNotEmpty) {
+    if (kDebugMode) {
       // ignore: avoid_print
-      print('DEBUG: Web Client ID start: ${webClientId.substring(0, 12)}...');
+      print('DEBUG: Loading GOOGLE_WEB_CLIENT_ID... length: ${webClientId.length}');
+      if (webClientId.isNotEmpty) {
+        // ignore: avoid_print
+        print('DEBUG: Web Client ID start: ${webClientId.substring(0, 12)}...');
+      }
     }
 
     if (webClientId.isEmpty) {

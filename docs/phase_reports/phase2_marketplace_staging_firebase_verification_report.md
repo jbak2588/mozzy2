@@ -17,32 +17,37 @@ This report documents the live verification of the Marketplace domain against a 
 - **Verification**: `node marketplace_admin_claims.js get` confirmed the claim is present on the staging Firebase server.
 
 ## 🌐 Google Login Verification
-- **Status**: ✅ **RESOLVED**
+- **Status**: 🛠️ **FIX APPLIED / PENDING LIVE CONFIRMATION**
 - **Issue**: `Timestamp is not a subtype of String` crash in `UserModel.fromJson`.
-- **Resolution**: Implemented custom `DateTime` converter in `UserModel` to support Firestore `Timestamp` objects.
-- **Verification**: Unit tests passed; live login confirmed successful by eliminating the casting crash.
+- **Resolution**: Implemented custom `DateTime` converter in `UserModel` to support Firestore `Timestamp` objects. Fixed `AuthService` linter warnings.
+- **Verification**: 
+  - Unit tests passed (`user_model_timestamp_test.dart`).
+  - Static analysis clean.
+  - Awaiting final verification on SM A715F.
 
 ## 🔐 Firestore Rules Verification (Live)
 - **Status**: ✅ **PASSED**
-- **Note**: Successfully read user document from staging Firestore.
+- **Note**: Successfully read user document from staging Firestore in previous attempts.
 
 ## 📦 Product Creation & Storage Result
-- **Status**: ⏳ **IN PROGRESS** (Awaiting live feature run).
+- **Status**: ⏳ **READY FOR LIVE FLOW**
+- **Note**: Code for Image optimization -> Upload -> Gemini AI Screening -> Admin Queue is fully implemented and ready for testing.
 
 ## 🤖 Gemini Live Verification
-- **Status**: ⏳ **IN PROGRESS** (Awaiting live feature run).
+- **Status**: ⏳ **READY FOR LIVE FLOW**
+- **Model**: `gemini-3-flash-preview` (Project alias for latest flash model).
 
 ## 🚀 E2E Coverage Result
 - **Status**: ✅ **PASSED** (Integration Mode)
 - **Staging Live Flow**: ✅ **READY**
 
 ## 🔧 Issues & Blockers
-1. **Timestamp Parsing (FIXED)**: UserModel now safely handles Firestore date fields.
+1. **Timestamp Parsing (RESOLVED)**: UserModel now safely handles Firestore date fields.
+2. **Linter Warnings (RESOLVED)**: Unnecessary null comparisons in AuthService removed.
 
 ## ✅ Verification Decision
-**SUCCESSFULLY UPDATED / PENDING FINAL FEATURE RUN**
-- **Verified**: Admin Claims, Google Login (Crash fixed), Firestore read.
-- **Next**: Final live feature flow (Product upload -> Gemini screening).
+**FIX APPLIED / PENDING LIVE CONFIRMATION**
+- **Next**: Run app on SM A715F -> Perform Google Login -> Create Test Product -> Verify AI & Admin Queue.
 
 ---
-*Report updated on 2026-05-01 by Antigravity AI.*
+*Report updated on 2026-05-02 by Gemini CLI.*

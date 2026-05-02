@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,18 +16,15 @@ class AuthService {
     try {
       // 1. Google 로그인 프로세스 시작
       final googleUser = await GoogleSignIn.instance.authenticate();
-      if (googleUser == null) {
-        // ignore: avoid_print
-        print('DEBUG: GoogleSignIn.authenticate() returned null (User cancelled or error)');
-        return null;
-      }
 
       // 2. Google 인증 세부 정보 획득
       final googleAuth = googleUser.authentication;
       final idToken = googleAuth.idToken;
 
-      // ignore: avoid_print
-      print('DEBUG: Google idToken length: ${idToken?.length ?? 0}');
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('DEBUG: Google idToken length: ${idToken?.length ?? 0}');
+      }
 
       if (idToken == null || idToken.isEmpty) {
         throw StateError('Google ID token is null or empty');
@@ -38,16 +36,22 @@ class AuthService {
       // 4. Firebase 인증을 통해 로그인
       return await _auth.signInWithCredential(credential);
     } on GoogleSignInException catch (gse) {
-      // ignore: avoid_print
-      print('DEBUG: GoogleSignInException: code=${gse.code}, details=${gse.details}');
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('DEBUG: GoogleSignInException: code=${gse.code}, details=${gse.details}');
+      }
       throw StateError('Google sign-in failed: [${gse.code}]');
     } on FirebaseAuthException catch (fae) {
-      // ignore: avoid_print
-      print('DEBUG: FirebaseAuthException: code=${fae.code}, message=${fae.message}');
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('DEBUG: FirebaseAuthException: code=${fae.code}, message=${fae.message}');
+      }
       rethrow;
     } catch (e) {
-      // ignore: avoid_print
-      print('DEBUG: Unknown error during signInWithGoogle: $e');
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('DEBUG: Unknown error during signInWithGoogle: $e');
+      }
       rethrow;
     }
   }

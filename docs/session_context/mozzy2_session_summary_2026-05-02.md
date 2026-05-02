@@ -4,7 +4,9 @@ This session focused on finalizing the fixes for the Google Login crash and prep
 
 #### 1. Key Accomplishments
 *   **Auth Stability**: Resolved linter warnings in `AuthService` by removing unnecessary null comparisons for `googleUser`, as the return type was identified as non-nullable.
-*   **Diagnostic Cleanup**: Wrapped diagnostic prints in `AuthService`, `GoogleSignInConfig`, and `UserRepository` within `kDebugMode` blocks to prevent log pollution in production-like environments while retaining debug utility.
+*   **Auth Bootstrap Fix**: Resolved an infinite loading issue after Google Login by implementing a 5-second timeout in `authBootstrapProvider`. If the device location cannot be retrieved within the limit, a fallback location is used, ensuring the user always reaches the Home screen.
+*   **Geo Layer Robustness**: Added a 5-second timeout to `reverseGeocode` in `LocationNotifier` to prevent hanging during the geocoding phase of location retrieval.
+*   **Diagnostic Cleanup**: Wrapped diagnostic prints in `AuthService`, `GoogleSignInConfig`, `UserRepository`, and `AuthBootstrap` within `kDebugMode` blocks to prevent log pollution in production-like environments while retaining debug utility.
 *   **Code Readiness**: Verified that the complete Marketplace flow (Optimization -> Upload -> AI Screening -> Admin Queue) is implemented and ready for live execution.
 *   **Static Analysis**: Confirmed `flutter analyze` returns no issues across the project.
 *   **Documentation**: Updated the Phase 2 Marketplace Staging Verification Report to reflect the "Fix Applied / Pending Live Confirmation" status.

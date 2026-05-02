@@ -6,7 +6,8 @@ Confirming the `UserModel` timestamp fix, resolving the local dart-define delive
 ## 🏁 State of Play
 - **Dart-Define Fix**: Resolved `GOOGLE_WEB_CLIENT_ID` delivery issue by introducing a `.local/mozzy_dev_env.json` and `run_mozzy_dev.ps1` setup.
 - **Auth Fix**: `UserModel` now uses a custom `DateTime` converter. Unit tests pass. Linter warnings resolved.
-- **Geolocator Fix**: Added a 5-second timeout to prevent infinite loading on emulators without GPS locks.
+- **Bootstrap Fix**: Added a 5-second timeout and fallback logic to `authBootstrapProvider` to prevent infinite loading screens after login if location retrieval hangs.
+- **Geo Layer Fix**: Enforced 5-second timeouts on both `Geolocator.getCurrentPosition` and `reverseGeocode` in the `LocationNotifier`.
 - **Diagnostics**: All debug prints in Auth/User repositories are wrapped in `kDebugMode`.
 - **Marketplace**: Product creation, image upload, and Gemini AI screening are implemented and ready for live testing.
 - **Repo Status**: `flutter analyze` is CLEAN.

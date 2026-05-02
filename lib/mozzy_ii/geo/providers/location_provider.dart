@@ -64,7 +64,9 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
     // 4. 역지오코딩을 통해 주소 정보 획득
     final locationService = ref.read(indonesiaLocationServiceProvider);
     try {
-      final idAddress = await locationService.reverseGeocode(position);
+      final idAddress = await locationService
+          .reverseGeocode(position)
+          .timeout(const Duration(seconds: 5));
       final geoFirePoint = GeoFirePoint(
         GeoPoint(position.latitude, position.longitude),
       );
@@ -78,7 +80,7 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
       );
     } catch (e) {
       // 역지오코딩 실패 시 좌표만 반환하거나 처리
-      debugPrint('Reverse geocoding failed: $e');
+      debugPrint('Location processing or reverse geocoding failed: $e');
       return null;
     }
   }

@@ -17,13 +17,17 @@ This report documents the live verification of the Marketplace domain against a 
 - **Verification**: `node marketplace_admin_claims.js get` confirmed the claim is present on the staging Firebase server.
 
 ## 🌐 Google Login Verification
-- **Status**: 🛠️ **FIX APPLIED / PENDING LIVE CONFIRMATION**
-- **Issue**: `Timestamp is not a subtype of String` crash in `UserModel.fromJson`.
-- **Resolution**: Implemented custom `DateTime` converter in `UserModel` to support Firestore `Timestamp` objects. Fixed `AuthService` linter warnings.
+- **Status**: ✅ **SUCCESS**
+- **Issue 1**: `Timestamp is not a subtype of String` crash in `UserModel.fromJson`.
+- **Issue 2**: Infinite loading screen post-login due to geolocator hang.
+- **Resolution**: 
+  - Implemented custom `DateTime` converter in `UserModel` to support Firestore `Timestamp` objects.
+  - Added 5-second timeouts to `authBootstrapProvider` and `LocationNotifier` with fallback logic.
 - **Verification**: 
   - Unit tests passed (`user_model_timestamp_test.dart`).
   - Static analysis clean.
-  - Awaiting final verification on SM A715F.
+  - Infinite loading issue resolved with fallback location logic.
+  - Live login confirmed successful on SM A715F.
 
 ## 🔐 Firestore Rules Verification (Live)
 - **Status**: ✅ **PASSED**
@@ -47,8 +51,8 @@ This report documents the live verification of the Marketplace domain against a 
 2. **Linter Warnings (RESOLVED)**: Unnecessary null comparisons in AuthService removed.
 
 ## ✅ Verification Decision
-**FIX APPLIED / PENDING LIVE CONFIRMATION**
-- **Next**: Run app on SM A715F -> Perform Google Login -> Create Test Product -> Verify AI & Admin Queue.
+**AUTH VERIFIED / MARKETPLACE PENDING**
+- **Next**: Create Test Product -> Verify AI & Admin Queue.
 
 ---
 *Report updated on 2026-05-02 by Gemini CLI.*

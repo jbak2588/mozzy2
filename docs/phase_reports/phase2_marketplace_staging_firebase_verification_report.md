@@ -32,6 +32,7 @@ This report documents the live verification of the Marketplace domain against a 
 ## 📦 Product Creation & Storage Result
 - **Status**: ⏳ **READY FOR LIVE FLOW**
 - **Note**: Code for Image optimization -> Upload -> Gemini AI Screening -> Admin Queue is fully implemented and ready for testing.
+- **Future Integration (Ver 6.1 Adoption)**: Marketplace completion flow will utilize a `confirmationCode` (6-character alphanumeric, stored in `deals/{dealId}.confirmationCode`, 24h expiry) to verify COD completion via Firestore transaction. MVP will prioritize manual code entry over QR scanning.
 
 ## 🤖 Gemini Live Verification
 - **Status**: ⏳ **READY FOR LIVE FLOW**

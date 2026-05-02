@@ -55,6 +55,10 @@ firebase-adminsdk*.json
 tools/admin_claims/.env
 tools/admin_claims/.env.*
 
+# Local environment
+.local/
+mozzy_dev_env.json
+
 # Node modules
 node_modules/
 **/node_modules/

@@ -55,8 +55,11 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
 
     // 3. 현재 위치 가져오기
     final position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    );
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 5),
+      ),
+    ).timeout(const Duration(seconds: 5));
 
     // 4. 역지오코딩을 통해 주소 정보 획득
     final locationService = ref.read(indonesiaLocationServiceProvider);

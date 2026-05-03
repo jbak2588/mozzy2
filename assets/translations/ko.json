@@ -181,6 +181,7 @@
     "selectedImages": "선택된 이미지",
     "imageUploadDeferred": "이미지 업로드 기능은 다음 단계에서 추가됩니다",
     "priceFormatHint": "예: 150000 또는 150.000",
+    "detectingLocation": "위치 확인 중...",
     "saved": "저장됨",
     "like": "좋아요",
     "unlike": "좋아요 취소",

@@ -18,6 +18,12 @@ class MarketplaceAiConfig {
     defaultValue: 'gemini-3-flash-preview',
   );
 
+  /// 강제 검토 플래그 (Staging 테스트용)
+  static const bool forceAiReview = bool.fromEnvironment(
+    'MOZZY_FORCE_AI_REVIEW',
+    defaultValue: false,
+  );
+
   /// API 키 존재 여부 확인
   static bool get hasApiKey => geminiApiKey.trim().isNotEmpty;
 }

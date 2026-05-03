@@ -181,6 +181,7 @@
     "selectedImages": "Selected images",
     "imageUploadDeferred": "Image upload will be added in the next step",
     "priceFormatHint": "Example: 150000 or 150.000",
+    "detectingLocation": "Detecting location...",
     "saved": "Saved",
     "like": "Like",
     "unlike": "Unlike",

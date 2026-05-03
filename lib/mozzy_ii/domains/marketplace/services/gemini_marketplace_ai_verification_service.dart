@@ -108,12 +108,21 @@ Rules:
 
       final Map<String, dynamic> aiJson = jsonDecode(cleanedJson);
 
+      String finalStatus = _normalizeStatus(aiJson['status']);
+      String finalSummary = aiJson['summary'] ?? '';
+
+      // Override for staging verification if forceAiReview is enabled
+      if (MarketplaceAiConfig.forceAiReview) {
+        finalStatus = 'needs_review';
+        finalSummary = '[FORCED REVIEW] $finalSummary';
+      }
+
       return AiVerificationResult(
         id: const Uuid().v4(),
         productId: productId,
-        status: _normalizeStatus(aiJson['status']),
+        status: finalStatus,
         score: (aiJson['score'] as num?)?.toDouble() ?? 0.0,
-        summary: aiJson['summary'] ?? '',
+        summary: finalSummary,
         detectedIssues: List<String>.from(aiJson['detectedIssues'] ?? []),
         suggestedCategory: aiJson['suggestedCategory'],
         conditionLabel: aiJson['conditionLabel'],

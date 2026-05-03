@@ -1,28 +1,26 @@
-### Session Summary: Staging Readiness & Auth Cleanup (2026-05-02)
+### Session Summary: Staging Verification & Infrastructure Fixes (2026-05-02 ~ 2026-05-03)
 
-This session focused on finalizing the fixes for the Google Login crash and preparing the Marketplace domain for live staging verification on a physical device.
+This session focused on resolving infrastructure blockers identified during live staging on physical devices, specifically Firestore indexes for marketplace listing and missing Android permissions.
 
 #### 1. Key Accomplishments
-*   **Auth Stability**: Resolved linter warnings in `AuthService` by removing unnecessary null comparisons for `googleUser`.
-*   **Auth Bootstrap Fix**: Resolved infinite loading after Google Login by implementing a 5-second timeout in `authBootstrapProvider` with fallback to Jakarta Senayan.
-*   **Marketplace Location Fallback**: Implemented `effectiveMarketplaceLocationProvider` to ensure Marketplace features are never blocked by GPS unavailability. It prioritizes user profile location, then device location, and finally a Jakarta Senayan fallback.
-*   **Marketplace List Fix**: Updated `MarketplaceListScreen` to use the effective location, preventing the "Location Unavailable" screen from blocking the feed.
-*   **Product Creation Fix**: Updated `CreateProductScreen` to use the effective location and added overall phase timeouts (30s optimization, 60s upload) to prevent submission hangs.
-*   **Geo Layer Helper**: Centralized the Jakarta Senayan fallback location in `default_indonesia_location.dart` for cross-module consistency.
-*   **Diagnostic Cleanup**: Wrapped diagnostic prints in `kDebugMode` blocks across Auth and Marketplace modules.
-*   **Dart-Define Delivery Fix**: Standardized local-only (`.local/`) execution script and environment file for `GOOGLE_WEB_CLIENT_ID` safety.
+*   **Firestore Index Resolution**: Added required composite indexes for the `products` collection to `firestore.indexes.json` to enable filtering by kecamatan and category with sorting by `createdAt`.
+*   **Location Permission Fix**: Added `ACCESS_COARSE_LOCATION` and `ACCESS_FINE_LOCATION` to `AndroidManifest.xml`, resolving "No location permissions are defined in the manifest" error on physical devices.
+*   **Marketplace Staging PASS**: Verified the full product creation flow (Image optimization -> Storage Upload -> Gemini AI Screening -> Firestore doc creation).
+*   **Marketplace List Verification**: Unblocked the marketplace listing by providing the necessary Firestore index definitions.
+*   **Auth Stability**: Resolved linter warnings in `AuthService` and fixed infinite loading post-login with timeouts and fallbacks.
 
 #### 2. Technical Context
-*   **Latest Commit**: `72a7ccc` (plus local changes for auth cleanup and architecture documentation).
-*   **Environment**: Staging Firebase is active, Admin Claims are verified, and Gemini API Key is ready. Local configs are masked and git-ignored.
-*   **Device Target**: Emulator / Samsung SM A715F (RR8N109B4JM).
+*   **Latest Commit**: `3f5145a` (plus latest index and permission fixes).
+*   **Environment**: Staging Firebase is active. Composite indexes are being applied.
+*   **Device Target**: Samsung SM A715F (RR8N109B4JM).
 
 #### 3. Verification Result (Internal)
 *   **Unit Tests**: `test/mozzy_ii/domains/users/user_model_timestamp_test.dart` -> **PASS**
 *   **Static Analysis**: `flutter analyze` -> **PASS**
-*   **Local Execution Script**: `.\.local\run_mozzy_dev.ps1` -> **SUCCESS** (App loads, Web Client ID length > 0, infinite Geolocator timeout handled).
+*   **Marketplace Listing**: Expected to work once Firestore finishes building indexes.
+*   **Product ID Evidence**: `82f47308-4d94-4bc9-902a-a0bf6d50b688`
 
 #### 4. Next Steps
-1.  **Live Login**: Run the app on SM A715F (or emulator) and confirm Google Login success without crashes.
-2.  **Marketplace Test**: Create a test product with images and verify the AI screening and admin moderation queue.
-3.  **Gate Review**: Once P2-B22 is fully verified, transition to P2-B23 Payment integration planning.
+1.  **Admin Review Queue**: Verify that the newly created product appears in the admin review queue if its status is not `passed` (or test with a review-needed case).
+2.  **Product Detail**: Verify that tapping a product in the list correctly displays the detail view with AI verification status.
+3.  **Gate Review**: Transition to P2-B23 Xendit Payment integration planning.

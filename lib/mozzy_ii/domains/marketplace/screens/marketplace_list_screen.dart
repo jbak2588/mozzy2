@@ -63,6 +63,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
       body: _buildBody(locationState),
       floatingActionButton: FloatingActionButton(
         key: const Key('marketplaceCreateFab'),
+        heroTag: 'marketplace_create_fab',
         onPressed: () async {
           await context.push('/marketplace/create');
           // Refresh lists after returning from create screen

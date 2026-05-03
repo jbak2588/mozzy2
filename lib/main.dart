@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/date_symbol_data_local.dart'; // 추가
 import 'firebase_options.dart';
 import 'mozzy_ii/app/auth/google_sign_in_config.dart';
+import 'mozzy_ii/domains/marketplace/ai/marketplace_ai_config.dart';
 
 import 'mozzy_ii/app/theme/mozzy_theme.dart';
 import 'mozzy_ii/app/navigation/app_router.dart';
@@ -23,6 +24,9 @@ void main() async {
 
   // 3.5 Google Sign-In 초기화 (dart-define로 Web Client ID 주입 필요)
   await GoogleSignInConfig.initialize();
+
+  // 3.6 Marketplace AI Config 로그 (디버그용)
+  MarketplaceAiConfig.logConfig();
 
   runApp(
     ProviderScope(

@@ -5,6 +5,8 @@
 // Purpose       : Marketplace AI 설정. Gemini API 키 및 모델 설정을 관리합니다.
 // ============================================================================
 
+import 'package:flutter/foundation.dart';
+
 class MarketplaceAiConfig {
   /// Gemini API Key (dart-define을 통해 주입받습니다)
   static const String geminiApiKey = String.fromEnvironment(
@@ -26,4 +28,13 @@ class MarketplaceAiConfig {
 
   /// API 키 존재 여부 확인
   static bool get hasApiKey => geminiApiKey.trim().isNotEmpty;
+
+  /// 초기화 로그 (디버그 모드 전용)
+  static void logConfig() {
+    if (kDebugMode) {
+      debugPrint('[MarketplaceAiConfig] geminiModel: $geminiModel');
+      debugPrint('[MarketplaceAiConfig] forceAiReview: $forceAiReview');
+      debugPrint('[MarketplaceAiConfig] hasApiKey: $hasApiKey');
+    }
+  }
 }

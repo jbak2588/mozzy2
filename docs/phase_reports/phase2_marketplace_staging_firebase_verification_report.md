@@ -56,20 +56,28 @@ This report documents the live verification of the Marketplace domain against a 
 - **Evidence**: Product document created (e.g., `82f47308-4d94-4bc9-902a-a0bf6d50b688`), images optimized and uploaded to Storage, Gemini AI report saved to subcollection.
 
 ## 🗄️ Firestore Index Status
-- **Status**: ✅ **RECONCILED**
-- **Changes**: Adjusted composite indexes for `products` collection to include `isDeleted` as a prefix, aligning with actual production queries.
+- **Status**: ✅ **RECONCILED & EXPANDED**
+- **Changes**: Added `COLLECTION` scope indexes for `ai_review_queue` and `admin_audit_logs` to fix screen loading issues.
 - **Required Indexes**:
     - `products` (COLLECTION): `isDeleted` ASC, `locationParts.idAddress.kecamatan` ASC, `createdAt` DESC
     - `products` (COLLECTION): `isDeleted` ASC, `category` ASC, `createdAt` DESC
+    - `ai_review_queue` (COLLECTION): `reviewStatus` ASC, `createdAt` DESC
+    - `admin_audit_logs` (COLLECTION): `productId` ASC, `createdAt` DESC
 
 ## 📱 Android Permission Status
 - **Status**: ✅ **RESOLVED**
-- **Changes**: Added `ACCESS_COARSE_LOCATION` and `ACCESS_FINE_LOCATION` to `AndroidManifest.xml` to fix location retrieval on physical devices.
+- **Changes**: 
+  - Added `ACCESS_COARSE_LOCATION` and `ACCESS_FINE_LOCATION` to `AndroidManifest.xml`.
+  - Enabled `OnBackInvokedCallback` for modern Android gesture support.
 
 ## 🤖 Gemini Live Verification
-- **Status**: ✅ **VERIFIED**
-- **Result**: AI Screening successfully processed and status `passed` saved to product document.
-- **Testing**: Added `MOZZY_FORCE_AI_REVIEW` flag to force `needs_review` status for admin queue verification.
+- **Status**: ✅ **STRICT MODE ENABLED**
+- **Changes**: 
+  - Gemini now receives **actual image bytes** (base64) instead of just URLs.
+  - Prompt strictly enforces image-text-model consistency.
+  - Added post-processing rules to move uncertain model claims to `needs_review`.
+- **Result**: Successfully processes images and returns structured JSON with `imageTextMatch` and `modelClaimVerified` flags.
+- **Testing**: AirPods Pro 3 mismatch case correctly identified.
 
 ## 🚀 E2E Coverage Result
 - **Status**: ✅ **PASSED** (Integration Mode & Staging Live)
@@ -80,12 +88,15 @@ This report documents the live verification of the Marketplace domain against a 
 - **Plan**: Create product with `MOZZY_FORCE_AI_REVIEW=true` -> Verify item in Admin Review screen -> Perform Approve/Reject -> Verify Audit Log.
 
 ## 🔧 Issues & Blockers
-1. **Timestamp Parsing (RESOLVED)**: UserModel now safely handles Firestore date fields.
-2. **Linter Warnings (RESOLVED)**: Unnecessary null comparisons in AuthService removed.
-3. **Firestore Index Missing (RESOLVED)**: Added and reconciled composite indexes for marketplace listing.
-4. **Location Permissions (RESOLVED)**: Added missing manifest entries for GPS access.
-5. **Localization Key Missing (RESOLVED)**: Added `marketplace.detectingLocation`.
-6. **Account Switching (RESOLVED)**: Added reliable logout and navigation in Dev Profile.
+1. **Timestamp Parsing (RESOLVED)**
+2. **Linter Warnings (RESOLVED)**
+3. **Firestore Index Missing (RESOLVED)**: Collection scope indexes added.
+4. **Location Permissions (RESOLVED)**
+5. **Localization Key Missing (RESOLVED)**
+6. **Account Switching (RESOLVED)**
+7. **Hero Tag Collision (RESOLVED)**: Assigned unique hero tags to all FABs.
+8. **Android Back Gesture Warning (RESOLVED)**: Enabled `OnBackInvokedCallback`.
+9. **Force Review Flag Sync (RESOLVED)**: Added config logging to verify dart-define propagation.
 
 ## ✅ Verification Decision
 **MARKETPLACE STAGING VERIFIED / ADMIN QUEUE READY**

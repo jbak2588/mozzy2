@@ -5,6 +5,7 @@
 // Purpose       : 테스트 및 통합 테스트용 가짜 AI 검수 서비스.
 // ============================================================================
 
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../models/ai_verification_result.dart';
 import 'marketplace_ai_verification_service.dart';
@@ -18,6 +19,7 @@ class InMemoryMarketplaceAiVerificationService
     required String description,
     required String category,
     required List<String> imageUrls,
+    List<XFile> imageFiles = const [],
   }) async {
     // 1초 지연 후 결정론적 결과 반환
     await Future.delayed(const Duration(seconds: 1));

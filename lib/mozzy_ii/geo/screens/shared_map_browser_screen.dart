@@ -96,6 +96,7 @@ class _SharedMapBrowserScreenState
             right: 16,
             top: MediaQuery.of(context).padding.top + 70,
             child: FloatingActionButton(
+              heroTag: 'map_locate_fab',
               mini: true,
               backgroundColor: Colors.white,
               onPressed: () {

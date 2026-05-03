@@ -139,6 +139,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         key: const Key('localNewsCreateFab'),
+        heroTag: 'news_create_fab',
         onPressed: () async {
           await context.push('/news/create');
           ref.invalidate(postsByCategoryAndKecamatanProvider);

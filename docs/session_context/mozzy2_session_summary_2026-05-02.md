@@ -3,11 +3,13 @@
 This session focused on resolving infrastructure blockers identified during live staging on physical devices, specifically Firestore indexes for marketplace listing and missing Android permissions.
 
 #### 1. Key Accomplishments
-*   **Firestore Index Resolution**: Added required composite indexes for the `products` collection to `firestore.indexes.json` to enable filtering by kecamatan and category with sorting by `createdAt`.
-*   **Location Permission Fix**: Added `ACCESS_COARSE_LOCATION` and `ACCESS_FINE_LOCATION` to `AndroidManifest.xml`, resolving "No location permissions are defined in the manifest" error on physical devices.
-*   **Marketplace Staging PASS**: Verified the full product creation flow (Image optimization -> Storage Upload -> Gemini AI Screening -> Firestore doc creation).
-*   **Marketplace List Verification**: Unblocked the marketplace listing by providing the necessary Firestore index definitions.
-*   **Auth Stability**: Resolved linter warnings in `AuthService` and fixed infinite loading post-login with timeouts and fallbacks.
+*   **Firestore Index Resolution**: Added required composite indexes for the `products`, `ai_review_queue`, and `admin_audit_logs` collections to `firestore.indexes.json`.
+*   **Location Permission Fix**: Added `ACCESS_COARSE_LOCATION` and `ACCESS_FINE_LOCATION` to `AndroidManifest.xml`.
+*   **Marketplace Staging PASS**: Verified the full product creation flow.
+*   **Auth Stability**: Resolved infinite loading post-login and implemented reliable account switching.
+*   **Strict AI Verification**: Upgraded Gemini service to use base64 image evidence and strict consistency prompts (AirPods Pro 3 case).
+*   **UI Polish**: Fixed Hero tag collisions for FABs and enabled `OnBackInvokedCallback` for modern Android navigation.
+*   **Force Review Flag Sync**: Added config logging to ensure `MOZZY_FORCE_AI_REVIEW` propagates correctly from environment to app.
 
 #### 2. Technical Context
 *   **Latest Commit**: `3f5145a` (plus latest index and permission fixes).

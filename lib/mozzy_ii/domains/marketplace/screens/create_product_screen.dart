@@ -184,8 +184,9 @@ class _CreateProductScreenState extends ConsumerState<CreateProductScreen> {
                 description: _descriptionController.text.trim(),
                 category: _selectedCategory,
                 imageUrls: uploadedUrls,
+                imageFiles: optimizedImages,
               )
-              .timeout(const Duration(seconds: 15));
+              .timeout(const Duration(seconds: 45));
           if (kDebugMode) debugPrint('[CreateProduct] ai verification done status=${aiVerificationResult?.status}');
         } catch (e) {
           debugPrint('AI verification failed (non-blocking): $e');

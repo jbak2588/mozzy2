@@ -8,6 +8,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../ai/marketplace_ai_config.dart';
 import '../models/ai_verification_result.dart';
@@ -27,6 +28,7 @@ class GeminiMarketplaceAiVerificationService
     required String description,
     required String category,
     required List<String> imageUrls,
+    List<XFile> imageFiles = const [],
   }) async {
     final apiKey = MarketplaceAiConfig.geminiApiKey;
     if (apiKey.isEmpty) {
@@ -39,31 +41,51 @@ class GeminiMarketplaceAiVerificationService
 
     final prompt =
         '''
-You are verifying a marketplace listing for a hyperlocal Indonesian app (Mozzy).
-Check whether the product evidence (title, description, category) appears consistent and safe.
-Note: Images are provided as URLs. If you cannot access them, rely on the text metadata.
+You are a strict marketplace AI verification agent for Mozzy, a hyperlocal Indonesian marketplace.
+You must verify whether the listing text and the uploaded product images match exactly.
 
 Product Title: $title
 Description: $description
 Category: $category
-Images: ${imageUrls.join(', ')}
 
-Rules:
-1. Detect unsafe, prohibited (drugs, weapons, adult), or clearly fraudulent red flags.
-2. Check if the category is appropriate.
-3. Suggest a condition label (new, good, used, damaged, unknown).
-4. Return ONLY a JSON object with this structure:
+Critical Rules:
+1. Inspect the provided images directly and compare them with the title and description.
+2. If the title claims a specific model, generation, or version (e.g., "AirPods Pro 3", "iPhone 15 Pro"), verify if the images actually show that exact model.
+3. If the model/generation cannot be confidently verified from the images, you MUST return "needs_review".
+4. If the images appear to show a different product, a different version, or a knock-off of what is claimed in the title, return "needs_review" or "failed".
+5. If images are missing, blurry, or insufficient to prove the claim, return "needs_review".
+6. Be extremely conservative for electronics and branded goods. Do not mark "passed" unless the image-text-category consistency is 100% clear.
+
+Return ONLY a JSON object:
 {
   "status": "passed" | "failed" | "needs_review",
   "score": 0.0 to 1.0,
   "summary": "Brief explanation",
   "detectedIssues": ["issue1", "issue2"],
   "suggestedCategory": "category name",
-  "conditionLabel": "new" | "good" | "used" | "damaged" | "unknown"
+  "conditionLabel": "new" | "good" | "used" | "damaged" | "unknown",
+  "imageTextMatch": "matched" | "mismatch" | "uncertain",
+  "modelClaimVerified": true | false
 }
 ''';
 
     try {
+      final List<Map<String, dynamic>> parts = [
+        {'text': prompt},
+      ];
+
+      // Add image data if available (max 4 images to keep request size reasonable)
+      final imagesToProcess = imageFiles.take(4).toList();
+      for (final file in imagesToProcess) {
+        final bytes = await file.readAsBytes();
+        parts.add({
+          'inlineData': {
+            'mimeType': 'image/webp',
+            'data': base64Encode(bytes),
+          },
+        });
+      }
+
       final response = await _client
           .post(
             Uri.parse(url),
@@ -71,15 +93,13 @@ Rules:
             body: jsonEncode({
               'contents': [
                 {
-                  'parts': [
-                    {'text': prompt},
-                  ],
+                  'parts': parts,
                 },
               ],
               'generationConfig': {'responseMimeType': 'application/json'},
             }),
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
         return _errorResult(
@@ -102,7 +122,6 @@ Rules:
       if (cleanedJson.startsWith('```')) {
         final lines = cleanedJson.split('\n');
         if (lines.length >= 2) {
-          // Remove first line (```json) and last line (```)
           cleanedJson = lines.sublist(1, lines.length - 1).join('\n').trim();
         }
       }
@@ -111,6 +130,21 @@ Rules:
 
       String finalStatus = _normalizeStatus(aiJson['status']);
       String finalSummary = aiJson['summary'] ?? '';
+
+      // Post-processing logic for strictness
+      final imageTextMatch = aiJson['imageTextMatch']?.toString();
+      final modelClaimVerified = aiJson['modelClaimVerified'];
+      
+      if (imageTextMatch == 'mismatch' || imageTextMatch == 'uncertain') {
+        finalStatus = 'needs_review';
+      }
+      
+      if (_containsSpecificModelClaim(title) && modelClaimVerified != true) {
+        if (finalStatus == 'passed') {
+          finalStatus = 'needs_review';
+          finalSummary = '[Strict Check] Model claim not verified. $finalSummary';
+        }
+      }
 
       // Override for staging verification if forceAiReview is enabled
       if (MarketplaceAiConfig.forceAiReview) {
@@ -132,12 +166,22 @@ Rules:
         createdAt: DateTime.now().toUtc(),
       );
     } catch (e) {
+      debugPrint('Gemini verification error: $e');
       return _errorResult(
         productId,
         'Verification failed: parsing error or timeout',
         'error',
       );
     }
+  }
+
+  bool _containsSpecificModelClaim(String title) {
+    final t = title.toLowerCase();
+    final patterns = [
+      'pro', 'gen', 'iphone', 'samsung', 'original', 'authentic', 
+      'series', 'ultra', 'ipad', 'macbook', 'sony', 'canon', 'nikon'
+    ];
+    return patterns.any((p) => t.contains(p));
   }
 
   String _normalizeStatus(dynamic status) {

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../core/config/integration_test_config.dart';
 import '../../../core/utils/formatters.dart';
-import '../../../trust/widgets/trust_score_badge.dart';
+import '../widgets/product_verification_badge.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/product_model.dart';
 import '../models/ai_verification_report_model.dart';
@@ -148,7 +148,7 @@ class _ProductDetailContent extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 8),
-            TrustScoreBadge(score: product.trustScore),
+            ProductVerificationBadge(product: product),
           ],
         ),
         const SizedBox(height: 8),
@@ -263,7 +263,11 @@ class _ProductDetailContent extends ConsumerWidget {
               Icon(Icons.auto_awesome, color: statusColor),
               const SizedBox(width: 8),
               Text(
-                'marketplace.aiVerified'.tr(),
+                product.isAiVerified
+                    ? 'marketplace.aiVerified'.tr()
+                    : (product.aiVerificationStatus == 'failed'
+                        ? 'marketplace.aiRejected'.tr()
+                        : 'marketplace.aiReviewPending'.tr()),
                 style: TextStyle(
                   color: statusColor,
                   fontWeight: FontWeight.bold,

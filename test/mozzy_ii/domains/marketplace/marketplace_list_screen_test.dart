@@ -41,6 +41,7 @@ void main() {
       overrides: [
         marketplaceRepositoryProvider.overrideWithValue(mockRepo),
         locationProvider.overrideWith(() => MockLocationNotifier(testLocation)),
+        currentMarketplaceUserIdProvider.overrideWithValue(null),
       ],
       child: const MaterialApp(home: MarketplaceListScreen()),
     );
@@ -54,8 +55,6 @@ void main() {
     expect(find.byKey(const Key('marketplaceCreateFab')), findsOneWidget);
     expect(find.byKey(const Key('marketplaceSavedButton')), findsOneWidget);
     expect(find.text('Kebayoran Baru, Jakarta Selatan'), findsOneWidget);
-
-    // By default in test environment it might be none or admin depending on how provider is set
   });
 
   testWidgets('MarketplaceListScreen shows admin button only when authorized', (
@@ -68,6 +67,7 @@ void main() {
           locationProvider.overrideWith(
             () => MockLocationNotifier(testLocation),
           ),
+          currentMarketplaceUserIdProvider.overrideWithValue(null),
           marketplaceAdminRoleProvider.overrideWithValue(
             MarketplaceAdminRole.admin,
           ),
@@ -92,6 +92,7 @@ void main() {
           locationProvider.overrideWith(
             () => MockLocationNotifier(testLocation),
           ),
+          currentMarketplaceUserIdProvider.overrideWithValue(null),
           marketplaceAdminRoleProvider.overrideWithValue(
             MarketplaceAdminRole.none,
           ),
@@ -122,7 +123,7 @@ void main() {
       description: 'Desc',
       category: 'electronics',
       price: 1000,
-      geoPath: 'ID/Jakarta/Kebayoran Baru',
+      geoPath: 'ID/DKI Jakarta/Jakarta Selatan/Kebayoran Baru',
       createdAt: DateTime.now(),
       locationParts: testLocation,
     );
@@ -131,6 +132,7 @@ void main() {
     await tester.pumpWidget(createTestWidget());
     await tester.pumpAndSettle();
 
+    debugDumpApp();
     expect(find.text('Repo Product'), findsOneWidget);
   });
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/utils/formatters.dart';
-import '../../../trust/widgets/trust_score_badge.dart';
+import 'product_verification_badge.dart';
 import '../models/product_model.dart';
 
 class MarketplaceProductCard extends StatelessWidget {
@@ -49,7 +49,7 @@ class MarketplaceProductCard extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
-                      TrustScoreBadge(score: product.trustScore),
+                      ProductVerificationBadge(product: product),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -84,34 +84,6 @@ class MarketplaceProductCard extends StatelessWidget {
                       ],
                     ],
                   ),
-                  if (product.isAiVerified) ...[
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.auto_awesome,
-                          size: 12,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'marketplace.aiVerified'.tr(),
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ] else if (product.aiVerificationStatus !=
-                      'not_requested') ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      '${'marketplace.aiStatus'.tr()}: ${product.aiVerificationStatus}',
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                  ],
                 ],
               ),
             ),

@@ -19,6 +19,7 @@ void main() {
       createdAt: DateTime.now(),
       imageUrls: [],
       isAiVerified: true,
+      aiVerificationStatus: 'passed',
       locationParts: const LocationParts(
         countryCode: 'ID',
         latitude: 0,

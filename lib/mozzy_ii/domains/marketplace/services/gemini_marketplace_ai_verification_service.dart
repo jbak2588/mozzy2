@@ -6,6 +6,7 @@
 // ============================================================================
 
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 import '../ai/marketplace_ai_config.dart';
@@ -113,6 +114,7 @@ Rules:
 
       // Override for staging verification if forceAiReview is enabled
       if (MarketplaceAiConfig.forceAiReview) {
+        debugPrint('[GeminiAiService] MOZZY_FORCE_AI_REVIEW is true. Overriding status "$finalStatus" to "needs_review"');
         finalStatus = 'needs_review';
         finalSummary = '[FORCED REVIEW] $finalSummary';
       }

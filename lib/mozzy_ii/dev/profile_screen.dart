@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import '../app/auth/auth_service.dart';
 import '../domains/users/presentation/providers/user_provider.dart';
+import '../domains/marketplace/providers/marketplace_provider.dart';
+import '../domains/marketplace/models/admin_role_model.dart';
 
 /// Dev/Profile screen: development-only diagnostics for current user
 class DevProfileScreen extends ConsumerStatefulWidget {
@@ -22,6 +24,7 @@ class DevProfileScreen extends ConsumerStatefulWidget {
 
 class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
   bool _isSigningOut = false;
+  bool _isRefreshingRole = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,8 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
     final userModelAsync = user != null
         ? ref.watch(userModelProvider(user.uid))
         : null;
+    
+    final adminRoleAsync = ref.watch(marketplaceAdminRoleAsyncProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -67,6 +72,60 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
             const SizedBox(height: 8),
             Text('DisplayName: ${user?.displayName ?? "-"}'),
             const Divider(height: 32),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Marketplace Admin Role',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                if (_isRefreshingRole)
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () async {
+                      setState(() => _isRefreshingRole = true);
+                      await ref.read(marketplaceAdminRoleAsyncProvider.future);
+                      // Force refresh by calling source directly if needed, but FutureProvider.autoDispose
+                      // should work if invalidated. Let's invalidate.
+                      ref.invalidate(marketplaceAdminRoleAsyncProvider);
+                      setState(() => _isRefreshingRole = false);
+                    },
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            adminRoleAsync.when(
+              data: (role) => Text('Role: ${role.name} (canModerate: ${role.canModerate})'),
+              loading: () => const Text('Loading role...'),
+              error: (e, st) => Text('Error loading role: $e'),
+            ),
+            const SizedBox(height: 16),
+            if (ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
+              Wrap(
+                spacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => context.push('/marketplace/admin-review'),
+                    icon: const Icon(Icons.rate_review),
+                    label: const Text('Admin Review'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () => context.push('/marketplace/admin-audit-logs'),
+                    icon: const Icon(Icons.history),
+                    label: const Text('Audit Logs'),
+                  ),
+                ],
+              ),
+            ],
+            const Divider(height: 32),
+
             const Text(
               'Firestore Doc',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

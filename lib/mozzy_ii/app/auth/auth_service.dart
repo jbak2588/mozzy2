@@ -95,8 +95,28 @@ class AuthService {
   }
 
   /// 로그아웃
-  Future<void> signOut() async {
-    await GoogleSignIn.instance.signOut();
+  Future<void> signOut({bool disconnectGoogle = false}) async {
+    try {
+      if (disconnectGoogle) {
+        try {
+          await GoogleSignIn.instance.disconnect();
+        } catch (e) {
+          if (kDebugMode) {
+            // ignore: avoid_print
+            print('[AuthService] Google disconnect failed, fallback to signOut: $e');
+          }
+          await GoogleSignIn.instance.signOut();
+        }
+      } else {
+        await GoogleSignIn.instance.signOut();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('[AuthService] Google signOut failed: $e');
+      }
+    }
+
     await _auth.signOut();
   }
 }

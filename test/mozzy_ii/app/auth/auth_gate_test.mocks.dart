@@ -138,9 +138,11 @@ class MockAuthService extends _i1.Mock implements _i3.AuthService {
           as _i4.Future<_i2.UserCredential>);
 
   @override
-  _i4.Future<void> signOut() =>
+  _i4.Future<void> signOut({bool? disconnectGoogle = false}) =>
       (super.noSuchMethod(
-            Invocation.method(#signOut, []),
+            Invocation.method(#signOut, [], {
+              #disconnectGoogle: disconnectGoogle,
+            }),
             returnValue: _i4.Future<void>.value(),
             returnValueForMissingStub: _i4.Future<void>.value(),
           )

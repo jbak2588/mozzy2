@@ -2,7 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Mozzy (Development)",
+      "name": "Mozzy (Development - Local Env File)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define-from-file=.local/mozzy_dev_env.json"
+      ]
+    },
+    {
+      "name": "Mozzy (Development - Env Vars)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",

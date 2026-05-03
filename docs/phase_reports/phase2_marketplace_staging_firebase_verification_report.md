@@ -39,6 +39,14 @@ This report documents the live verification of the Marketplace domain against a 
   - Added "Logout / Switch Account" button with loading state.
 - **Verification**: `flutter analyze` passed. Ready for live account switching test.
 
+## 🛠️ VSCode Runtime Alignment
+- **Status**: ✅ **RESOLVED**
+- **Problem**: Running via PowerShell script worked, but VSCode `main.dart` direct run failed due to missing/mismatched dart-define values.
+- **Fix**: 
+  - Updated `.vscode/launch.json` to include `Mozzy (Development - Local Env File)` which uses `--dart-define-from-file=.local/mozzy_dev_env.json`.
+  - Updated `.vscode/settings.json` with `dart.flutterRunAdditionalArgs` to ensure VSCode's "Run" buttons also pick up the local env file.
+- **Verification**: PowerShell and VSCode configurations now use the same environment values.
+
 ## 🔐 Firestore Rules Verification (Live)
 - **Status**: ✅ **PASSED**
 - **Note**: Successfully read user document from staging Firestore in previous attempts.

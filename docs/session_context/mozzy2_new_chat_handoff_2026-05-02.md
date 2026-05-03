@@ -16,15 +16,17 @@ Verification of Marketplace listing and transitioning to Admin Review Queue and 
 3.  **Run**: Use `.\.local\run_mozzy_dev.ps1`.
 4.  **Verify**:
     - [x] Google Login success.
-    - [ ] Marketplace list displays items (Requires Firestore index build completion).
+    - [x] Marketplace list displays items (Firestore indexes are fully built).
     - [x] Product creation completes.
     - [x] AI Screening result is saved.
-    - [ ] Admin Review Queue reflects products (especially `needs_review` cases).
-    - [ ] Product Detail view displays correctly.
+    - [x] Admin Review Queue reflects products (especially `needs_review` cases).
+    - [x] Product Detail view displays correctly.
+    - [x] TrustScore/AI badges correctly reflect `aiVerificationStatus`.
+    - [x] Moderation flow generates `admin_audit_logs`.
 
 ## ⚠️ Known Constraints
-- **Firestore Index Build**: After pushing the new index definitions, it may take a few minutes for Firebase to enable them.
-- **Admin Queue**: Products with `aiVerificationStatus: passed` might not appear in the review queue if the filter excludes them.
+- **Admin Queue**: Products with `aiVerificationStatus: passed` will not appear in the review queue by design.
+- **Badge Policy**: `needs_review` and `failed` products hide the TrustScore text (Terpercaya) entirely to avoid misleading users.
 
 ## 📄 Reference Documents
 - `docs/phase_reports/phase2_marketplace_staging_firebase_verification_report.md` 

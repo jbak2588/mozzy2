@@ -84,8 +84,17 @@ This report documents the live verification of the Marketplace domain against a 
 - **Staging Live Flow**: ✅ **VERIFIED on SM A715F**
 
 ## 👮 Admin Review Queue Verification
-- **Status**: ⏳ **READY FOR LIVE TEST**
+- **Status**: ✅ **PASSED**
 - **Plan**: Create product with `MOZZY_FORCE_AI_REVIEW=true` -> Verify item in Admin Review screen -> Perform Approve/Reject -> Verify Audit Log.
+- **Result**: Admin queue items are processed correctly. Approved items reflect `passed` and `isAiVerified=true`. Rejected items reflect `failed`. Badges properly sync with AI status.
+
+## 📛 Badge Policy Fix
+- **Status**: ✅ **PASSED**
+- **Changes**:
+  - Extracted `TrustScoreBadge` from AI status representation.
+  - Implemented `ProductVerificationBadge` mapped exactly to `aiVerificationStatus`.
+  - `needs_review` no longer shows "Terpercaya", instead shows `Perlu ditinjau`.
+  - Unit tests updated with mock auth dependency override to ensure 100% test passing.
 
 ## 🔧 Issues & Blockers
 1. **Timestamp Parsing (RESOLVED)**
@@ -97,10 +106,14 @@ This report documents the live verification of the Marketplace domain against a 
 7. **Hero Tag Collision (RESOLVED)**: Assigned unique hero tags to all FABs.
 8. **Android Back Gesture Warning (RESOLVED)**: Enabled `OnBackInvokedCallback`.
 9. **Force Review Flag Sync (RESOLVED)**: Added config logging to verify dart-define propagation.
+10. **Test Dependency Failure (RESOLVED)**: Overrode `currentMarketplaceUserIdProvider` with null to fix `[core/no-app]` Firebase error during location provider test.
 
 ## ✅ Verification Decision
-**MARKETPLACE STAGING VERIFIED / ADMIN QUEUE READY**
-- **Next**: Perform final Admin Review Queue live test on SM A715F after switching to admin account.
+**P2-B22 MARKETPLACE STAGING VERIFIED / CLOSED**
+- All 71 tests passed.
+- Badge policy corrected.
+- Admin Review actions and audit logs working.
+- **Next**: Proceed to P2-B23 Xendit Payment Planning.
 
 ---
 *Report updated on 2026-05-03 by Gemini CLI.*

@@ -10,7 +10,7 @@ This report documents the live verification of the Marketplace domain against a 
 | `GOOGLE_WEB_CLIENT_ID` | ✅ **PRESENT** | Passed via dart-define. |
 | `GOOGLE_APPLICATION_CREDENTIALS` | ✅ **PRESENT** | Path: `C:\Users\OWNER\secure\firebase\mozzy-v2-firebase-adminsdk-fbsvc-154d887479.json` |
 | `MOZZY_STAGING_ADMIN_TEST_UID` | ✅ **PRESENT** | `F1RhoJnK0uUQ1jPzvA9GuIG6U2w1` |
-| `MOZZY_FORCE_AI_REVIEW` | ✅ **READY** | Staging-only flag for testing admin review queue. |
+| `MOZZY_FORCE_AI_REVIEW` | ✅ **READY** | Set to `true` in `.local/mozzy_dev_env.json` to test admin queue. |
 
 ## 👮 Admin Claims Script Verification
 - **Status**: ✅ **SUCCESS**
@@ -58,6 +58,10 @@ This report documents the live verification of the Marketplace domain against a 
 - **Status**: ✅ **PASSED** (Integration Mode & Staging Live)
 - **Staging Live Flow**: ✅ **VERIFIED on SM A715F**
 
+## 👮 Admin Review Queue Verification
+- **Status**: ⏳ **READY FOR LIVE TEST**
+- **Plan**: Create product with `MOZZY_FORCE_AI_REVIEW=true` -> Verify item in Admin Review screen -> Perform Approve/Reject -> Verify Audit Log.
+
 ## 🔧 Issues & Blockers
 1. **Timestamp Parsing (RESOLVED)**: UserModel now safely handles Firestore date fields.
 2. **Linter Warnings (RESOLVED)**: Unnecessary null comparisons in AuthService removed.
@@ -66,8 +70,8 @@ This report documents the live verification of the Marketplace domain against a 
 5. **Localization Key Missing (RESOLVED)**: Added `marketplace.detectingLocation`.
 
 ## ✅ Verification Decision
-**MARKETPLACE STAGING VERIFIED**
-- **Next**: Finalize Admin Review Queue and Admin Audit Log verification.
+**MARKETPLACE STAGING VERIFIED / ADMIN QUEUE READY**
+- **Next**: Perform final Admin Review Queue live test on SM A715F.
 
 ---
 *Report updated on 2026-05-03 by Gemini CLI.*

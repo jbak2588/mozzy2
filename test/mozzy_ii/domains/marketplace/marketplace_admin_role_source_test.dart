@@ -30,7 +30,16 @@ void main() {
       expect(role, MarketplaceAdminRole.none);
     });
 
-    test('returns none when no claims are present', () async {
+    test('returns none for non-allowlisted UID', () async {
+      when(mockAuth.currentUser).thenReturn(mockUser);
+      when(mockUser.uid).thenReturn('HUZMs5mweBT2DjkS8vHQrDjKZCx2');
+
+      final role = await roleSource.getCurrentRole();
+
+      expect(role, MarketplaceAdminRole.none);
+    });
+
+    test('returns staging fallback admin when no claims are present for allowlisted UID', () async {
       when(mockAuth.currentUser).thenReturn(mockUser);
       when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
       when(
@@ -40,19 +49,19 @@ void main() {
 
       final role = await roleSource.getCurrentRole();
 
-      expect(role, MarketplaceAdminRole.none);
+      // Staging fallback: allowlisted UID gets admin even without claims
+      expect(role, MarketplaceAdminRole.admin);
     });
 
-    test('returns correct role from claims', () async {
-      final scenarios = {
+    test('returns correct role from valid claims for allowlisted UID', () async {
+      // These claims should return their respective roles (not fallback)
+      final claimScenarios = {
         'reviewer': MarketplaceAdminRole.reviewer,
         'admin': MarketplaceAdminRole.admin,
         'superAdmin': MarketplaceAdminRole.superAdmin,
-        'none': MarketplaceAdminRole.none,
-        'invalid': MarketplaceAdminRole.none,
       };
 
-      for (final entry in scenarios.entries) {
+      for (final entry in claimScenarios.entries) {
         when(mockAuth.currentUser).thenReturn(mockUser);
         when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
         when(
@@ -72,7 +81,31 @@ void main() {
       }
     });
 
-    test('returns none on exception', () async {
+    test('returns staging fallback admin for none/invalid claim on allowlisted UID', () async {
+      // These claims map to none, so staging fallback kicks in
+      final fallbackScenarios = ['none', 'invalid', ''];
+
+      for (final claimValue in fallbackScenarios) {
+        when(mockAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
+        when(
+          mockUser.getIdTokenResult(any),
+        ).thenAnswer((_) async => mockTokenResult);
+        when(
+          mockTokenResult.claims,
+        ).thenReturn({'marketplaceAdminRole': claimValue});
+
+        final role = await roleSource.getCurrentRole();
+
+        expect(
+          role,
+          MarketplaceAdminRole.admin,
+          reason: 'Staging fallback should return admin for allowlisted UID with claim: "$claimValue"',
+        );
+      }
+    });
+
+    test('returns staging fallback admin on token refresh exception for allowlisted UID', () async {
       when(mockAuth.currentUser).thenReturn(mockUser);
       when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
       when(
@@ -81,7 +114,8 @@ void main() {
 
       final role = await roleSource.getCurrentRole();
 
-      expect(role, MarketplaceAdminRole.none);
+      // Staging fallback: even on error, allowlisted UID gets admin
+      expect(role, MarketplaceAdminRole.admin);
     });
   });
 }

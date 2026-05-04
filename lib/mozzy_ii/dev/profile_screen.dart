@@ -107,6 +107,16 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
               loading: () => const Text('Loading role...'),
               error: (e, st) => Text('Error loading role: $e'),
             ),
+            const SizedBox(height: 8),
+            Text(
+              'UID allowlisted: ${isMarketplaceAdminUidAllowed(user?.uid)}',
+              style: TextStyle(
+                color: isMarketplaceAdminUidAllowed(user?.uid)
+                    ? Colors.green
+                    : Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             const SizedBox(height: 16),
             if (isMarketplaceAdminUidAllowed(user?.uid) &&
                 ref.watch(canViewMarketplaceAdminReviewProvider)) ...[

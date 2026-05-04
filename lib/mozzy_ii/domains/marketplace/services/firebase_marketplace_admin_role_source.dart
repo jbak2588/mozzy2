@@ -32,16 +32,21 @@ class FirebaseMarketplaceAdminRoleSource implements MarketplaceAdminRoleSource {
       final tokenResult = await user.getIdTokenResult(forceRefresh);
       final claims = tokenResult.claims;
 
-      if (claims == null) return MarketplaceAdminRole.none;
+      if (claims != null) {
+        final roleValue = claims['marketplaceAdminRole'] as String?;
+        if (roleValue != null) {
+          final claimRole = _mapStringToRole(roleValue);
+          if (claimRole != MarketplaceAdminRole.none) {
+            return claimRole;
+          }
+        }
+      }
 
-      final roleValue = claims['marketplaceAdminRole'] as String?;
-
-      if (roleValue == null) return MarketplaceAdminRole.none;
-
-      return _mapStringToRole(roleValue);
+      // Staging MVP fallback: allowlisted UID gets admin even without custom claims
+      return marketplaceAdminRoleForAllowlistedUid(user.uid);
     } catch (e) {
-      // In case of error (network, etc.), default to none for security
-      return MarketplaceAdminRole.none;
+      // Even if token refresh fails, allowlisted staging admin should not be locked out
+      return marketplaceAdminRoleForAllowlistedUid(user.uid);
     }
   }
 

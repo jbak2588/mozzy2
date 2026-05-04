@@ -28,6 +28,26 @@ void main() {
     });
   });
 
+  group('Marketplace Admin Allowlist Staging Fallback Role', () {
+    test('allowlisted UID returns admin', () {
+      expect(
+        marketplaceAdminRoleForAllowlistedUid('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1'),
+        MarketplaceAdminRole.admin,
+      );
+    });
+
+    test('non-allowlisted UID returns none', () {
+      expect(
+        marketplaceAdminRoleForAllowlistedUid('HUZMs5mweBT2DjkS8vHQrDjKZCx2'),
+        MarketplaceAdminRole.none,
+      );
+    });
+
+    test('null UID returns none', () {
+      expect(marketplaceAdminRoleForAllowlistedUid(null), MarketplaceAdminRole.none);
+    });
+  });
+
   group('Admin Role — Non-Allowlisted UID Blocked', () {
     test('non-allowlisted UID gets none even if source returns admin', () async {
       final source = InMemoryMarketplaceAdminRoleSource(
@@ -66,6 +86,25 @@ void main() {
       expect(container.read(canViewMarketplaceAdminReviewProvider), isFalse);
     });
 
+    test('non-allowlisted UID blocked from admin review queue visibility', () {
+      final source = InMemoryMarketplaceAdminRoleSource(
+        MarketplaceAdminRole.superAdmin,
+      );
+      final container = ProviderContainer(
+        overrides: [
+          currentMarketplaceUserIdProvider.overrideWithValue('HUZMs5mweBT2DjkS8vHQrDjKZCx2'),
+          marketplaceAdminRoleSourceProvider.overrideWithValue(source),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      // Even with superAdmin source, non-allowlisted UID cannot view
+      expect(container.read(canViewMarketplaceAdminReviewProvider), isFalse);
+      expect(container.read(marketplaceAdminRoleProvider), MarketplaceAdminRole.none);
+    });
+  });
+
+  group('Admin Role — Allowlisted UID with claims', () {
     test('allowlisted admin UID with admin source gets admin role', () async {
       final source = InMemoryMarketplaceAdminRoleSource(
         MarketplaceAdminRole.admin,
@@ -78,11 +117,9 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      // Async provider should return admin for allowlisted UID
       final asyncRole = await container.read(marketplaceAdminRoleAsyncProvider.future);
       expect(asyncRole, MarketplaceAdminRole.admin);
 
-      // Sync provider should also return admin after async resolves
       expect(container.read(marketplaceAdminRoleProvider), MarketplaceAdminRole.admin);
       expect(container.read(canViewMarketplaceAdminReviewProvider), isTrue);
     });
@@ -103,27 +140,33 @@ void main() {
       expect(asyncRole, MarketplaceAdminRole.reviewer);
       expect(container.read(canViewMarketplaceAdminReviewProvider), isTrue);
     });
+  });
 
-    test('non-allowlisted UID blocked from admin review queue visibility', () {
+  group('Admin Role — Allowlisted UID staging fallback (no claims)', () {
+    test('allowlisted UID with none source still gets admin via staging fallback', () async {
+      // Simulates F1Rho with no custom claims set
       final source = InMemoryMarketplaceAdminRoleSource(
-        MarketplaceAdminRole.superAdmin,
+        MarketplaceAdminRole.none,
       );
       final container = ProviderContainer(
         overrides: [
-          currentMarketplaceUserIdProvider.overrideWithValue('HUZMs5mweBT2DjkS8vHQrDjKZCx2'),
+          currentMarketplaceUserIdProvider.overrideWithValue('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1'),
           marketplaceAdminRoleSourceProvider.overrideWithValue(source),
         ],
       );
       addTearDown(container.dispose);
 
-      // Even with superAdmin source, non-allowlisted UID cannot view
-      expect(container.read(canViewMarketplaceAdminReviewProvider), isFalse);
-      expect(container.read(marketplaceAdminRoleProvider), MarketplaceAdminRole.none);
-    });
-  });
+      // Async provider returns none from source, but sync provider applies staging fallback
+      final asyncRole = await container.read(marketplaceAdminRoleAsyncProvider.future);
+      expect(asyncRole, MarketplaceAdminRole.none);
 
-  group('Admin Role — Source role changes', () {
-    test('role change from admin to none clears access', () async {
+      // Sync provider should fall back to admin for allowlisted UID
+      expect(container.read(marketplaceAdminRoleProvider), MarketplaceAdminRole.admin);
+      expect(container.read(canViewMarketplaceAdminReviewProvider), isTrue);
+    });
+
+    test('allowlisted UID gets admin while async is still loading', () {
+      // Before async resolves, sync provider should still show admin for allowlisted UID
       final source = InMemoryMarketplaceAdminRoleSource(
         MarketplaceAdminRole.admin,
       );
@@ -135,15 +178,27 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      // Initially admin
-      await container.read(marketplaceAdminRoleAsyncProvider.future);
+      // Don't await async - read sync provider immediately
+      expect(container.read(marketplaceAdminRoleProvider), MarketplaceAdminRole.admin);
       expect(container.read(canViewMarketplaceAdminReviewProvider), isTrue);
+    });
 
-      // Source changes to none (simulates claim revocation)
-      source.setRole(MarketplaceAdminRole.none);
-      container.invalidate(marketplaceAdminRoleAsyncProvider);
-      await container.read(marketplaceAdminRoleAsyncProvider.future);
+    test('non-allowlisted UID stays none even with staging fallback path', () async {
+      final source = InMemoryMarketplaceAdminRoleSource(
+        MarketplaceAdminRole.none,
+      );
+      final container = ProviderContainer(
+        overrides: [
+          currentMarketplaceUserIdProvider.overrideWithValue('HUZMs5mweBT2DjkS8vHQrDjKZCx2'),
+          marketplaceAdminRoleSourceProvider.overrideWithValue(source),
+        ],
+      );
+      addTearDown(container.dispose);
 
+      final asyncRole = await container.read(marketplaceAdminRoleAsyncProvider.future);
+      expect(asyncRole, MarketplaceAdminRole.none);
+
+      expect(container.read(marketplaceAdminRoleProvider), MarketplaceAdminRole.none);
       expect(container.read(canViewMarketplaceAdminReviewProvider), isFalse);
     });
   });

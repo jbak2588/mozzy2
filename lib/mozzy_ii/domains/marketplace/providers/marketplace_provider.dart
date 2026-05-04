@@ -67,8 +67,12 @@ final marketplaceAdminRoleProvider = Provider<MarketplaceAdminRole>((ref) {
   }
 
   return ref.watch(marketplaceAdminRoleAsyncProvider).maybeWhen(
-    data: (role) => role,
-    orElse: () => MarketplaceAdminRole.none,
+    data: (role) {
+      if (role != MarketplaceAdminRole.none) return role;
+      // Staging fallback: allowlisted UID gets admin even if source returned none
+      return marketplaceAdminRoleForAllowlistedUid(uid);
+    },
+    orElse: () => marketplaceAdminRoleForAllowlistedUid(uid),
   );
 });
 

@@ -1,7 +1,19 @@
 # P2-B23: Xendit Payment & Idempotency Backlog
 
 ## Goal
-Implement a secure, idempotent payment webhook and transaction synchronization system using Xendit.
+Implement a secure, idempotent payment webhook and transaction synchronization system using Xendit. Also include an offline COD confirmation flow.
+
+## Sequence / Phases
+- [x] P2-B23-A: Architecture / schema / security planning
+- [ ] P2-B23-B: COD confirmationCode MVP
+- [ ] P2-B23-C: payments/deals Firestore models
+- [ ] P2-B23-D: Xendit sandbox environment setup
+- [ ] P2-B23-E: Cloud Functions webhook skeleton
+- [ ] P2-B23-F: Invoice/QRIS sandbox creation
+- [ ] P2-B23-G: Webhook live test
+- [ ] P2-B23-H: Payment UI integration
+- [ ] P2-B23-I: Admin payment audit screen
+- [ ] P2-B23-J: Final staging verification
 
 ## Tasks
 
@@ -10,7 +22,7 @@ Implement a secure, idempotent payment webhook and transaction synchronization s
 - [ ] Validate `X-CALLBACK-TOKEN` on all incoming requests to ensure authenticity.
 
 ### 2. Idempotency & Transaction Safety
-- [ ] Enforce idempotency using Xendit's `external_id`.
+- [ ] Enforce idempotency using Xendit's `external_id` or event `id`.
 - [ ] Ensure duplicate webhook receipts do not trigger re-processing or duplicate balance updates.
 - [ ] Use Firestore Transactions to safely update states.
 
@@ -21,3 +33,7 @@ Implement a secure, idempotent payment webhook and transaction synchronization s
 ### 4. Error Handling & Escalation
 - [ ] Implement a retry/failure tracking mechanism.
 - [ ] Trigger an escalation log/alert upon 3 consecutive processing failures for the same `external_id`.
+
+### 5. COD Confirmation
+- [ ] Generate 6-char `confirmationCode` upon deal confirmation.
+- [ ] Implement seller code entry to complete a deal offline safely.

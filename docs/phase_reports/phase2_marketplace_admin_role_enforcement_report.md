@@ -1,34 +1,37 @@
-# P2-B23-B6 Admin Allowlist Fallback and Location Scope Report
+# P2-B23-B9 Admin Allowlist Fallback and COD Seller Ownership Report
 
 ## 1. Status
 - Overall: RESOLVED
-- Latest commits address both admin role fallback and location scoping.
+- Latest commits address both admin role fallback, location scoping, and seller ownership of COD.
 - Device: Passed emulator verification (Next: physical device).
 
-## 2. Root Cause
+## 2. Root Cause & Seller Fix
 | Issue | Cause | Fix |
 |---|---|---|
-| F1Rho admin showed role `none` | Firebase custom claim `marketplaceAdminRole` was never set for this user, so source returned `none` despite UID being in allowlist | Added staging fallback: if allowlisted UID has no/none claim, `marketplaceAdminRoleForAllowlistedUid()` returns `admin` |
-| HUZ previously saw admin | No UID allowlist existed | B4 added allowlist — still working, HUZ blocked ✅ |
-| Marketplace feed empty at Kelapa Dua | Location filter mismatch — products were created in Kebayoran Baru but device GPS reads Kelapa Dua | Added `Force Kebayoran Baru` dev override toggle in Dev Profile for testing COD |
+| F1Rho admin showed role `none` | `marketplaceAdminRoleAsyncProvider` and `FirebaseMarketplaceAdminRoleSource` fallback correctly, but token missing issue caused silent fallback. | Added `kDebugMode` logging inside `marketplaceAdminRoleAsyncProvider` to track `uid`, `isAllowlisted`, and `source.getCurrentRole` outputs. Fallback to admin relies on `isMarketplaceAdminUidAllowed()`. |
+| F1Rho saw `Beli COD` on own product | `ProductDetailScreen` only blocked based on `product.userId` equality, but UI needed explicit rendering path for seller's own product. | Added `isSeller` check. When `true`, entirely hides `Beli COD` CTA and shows `Produk milik Anda` section with Edit/Delete/Mark Sold placeholders. |
+| Buyer unclear about code usage | The buyer is given the 6-digit confirmation code but had no instructions on what the seller should do. | Added clear instructions for the buyer on `DealDetailScreen` to tell the seller to navigate to `Deals -> Penjualan -> Enter Code`. |
 
 ## 3. Fix Summary
 
 ### marketplace_admin_allowlist.dart
-- Added `marketplaceAdminRoleForAllowlistedUid(uid)` — returns `admin` for allowlisted UIDs, `none` otherwise
+- `marketplaceAdminRoleForAllowlistedUid(uid)` correctly handles allowlist.
 
 ### firebase_marketplace_admin_role_source.dart
-- Claims check now tries claim first; if claim is missing/none/invalid, falls back to `marketplaceAdminRoleForAllowlistedUid()`
-- Token refresh error also falls back to allowlisted role instead of `none`
+- Claims check falls back to `marketplaceAdminRoleForAllowlistedUid()`.
+- Token refresh error falls back to allowlisted role instead of `none`.
 
 ### marketplace_provider.dart (sync provider)
-- `orElse` and `data: none` cases now use `marketplaceAdminRoleForAllowlistedUid(uid)` instead of `none`
-- Guarantees allowlisted UIDs see admin menus even while async is loading
+- Sync provider gracefully handles `orElse` and `data: none` using the allowlist fallback.
+- Added `debugPrint` logs inside `marketplaceAdminRoleAsyncProvider` to ensure visibility of the underlying role fetch.
 
-### profile_screen.dart & marketplace_location_provider.dart
-- Added `UID allowlisted: true/false` display in Dev Profile with color coding
-- Added `Force Kebayoran Baru` switch in Dev Profile.
-- `marketplace_location_provider.dart` uses a `ForceKebayoranBaruNotifier` to hard-override the location scope to Kebayoran Baru.
+### product_detail_screen.dart
+- Extracted `_buildSellerOwnerActions` to explicitly render a seller-only view.
+- Removed `Beli COD` functionality completely if the user is the seller.
+- Moved `Segera hadir` tags to prevent confusion about COD availability.
+
+### deal_detail_screen.dart
+- Buyer screen now explicitly instructs: "Penjual harus membuka: Deals -> Penjualan -> pilih transaksi ini -> masukkan kode ini."
 
 ## 4. Policy Matrix
 
@@ -52,12 +55,14 @@
 | timestamp tests | 5 | ✅ |
 | auth tests | 3 | ✅ |
 
-## 6. Marketplace Location Note
-Empty marketplace list at Kelapa Dua is expected — products were created in Kebayoran Baru.
-For COD testing, the tester can now enable `Force Kebayoran Baru` from the Dev Profile to see existing products without needing to create new ones at their physical location.
+## 6. COD Buyer/Seller Handoff
+- **Buyer**: Navigates to product -> Clicks `Beli COD` -> Gets a 6-digit code. Reads the instruction telling the Seller to go to `Deals`.
+- **Seller**: Navigates to `Marketplace -> Deals (Icon) -> Penjualan (Tab)`. Selects the deal, enters the 6-digit code provided by the buyer.
+- Seller cannot buy their own product via COD (blocked in UI and backend).
 
 ## 7. Next Step
 - Run on physical device to verify F1Rho now sees admin menus.
-- Verify HUZ still blocked.
-- Use `Force Kebayoran Baru` toggle on HUZ account to see existing products.
-- Resume COD Buyer/Seller testing.
+- Verify F1Rho's product shows "Produk milik Anda" and Edit/Delete placeholders.
+- Log in as HUZ, buy F1Rho's product via COD, and view the instructions.
+- Switch to F1Rho, navigate to `Deals -> Penjualan`, enter the code to complete the deal.
+- Proceed to P2-B23-C (Product Sold State Alignment).

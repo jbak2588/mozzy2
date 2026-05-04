@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import '../../../core/config/integration_test_config.dart';
 import '../../../core/utils/formatters.dart';
 import '../widgets/product_verification_badge.dart';
@@ -60,6 +61,16 @@ class _ProductDetailContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(currentMarketplaceUserIdProvider);
+    final isSeller = userId != null && userId == product.userId;
+
+    if (kDebugMode) {
+      debugPrint('[CODEligibility] currentUid=$userId');
+      debugPrint('[CODEligibility] product.userId=${product.userId}');
+      debugPrint('[CODEligibility] isSeller=$isSeller');
+      debugPrint('[CODEligibility] aiStatus=${product.aiVerificationStatus}');
+      debugPrint('[CODEligibility] isAiVerified=${product.isAiVerified}');
+    }
+
     final likedAsync = userId != null
         ? ref.watch(
             productLikedByUserProvider(
@@ -80,7 +91,10 @@ class _ProductDetailContent extends ConsumerWidget {
               children: [
                 _buildHeader(context),
                 const SizedBox(height: 16),
-                _buildCodCta(context, ref),
+                if (isSeller)
+                  _buildSellerOwnerActions(context)
+                else
+                  _buildCodCta(context, ref, userId, isSeller),
                 const Divider(height: 32),
                 _buildDescription(context),
                 const Divider(height: 32),
@@ -92,7 +106,7 @@ class _ProductDetailContent extends ConsumerWidget {
                 const SizedBox(height: 32),
                 _buildStats(context),
                 const SizedBox(height: 32),
-                _buildActions(context, ref, likedAsync.value ?? false),
+                _buildActions(context, ref, likedAsync.value ?? false, isSeller),
                 const SizedBox(height: 32),
               ],
             ),
@@ -190,10 +204,79 @@ class _ProductDetailContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildCodCta(BuildContext context, WidgetRef ref) {
-    final userId = ref.watch(currentMarketplaceUserIdProvider);
-    final isSeller = userId == product.userId;
+  Widget _buildSellerOwnerActions(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.storefront, color: Colors.orange),
+              const SizedBox(width: 8),
+              const Text(
+                'Produk milik Anda',
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: OutlinedButton.icon(
+              onPressed: () => context.push('/marketplace/deals'),
+              icon: const Icon(Icons.receipt_long),
+              label: const Text('Lihat Transaksi Penjualan'),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: null, // P2-B24 TODO
+                  child: const Text('Edit'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: null, // P2-B24 TODO
+                  child: const Text('Delete'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: null, // P2-B23-C TODO
+                  child: const Text('Mark Sold'),
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: Text(
+              'Manajemen produk segera hadir',
+              style: TextStyle(fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildCodCta(BuildContext context, WidgetRef ref, String? userId, bool isSeller) {
     final canBuyCod = userId != null &&
         !isSeller &&
         product.aiVerificationStatus == 'passed' &&
@@ -532,9 +615,8 @@ class _ProductDetailContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildActions(BuildContext context, WidgetRef ref, bool isLiked) {
+  Widget _buildActions(BuildContext context, WidgetRef ref, bool isLiked, bool isSeller) {
     final userId = ref.watch(currentMarketplaceUserIdProvider);
-    final isSeller = userId == product.userId;
 
     return Column(
       children: [

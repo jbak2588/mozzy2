@@ -97,6 +97,28 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
               'Expires: ${DateFormat('yyyy-MM-dd HH:mm').format(deal.codeExpiresAt.toLocal())}',
               style: const TextStyle(color: Colors.grey),
             ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: const [
+                  Text(
+                    'Instruksi untuk Penjual',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Penjual harus membuka:\nDeals -> Penjualan -> pilih transaksi ini -> masukkan kode ini.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12, color: Colors.blue),
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       },

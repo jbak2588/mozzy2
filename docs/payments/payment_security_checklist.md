@@ -7,3 +7,10 @@
 - [ ] **Data Minimization**: Do not store full credit card numbers or sensitive banking credentials; rely entirely on the Payment Gateway (Xendit).
 - [ ] **Audit Logging**: All payment events and admin actions must be securely logged and immutable.
 - [ ] **Confirmation Code Rate Limiting**: Limit the number of attempts a seller can make to enter a `confirmationCode` to prevent brute force attacks.
+- [ ] **Firestore Rules**: 
+  - buyer can read own deal
+  - seller can read own deal
+  - buyer can read own private code
+  - seller cannot read buyer private code
+  - seller can submit code verification only through repository/client transaction for MVP
+  - production should move verification to Cloud Functions

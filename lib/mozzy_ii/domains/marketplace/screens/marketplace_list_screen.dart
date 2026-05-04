@@ -35,6 +35,12 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
             tooltip: 'marketplace.savedItems'.tr(),
             onPressed: () => context.push('/marketplace/saved'),
           ),
+          IconButton(
+            key: const Key('marketplaceDealsButton'),
+            icon: const Icon(Icons.receipt_long),
+            tooltip: 'marketplace.deals'.tr(),
+            onPressed: () => context.push('/marketplace/deals'),
+          ),
           if (ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
             IconButton(
               key: const Key('marketplaceAdminReviewButton'),

@@ -239,6 +239,22 @@
     "auditReviewerRole": "Reviewer role",
     "auditQueueItem": "Queue item",
     "auditProduct": "Product",
-    "auditNote": "Note"
+    "auditNote": "Note",
+    "codBuy": "Buy COD",
+    "codDeal": "COD Deal",
+    "deals": "Deals",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "confirmationCode": "Confirmation Code",
+    "showThisCodeToSeller": "Show this code to the seller when COD is complete.",
+    "enterBuyerCode": "Enter Buyer Code",
+    "confirmDeal": "Confirm Deal",
+    "dealCompleted": "Deal Completed",
+    "invalidCode": "Invalid code",
+    "codeExpired": "Code expired",
+    "codeLocked": "Code locked",
+    "remainingAttempts": "Remaining attempts",
+    "cannotBuyOwnProduct": "Cannot buy own product",
+    "itemNotEligibleForCod": "Item not eligible for COD"
   }
 }

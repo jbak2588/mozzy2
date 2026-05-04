@@ -239,6 +239,22 @@
     "auditReviewerRole": "Peran peninjau",
     "auditQueueItem": "Item antrian",
     "auditProduct": "Produk",
-    "auditNote": "Catatan"
+    "auditNote": "Catatan",
+    "codBuy": "Beli COD",
+    "codDeal": "Deal COD",
+    "deals": "Transaksi",
+    "purchases": "Pembelian",
+    "sales": "Penjualan",
+    "confirmationCode": "Kode Konfirmasi",
+    "showThisCodeToSeller": "Tunjukkan kode ini kepada penjual saat transaksi COD selesai.",
+    "enterBuyerCode": "Masukkan Kode Pembeli",
+    "confirmDeal": "Konfirmasi Transaksi",
+    "dealCompleted": "Transaksi Selesai",
+    "invalidCode": "Kode tidak valid",
+    "codeExpired": "Kode kedaluwarsa",
+    "codeLocked": "Kode terkunci",
+    "remainingAttempts": "Sisa percobaan",
+    "cannotBuyOwnProduct": "Tidak bisa membeli produk sendiri",
+    "itemNotEligibleForCod": "Produk tidak memenuhi syarat COD"
   }
 }

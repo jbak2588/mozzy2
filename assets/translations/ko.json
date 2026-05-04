@@ -238,7 +238,23 @@
     "auditDecision": "결정",
     "auditReviewerRole": "검토자 권한",
     "auditQueueItem": "대기열 항목",
-    "auditProduct": "상품",
-    "auditNote": "노트"
+    "auditProduct": "제품",
+    "auditNote": "메모",
+    "codBuy": "직거래 구매",
+    "codDeal": "직거래",
+    "deals": "내 거래",
+    "purchases": "구매 내역",
+    "sales": "판매 내역",
+    "confirmationCode": "확인 코드",
+    "showThisCodeToSeller": "직거래가 완료되면 이 코드를 판매자에게 보여주세요.",
+    "enterBuyerCode": "구매자 코드 입력",
+    "confirmDeal": "거래 확인",
+    "dealCompleted": "거래 완료",
+    "invalidCode": "잘못된 코드입니다",
+    "codeExpired": "만료된 코드입니다",
+    "codeLocked": "코드가 잠겼습니다",
+    "remainingAttempts": "남은 시도 횟수",
+    "cannotBuyOwnProduct": "자신의 상품은 구매할 수 없습니다",
+    "itemNotEligibleForCod": "이 상품은 직거래를 지원하지 않습니다"
   }
 }

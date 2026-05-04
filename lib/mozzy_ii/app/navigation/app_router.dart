@@ -18,6 +18,8 @@ import '../../domains/marketplace/screens/product_detail_screen.dart';
 import '../../domains/marketplace/screens/saved_marketplace_screen.dart';
 import '../../domains/marketplace/screens/admin_review_screen.dart';
 import '../../domains/marketplace/screens/admin_audit_log_screen.dart';
+import '../../domains/marketplace/screens/deals_list_screen.dart';
+import '../../domains/marketplace/screens/deal_detail_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -88,6 +90,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                   GoRoute(
                     path: 'admin-audit-logs',
                     builder: (context, state) => const AdminAuditLogScreen(),
+                  ),
+                  GoRoute(
+                    path: 'deals',
+                    builder: (context, state) => const DealsListScreen(),
+                  ),
+                  GoRoute(
+                    path: 'deals/:dealId',
+                    builder: (context, state) {
+                      final dealId = state.pathParameters['dealId']!;
+                      return DealDetailScreen(dealId: dealId);
+                    },
                   ),
                   GoRoute(
                     path: ':productId',

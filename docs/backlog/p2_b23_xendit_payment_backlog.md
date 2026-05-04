@@ -5,7 +5,7 @@ Implement a secure, idempotent payment webhook and transaction synchronization s
 
 ## Sequence / Phases
 - [x] P2-B23-A: Architecture / schema / security planning
-- [ ] P2-B23-B: COD confirmationCode MVP
+- [x] P2-B23-B: COD confirmationCode MVP
 - [ ] P2-B23-C: payments/deals Firestore models
 - [ ] P2-B23-D: Xendit sandbox environment setup
 - [ ] P2-B23-E: Cloud Functions webhook skeleton

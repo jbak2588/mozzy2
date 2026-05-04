@@ -7,6 +7,8 @@ import '../widgets/product_verification_badge.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/product_model.dart';
 import '../models/ai_verification_report_model.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/deal_provider.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({super.key, required this.productId});
@@ -444,9 +446,56 @@ class _ProductDetailContent extends ConsumerWidget {
 
   Widget _buildActions(BuildContext context, WidgetRef ref, bool isLiked) {
     final userId = ref.watch(currentMarketplaceUserIdProvider);
+    final isSeller = userId == product.userId;
+
+    final canBuyCod = userId != null &&
+        !isSeller &&
+        product.aiVerificationStatus == 'passed' &&
+        !product.isDeleted;
+    
+    final codDisabledReason = product.aiVerificationStatus == 'needs_review'
+        ? 'Menunggu review admin'
+        : (product.aiVerificationStatus == 'failed' ? 'Tidak lolos AI' : null);
 
     return Column(
       children: [
+        if (!isSeller)
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton.icon(
+              onPressed: canBuyCod
+                  ? () async {
+                      try {
+                        final repo = ref.read(dealRepositoryProvider);
+                        final deal = await repo.createCodDeal(
+                          product: product,
+                          buyerId: userId as String,
+                        );
+                        if (context.mounted) {
+                          context.push('/marketplace/deals/${deal.id}');
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(e
+                                    .toString()
+                                    .replaceAll('Exception: ', ''))),
+                          );
+                        }
+                      }
+                    }
+                  : null,
+              icon: const Icon(Icons.handshake),
+              label: Text(codDisabledReason ?? 'marketplace.codBuy'.tr()),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+        if (!isSeller) const SizedBox(height: 12),
         SizedBox(
           width: double.infinity,
           height: 50,

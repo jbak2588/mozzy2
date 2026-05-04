@@ -48,6 +48,24 @@ Path: `countries/ID/domains/marketplace/payment_events/{eventId}`
 - `processedAt`: Timestamp
 - `idempotencyResult`: String (`created`, `duplicate`, `ignored`, `failed`)
 
+## 4. Buyer Private Deal Codes
+Path: `users/{buyerId}/private_deal_codes/{dealId}`
+
+- `dealId`: String
+- `buyerId`: String
+- `sellerId`: String
+- `productId`: String
+- `confirmationCode`: String
+- `codeExpiresAt`: Timestamp
+- `createdAt`: Timestamp
+
 ## State Transition Rules
 Client direct write is FORBIDDEN for payment status.
-Webhook/Admin SDK is source of truth.
+Webhook/Admin SDK is source of truth for online payments.
+COD deals are completed via client transaction in MVP (will move to Cloud Functions).
+
+## Security Rules Draft
+- Buyer can read own deal
+- Seller can read own deal
+- Buyer can read own private code
+- Seller cannot read buyer private code

@@ -4,7 +4,6 @@ import 'package:easy_localization/easy_localization.dart';
 import '../providers/deal_provider.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/deal_model.dart';
-import '../../../core/utils/formatters.dart';
 
 class DealDetailScreen extends ConsumerStatefulWidget {
   final String dealId;

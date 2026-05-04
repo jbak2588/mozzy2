@@ -32,7 +32,7 @@ class DealRepository {
     if (buyerId == product.sellerId) {
       throw Exception('Cannot buy your own product');
     }
-    if (product.aiVerificationStatus == 'failed') {
+    if (product.aiVerificationStatus != 'passed' || product.isAiVerified != true) {
       throw Exception('Product is not eligible for COD due to AI status');
     }
     if (product.isDeleted) {
@@ -216,17 +216,7 @@ class DealRepository {
         'updatedAt': Timestamp.fromDate(now),
       });
       
-      // Update product to sold
-      final String country = 'ID';
-      final productRef = _fs.collection('countries/$country/domains/$domainId/products').doc(deal.productId);
-      
-      final productDoc = await transaction.get(productRef);
-      if (productDoc.exists) {
-        transaction.update(productRef, {
-          'status': 'sold',
-          'updatedAt': Timestamp.fromDate(now),
-        });
-      }
+      // TODO(P2-B23-C): Update product to sold when ProductModel supports status field
 
       return deal.copyWith(
         status: 'completed',

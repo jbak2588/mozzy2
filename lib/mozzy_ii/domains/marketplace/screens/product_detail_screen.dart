@@ -470,7 +470,7 @@ class _ProductDetailContent extends ConsumerWidget {
                         final repo = ref.read(dealRepositoryProvider);
                         final deal = await repo.createCodDeal(
                           product: product,
-                          buyerId: userId as String,
+                          buyerId: userId,
                         );
                         if (context.mounted) {
                           context.push('/marketplace/deals/${deal.id}');

@@ -12,6 +12,16 @@ class InMemoryDealRepository extends DealRepository {
     required ProductModel product,
     required String buyerId,
   }) async {
+    if (buyerId == product.sellerId) {
+      throw Exception('Cannot buy your own product');
+    }
+    if (product.aiVerificationStatus != 'passed' || product.isAiVerified != true) {
+      throw Exception('Product is not eligible for COD due to AI status');
+    }
+    if (product.isDeleted) {
+      throw Exception('Product is no longer available');
+    }
+
     final dealId = 'deal_${DateTime.now().millisecondsSinceEpoch}';
     
     final deal = DealModel(

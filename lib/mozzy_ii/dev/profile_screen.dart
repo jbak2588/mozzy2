@@ -13,6 +13,7 @@ import '../app/auth/auth_service.dart';
 import '../domains/users/presentation/providers/user_provider.dart';
 import '../domains/marketplace/providers/marketplace_provider.dart';
 import '../domains/marketplace/models/admin_role_model.dart';
+import '../domains/marketplace/security/marketplace_admin_allowlist.dart';
 
 /// Dev/Profile screen: development-only diagnostics for current user
 class DevProfileScreen extends ConsumerStatefulWidget {
@@ -107,7 +108,8 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
               error: (e, st) => Text('Error loading role: $e'),
             ),
             const SizedBox(height: 16),
-            if (ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
+            if (isMarketplaceAdminUidAllowed(user?.uid) &&
+                ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
               Wrap(
                 spacing: 8,
                 children: [
@@ -158,10 +160,12 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
                     : () async {
                         setState(() => _isSigningOut = true);
                         try {
-                          // disconnectGoogle: true를 통해 다음 로그인 시 계정 선택창이 뜨도록 함
                           await ref.read(authServiceProvider).signOut(
                             disconnectGoogle: true,
                           );
+
+                          // Invalidate admin role providers to prevent stale cache leaking
+                          ref.invalidate(marketplaceAdminRoleAsyncProvider);
 
                           if (!context.mounted) return;
                           // AuthGate가 상태 변화를 감지하여 로그인 화면으로 보내겠지만, 명시적으로 이동

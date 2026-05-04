@@ -67,7 +67,7 @@ void main() {
           locationProvider.overrideWith(
             () => MockLocationNotifier(testLocation),
           ),
-          currentMarketplaceUserIdProvider.overrideWithValue(null),
+          currentMarketplaceUserIdProvider.overrideWithValue('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1'),
           marketplaceAdminRoleProvider.overrideWithValue(
             MarketplaceAdminRole.admin,
           ),

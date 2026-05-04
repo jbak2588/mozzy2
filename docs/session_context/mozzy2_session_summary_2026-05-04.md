@@ -1,23 +1,19 @@
-# Session Summary: P2-B23-B COD MVP Completion
+# Session Summary: P2-B23-B3 Verification Preparation
 
 ## Objectives Achieved
-1. **COD Deal UI & Routing Integration**
-   - Successfully wired `DealsListScreen` to display user's purchasing and sales history.
-   - Connected `ProductDetailScreen` to trigger COD deal creation via the new "Beli COD" button (which correctly respects the user role).
-   - Registered paths (`/marketplace/deals` and `/marketplace/deals/:dealId`) in `AppRouter`.
-   - Added deals access button to `MarketplaceListScreen` app bar.
-2. **Localization**
-   - Added Deal MVP translations (`codBuy`, `codDeal`, `deals`, `purchases`, `sales`, `confirmationCode`, etc.) to `en.json`, `id.json`, and `ko.json`.
-3. **Data Schema & Security Updates**
-   - Updated `firestore.indexes.json` with composite indexes for `deals` collection (`buyerId` / `createdAt` and `sellerId` / `createdAt`).
-   - Drafted Firestore security rules for COD MVP into `payment_firestore_schema.md` and `payment_security_checklist.md`.
-4. **Validation & Tests**
-   - Handled minor lint issues related to unnecessary null assertions and strict types.
-   - Refactored `DealRepository` into an interface-style layout by adding `InMemoryDealRepository` for `IntegrationTestConfig.enabled`.
-   - Wrote comprehensive unit tests for `DealModel`, `ConfirmationCodeUtils`.
-   - All 78 tests in `marketplace` domain successfully passed.
+1. **Repository Security Blockers Resolved:**
+   - Modified `DealRepository.createCodDeal()` to enforce a strict blocker on products where `aiVerificationStatus != 'passed'` or `isAiVerified != true`. This handles the `needs_review` condition securely from the backend instead of just hiding the UI button.
+   - Removed premature updating of `product.status = 'sold'` during the code verification transaction, because `ProductModel` doesn't have a `status` field. This is formally deferred to P2-B23-C.
+   - Fixed un-pushed analysis warning corrections in `deal_detail_screen.dart` and `product_detail_screen.dart`.
 
-## Next Steps
-1. P2-B23-C: Integrate production models into broader flow or Xendit environment (P2-B23-D).
-2. Configure Firestore security rules directly on Firebase console or via CLI.
-3. Validate COD creation via connected device running the app.
+2. **Testing Constraints Verified:**
+   - `flutter analyze` reports 0 issues.
+   - All `marketplace` tests (78/78) successfully passed.
+   - Project cleanly committed to `main` at SHA `657bf72`.
+
+## Next Actions
+The repository is perfectly prepped for Physical Device Testing.
+- Run `.\.local\run_mozzy_dev.ps1`.
+- Log in with 2 separate accounts to act as Seller and Buyer.
+- Run through the "Beli COD" creation and confirmation code execution.
+- If live test passes, officially mark P2-B23-B as VERIFIED and transition to P2-B23-C (Payment Data Flow).

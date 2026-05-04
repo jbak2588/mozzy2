@@ -7,6 +7,7 @@ import '../../../core/config/integration_test_config.dart';
 import '../../../geo/models/location_parts.dart';
 import '../providers/marketplace_provider.dart';
 import '../providers/marketplace_location_provider.dart';
+import '../security/marketplace_admin_allowlist.dart';
 import '../widgets/marketplace_product_card.dart';
 
 class MarketplaceListScreen extends ConsumerStatefulWidget {
@@ -41,7 +42,9 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
             tooltip: 'marketplace.deals'.tr(),
             onPressed: () => context.push('/marketplace/deals'),
           ),
-          if (ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
+          if (isMarketplaceAdminUidAllowed(
+              ref.watch(currentMarketplaceUserIdProvider)) &&
+              ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
             IconButton(
               key: const Key('marketplaceAdminReviewButton'),
               icon: const Icon(Icons.admin_panel_settings_outlined),

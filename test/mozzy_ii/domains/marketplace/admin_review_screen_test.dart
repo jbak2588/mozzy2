@@ -35,7 +35,7 @@ void main() {
         ),
         adminAuditLogRepositoryProvider.overrideWithValue(mockAuditRepo),
         marketplaceAdminRoleSourceProvider.overrideWithValue(mockRoleSource),
-        currentMarketplaceUserIdProvider.overrideWithValue('test_admin_id'),
+        currentMarketplaceUserIdProvider.overrideWithValue('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1'),
       ],
       child: const MaterialApp(home: AdminReviewScreen()),
     );
@@ -132,7 +132,7 @@ void main() {
       expect(mockAuditRepo.logs.length, 1);
       expect(mockAuditRepo.logs.first.action, 'approve');
       expect(mockAuditRepo.logs.first.queueItemId, 'r1');
-      expect(mockAuditRepo.logs.first.reviewerId, 'test_admin_id');
+      expect(mockAuditRepo.logs.first.reviewerId, 'F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
     },
   );
 

@@ -22,6 +22,7 @@ import '../repositories/in_memory_admin_audit_log_repository.dart';
 import '../services/marketplace_admin_role_source.dart';
 import '../services/firebase_marketplace_admin_role_source.dart';
 import '../services/in_memory_marketplace_admin_role_source.dart';
+import '../security/marketplace_admin_allowlist.dart';
 
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
@@ -42,8 +43,16 @@ final marketplaceAdminRoleSourceProvider = Provider<MarketplaceAdminRoleSource>(
 
 final marketplaceAdminRoleAsyncProvider =
     FutureProvider.autoDispose<MarketplaceAdminRole>((ref) async {
+      // Watch UID so provider re-evaluates on account switch
+      final uid = ref.watch(currentMarketplaceUserIdProvider);
+
+      // Hard block: UID must be in allowlist
+      if (!IntegrationTestConfig.enabled && !isMarketplaceAdminUidAllowed(uid)) {
+        return MarketplaceAdminRole.none;
+      }
+
       final source = ref.watch(marketplaceAdminRoleSourceProvider);
-      return source.getCurrentRole();
+      return source.getCurrentRole(forceRefresh: true);
     });
 
 final marketplaceAdminRoleProvider = Provider<MarketplaceAdminRole>((ref) {
@@ -51,9 +60,16 @@ final marketplaceAdminRoleProvider = Provider<MarketplaceAdminRole>((ref) {
     return MarketplaceAdminRole.admin;
   }
 
-  // Sync fallback: Use the last known value from the async provider if available
-  return ref.watch(marketplaceAdminRoleAsyncProvider).value ??
-      MarketplaceAdminRole.none;
+  // Hard block: UID must be in allowlist regardless of async state
+  final uid = ref.watch(currentMarketplaceUserIdProvider);
+  if (!isMarketplaceAdminUidAllowed(uid)) {
+    return MarketplaceAdminRole.none;
+  }
+
+  return ref.watch(marketplaceAdminRoleAsyncProvider).maybeWhen(
+    data: (role) => role,
+    orElse: () => MarketplaceAdminRole.none,
+  );
 });
 
 final canViewMarketplaceAdminReviewProvider = Provider<bool>((ref) {
@@ -249,15 +265,17 @@ class AdminReviewActionController {
   );
 
   Future<void> approve(String itemId, String productId) async {
+    final reviewerId = _ref.read(currentMarketplaceUserIdProvider);
+    if (reviewerId == null || (!IntegrationTestConfig.enabled && !isMarketplaceAdminUidAllowed(reviewerId))) {
+      throw StateError('Marketplace admin UID allowlist required.');
+    }
+
     final source = _ref.read(marketplaceAdminRoleSourceProvider);
     final role = await source.getCurrentRole(forceRefresh: true);
 
     if (!role.canModerate) {
       throw StateError('Admin moderation permission required.');
     }
-
-    final reviewerId =
-        _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
 
     await _aiRepo.resolveReviewItem(
       itemId: itemId,
@@ -298,15 +316,17 @@ class AdminReviewActionController {
   }
 
   Future<void> reject(String itemId, String productId, {String? note}) async {
+    final reviewerId = _ref.read(currentMarketplaceUserIdProvider);
+    if (reviewerId == null || (!IntegrationTestConfig.enabled && !isMarketplaceAdminUidAllowed(reviewerId))) {
+      throw StateError('Marketplace admin UID allowlist required.');
+    }
+
     final source = _ref.read(marketplaceAdminRoleSourceProvider);
     final role = await source.getCurrentRole(forceRefresh: true);
 
     if (!role.canModerate) {
       throw StateError('Admin moderation permission required.');
     }
-
-    final reviewerId =
-        _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
 
     await _aiRepo.resolveReviewItem(
       itemId: itemId,
@@ -347,15 +367,17 @@ class AdminReviewActionController {
   }
 
   Future<void> dismiss(String itemId, String productId) async {
+    final reviewerId = _ref.read(currentMarketplaceUserIdProvider);
+    if (reviewerId == null || (!IntegrationTestConfig.enabled && !isMarketplaceAdminUidAllowed(reviewerId))) {
+      throw StateError('Marketplace admin UID allowlist required.');
+    }
+
     final source = _ref.read(marketplaceAdminRoleSourceProvider);
     final role = await source.getCurrentRole(forceRefresh: true);
 
     if (!role.canModerate) {
       throw StateError('Admin moderation permission required.');
     }
-
-    final reviewerId =
-        _ref.read(currentMarketplaceUserIdProvider) ?? 'unknown_admin';
 
     await _aiRepo.resolveReviewItem(
       itemId: itemId,

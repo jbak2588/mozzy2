@@ -32,6 +32,7 @@ void main() {
 
     test('returns none when no claims are present', () async {
       when(mockAuth.currentUser).thenReturn(mockUser);
+      when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
       when(
         mockUser.getIdTokenResult(any),
       ).thenAnswer((_) async => mockTokenResult);
@@ -53,6 +54,7 @@ void main() {
 
       for (final entry in scenarios.entries) {
         when(mockAuth.currentUser).thenReturn(mockUser);
+        when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
         when(
           mockUser.getIdTokenResult(any),
         ).thenAnswer((_) async => mockTokenResult);
@@ -72,6 +74,7 @@ void main() {
 
     test('returns none on exception', () async {
       when(mockAuth.currentUser).thenReturn(mockUser);
+      when(mockUser.uid).thenReturn('F1RhoJnK0uUQ1jPzvA9GuIG6U2w1');
       when(
         mockUser.getIdTokenResult(any),
       ).thenThrow(Exception('Network error'));

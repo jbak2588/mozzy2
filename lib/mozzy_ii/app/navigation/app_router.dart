@@ -18,6 +18,7 @@ import '../../domains/marketplace/screens/product_detail_screen.dart';
 import '../../domains/marketplace/screens/saved_marketplace_screen.dart';
 import '../../domains/marketplace/screens/admin_review_screen.dart';
 import '../../domains/marketplace/screens/admin_audit_log_screen.dart';
+import '../../domains/marketplace/screens/admin_guard_screen.dart';
 import '../../domains/marketplace/screens/deals_list_screen.dart';
 import '../../domains/marketplace/screens/deal_detail_screen.dart';
 
@@ -85,11 +86,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                   ),
                   GoRoute(
                     path: 'admin-review',
-                    builder: (context, state) => const AdminReviewScreen(),
+                    builder: (context, state) => const MarketplaceAdminGuardScreen(
+                      child: AdminReviewScreen(),
+                    ),
                   ),
                   GoRoute(
                     path: 'admin-audit-logs',
-                    builder: (context, state) => const AdminAuditLogScreen(),
+                    builder: (context, state) => const MarketplaceAdminGuardScreen(
+                      child: AdminAuditLogScreen(),
+                    ),
                   ),
                   GoRoute(
                     path: 'deals',

@@ -7,6 +7,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/admin_role_model.dart';
+import '../security/marketplace_admin_allowlist.dart';
 import 'marketplace_admin_role_source.dart';
 
 class FirebaseMarketplaceAdminRoleSource implements MarketplaceAdminRoleSource {
@@ -21,6 +22,11 @@ class FirebaseMarketplaceAdminRoleSource implements MarketplaceAdminRoleSource {
   }) async {
     final user = _auth.currentUser;
     if (user == null) return MarketplaceAdminRole.none;
+
+    // Hard block: UID must be in allowlist before checking claims
+    if (!isMarketplaceAdminUidAllowed(user.uid)) {
+      return MarketplaceAdminRole.none;
+    }
 
     try {
       final tokenResult = await user.getIdTokenResult(forceRefresh);

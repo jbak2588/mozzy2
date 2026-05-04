@@ -1,23 +1,30 @@
-# Session Summary: P2-B23-B4 Admin Role Enforcement
+# Session Summary: P2-B23-B6 Admin Allowlist Fallback Fix
 
-## Critical Blocker Resolved
-Admin role leakage was discovered where a general user (HUZMs5mweBT2DjkS8vHQrDjKZCx2) could see and access admin menus after switching from an admin account (F1RhoJnK0uUQ1jPzvA9GuIG6U2w1).
+## Critical Fix
+Admin UID F1Rho was blocked from admin features despite being in the UID allowlist.
+Root cause: Firebase custom claim `marketplaceAdminRole` was never set, so the source returned `none`.
 
-## 5-Layer Defense Implemented
-1. **UID Allowlist** (`marketplace_admin_allowlist.dart`) — hard blocks non-allowlisted UIDs without network
-2. **Firebase Custom Claims** — allowlist-gated claims check with forceRefresh
-3. **Provider UID Dependency** — async/sync providers watch UID, re-evaluate on account switch
-4. **Route Guard** (`MarketplaceAdminGuardScreen`) — blocks direct URL navigation for unauthorized UIDs
-5. **Action Controller** — rejects approve/reject/dismiss from non-allowlisted UIDs
+## Solution
+Added staging fallback: allowlisted UIDs get `admin` role even when custom claims are missing, `none`, or when token refresh fails.
+Non-allowlisted UIDs remain permanently blocked regardless of claims.
+
+## Changes
+- `marketplace_admin_allowlist.dart`: Added `marketplaceAdminRoleForAllowlistedUid()`
+- `firebase_marketplace_admin_role_source.dart`: Claims → fallback chain for allowlisted UIDs
+- `marketplace_provider.dart`: Sync provider uses allowlist fallback during loading/none
+- `profile_screen.dart`: Shows `UID allowlisted: true/false` in Dev Profile
 
 ## Test Results
 - flutter analyze: 0 issues
-- marketplace tests: 86 PASS (78 existing + 8 new admin tests)
-- admin role tests: 11 PASS
+- marketplace tests: 93 PASS (expanded from 86)
 - auth tests: 3 PASS
 - timestamp tests: 5 PASS
-- Latest commit: 8b4e2e5
+- Commit: 55d03a3
+
+## Location Note
+Marketplace feed empty at Kelapa Dua — location-scoped, not a bug.
+Products were created in Kebayoran Baru. COD test needs same-location products.
 
 ## Next Steps
-- Verify on physical device: admin account sees menus, general account does not
-- Resume P2-B23-B3 COD buyer/seller flow testing after admin fix confirmed
+- Verify on physical device: F1Rho sees admin, HUZ does not
+- Resume COD Buyer/Seller testing after admin guard confirmed

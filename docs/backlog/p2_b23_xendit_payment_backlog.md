@@ -35,5 +35,5 @@ Implement a secure, idempotent payment webhook and transaction synchronization s
 - [ ] Trigger an escalation log/alert upon 3 consecutive processing failures for the same `external_id`.
 
 ### 5. COD Confirmation
-- [ ] Generate 6-char `confirmationCode` upon deal confirmation.
-- [ ] Implement seller code entry to complete a deal offline safely.
+- [x] Generate 6-char `confirmationCode` upon deal confirmation.
+- [x] Implement seller code entry to complete a deal offline safely.

@@ -18,3 +18,15 @@ To provide a secure, offline way to confirm that a transaction has been complete
 - The code is short (6 chars) for easy typing but has enough entropy (36^6) for a 24-hour window per deal.
 - Rate limiting should be applied to prevent brute-forcing the code on the seller side.
 - Only the buyer of the specific deal can read the code.
+
+## COD Entry Point & Verification
+To ensure a smooth user experience, the COD CTA ("Beli COD") is explicitly displayed on the `ProductDetailScreen` just below the product header.
+
+The CTA clearly communicates the product's COD eligibility based on the following rules:
+- **Eligible**: Buyer + `aiVerificationStatus == 'passed'` + `isAiVerified == true` -> Button is active.
+- **Needs Review**: Buyer + `needs_review` -> Button is disabled showing "Menunggu review admin".
+- **Failed**: Buyer + `failed` (or `isAiVerified == false`) -> Button is disabled showing "Tidak lolos AI".
+- **Seller Own Product**: Button is disabled showing "Tidak bisa membeli produk sendiri".
+- **Unauthenticated**: Button is disabled showing "Login diperlukan".
+
+This visibility rule replaces hiding the COD option entirely, ensuring users understand why they cannot proceed with a COD deal and reducing confusion during testing and regular use.

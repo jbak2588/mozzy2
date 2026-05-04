@@ -79,6 +79,8 @@ class _ProductDetailContent extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context),
+                const SizedBox(height: 16),
+                _buildCodCta(context, ref),
                 const Divider(height: 32),
                 _buildDescription(context),
                 const Divider(height: 32),
@@ -185,6 +187,92 @@ class _ProductDetailContent extends ConsumerWidget {
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
+    );
+  }
+
+  Widget _buildCodCta(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(currentMarketplaceUserIdProvider);
+    final isSeller = userId == product.userId;
+
+    final canBuyCod = userId != null &&
+        !isSeller &&
+        product.aiVerificationStatus == 'passed' &&
+        product.isAiVerified == true &&
+        !product.isDeleted;
+    
+    String? codDisabledReason;
+    if (userId == null) {
+      codDisabledReason = 'Login diperlukan';
+    } else if (isSeller) {
+      codDisabledReason = 'Tidak bisa membeli produk sendiri';
+    } else if (product.aiVerificationStatus == 'needs_review') {
+      codDisabledReason = 'Menunggu review admin';
+    } else if (product.aiVerificationStatus == 'failed' || product.isAiVerified != true) {
+      codDisabledReason = 'Tidak lolos AI';
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.blue[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.verified_user, color: Colors.blue),
+              const SizedBox(width: 8),
+              const Text(
+                'COD Tersedia',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton.icon(
+              onPressed: canBuyCod
+                  ? () async {
+                      try {
+                        final repo = ref.read(dealRepositoryProvider);
+                        final deal = await repo.createCodDeal(
+                          product: product,
+                          buyerId: userId,
+                        );
+                        if (context.mounted) {
+                          context.push('/marketplace/deals/${deal.id}');
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(e
+                                    .toString()
+                                    .replaceAll('Exception: ', ''))),
+                          );
+                        }
+                      }
+                    }
+                  : null,
+              icon: const Icon(Icons.handshake),
+              label: Text(codDisabledReason ?? 'marketplace.codBuy'.tr()),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -448,15 +536,6 @@ class _ProductDetailContent extends ConsumerWidget {
     final userId = ref.watch(currentMarketplaceUserIdProvider);
     final isSeller = userId == product.userId;
 
-    final canBuyCod = userId != null &&
-        !isSeller &&
-        product.aiVerificationStatus == 'passed' &&
-        !product.isDeleted;
-    
-    final codDisabledReason = product.aiVerificationStatus == 'needs_review'
-        ? 'Menunggu review admin'
-        : (product.aiVerificationStatus == 'failed' ? 'Tidak lolos AI' : null);
-
     return Column(
       children: [
         if (!isSeller)
@@ -464,52 +543,27 @@ class _ProductDetailContent extends ConsumerWidget {
             width: double.infinity,
             height: 50,
             child: ElevatedButton.icon(
-              onPressed: canBuyCod
-                  ? () async {
-                      try {
-                        final repo = ref.read(dealRepositoryProvider);
-                        final deal = await repo.createCodDeal(
-                          product: product,
-                          buyerId: userId,
-                        );
-                        if (context.mounted) {
-                          context.push('/marketplace/deals/${deal.id}');
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(e
-                                    .toString()
-                                    .replaceAll('Exception: ', ''))),
-                          );
-                        }
-                      }
-                    }
-                  : null,
-              icon: const Icon(Icons.handshake),
-              label: Text(codDisabledReason ?? 'marketplace.codBuy'.tr()),
+              onPressed: null, // Placeholder: Disabled
+              icon: const Icon(Icons.chat),
+              label: Text('marketplace.chatSeller'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
                 foregroundColor: Colors.white,
+                disabledBackgroundColor: Colors.grey,
               ),
             ),
           ),
-        if (!isSeller) const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton.icon(
-            onPressed: null, // Placeholder: Disabled
-            icon: const Icon(Icons.chat),
-            label: Text('marketplace.chatSeller'.tr()),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-              disabledBackgroundColor: Colors.grey,
+        if (!isSeller)
+          const SizedBox(height: 8),
+        if (!isSeller)
+          Text(
+            'marketplace.comingSoon'.tr(),
+            style: const TextStyle(
+              color: Colors.grey,
+              fontStyle: FontStyle.italic,
+              fontSize: 12,
             ),
           ),
-        ),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -540,21 +594,29 @@ class _ProductDetailContent extends ConsumerWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: null, // Placeholder: Disabled
-                icon: const Icon(Icons.report_outlined),
-                label: Text('marketplace.report'.tr()),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: null, // Placeholder: Disabled
+                      icon: const Icon(Icons.report_outlined),
+                      label: Text('marketplace.report'.tr()),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'marketplace.comingSoon'.tr(),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'marketplace.comingSoon'.tr(),
-          style: const TextStyle(
-            color: Colors.grey,
-            fontStyle: FontStyle.italic,
-          ),
         ),
       ],
     );

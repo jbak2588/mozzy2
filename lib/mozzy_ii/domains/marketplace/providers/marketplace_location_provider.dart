@@ -6,13 +6,36 @@ import '../../../geo/utils/default_indonesia_location.dart';
 import '../../users/data/repositories/user_repository.dart';
 import 'marketplace_provider.dart';
 
+/// Dev override to force marketplace location to Kebayoran Baru
+/// Useful for testing COD flows when buyer and seller are physically in different test locations.
+class ForceKebayoranBaruNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setForced(bool value) {
+    state = value;
+  }
+}
+
+final forceKebayoranBaruProvider = NotifierProvider<ForceKebayoranBaruNotifier, bool>(() {
+  return ForceKebayoranBaruNotifier();
+});
+
 /// Marketplace 전용 effective location provider.
 /// 우선순위:
+/// 0. forceKebayoranBaruProvider (Dev override)
 /// 1. users/{uid}.locationParts (저장된 사용자 위치)
 /// 2. locationProvider의 device location (현재 기기 위치)
 /// 3. Jakarta Senayan fallback (기본값)
 final effectiveMarketplaceLocationProvider =
     FutureProvider.autoDispose<LocationParts>((ref) async {
+  
+  final forceFallback = ref.watch(forceKebayoranBaruProvider);
+  if (forceFallback) {
+    if (kDebugMode) debugPrint('[MarketplaceLocation] using FORCED Kebayoran Baru');
+    return defaultJakartaSenayanLocation();
+  }
+
   final uid = ref.watch(currentMarketplaceUserIdProvider);
 
   // 1. Prefer saved user profile location

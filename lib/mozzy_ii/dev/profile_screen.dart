@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import '../app/auth/auth_service.dart';
 import '../domains/users/presentation/providers/user_provider.dart';
 import '../domains/marketplace/providers/marketplace_provider.dart';
+import '../domains/marketplace/providers/marketplace_location_provider.dart';
 import '../domains/marketplace/models/admin_role_model.dart';
 import '../domains/marketplace/security/marketplace_admin_allowlist.dart';
 
@@ -35,6 +36,8 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
         : null;
     
     final adminRoleAsync = ref.watch(marketplaceAdminRoleAsyncProvider);
+    final locationAsync = ref.watch(effectiveMarketplaceLocationProvider);
+    final isForcingKebayoranBaru = ref.watch(forceKebayoranBaruProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -139,6 +142,30 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
             const Divider(height: 32),
 
             const Text(
+              'Marketplace Location (Test)',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+            locationAsync.when(
+              data: (loc) => Text('Effective: ${loc.idAddress?.kecamatan ?? loc.latitude}, ${loc.idAddress?.kabupaten ?? loc.longitude}'),
+              loading: () => const Text('Loading location...'),
+              error: (e, st) => Text('Error loading location: $e'),
+            ),
+            const SizedBox(height: 16),
+            SwitchListTile(
+              title: const Text('Force Kebayoran Baru'),
+              subtitle: const Text('Useful for testing COD with existing items'),
+              value: isForcingKebayoranBaru,
+              onChanged: (val) {
+                ref.read(forceKebayoranBaruProvider.notifier).setForced(val);
+                // Invalidate location provider to immediately reflect change
+                ref.invalidate(effectiveMarketplaceLocationProvider);
+              },
+              contentPadding: EdgeInsets.zero,
+            ),
+            const Divider(height: 32),
+
+            const Text(
               'Firestore Doc',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
@@ -176,6 +203,8 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
 
                           // Invalidate admin role providers to prevent stale cache leaking
                           ref.invalidate(marketplaceAdminRoleAsyncProvider);
+                          // Also clear dev override for location
+                          ref.read(forceKebayoranBaruProvider.notifier).setForced(false);
 
                           if (!context.mounted) return;
                           // AuthGate가 상태 변화를 감지하여 로그인 화면으로 보내겠지만, 명시적으로 이동

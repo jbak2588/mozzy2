@@ -1,19 +1,23 @@
-# Session Summary: P2-B23-B3 Verification Preparation
+# Session Summary: P2-B23-B4 Admin Role Enforcement
 
-## Objectives Achieved
-1. **Repository Security Blockers Resolved:**
-   - Modified `DealRepository.createCodDeal()` to enforce a strict blocker on products where `aiVerificationStatus != 'passed'` or `isAiVerified != true`. This handles the `needs_review` condition securely from the backend instead of just hiding the UI button.
-   - Removed premature updating of `product.status = 'sold'` during the code verification transaction, because `ProductModel` doesn't have a `status` field. This is formally deferred to P2-B23-C.
-   - Fixed un-pushed analysis warning corrections in `deal_detail_screen.dart` and `product_detail_screen.dart`.
+## Critical Blocker Resolved
+Admin role leakage was discovered where a general user (HUZMs5mweBT2DjkS8vHQrDjKZCx2) could see and access admin menus after switching from an admin account (F1RhoJnK0uUQ1jPzvA9GuIG6U2w1).
 
-2. **Testing Constraints Verified:**
-   - `flutter analyze` reports 0 issues.
-   - All `marketplace` tests (78/78) successfully passed.
-   - Project cleanly committed to `main` at SHA `657bf72`.
+## 5-Layer Defense Implemented
+1. **UID Allowlist** (`marketplace_admin_allowlist.dart`) — hard blocks non-allowlisted UIDs without network
+2. **Firebase Custom Claims** — allowlist-gated claims check with forceRefresh
+3. **Provider UID Dependency** — async/sync providers watch UID, re-evaluate on account switch
+4. **Route Guard** (`MarketplaceAdminGuardScreen`) — blocks direct URL navigation for unauthorized UIDs
+5. **Action Controller** — rejects approve/reject/dismiss from non-allowlisted UIDs
 
-## Next Actions
-The repository is perfectly prepped for Physical Device Testing.
-- Run `.\.local\run_mozzy_dev.ps1`.
-- Log in with 2 separate accounts to act as Seller and Buyer.
-- Run through the "Beli COD" creation and confirmation code execution.
-- If live test passes, officially mark P2-B23-B as VERIFIED and transition to P2-B23-C (Payment Data Flow).
+## Test Results
+- flutter analyze: 0 issues
+- marketplace tests: 86 PASS (78 existing + 8 new admin tests)
+- admin role tests: 11 PASS
+- auth tests: 3 PASS
+- timestamp tests: 5 PASS
+- Latest commit: 8b4e2e5
+
+## Next Steps
+- Verify on physical device: admin account sees menus, general account does not
+- Resume P2-B23-B3 COD buyer/seller flow testing after admin fix confirmed

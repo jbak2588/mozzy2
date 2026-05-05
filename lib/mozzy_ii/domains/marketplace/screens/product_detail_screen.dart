@@ -235,40 +235,27 @@ class _ProductDetailContent extends ConsumerWidget {
             width: double.infinity,
             height: 48,
             child: OutlinedButton.icon(
-              onPressed: () => context.push('/marketplace/deals'),
+              onPressed: () => context.push('/marketplace/deals?tab=sales'),
               icon: const Icon(Icons.receipt_long),
-              label: const Text('Lihat Transaksi Penjualan'),
+              label: const Text('Buka Transaksi COD Penjualan'),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(
+              'Masukkan kode 6 digit dari pembeli di halaman Penjualan.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: null, // P2-B24 TODO
-                  child: const Text('Edit'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: null, // P2-B24 TODO
-                  child: const Text('Delete'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: null, // P2-B23-C TODO
-                  child: const Text('Mark Sold'),
-                ),
-              ),
-            ],
-          ),
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: Text(
-              'Manajemen produk segera hadir',
+              'Edit/Delete/Mark Sold akan dibuat pada tahap berikutnya.',
               style: TextStyle(fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic),
             ),
           ),

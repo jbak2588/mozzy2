@@ -41,4 +41,4 @@ This visibility rule replaces hiding the COD option entirely, ensuring users und
 - Renamed generic seller action button to Buka Transaksi COD Penjualan.
 - Routed seller action directly to the Sales (Penjualan) tab via deep link ?tab=sales.
 - Added explicit buyer guidance advising the buyer to show the code to the seller and explaining the sellers path to the input screen.
-- Temporarily removed edit/delete/mark sold buttons from the seller actions view as they are deferred to P2-B24/C.
+- Temporarily removed edit/delete/mark sold buttons from the seller actions view as they are deferred to P2-B24/C.Reconciled Gemini CLI reported code with actual product_detail_screen.dart changes on 2026-05-05.

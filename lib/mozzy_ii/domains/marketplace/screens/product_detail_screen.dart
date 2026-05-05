@@ -61,11 +61,12 @@ class _ProductDetailContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(currentMarketplaceUserIdProvider);
-    final isSeller = userId != null && userId == product.userId;
+    final effectiveCurrentUid = userId;
+    final isSeller = effectiveCurrentUid != null && effectiveCurrentUid == product.sellerId;
 
     if (kDebugMode) {
       debugPrint('[CODEligibility] currentUid=$userId');
-      debugPrint('[CODEligibility] product.userId=${product.userId}');
+      debugPrint('[CODEligibility] product.sellerId=${product.sellerId}');
       debugPrint('[CODEligibility] isSeller=$isSeller');
       debugPrint('[CODEligibility] aiStatus=${product.aiVerificationStatus}');
       debugPrint('[CODEligibility] isAiVerified=${product.isAiVerified}');

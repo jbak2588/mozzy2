@@ -24,12 +24,23 @@ import '../services/firebase_marketplace_admin_role_source.dart';
 import '../services/in_memory_marketplace_admin_role_source.dart';
 import '../security/marketplace_admin_allowlist.dart';
 
+final firebaseAuthProvider = Provider<FirebaseAuth>((ref) {
+  return FirebaseAuth.instance;
+});
+
+final marketplaceAuthStateProvider = StreamProvider.autoDispose<User?>((ref) {
+  if (IntegrationTestConfig.enabled) {
+    return const Stream<User?>.empty();
+  }
+  return ref.watch(firebaseAuthProvider).authStateChanges();
+});
+
 final currentMarketplaceUserIdProvider = Provider<String?>((ref) {
   if (IntegrationTestConfig.enabled) {
     return IntegrationTestConfig.testUserId;
   }
-  // This will throw if not logged in. The UI should prevent this.
-  return FirebaseAuth.instance.currentUser?.uid;
+  final authUser = ref.watch(marketplaceAuthStateProvider).value;
+  return authUser?.uid ?? ref.watch(firebaseAuthProvider).currentUser?.uid;
 });
 
 final marketplaceAdminRoleSourceProvider = Provider<MarketplaceAdminRoleSource>(

@@ -34,10 +34,14 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
     final userModelAsync = user != null
         ? ref.watch(userModelProvider(user.uid))
         : null;
-    
+
+    final currentProviderUid = ref.watch(currentMarketplaceUserIdProvider);
+    final effectiveRole = ref.watch(marketplaceAdminRoleProvider);
     final adminRoleAsync = ref.watch(marketplaceAdminRoleAsyncProvider);
     final locationAsync = ref.watch(effectiveMarketplaceLocationProvider);
     final isForcingKebayoranBaru = ref.watch(forceKebayoranBaruProvider);
+
+    final isAllowlisted = isMarketplaceAdminUidAllowed(currentProviderUid);
 
     return Scaffold(
       appBar: AppBar(
@@ -72,11 +76,13 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
             const SizedBox(height: 12),
             Text('Email: ${user?.email ?? "-"}'),
             const SizedBox(height: 8),
-            Text('UID: ${user?.uid ?? "-"}'),
+            Text('FirebaseAuth UID: ${user?.uid ?? "-"}'),
+            const SizedBox(height: 8),
+            Text('Provider UID: ${currentProviderUid ?? "-"}'),
             const SizedBox(height: 8),
             Text('DisplayName: ${user?.displayName ?? "-"}'),
             const Divider(height: 32),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -105,30 +111,31 @@ class _DevProfileScreenState extends ConsumerState<DevProfileScreen> {
               ],
             ),
             const SizedBox(height: 12),
+            Text(
+              'Effective Role: ${effectiveRole.name} (canModerate: ${effectiveRole.canModerate})',
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+            const SizedBox(height: 8),
             adminRoleAsync.when(
-              data: (role) => Text('Role: ${role.name} (canModerate: ${role.canModerate})'),
-              loading: () => const Text('Loading role...'),
-              error: (e, st) => Text('Error loading role: $e'),
+              data: (role) => Text('Async Source Role: ${role.name}'),
+              loading: () => const Text('Loading async source role...'),
+              error: (e, st) => Text('Error loading source role: $e'),
             ),
             const SizedBox(height: 8),
             Text(
-              'UID allowlisted: ${isMarketplaceAdminUidAllowed(user?.uid)}',
+              'UID allowlisted: $isAllowlisted',
               style: TextStyle(
-                color: isMarketplaceAdminUidAllowed(user?.uid)
-                    ? Colors.green
-                    : Colors.grey,
+                color: isAllowlisted ? Colors.green : Colors.grey,
                 fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 16),
-            if (isMarketplaceAdminUidAllowed(user?.uid) &&
-                ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
+            if (isAllowlisted && ref.watch(canViewMarketplaceAdminReviewProvider)) ...[
               Wrap(
                 spacing: 8,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () => context.push('/marketplace/admin-review'),
-                    icon: const Icon(Icons.rate_review),
+                    onPressed: () => context.push('/marketplace/admin-review'),                    icon: const Icon(Icons.rate_review),
                     label: const Text('Admin Review'),
                   ),
                   ElevatedButton.icon(

@@ -30,3 +30,9 @@ The CTA clearly communicates the product's COD eligibility based on the followin
 - **Unauthenticated**: Button is disabled showing "Login diperlukan".
 
 This visibility rule replaces hiding the COD option entirely, ensuring users understand why they cannot proceed with a COD deal and reducing confusion during testing and regular use.
+
+
+### 2026-05-05 Update: Auth-State & COD Ownership Validation
+- Provider currentMarketplaceUserIdProvider has been updated to use FirebaseAuth.instance.authStateChanges() for reactively catching user switching.
+- Admin effective role and ownership (Seller check isSeller = effectiveCurrentUid == product.sellerId) is explicitly validated using this reactive uid.
+- Fixes an issue where F1Rho saw Beli COD on his own products due to stale static read of currentUser.uid.

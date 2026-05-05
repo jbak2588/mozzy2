@@ -66,3 +66,9 @@
 - Log in as HUZ, buy F1Rho's product via COD, and view the instructions.
 - Switch to F1Rho, navigate to `Deals -> Penjualan`, enter the code to complete the deal.
 - Proceed to P2-B23-C (Product Sold State Alignment).
+
+
+### 2026-05-05 Update: Role Reactivity
+- Fixed an issue where the async admin role provider cached stale roles during account switching.
+- Switched to a reactive currentMarketplaceUserIdProvider tied to authStateChanges().
+- Verified F1Rho always receives admin role and HUZ receives none, explicitly updating DevProfileScreen to reflect effective state.

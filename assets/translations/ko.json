@@ -255,6 +255,12 @@
     "codeLocked": "코드가 잠겼습니다",
     "remainingAttempts": "남은 시도 횟수",
     "cannotBuyOwnProduct": "자신의 상품은 구매할 수 없습니다",
-    "itemNotEligibleForCod": "이 상품은 직거래를 지원하지 않습니다"
+    "itemNotEligibleForCod": "이 상품은 직거래를 지원하지 않습니다",
+    "openSalesCod": "판매 COD 거래 열기",
+    "salesCodDesc": "구매자가 보여준 6자리 코드를 Penjualan 화면에서 입력하세요.",
+    "noSalesDeals": "아직 판매 COD 거래가 없습니다.\n구매자가 먼저 상품 상세에서 Beli COD를 눌러야 합니다.",
+    "noBuyerDeals": "아직 구매 COD 거래가 없습니다.\n상품 상세에서 Beli COD를 눌러 시작하세요.",
+    "buyerCodeSellerInstruction": "이 코드는 직접 입력하는 것이 아닙니다.\n만났을 때 판매자에게 보여주세요.\n판매자는 Transaksi COD > Penjualan에서 해당 거래를 열고 입력합니다.",
+    "dealsListTooltip": "COD 거래 목록"
   }
 }

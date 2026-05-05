@@ -6,7 +6,8 @@ import '../providers/deal_provider.dart';
 import '../models/deal_model.dart';
 
 class DealsListScreen extends ConsumerStatefulWidget {
-  const DealsListScreen({super.key});
+  final String? initialTab;
+  const DealsListScreen({super.key, this.initialTab});
 
   @override
   ConsumerState<DealsListScreen> createState() => _DealsListScreenState();
@@ -19,7 +20,7 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialTab == 'sales' ? 1 : 0);
   }
 
   @override
@@ -44,8 +45,8 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          _DealsListTab(dealsAsync: ref.watch(buyerDealsProvider)),
-          _DealsListTab(dealsAsync: ref.watch(sellerDealsProvider)),
+          _DealsListTab(dealsAsync: ref.watch(buyerDealsProvider), isSales: false),
+          _DealsListTab(dealsAsync: ref.watch(sellerDealsProvider), isSales: true),
         ],
       ),
     );
@@ -53,16 +54,29 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen>
 }
 
 class _DealsListTab extends ConsumerWidget {
+  final bool isSales;
+
   final AsyncValue<List<DealModel>> dealsAsync;
 
-  const _DealsListTab({required this.dealsAsync});
+  const _DealsListTab({required this.dealsAsync, this.isSales = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return dealsAsync.when(
       data: (deals) {
         if (deals.isEmpty) {
-          return const Center(child: Text('No deals found.'));
+          return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Text(
+                  isSales
+                      ? 'marketplace.noSalesDeals'.tr()
+                      : 'marketplace.noBuyerDeals'.tr(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.grey, height: 1.5),
+                ),
+              ),
+            );
         }
         return ListView.builder(
           itemCount: deals.length,

@@ -39,7 +39,7 @@ class _MarketplaceListScreenState extends ConsumerState<MarketplaceListScreen> {
           IconButton(
             key: const Key('marketplaceDealsButton'),
             icon: const Icon(Icons.receipt_long),
-            tooltip: 'marketplace.deals'.tr(),
+            tooltip: 'marketplace.dealsListTooltip'.tr(),
             onPressed: () => context.push('/marketplace/deals'),
           ),
           if (isMarketplaceAdminUidAllowed(

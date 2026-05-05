@@ -105,14 +105,14 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
-                children: const [
+                children: [
                   Text(
                     'Instruksi untuk Penjual',
                     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Penjual harus membuka:\nDeals -> Penjualan -> pilih transaksi ini -> masukkan kode ini.',
+                    'marketplace.buyerCodeSellerInstruction'.tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12, color: Colors.blue),
                   ),

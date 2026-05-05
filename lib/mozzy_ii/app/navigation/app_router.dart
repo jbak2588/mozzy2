@@ -98,7 +98,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   ),
                   GoRoute(
                     path: 'deals',
-                    builder: (context, state) => const DealsListScreen(),
+                    builder: (context, state) => DealsListScreen(initialTab: state.uri.queryParameters['tab']),
                   ),
                   GoRoute(
                     path: 'deals/:dealId',

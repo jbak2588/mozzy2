@@ -255,6 +255,12 @@
     "codeLocked": "Kode terkunci",
     "remainingAttempts": "Sisa percobaan",
     "cannotBuyOwnProduct": "Tidak bisa membeli produk sendiri",
-    "itemNotEligibleForCod": "Produk tidak memenuhi syarat COD"
+    "itemNotEligibleForCod": "Produk tidak memenuhi syarat COD",
+    "openSalesCod": "Buka Transaksi COD Penjualan",
+    "salesCodDesc": "Masukkan kode 6 digit dari pembeli di halaman Penjualan.",
+    "noSalesDeals": "Belum ada transaksi penjualan COD.\nMinta pembeli membuka produk Anda dan menekan Beli COD terlebih dahulu.",
+    "noBuyerDeals": "Belum ada transaksi pembelian COD.\nBuka produk dan tekan Beli COD untuk memulai.",
+    "buyerCodeSellerInstruction": "Kode ini bukan untuk Anda masukkan.\nBerikan kode ini kepada penjual saat bertemu.\nPenjual membuka: Transaksi COD > Penjualan > pilih deal ini.",
+    "dealsListTooltip": "Daftar Transaksi COD"
   }
 }

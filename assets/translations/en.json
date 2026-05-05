@@ -255,6 +255,12 @@
     "codeLocked": "Code locked",
     "remainingAttempts": "Remaining attempts",
     "cannotBuyOwnProduct": "Cannot buy own product",
-    "itemNotEligibleForCod": "Item not eligible for COD"
+    "itemNotEligibleForCod": "Item not eligible for COD",
+    "openSalesCod": "Open Sales COD Deals",
+    "salesCodDesc": "Enter the 6-digit code from the buyer in the Sales tab.",
+    "noSalesDeals": "No sales COD deals yet.\nAsk the buyer to open your product and tap Beli COD first.",
+    "noBuyerDeals": "No purchase COD deals yet.\nOpen a product and tap Beli COD to start.",
+    "buyerCodeSellerInstruction": "Do not enter this code yourself.\nShow this code to the seller when you meet.\nThe seller should open: Transaksi COD > Penjualan > select this deal.",
+    "dealsListTooltip": "COD Deals List"
   }
 }

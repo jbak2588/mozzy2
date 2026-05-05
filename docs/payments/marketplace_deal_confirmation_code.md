@@ -36,3 +36,9 @@ This visibility rule replaces hiding the COD option entirely, ensuring users und
 - Provider currentMarketplaceUserIdProvider has been updated to use FirebaseAuth.instance.authStateChanges() for reactively catching user switching.
 - Admin effective role and ownership (Seller check isSeller = effectiveCurrentUid == product.sellerId) is explicitly validated using this reactive uid.
 - Fixes an issue where F1Rho saw Beli COD on his own products due to stale static read of currentUser.uid.
+
+### 2026-05-05 Update: Seller UX Improvements
+- Renamed generic seller action button to Buka Transaksi COD Penjualan.
+- Routed seller action directly to the Sales (Penjualan) tab via deep link ?tab=sales.
+- Added explicit buyer guidance advising the buyer to show the code to the seller and explaining the sellers path to the input screen.
+- Temporarily removed edit/delete/mark sold buttons from the seller actions view as they are deferred to P2-B24/C.

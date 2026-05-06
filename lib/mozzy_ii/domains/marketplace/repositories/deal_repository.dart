@@ -35,7 +35,7 @@ class DealRepository {
     if (product.aiVerificationStatus != 'passed' || product.isAiVerified != true) {
       throw Exception('Product is not eligible for COD due to AI status');
     }
-    if (product.isDeleted) {
+    if (product.isDeleted || product.status != ProductStatus.available) {
       throw Exception('Product is no longer available');
     }
 
@@ -77,10 +77,29 @@ class DealRepository {
 
     final dealRef = dealsCollection.doc(dealId);
     final privateCodeRef = _fs.collection(buyerPrivateCodePath(buyerId)).doc(dealId);
+    final productRef = _fs.collection('countries/$countryId/domains/$domainId/products').doc(product.id);
 
     await _fs.runTransaction((transaction) async {
+      // Re-verify availability within transaction
+      final productDoc = await transaction.get(productRef);
+      if (!productDoc.exists) throw Exception('Product not found');
+      
+      final data = productDoc.data() as Map<String, dynamic>;
+      final currentStatus = data['status'] ?? 'available';
+      final currentIsDeleted = data['isDeleted'] ?? false;
+      
+      if (currentStatus != 'available' || currentIsDeleted == true) {
+        throw Exception('Product is no longer available');
+      }
+
       transaction.set(dealRef, deal.toJson());
       transaction.set(privateCodeRef, privateCode.toJson());
+
+      // Mark as reserved
+      transaction.update(productRef, {
+        'status': ProductStatus.reserved.name,
+        'updatedAt': Timestamp.fromDate(now),
+      });
     });
 
     return deal;
@@ -208,15 +227,20 @@ class DealRepository {
       }
 
       final now = DateTime.now().toUtc();
-      
+
       transaction.update(dealRef, {
         'status': 'completed',
         'completedAt': Timestamp.fromDate(now),
         'completedBy': sellerId,
         'updatedAt': Timestamp.fromDate(now),
       });
-      
-      // TODO(P2-B23-C): Update product to sold when ProductModel supports status field
+
+      // Update product to sold
+      final productRef = _fs.collection('countries/$countryId/domains/$domainId/products').doc(deal.productId);
+      transaction.update(productRef, {
+        'status': ProductStatus.sold.name,
+        'updatedAt': Timestamp.fromDate(now),
+      });
 
       return deal.copyWith(
         status: 'completed',
@@ -224,6 +248,7 @@ class DealRepository {
         completedBy: sellerId,
         updatedAt: now,
       );
+
     });
   }
 }

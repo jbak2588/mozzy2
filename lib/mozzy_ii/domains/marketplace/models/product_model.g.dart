@@ -55,6 +55,9 @@ _ProductModel _$ProductModelFromJson(
   createdAt: const SafeDateTimeConverter().fromJson(json['createdAt']),
   updatedAt: const OptionalSafeDateTimeConverter().fromJson(json['updatedAt']),
   isDeleted: json['isDeleted'] as bool? ?? false,
+  status:
+      $enumDecodeNullable(_$ProductStatusEnumMap, json['status']) ??
+      ProductStatus.available,
   viewsCount: (json['viewsCount'] as num?)?.toInt() ?? 0,
   likesCount: (json['likesCount'] as num?)?.toInt() ?? 0,
   chatsCount: (json['chatsCount'] as num?)?.toInt() ?? 0,
@@ -92,6 +95,7 @@ Map<String, dynamic> _$ProductModelToJson(
   'createdAt': const SafeDateTimeConverter().toJson(instance.createdAt),
   'updatedAt': const OptionalSafeDateTimeConverter().toJson(instance.updatedAt),
   'isDeleted': instance.isDeleted,
+  'status': _$ProductStatusEnumMap[instance.status]!,
   'viewsCount': instance.viewsCount,
   'likesCount': instance.likesCount,
   'chatsCount': instance.chatsCount,
@@ -108,4 +112,10 @@ const _$ReachModeEnumMap = {
   ReachMode.localOnly: 'localOnly',
   ReachMode.progressive: 'progressive',
   ReachMode.globalRelay: 'globalRelay',
+};
+
+const _$ProductStatusEnumMap = {
+  ProductStatus.available: 'available',
+  ProductStatus.reserved: 'reserved',
+  ProductStatus.sold: 'sold',
 };

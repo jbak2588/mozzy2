@@ -265,23 +265,27 @@ class _ProductDetailContent extends ConsumerWidget {
   }
 
   Widget _buildCodCta(BuildContext context, WidgetRef ref, String? userId, bool isSeller) {
-    final canBuyCod = userId != null &&
+  final canBuyCod = userId != null &&
         !isSeller &&
         product.aiVerificationStatus == 'passed' &&
         product.isAiVerified == true &&
-        !product.isDeleted;
-    
-    String? codDisabledReason;
-    if (userId == null) {
-      codDisabledReason = 'Login diperlukan';
-    } else if (isSeller) {
-      codDisabledReason = 'Tidak bisa membeli produk sendiri';
-    } else if (product.aiVerificationStatus == 'needs_review') {
-      codDisabledReason = 'Menunggu review admin';
-    } else if (product.aiVerificationStatus == 'failed' || product.isAiVerified != true) {
-      codDisabledReason = 'Tidak lolos AI';
-    }
+        !product.isDeleted &&
+        product.status == ProductStatus.available;
 
+  String? codDisabledReason;
+  if (userId == null) {
+    codDisabledReason = 'Login diperlukan';
+  } else if (isSeller) {
+    codDisabledReason = 'Tidak bisa membeli produk sendiri';
+  } else if (product.status == ProductStatus.sold) {
+    codDisabledReason = 'Sudah Terjual';
+  } else if (product.status == ProductStatus.reserved) {
+    codDisabledReason = 'Sedang dipesan';
+  } else if (product.aiVerificationStatus == 'needs_review') {
+    codDisabledReason = 'Menunggu review admin';
+  } else if (product.aiVerificationStatus == 'failed' || product.isAiVerified != true) {
+    codDisabledReason = 'Tidak lolos AI';
+  }
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

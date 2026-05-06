@@ -149,6 +149,22 @@ class MarketplaceRepository {
     }
   }
 
+  Future<void> updateProductStatus({
+    required String productId,
+    required ProductStatus status,
+  }) async {
+    try {
+      final now = DateTime.now().toUtc();
+      await productsCollection.doc(productId).update({
+        'status': status.name,
+        'updatedAt': now,
+      }).timeout(const Duration(seconds: 10));
+    } catch (e) {
+      if (kDebugMode) debugPrint('[MarketplaceRepo] updateProductStatus error: $e');
+      rethrow;
+    }
+  }
+
   // --- Like Methods ---
 
   Future<bool> isProductLikedByUser({

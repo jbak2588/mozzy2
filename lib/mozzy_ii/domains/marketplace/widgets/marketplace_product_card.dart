@@ -94,8 +94,9 @@ class MarketplaceProductCard extends StatelessWidget {
   }
 
   Widget _buildImage(BuildContext context) {
+    Widget image;
     if (product.imageUrls.isEmpty) {
-      return Container(
+      image = Container(
         key: const Key('marketplaceProductImagePlaceholder'),
         color: Colors.grey[200],
         child: Center(
@@ -112,20 +113,50 @@ class MarketplaceProductCard extends StatelessWidget {
           ),
         ),
       );
+    } else {
+      image = Image.network(
+        product.imageUrls.first,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            key: const Key('marketplaceProductImagePlaceholder'),
+            color: Colors.grey[200],
+            child: const Center(
+              child: Icon(Icons.broken_image, color: Colors.grey),
+            ),
+          );
+        },
+      );
     }
 
-    return Image.network(
-      product.imageUrls.first,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
-          key: const Key('marketplaceProductImagePlaceholder'),
-          color: Colors.grey[200],
-          child: const Center(
-            child: Icon(Icons.broken_image, color: Colors.grey),
+    if (product.status == ProductStatus.sold) {
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          image,
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: const Text(
+                  'TERJUAL',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
           ),
-        );
-      },
-    );
+        ],
+      );
+    }
+
+    return image;
   }
 }

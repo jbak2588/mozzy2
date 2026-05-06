@@ -89,6 +89,20 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
     }
   }
 
+  @override
+  Future<void> updateProductStatus({
+    required String productId,
+    required ProductStatus status,
+  }) async {
+    final p = _products[productId];
+    if (p != null) {
+      _products[productId] = p.copyWith(
+        status: status,
+        updatedAt: DateTime.now().toUtc(),
+      );
+    }
+  }
+
   final Map<String, Map<String, DateTime>> _productLikes =
       {}; // productId -> {userId: likedAt}
 

@@ -53,6 +53,16 @@ class OptionalSafeDateTimeConverter
   dynamic toJson(DateTime? object) => object?.toUtc().toIso8601String();
 }
 
+@JsonEnum(alwaysCreate: true)
+enum ProductStatus {
+  @JsonValue('available')
+  available,
+  @JsonValue('reserved')
+  reserved,
+  @JsonValue('sold')
+  sold,
+}
+
 @freezed
 abstract class ProductModel with _$ProductModel implements MozzyPostContract {
   const ProductModel._();
@@ -68,7 +78,7 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @Default('IDR') String currencyCode,
     @Default([]) List<String> imageUrls,
 
-    // MozzyPostContract 구현 필드
+    // MozzyPostContract êµ¬í˜„ í•„ë“œ
     @Default(GeoScope.neighborhood) GeoScope geoScope,
     @Default(ReachMode.localOnly) ReachMode reachMode,
     @Default({}) Map<String, String> translationState,
@@ -76,7 +86,7 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @Default(0.0) double signalScore,
     required String geoPath,
 
-    // 위치 상세
+    // ìœ위치 상세
     LocationParts? locationParts,
 
     @Default('ID') String countryCode,
@@ -93,10 +103,12 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @OptionalSafeDateTimeConverter() DateTime? updatedAt,
 
     @Default(false) bool isDeleted,
+    @Default(ProductStatus.available) ProductStatus status,
     @Default(0) int viewsCount,
     @Default(0) int likesCount,
     @Default(0) int chatsCount,
   }) = _ProductModel;
+
 
   // Alias for MozzyPostContract compatibility if needed,
   // but we already mapped sellerId to userId in the factory.

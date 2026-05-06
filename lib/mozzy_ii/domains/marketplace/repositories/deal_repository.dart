@@ -139,6 +139,16 @@ class DealRepository {
     }
   }
 
+  Stream<List<DealModel>> watchBuyerDeals(String buyerId) {
+    return dealsCollection
+        .where('buyerId', isEqualTo: buyerId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((d) => DealModel.fromJson({...d.data() as Map<String, dynamic>, 'id': d.id}))
+            .toList());
+  }
+
   Future<List<DealModel>> fetchSellerDeals(String sellerId) async {
     try {
       final snap = await dealsCollection
@@ -153,6 +163,16 @@ class DealRepository {
       if (kDebugMode) debugPrint('[DealRepo] fetchSellerDeals error: $e');
       rethrow;
     }
+  }
+
+  Stream<List<DealModel>> watchSellerDeals(String sellerId) {
+    return dealsCollection
+        .where('sellerId', isEqualTo: sellerId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((d) => DealModel.fromJson({...d.data() as Map<String, dynamic>, 'id': d.id}))
+            .toList());
   }
 
   Future<BuyerDealCodeModel?> getBuyerDealCode({

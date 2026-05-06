@@ -130,33 +130,41 @@ class MarketplaceProductCard extends StatelessWidget {
     }
 
     if (product.status == ProductStatus.sold) {
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          image,
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-                child: const Text(
-                  'TERJUAL',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+      return _buildOverlay(image, 'TERJUAL', Colors.black.withValues(alpha: 0.5));
+    }
+
+    if (product.status == ProductStatus.reserved) {
+      return _buildOverlay(image, 'DIPESAN', Colors.orange.withValues(alpha: 0.6));
+    }
+
+    return image;
+  }
+
+  Widget _buildOverlay(Widget image, String label, Color overlayColor) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        image,
+        Container(
+          color: overlayColor,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
             ),
           ),
-        ],
-      );
-    }
-
-    return image;
+        ),
+      ],
+    );
   }
 }

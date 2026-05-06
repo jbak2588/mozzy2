@@ -18,18 +18,28 @@ final dealByIdProvider = StreamProvider.autoDispose.family<DealModel?, String>((
   return repo.watchDealById(dealId);
 });
 
-final buyerDealsProvider = FutureProvider.autoDispose<List<DealModel>>((ref) async {
+final buyerDealsProvider = StreamProvider.autoDispose<List<DealModel>>((ref) {
   final userId = ref.watch(currentMarketplaceUserIdProvider);
-  if (userId == null) return [];
+  if (userId == null) return Stream.value([]);
   final repo = ref.watch(dealRepositoryProvider);
-  return repo.fetchBuyerDeals(userId);
+  return repo.watchBuyerDeals(userId);
 });
 
-final sellerDealsProvider = FutureProvider.autoDispose<List<DealModel>>((ref) async {
+final activeDealForProductProvider = Provider.autoDispose.family<AsyncValue<DealModel?>, String>((ref, productId) {
+  return ref.watch(buyerDealsProvider).whenData((deals) {
+    try {
+      return deals.firstWhere((d) => d.productId == productId && d.status == 'confirmed');
+    } catch (_) {
+      return null;
+    }
+  });
+});
+
+final sellerDealsProvider = StreamProvider.autoDispose<List<DealModel>>((ref) {
   final userId = ref.watch(currentMarketplaceUserIdProvider);
-  if (userId == null) return [];
+  if (userId == null) return Stream.value([]);
   final repo = ref.watch(dealRepositoryProvider);
-  return repo.fetchSellerDeals(userId);
+  return repo.watchSellerDeals(userId);
 });
 
 final buyerDealCodeProvider = FutureProvider.autoDispose.family<BuyerDealCodeModel?, String>((ref, dealId) async {

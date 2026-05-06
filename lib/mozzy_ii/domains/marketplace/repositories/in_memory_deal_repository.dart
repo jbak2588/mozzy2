@@ -30,6 +30,16 @@ class InMemoryDealRepository implements DealRepository {
   }
 
   @override
+  Stream<List<DealModel>> watchBuyerDeals(String buyerId) {
+    return Stream.fromIterable([_deals.where((d) => d.buyerId == buyerId).toList()]);
+  }
+
+  @override
+  Stream<List<DealModel>> watchSellerDeals(String sellerId) {
+    return Stream.fromIterable([_deals.where((d) => d.sellerId == sellerId).toList()]);
+  }
+
+  @override
   Future<DealModel> createCodDeal({
     required ProductModel product,
     required String buyerId,
@@ -119,7 +129,6 @@ class InMemoryDealRepository implements DealRepository {
 
       return updated;
     } else {
-
       final newCount = deal.codeAttemptCount + 1;
       final updated = deal.copyWith(
         codeAttemptCount: newCount,

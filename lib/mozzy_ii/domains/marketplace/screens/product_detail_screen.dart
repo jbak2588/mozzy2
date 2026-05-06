@@ -7,6 +7,7 @@ import '../../../core/utils/formatters.dart';
 import '../widgets/product_verification_badge.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/product_model.dart';
+import '../models/deal_model.dart';
 import '../models/ai_verification_report_model.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/deal_provider.dart';
@@ -206,24 +207,29 @@ class _ProductDetailContent extends ConsumerWidget {
   }
 
   Widget _buildSellerOwnerActions(BuildContext context) {
+    final isSold = product.status == ProductStatus.sold;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.orange[50],
+        color: isSold ? Colors.grey[50] : Colors.orange[50],
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange[200]!),
+        border: Border.all(color: isSold ? Colors.grey[300]! : Colors.orange[200]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.storefront, color: Colors.orange),
+              Icon(
+                isSold ? Icons.check_circle_outline : Icons.storefront,
+                color: isSold ? Colors.grey : Colors.orange,
+              ),
               const SizedBox(width: 8),
-              const Text(
-                'Produk milik Anda',
+              Text(
+                isSold ? 'Produk Terjual' : 'Produk milik Anda',
                 style: TextStyle(
-                  color: Colors.orange,
+                  color: isSold ? Colors.grey : Colors.orange,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -231,26 +237,32 @@ class _ProductDetailContent extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: OutlinedButton.icon(
-              onPressed: () => context.push('/marketplace/deals?tab=sales'),
-              icon: const Icon(Icons.receipt_long),
-              label: const Text('Buka Transaksi COD Penjualan'),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 8),
-            child: Text(
-              'Masukkan kode 6 digit dari pembeli di halaman Penjualan.',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
+          if (!isSold) ...[
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton.icon(
+                onPressed: () => context.push('/marketplace/deals?tab=sales'),
+                icon: const Icon(Icons.receipt_long),
+                label: const Text('Buka Transaksi COD Penjualan'),
               ),
             ),
-          ),
+            const Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Text(
+                'Masukkan kode 6 digit dari pembeli di halaman Penjualan.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ] else
+            const Text(
+              'Transaksi COD telah selesai.',
+              style: TextStyle(color: Colors.grey),
+            ),
           const SizedBox(height: 12),
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
@@ -265,27 +277,32 @@ class _ProductDetailContent extends ConsumerWidget {
   }
 
   Widget _buildCodCta(BuildContext context, WidgetRef ref, String? userId, bool isSeller) {
-  final canBuyCod = userId != null &&
+    final activeDealAsync = userId != null
+        ? ref.watch(activeDealForProductProvider(product.id))
+        : const AsyncValue<DealModel?>.data(null);
+
+    final canBuyCod = userId != null &&
         !isSeller &&
         product.aiVerificationStatus == 'passed' &&
         product.isAiVerified == true &&
         !product.isDeleted &&
         product.status == ProductStatus.available;
 
-  String? codDisabledReason;
-  if (userId == null) {
-    codDisabledReason = 'Login diperlukan';
-  } else if (isSeller) {
-    codDisabledReason = 'Tidak bisa membeli produk sendiri';
-  } else if (product.status == ProductStatus.sold) {
-    codDisabledReason = 'Sudah Terjual';
-  } else if (product.status == ProductStatus.reserved) {
-    codDisabledReason = 'Sedang dipesan';
-  } else if (product.aiVerificationStatus == 'needs_review') {
-    codDisabledReason = 'Menunggu review admin';
-  } else if (product.aiVerificationStatus == 'failed' || product.isAiVerified != true) {
-    codDisabledReason = 'Tidak lolos AI';
-  }
+    String? codDisabledReason;
+    if (userId == null) {
+      codDisabledReason = 'Login diperlukan';
+    } else if (isSeller) {
+      codDisabledReason = 'Tidak bisa membeli produk sendiri';
+    } else if (product.status == ProductStatus.sold) {
+      codDisabledReason = 'Sudah Terjual';
+    } else if (product.status == ProductStatus.reserved) {
+      codDisabledReason = 'Sedang dipesan';
+    } else if (product.aiVerificationStatus == 'needs_review') {
+      codDisabledReason = 'Menunggu review admin';
+    } else if (product.aiVerificationStatus == 'failed' || product.isAiVerified != true) {
+      codDisabledReason = 'Tidak lolos AI';
+    }
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -311,41 +328,61 @@ class _ProductDetailContent extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton.icon(
-              onPressed: canBuyCod
-                  ? () async {
-                      try {
-                        final repo = ref.read(dealRepositoryProvider);
-                        final deal = await repo.createCodDeal(
-                          product: product,
-                          buyerId: userId,
-                        );
-                        if (context.mounted) {
-                          context.push('/marketplace/deals/${deal.id}');
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(e
-                                    .toString()
-                                    .replaceAll('Exception: ', ''))),
+          // Check for data existence specifically, not just value
+          if (activeDealAsync.hasValue && activeDealAsync.value != null)
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                onPressed: () =>
+                    context.push('/marketplace/deals/${activeDealAsync.value!.id}'),
+                icon: const Icon(Icons.qr_code),
+                label: const Text('Lihat Kode COD Saya'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[700],
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            )
+          else
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                onPressed: canBuyCod
+                    ? () async {
+                        try {
+                          final repo = ref.read(dealRepositoryProvider);
+                          final deal = await repo.createCodDeal(
+                            product: product,
+                            buyerId: userId,
                           );
+                          // Invalidate to trigger immediate refresh of active deal
+                          ref.invalidate(buyerDealsProvider);
+                          
+                          if (context.mounted) {
+                            context.push('/marketplace/deals/${deal.id}');
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(e
+                                      .toString()
+                                      .replaceAll('Exception: ', ''))),
+                            );
+                          }
                         }
                       }
-                    }
-                  : null,
-              icon: const Icon(Icons.handshake),
-              label: Text(codDisabledReason ?? 'marketplace.codBuy'.tr()),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
+                    : null,
+                icon: const Icon(Icons.handshake),
+                label: Text(codDisabledReason ?? 'marketplace.codBuy'.tr()),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

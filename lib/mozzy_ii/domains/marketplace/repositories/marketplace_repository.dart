@@ -45,6 +45,50 @@ class MarketplaceRepository {
     }
   }
 
+  Stream<ProductModel?> watchProductById(String productId) {
+    return productsCollection.doc(productId).snapshots().map((doc) {
+      if (!doc.exists) return null;
+      final data = doc.data() as Map<String, dynamic>;
+      return ProductModel.fromJson({...data, 'id': doc.id});
+    });
+  }
+
+  Stream<List<ProductModel>> watchByKecamatan({
+    required String kecamatan,
+    int limit = 20,
+  }) {
+    return productsCollection
+        .where('isDeleted', isEqualTo: false)
+        .where('locationParts.idAddress.kecamatan', isEqualTo: kecamatan)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((d) => ProductModel.fromJson({
+                  ...d.data() as Map<String, dynamic>,
+                  'id': d.id,
+                }))
+            .toList());
+  }
+
+  Stream<List<ProductModel>> watchByCategory({
+    required String category,
+    int limit = 20,
+  }) {
+    return productsCollection
+        .where('isDeleted', isEqualTo: false)
+        .where('category', isEqualTo: category)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snap) => snap.docs
+            .map((d) => ProductModel.fromJson({
+                  ...d.data() as Map<String, dynamic>,
+                  'id': d.id,
+                }))
+            .toList());
+  }
+
   Future<List<ProductModel>> fetchByKecamatan({
     required String kecamatan,
     int limit = 20,

@@ -26,6 +26,35 @@ class InMemoryMarketplaceRepository implements MarketplaceRepository {
   }
 
   @override
+  Stream<ProductModel?> watchProductById(String productId) {
+    return Stream.fromIterable([_products[productId]]);
+  }
+
+  @override
+  Stream<List<ProductModel>> watchByKecamatan({
+    required String kecamatan,
+    int limit = 20,
+  }) {
+    final filtered = _products.values
+        .where((p) => !p.isDeleted && p.locationParts?.idAddress?.kecamatan == kecamatan)
+        .toList();
+    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return Stream.fromIterable([filtered.take(limit).toList()]);
+  }
+
+  @override
+  Stream<List<ProductModel>> watchByCategory({
+    required String category,
+    int limit = 20,
+  }) {
+    final filtered = _products.values
+        .where((p) => !p.isDeleted && p.category == category)
+        .toList();
+    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return Stream.fromIterable([filtered.take(limit).toList()]);
+  }
+
+  @override
   Future<List<ProductModel>> fetchByKecamatan({
     required String kecamatan,
     int limit = 20,

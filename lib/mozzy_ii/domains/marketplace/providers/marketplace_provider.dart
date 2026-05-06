@@ -150,16 +150,22 @@ final adminAuditLogRepositoryProvider = Provider<AdminAuditLogRepository>((
   return AdminAuditLogRepository();
 });
 
-final productsByKecamatanProvider = FutureProvider.family
-    .autoDispose<List<ProductModel>, String>((ref, kecamatan) async {
+final productsByKecamatanProvider = StreamProvider.family
+    .autoDispose<List<ProductModel>, String>((ref, kecamatan) {
       final repo = ref.read(marketplaceRepositoryProvider);
-      return repo.fetchByKecamatan(kecamatan: kecamatan);
+      return repo.watchByKecamatan(kecamatan: kecamatan);
     });
 
-final productsByCategoryProvider = FutureProvider.family
-    .autoDispose<List<ProductModel>, String>((ref, category) async {
+final productsByCategoryProvider = StreamProvider.family
+    .autoDispose<List<ProductModel>, String>((ref, category) {
       final repo = ref.read(marketplaceRepositoryProvider);
-      return repo.fetchByCategory(category: category);
+      return repo.watchByCategory(category: category);
+    });
+
+final productByIdProvider = StreamProvider.family
+    .autoDispose<ProductModel?, String>((ref, productId) {
+      final repo = ref.read(marketplaceRepositoryProvider);
+      return repo.watchProductById(productId);
     });
 
 final savedMarketplaceProductsProvider = FutureProvider.family
@@ -202,12 +208,6 @@ class CreateProductAction {
 final createProductProvider = Provider<CreateProductAction>((ref) {
   return CreateProductAction(ref.read(marketplaceRepositoryProvider));
 });
-
-final productByIdProvider = FutureProvider.family
-    .autoDispose<ProductModel?, String>((ref, productId) {
-      final repo = ref.read(marketplaceRepositoryProvider);
-      return repo.getProductById(productId);
-    });
 
 class ProductLikeQuery {
   final String productId;

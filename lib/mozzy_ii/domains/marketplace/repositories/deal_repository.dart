@@ -116,7 +116,7 @@ class DealRepository {
           .toList();
     } catch (e) {
       if (kDebugMode) debugPrint('[DealRepo] fetchBuyerDeals error: $e');
-      return [];
+      rethrow;
     }
   }
 
@@ -132,7 +132,7 @@ class DealRepository {
           .toList();
     } catch (e) {
       if (kDebugMode) debugPrint('[DealRepo] fetchSellerDeals error: $e');
-      return [];
+      rethrow;
     }
   }
 

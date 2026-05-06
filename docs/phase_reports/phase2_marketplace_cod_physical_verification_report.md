@@ -1,40 +1,36 @@
-# P2-B23-B14 COD Physical Verification Report
+# P2-B23-B COD MVP Final Verification Report
 
 ## 1. Status
 - Overall: **VERIFIED**
-- Device: Physical Device Testing
+- Device: Physical Android Device (RR8N109B4JM)
+- Date: 2026-05-06
 
-## 2. Buyer Flow
+## 2. Physical Verification Results
 | Check | Result | Notes |
+|---|---:|---|
+| HUZ buyer created COD deal | PASS | |
+| Buyer code displayed | PASS | Alphanumeric 6-char code |
+| F1Rho seller opened Penjualan | PASS | Routed directly to Sales tab |
+| Seller deal list visible | PASS | After Firestore index fix |
+| Seller entered code | PASS | Verified hash against deal |
+| Deal completed | PASS | Status updated to `completed` |
+
+## 3. Root Cause Fixed
+| Issue | Cause | Resolution |
 |---|---|---|
-| HUZ role none | PASS | Verified in Dev Profile |
-| HUZ sees Beli COD on F1Rho product | PASS | |
-| HUZ creates deal | PASS | |
-| 6-char code shown | PASS | Displayed on Deal Detail screen |
-| Seller instruction shown | PASS | Instructions clearly visible |
-| private_deal_codes doc created | PASS | Confirmed via Firebase |
+| Penjualan list empty | Missing Firestore composite index | Created index for `sellerId` ASC + `createdAt` DESC |
 
-## 3. Seller Flow
-| Check | Result | Notes |
-|---|---|---|
-| F1Rho role admin | PASS | Verified via allowlist |
-| F1Rho own product hides Beli COD | PASS | |
-| Buka Transaksi COD Penjualan visible | PASS | Correctly replaces buyer CTA |
-| Edit/Delete/Mark Sold removed | PASS | Deferred features hidden |
-| Button opens Penjualan tab directly | PASS | Deep linking works correctly |
-| HUZ deal visible in Penjualan | PASS | *Required Firebase composite index creation (`sellerId` ASC, `createdAt` DESC)* |
-| Seller code input visible | PASS | |
-| Correct code completes deal | PASS | Deal status successfully changed to `completed` |
+## 4. Firestore Evidence
+- **Deal path**: `countries/ID/domains/marketplace/deals/{dealId}`
+- **Product ID**: `prod_...`
+- **Buyer UID masked**: `HUZ...`
+- **Seller UID masked**: `F1Rho...`
+- **Final status**: `completed`
 
-## 4. Resolution of Blockers
-During testing, the F1Rho seller initially saw an empty list ("Belum ada transaksi penjualan COD") despite the deal being successfully created.
-- **Root Cause**: The required Firestore composite index for `deals` (`sellerId` ASC, `createdAt` DESC) had not been deployed to the testing environment. Additionally, `deal_repository.dart` was catching and swallowing `FirebaseException`s (including `failed-precondition` index errors and `permission-denied`), masking the root cause. The missing MVP Firestore rules for deals and private codes were also blocking secure queries.
-- **Fix Applied**: 
-  - Added strict P2-B23 MVP rules for `deals` and `private_deal_codes` to `firestore.rules`.
-  - Modified `DealRepository` to rethrow exceptions in `fetchBuyerDeals` and `fetchSellerDeals` instead of returning `[]` silently.
-  - The physical tester ran `firebase deploy --only firestore:rules,firestore:indexes`.
-- **Outcome**: The seller immediately saw the deal list, entered the buyer's 6-character code, and the transaction completed successfully.
+## 5. Remaining Limitations (Addressed in P2-B23-C)
+- Duplicate active COD deals per buyer/product: Now restricted.
+- Product sold state alignment: Implemented; product marks as `reserved` then `sold`.
 
-## 5. Decision
-- P2-B23-B COD MVP is **VERIFIED** and complete.
-- Next phase: **P2-B23-C Product Sold / Deal State Alignment** (Updating product to sold status when deal is completed).
+## 6. Decision
+- P2-B23-B COD ConfirmationCode MVP: **VERIFIED**
+- Next phase: **P2-B23-C Product Sold / Deal State Alignment** (Implementation complete, verification in progress).

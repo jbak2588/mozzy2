@@ -1,20 +1,33 @@
-# Session Summary: P2-B23-B14 COD Physical Verification
+# Session Summary: P2-B23-B Final Physical Verification
 
-## Final Physical Verification Success
-The physical verification of the COD buyer/seller flow is now complete and marked as VERIFIED.
+## 1. Final Physical Verification Success
+The physical verification of the COD buyer/seller flow (Phase P2-B23-B) is now complete and marked as **VERIFIED**.
 
 - **Buyer Flow (HUZ)**: Successfully clicked "Beli COD", created the deal, and saw the 6-digit confirmation code.
 - **Seller Flow (F1Rho)**: Clicked "Buka Transaksi COD Penjualan", navigated directly to the "Penjualan" tab, viewed the pending deal, entered the buyer's 6-digit code, and successfully completed the deal.
+- **Date**: 2026-05-06
 
-## Blockers Resolved
-During testing, an issue occurred where the seller's deal list was completely empty despite the deal being successfully created.
-- **Identified Root Cause**: The required composite index for `deals` collection was not deployed to Firebase. Furthermore, `deal_repository.dart` was silently catching and returning empty lists `[]` on Firebase exceptions (like `failed-precondition`), preventing the UI from showing the error. Finally, explicit `firestore.rules` for deals and private codes were still pending implementation.
-- **Fixes**: 
-  - Modified `DealRepository` to rethrow exceptions in `fetchBuyerDeals` and `fetchSellerDeals`.
-  - Implemented the strict MVP `deals` and `private_deal_codes` rules in `firestore.rules`.
-  - Physical tester manually ran `firebase deploy --only firestore:rules,firestore:indexes`.
+## 2. Root Cause & Blockers Resolved
+During testing, the seller's deal list was empty despite the deal being successfully created.
+- **Identified Root Cause**: Missing Firestore composite index (`sellerId` ASC + `createdAt` DESC) in the staging environment.
+- **Secondary Issue**: `DealRepository` was swallowing Firebase exceptions (index errors), returning empty lists silently.
+- **Resolution**: 
+  - Modified `DealRepository` to rethrow exceptions.
+  - Implemented strict `deals` and `private_deal_codes` Firestore rules.
+  - Deployed composite indexes via `firestore.indexes.json`.
 
-## Next Steps (P2-B23-C)
-Now that the core COD offline transaction completes successfully:
-- Move to **P2-B23-C Product Sold / Deal State Alignment**: The app currently does not transition the original `product` document to a "sold" status when the COD deal is completed. 
-- Product management (Edit/Delete/Mark Sold) is also slated for P2-B24 or P2-B23-C.
+## 3. Immediate Progress on Phase P2-B23-C
+Implemented the following to align Product and Deal states:
+- Added `ProductStatus` (available, reserved, sold) to `ProductModel`.
+- Automated state transitions:
+  - `confirmed` Deal -> Product `reserved`.
+  - `completed` Deal -> Product `sold`.
+- Updated UI:
+  - Added "TERJUAL" overlay to `MarketplaceProductCard`.
+  - Added "Already Sold" disabled state to `ProductDetailScreen`.
+- Verified with new unit test: `product_sold_alignment_test.dart`.
+
+## 4. Decision
+- **Phase P2-B23-B**: VERIFIED
+- **Phase P2-B23-C**: IMPLEMENTED (Pending final device verification)
+- **Next Phase**: P2-B23-D Xendit Sandbox Setup or P2-B24 Seller Product Management.

@@ -28,6 +28,8 @@ class InMemoryDealRepository implements DealRepository {
       _deals.firstWhere((d) => d.id == dealId, orElse: () => throw Exception('Not found'))
     ]).handleError((_) => null);
   }
+
+  @override
   Future<DealModel> createCodDeal({
     required ProductModel product,
     required String buyerId,
@@ -67,7 +69,7 @@ class InMemoryDealRepository implements DealRepository {
 
     // Update product status to reserved if repo is available
     if (_marketplaceRepo != null) {
-      await _marketplaceRepo!.updateProductStatus(
+      await _marketplaceRepo.updateProductStatus(
         productId: product.id,
         status: ProductStatus.reserved,
       );
@@ -109,7 +111,7 @@ class InMemoryDealRepository implements DealRepository {
       _deals[dealIndex] = updated;
 
       if (_marketplaceRepo != null) {
-        await _marketplaceRepo!.updateProductStatus(
+        await _marketplaceRepo.updateProductStatus(
           productId: deal.productId,
           status: ProductStatus.sold,
         );

@@ -1,44 +1,43 @@
-# Marketplace Deal Confirmation Code (COD Flow)
+# Marketplace Deal Confirmation Code (COD)
 
-## Objective
-To provide a secure, offline way to confirm that a transaction has been completed between a buyer and a seller, without Mozzy holding any funds.
-
-## Mechanism
+## 1. Flow Overview
 1. A buyer agrees to purchase an item via Cash on Delivery (COD) or direct offline transfer.
 2. The `deals` document is created in Firestore with status `confirmed`.
-3. A backend function (or secure client generation) creates a 6-character, uppercase alphanumeric `confirmationCode`.
-4. The code is saved to the deal document and a `codeExpiresAt` is set (e.g., 24 hours from creation).
+3. A 6-character, uppercase alphanumeric `confirmationCode` is generated.
+4. The code hash is stored in the deal; raw code is stored in `users/{buyerId}/private_deal_codes/{dealId}`.
 5. The UI shows the `confirmationCode` only to the Buyer.
 6. When meeting, the Buyer shows/tells the code to the Seller.
-7. The Seller inputs the code into the Mozzy app.
-8. The app calls a function (or performs a transaction) to verify the code against `deals/{dealId}`.
-9. If matched, the deal is marked as `completed`, and the product may be marked as `sold`.
+7. The Seller inputs the code into the Mozzy app on their Deal Detail screen (Penjualan tab).
+8. If matched, the deal is marked as `completed`.
 
-## Security
-- The code is short (6 chars) for easy typing but has enough entropy (36^6) for a 24-hour window per deal.
-- Rate limiting should be applied to prevent brute-forcing the code on the seller side.
-- Only the buyer of the specific deal can read the code.
+## 2. Physical Verification Results (2026-05-06)
+- **Status**: VERIFIED
+- **Device**: Physical Android device (RR8N109B4JM)
+- **HUZ buyer created COD deal**: PASS
+- **Buyer code displayed**: PASS
+- **F1Rho seller opened Penjualan list**: PASS (After index fix)
+- **Seller entered code**: PASS
+- **Deal completed**: PASS
 
-## COD Entry Point & Verification
-To ensure a smooth user experience, the COD CTA ("Beli COD") is explicitly displayed on the `ProductDetailScreen` just below the product header.
+## 3. Root Cause Analysis (Resolved)
+- **Issue**: Seller's "Penjualan" deal list was empty on first attempt.
+- **Root Cause**: Firestore composite index for `sellerId` ASC + `createdAt` DESC was missing in the environment.
+- **Resolution**: Deployed `firestore.indexes.json` with the missing composite indexes. Deal list now displays correctly.
 
-The CTA clearly communicates the product's COD eligibility based on the following rules:
-- **Eligible**: Buyer + `aiVerificationStatus == 'passed'` + `isAiVerified == true` -> Button is active.
-- **Needs Review**: Buyer + `needs_review` -> Button is disabled showing "Menunggu review admin".
-- **Failed**: Buyer + `failed` (or `isAiVerified == false`) -> Button is disabled showing "Tidak lolos AI".
-- **Seller Own Product**: Button is disabled showing "Tidak bisa membeli produk sendiri".
-- **Unauthenticated**: Button is disabled showing "Login diperlukan".
+## 4. Implementation Details
+- Code is 6 characters (Uppercase + Digits).
+- Hashing: `SHA-256(dealId + rawCode)`.
+- Max attempts: 5 (locked after failure).
+- Expiry: 24 hours.
 
-This visibility rule replaces hiding the COD option entirely, ensuring users understand why they cannot proceed with a COD deal and reducing confusion during testing and regular use.
+## 5. Known Limitations & Next Steps
+- **Duplicate Prevention**: Currently allowed for testing, but restricted in P2-B23-C.
+- **Product State Alignment**: Completed deal now updates product status to `sold` (Implemented in P2-B23-C).
 
-
-### 2026-05-05 Update: Auth-State & COD Ownership Validation
-- Provider currentMarketplaceUserIdProvider has been updated to use FirebaseAuth.instance.authStateChanges() for reactively catching user switching.
-- Admin effective role and ownership (Seller check isSeller = effectiveCurrentUid == product.sellerId) is explicitly validated using this reactive uid.
-- Fixes an issue where F1Rho saw Beli COD on his own products due to stale static read of currentUser.uid.
-
-### 2026-05-05 Update: Seller UX Improvements
-- Renamed generic seller action button to Buka Transaksi COD Penjualan.
-- Routed seller action directly to the Sales (Penjualan) tab via deep link ?tab=sales.
-- Added explicit buyer guidance advising the buyer to show the code to the seller and explaining the sellers path to the input screen.
-- Temporarily removed edit/delete/mark sold buttons from the seller actions view as they are deferred to P2-B24/C.Reconciled Gemini CLI reported code with actual product_detail_screen.dart changes on 2026-05-05.
+## 6. COD Entry Point & Verification
+The CTA clearly communicates the product's COD eligibility based on:
+- **Eligible**: Buyer + `aiVerificationStatus == 'passed'` + `isAiVerified == true` -> Button active.
+- **Needs Review**: Buyer + `needs_review` -> "Menunggu review admin".
+- **Failed**: Buyer + `failed` -> "Tidak lolos AI".
+- **Seller Own Product**: "Buka Transaksi COD Penjualan" (routes to sales tab).
+- **Unauthenticated**: "Login diperlukan".

@@ -1,14 +1,19 @@
-# Chat Handoff: P2-B23-B14 COD Physical Verification Complete
+# Chat Handoff: P2-B23-B Finalized & P2-B23-C Implemented
 
-## Current State
-- The final physical verification of the COD MVP flow (P2-B23-B) has been successfully completed. 
-- The buyer can create a COD deal and see the generated 6-character code.
-- The seller can view the deal in their "Penjualan" tab, enter the code, and mark the deal as "completed".
+## Phase P2-B23-B (COD MVP)
+- **Status**: VERIFIED
+- **Summary**: End-to-end COD flow (Buyer create deal -> Seller enter code) verified on physical device.
+- **Critical Fix**: Missing Firestore composite indexes for `deals` (buyerId/sellerId + createdAt) were added to `firestore.indexes.json` and deployed.
 
-## Key Fixes Applied Today
-- Added missing `firestore.rules` for the `deals` and `private_deal_codes` paths based on the P2-B23 security schema.
-- Modified `DealRepository.fetchBuyerDeals` and `fetchSellerDeals` to rethrow Firebase exceptions instead of silently swallowing them, surfacing a missing composite index error which was subsequently fixed via `firebase deploy`.
+## Phase P2-B23-C (Product Sold Alignment)
+- **Status**: IMPLEMENTED
+- **Summary**: Aligned product availability with deal lifecycle.
+- **Key Features**:
+  - `ProductStatus` enum: `available`, `reserved`, `sold`.
+  - Transactional updates: Mark as `reserved` on deal creation, `sold` on completion.
+  - UI overlays: "TERJUAL" (Sold) badge in feed, "Sudah Terjual" status in detail view.
+- **Test**: `test/mozzy_ii/domains/marketplace/product_sold_alignment_test.dart` passes.
 
 ## Next Steps
-- Begin **P2-B23-C Product Sold / Deal State Alignment**. Currently, when a COD deal is completed, the original `product` document remains unchanged. We need to introduce a mechanism (or a `status` field) on `ProductModel` to mark it as sold when the transaction completes.
-- Consider addressing the placeholder text in the seller's product detail view regarding Edit/Delete features, moving into Seller Product Management (P2-B24).
+- Verify P2-B23-C on physical device (HUZ/F1Rho).
+- Proceed to **P2-B23-D: Xendit sandbox environment setup** or **P2-B24: Seller Product Management**.

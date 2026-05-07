@@ -9,6 +9,7 @@ import 'mozzy_ii/domains/marketplace/ai/marketplace_ai_config.dart';
 
 import 'mozzy_ii/app/theme/mozzy_theme.dart';
 import 'mozzy_ii/app/navigation/app_router.dart';
+import 'mozzy_ii/app/notifications/notification_initializer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,9 @@ void main() async {
         supportedLocales: const [Locale('id'), Locale('en'), Locale('ko')],
         path: 'assets/translations', // 번역 파일 경로
         fallbackLocale: const Locale('id'), // 기본 언어
-        child: const MozzyApp(),
+        child: const NotificationInitializer(
+          child: MozzyApp(),
+        ),
       ),
     ),
   );

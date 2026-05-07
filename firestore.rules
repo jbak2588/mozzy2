@@ -53,6 +53,19 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isAuthenticated();
       allow write: if isOwner(userId);
+
+      match /fcm_tokens/{tokenId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /blocked_users/{blockedUserId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /private_deal_codes/{dealId} {
+        allow read, create: if isOwner(userId);
+        allow update, delete: if false;
+      }
     }
 
     // [2] 국가별 도메인 게시글 (Path-sharded architecture)
@@ -142,10 +155,48 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // [3] 채팅 (추후 확장 예정)
+    // [3] 채팅
     match /chat_rooms/{roomId} {
-      allow read, write: if isAuthenticated() 
+      allow read: if isAuthenticated() 
         && request.auth.uid in resource.data.participants;
+      
+      allow create: if isAuthenticated()
+        && request.auth.uid in request.resource.data.participants;
+
+      allow update: if isAuthenticated()
+        && request.auth.uid in resource.data.participants
+        && (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastMessage', 'lastMessageType', 'lastMessageAt', 'lastSenderId', 'unreadCountByUser', 'updatedAt', 'isArchivedByUser']));
+
+      match /messages/{messageId} {
+        allow read: if isAuthenticated()
+          && request.auth.uid in get(/databases/$(database)/documents/chat_rooms/$(roomId)).data.participants;
+        
+        allow create: if isAuthenticated()
+          && request.resource.data.senderId == request.auth.uid
+          && request.auth.uid in get(/databases/$(database)/documents/chat_rooms/$(roomId)).data.participants;
+          
+        allow update: if isAuthenticated()
+          && request.auth.uid in get(/databases/$(database)/documents/chat_rooms/$(roomId)).data.participants
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readBy', 'status']);
+          
+        allow delete: if false;
+      }
+    }
+
+    // [4] 알림
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && resource.data.recipientId == request.auth.uid;
+      allow update: if isAuthenticated() 
+        && resource.data.recipientId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+      allow create, delete: if false; // Only via Cloud Functions
+    }
+
+    // [5] 신고
+    match /reports/{reportId} {
+      allow create: if isAuthenticated() 
+        && request.resource.data.reporterId == request.auth.uid;
+      allow read, update, delete: if false; // Only admin (via console)
     }
 
     // [Deals and Private Codes - P2-B23 MVP]
@@ -161,11 +212,6 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    match /users/{userId}/private_deal_codes/{dealId} {
-      allow read: if isAuthenticated() && userId == request.auth.uid;
-      allow create: if isAuthenticated() && userId == request.auth.uid;
-      allow update, delete: if false;
-    }
     
     // [Collection Group] 모든 도메인의 'posts' 컬렉션에 공통 적용
     match /{path=**}/posts/{postId} {
@@ -174,6 +220,52 @@ service cloud.firestore {
 
     match /{path=**}/likes/{userId} {
       allow read: if isAuthenticated();
+    }
+
+    // [Jobs Domain]
+    match /job_posts/{jobId} {
+      allow read: if isAuthenticated() 
+        && resource.data.isDeleted == false
+        && (resource.data.status != 'archived' || resource.data.ownerId == request.auth.uid);
+      
+      allow create: if isAuthenticated()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.status == 'open'
+        && request.resource.data.isDeleted == false;
+
+      allow update: if isAuthenticated()
+        && (
+          // Owner can update everything except immutable fields
+          (resource.data.ownerId == request.auth.uid
+            && request.resource.data.ownerId == resource.data.ownerId
+            && request.resource.data.createdAt == resource.data.createdAt)
+          ||
+          // Others can only increment applicantCount or chatCount
+          (request.resource.data.diff(resource.data).affectedKeys().hasAny(['applicantCount', 'chatCount', 'updatedAt'])
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applicantCount', 'chatCount', 'updatedAt']))
+        );
+
+      allow delete: if isAuthenticated() && resource.data.ownerId == request.auth.uid;
+
+      match /applicants/{applicantId} {
+        allow read: if isAuthenticated() 
+          && (request.auth.uid == applicantId || request.auth.uid == get(/databases/$(database)/documents/job_posts/$(jobId)).data.ownerId);
+        
+        allow create: if isAuthenticated() 
+          && request.auth.uid == applicantId
+          && get(/databases/$(database)/documents/job_posts/$(jobId)).data.status == 'open';
+          
+        allow update: if isAuthenticated()
+          && (
+            // Owner can update status and metadata
+            (get(/databases/$(database)/documents/job_posts/$(jobId)).data.ownerId == request.auth.uid
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'updatedAt']))
+            ||
+            // Applicant can update their own record (e.g. chatRoomId sync)
+            (request.auth.uid == applicantId
+              && request.resource.data.diff(resource.data).affectedKeys().hasAny(['chatRoomId', 'updatedAt', 'lastInteractionAt', 'messagePreview']))
+          );
+      }
     }
   }
 }

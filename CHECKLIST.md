@@ -186,13 +186,13 @@
 - [ ] SharedMapBrowser 연동 (mapVisibility)
 
 ### 2-C. Chat (Pesan) — dart-agent
-- [ ] `ChatRoomModel`, `MessageModel`
-- [ ] 1:1 채팅 (모든 Feature에서 "Chat dengan Penjual/Pemasang" 진입)
-- [ ] Firebase Realtime 기반 실시간 메시지
-- [ ] 읽음 확인 (Read Receipt)
+- [x] ChatRoomModel, MessageModel
+- [x] 1:1 채팅 (모든 Feature에서 "Chat dengan Penjual/Pemasang" 진입)
+- [x] Firebase Realtime 기반 실시간 메시지 (Firestore snapshots 사용)
+- [x] 읽음 확인 (Read Receipt) (unreadCountByUser 방식)
 - [ ] 이미지 전송
-- [ ] FCM 푸시 알림 (미읽 메시지)
-- [ ] 차단/신고 기능
+- [x] FCM 푸시 알림 (미읽 메시지)
+- [x] 차단/신고 기능
 
 ### 2-D. Firestore 인덱스 최적화 (firestore-agent)
 - [ ] `posts` 컬렉션 인덱스 12개 정의

@@ -4,6 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import '../providers/deal_provider.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/deal_model.dart';
+import '../../chat/providers/chat_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class DealDetailScreen extends ConsumerStatefulWidget {
   final String dealId;
@@ -67,7 +69,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
     final codeAsync = ref.watch(buyerDealCodeProvider(deal.id));
     return codeAsync.when(
       data: (codeModel) {
-        if (codeModel == null) return const Text('Code not found');
+        if (codeModel == null) return Text('marketplace.notFound'.tr());
         return Column(
           children: [
             Text(
@@ -123,7 +125,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
         );
       },
       loading: () => const CircularProgressIndicator(),
-      error: (e, st) => Text('Error: $e'),
+      error: (e, st) => Text('common.error'.tr()),
     );
   }
 
@@ -165,7 +167,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
     }
 
     if (deal.status == 'canceled') {
-      return const Text('Deal Canceled', style: TextStyle(color: Colors.red));
+      return Text('marketplace.cancelled'.tr(), style: const TextStyle(color: Colors.red));
     }
 
     final remaining = deal.maxCodeAttempts - deal.codeAttemptCount;
@@ -217,7 +219,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
       body: dealAsync.when(
         data: (deal) {
           if (deal == null) {
-            return const Center(child: Text('Deal not found'));
+            return Center(child: Text('marketplace.notFound'.tr()));
           }
           if (userId == null) {
             return const Center(child: CircularProgressIndicator());
@@ -227,7 +229,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
           final isSeller = userId == deal.sellerId;
 
           if (!isBuyer && !isSeller) {
-            return const Center(child: Text('Unauthorized'));
+            return Center(child: Text('marketplace.adminAccessDenied'.tr()));
           }
 
           return SingleChildScrollView(
@@ -293,7 +295,30 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
+                // Chat Button
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    final chatRepo = ref.read(chatRepositoryProvider);
+                    final room = await chatRepo.getOrCreateDealChatRoom(
+                      buyerId: deal.buyerId,
+                      sellerId: deal.sellerId,
+                      productId: deal.productId,
+                      dealId: deal.id,
+                      productTitle: deal.productTitle,
+                      productImageUrl: deal.productImageUrl,
+                    );
+                    if (mounted) {
+                      context.push('/chat/${room.id}');
+                    }
+                  },
+                  icon: const Icon(Icons.chat),
+                  label: Text(isBuyer ? 'chat.chatSeller'.tr() : 'chat.chatBuyer'.tr()),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal.shade700,
+                  ),
+                ),
+                const SizedBox(height: 24),
                 const Divider(),
                 const SizedBox(height: 32),
                 if (isBuyer)

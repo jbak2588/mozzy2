@@ -80,7 +80,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
                   onSelected: (_) => setState(() => _selectedCategory = cat),
                 );
               },
-              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              separatorBuilder: (context, _) => const SizedBox(width: 8),
               itemCount: categories.length,
             ),
           ),
@@ -108,7 +108,7 @@ class _LocalNewsListScreenState extends ConsumerState<LocalNewsListScreen> {
                 return ListView.separated(
                   itemBuilder: (context, index) =>
                       LocalNewsCard(post: posts[index]),
-                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  separatorBuilder: (context, _) => const Divider(height: 1),
                   itemCount: posts.length,
                 );
               },

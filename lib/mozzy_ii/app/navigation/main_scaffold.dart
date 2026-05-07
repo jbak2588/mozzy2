@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../domains/notifications/providers/notification_provider.dart';
 
-class MainScaffold extends StatelessWidget {
+class MainScaffold extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
   const MainScaffold({super.key, required this.navigationShell});
@@ -9,13 +11,14 @@ class MainScaffold extends StatelessWidget {
   void _onTap(int index) {
     navigationShell.goBranch(
       index,
-      // 현재 보고 있는 탭을 다시 탭하면 해당 탭의 첫 화면으로 이동(초기화)
       initialLocation: index == navigationShell.currentIndex,
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCount = ref.watch(unreadNotificationsCountProvider);
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
@@ -24,26 +27,30 @@ class MainScaffold extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFFCC0001),
         unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.explore),
-            label: 'Beranda', // 홈 (Smart Feed)
+            label: 'Beranda',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.storefront),
-            label: 'Jual', // 마켓
+            label: 'Jual',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.article),
-            label: 'Berita', // 뉴스
+            label: 'Berita',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.store),
-            label: 'Toko', // 로컬 스토어
+            label: 'Toko',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble),
-            label: 'Pesan', // 채팅
+            icon: Badge(
+              label: unreadCount > 0 ? Text(unreadCount.toString()) : null,
+              isLabelVisible: unreadCount > 0,
+              child: const Icon(Icons.chat_bubble),
+            ),
+            label: 'Pesan',
           ),
         ],
       ),

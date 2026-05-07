@@ -21,6 +21,14 @@ import '../../domains/marketplace/screens/admin_audit_log_screen.dart';
 import '../../domains/marketplace/screens/admin_guard_screen.dart';
 import '../../domains/marketplace/screens/deals_list_screen.dart';
 import '../../domains/marketplace/screens/deal_detail_screen.dart';
+import '../../domains/chat/screens/chat_list_screen.dart';
+import '../../domains/chat/screens/chat_detail_screen.dart';
+import '../../domains/notifications/screens/notification_list_screen.dart';
+import '../../domains/jobs/screens/jobs_list_screen.dart';
+import '../../domains/jobs/screens/job_detail_screen.dart';
+import '../../domains/jobs/screens/create_job_screen.dart';
+import '../../domains/jobs/screens/my_jobs_screen.dart';
+import '../../domains/jobs/screens/job_applicants_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -155,8 +163,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/chat',
-                builder: (context, state) =>
-                    const DummyScreen(title: 'Pesan (Chat)'),
+                builder: (context, state) => const ChatListScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':roomId',
+                    builder: (context, state) {
+                      final roomId = state.pathParameters['roomId']!;
+                      return ChatDetailScreen(roomId: roomId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -166,7 +182,33 @@ final routerProvider = Provider<GoRouter>((ref) {
       // 나머지 Feature 라우트
       GoRoute(
         path: '/jobs',
-        builder: (context, state) => const DummyScreen(title: 'Jobs'),
+        builder: (context, state) => const JobsListScreen(),
+        routes: [
+          GoRoute(
+            path: 'create',
+            builder: (context, state) => const CreateJobScreen(),
+          ),
+          GoRoute(
+            path: 'my',
+            builder: (context, state) => const MyJobsScreen(),
+          ),
+          GoRoute(
+            path: ':jobId',
+            builder: (context, state) {
+              final jobId = state.pathParameters['jobId']!;
+              return JobDetailScreen(jobId: jobId);
+            },
+            routes: [
+              GoRoute(
+                path: 'applicants',
+                builder: (context, state) {
+                  final jobId = state.pathParameters['jobId']!;
+                  return JobApplicantsScreen(jobId: jobId);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
 
       // Feature placeholder routes — must be available in debug and release
@@ -200,6 +242,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           path: '/dev/profile',
           builder: (context, state) => const DevProfileScreen(),
         ),
+      
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationListScreen(),
+      ),
     ],
   );
 });

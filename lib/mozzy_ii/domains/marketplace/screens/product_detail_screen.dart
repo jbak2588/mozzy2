@@ -227,7 +227,7 @@ class _ProductDetailContent extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                isSold ? 'Produk Terjual' : 'Produk milik Anda',
+                isSold ? 'marketplace.sold'.tr() : 'marketplace.myProduct'.tr(),
                 style: TextStyle(
                   color: isSold ? Colors.grey : Colors.orange,
                   fontWeight: FontWeight.bold,
@@ -244,13 +244,13 @@ class _ProductDetailContent extends ConsumerWidget {
               child: OutlinedButton.icon(
                 onPressed: () => context.push('/marketplace/deals?tab=sales'),
                 icon: const Icon(Icons.receipt_long),
-                label: const Text('Buka Transaksi COD Penjualan'),
+                label: Text('marketplace.openSalesCod'.tr()),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 8),
               child: Text(
-                'Masukkan kode 6 digit dari pembeli di halaman Penjualan.',
+                'marketplace.salesCodDesc'.tr(),
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey,
@@ -259,9 +259,9 @@ class _ProductDetailContent extends ConsumerWidget {
               ),
             ),
           ] else
-            const Text(
-              'Transaksi COD telah selesai.',
-              style: TextStyle(color: Colors.grey),
+            Text(
+              'marketplace.completed'.tr(),
+              style: const TextStyle(color: Colors.grey),
             ),
           const SizedBox(height: 12),
           const Padding(
@@ -290,17 +290,17 @@ class _ProductDetailContent extends ConsumerWidget {
 
     String? codDisabledReason;
     if (userId == null) {
-      codDisabledReason = 'Login diperlukan';
+      codDisabledReason = 'auth.loginRequired'.tr();
     } else if (isSeller) {
-      codDisabledReason = 'Tidak bisa membeli produk sendiri';
+      codDisabledReason = 'marketplace.cannotBuyOwnProduct'.tr();
     } else if (product.status == ProductStatus.sold) {
-      codDisabledReason = 'Sudah Terjual';
+      codDisabledReason = 'marketplace.sold'.tr();
     } else if (product.status == ProductStatus.reserved) {
-      codDisabledReason = 'Sedang dipesan';
+      codDisabledReason = 'marketplace.reserved'.tr();
     } else if (product.aiVerificationStatus == 'needs_review') {
-      codDisabledReason = 'Menunggu review admin';
+      codDisabledReason = 'marketplace.aiReviewPending'.tr();
     } else if (product.aiVerificationStatus == 'failed' || product.isAiVerified != true) {
-      codDisabledReason = 'Tidak lolos AI';
+      codDisabledReason = 'marketplace.aiRejected'.tr();
     }
 
     return Container(

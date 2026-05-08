@@ -196,6 +196,11 @@ class JobActionController extends _$JobActionController {
       );
 
       roomId = result.room.id;
+      final wasCreated = result.wasCreated;
+
+      if (wasCreated) {
+        await ref.read(jobRepositoryProvider).incrementChatCount(job.id);
+      }
 
       await ref.read(jobRepositoryProvider).ensureApplicantRecord(
         job: job,

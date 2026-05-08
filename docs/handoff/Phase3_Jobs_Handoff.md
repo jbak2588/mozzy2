@@ -37,6 +37,7 @@ Mozzy Indonesia 프로젝트의 Phase 3 "Jobs Domain MVP" 개발이 완료되었
   - 지원자 상태 변경: **Owner만 가능**. Applicant 본인은 `status` 필드 수정 불가.
   - Applicant 수정 범위: 채팅 메타데이터(`chatRoomId`, `lastInteractionAt` 등) 및 `updatedAt` 필드로 제한.
   - Immutable Fields: `jobId`, `applicantId`, `appliedAt` 등 핵심 식별자 필드는 생성 후 수정 불가.
+  - **카운터 무결성**: `applicantCount`, `chatCount`는 제3자에 의해 정확히 `+1`씩만 증가 가능하도록 Rules 레벨에서 제한.
   - 알림 및 채팅: `isRead` 등 허용된 필드 외 모든 수정 시도 차단.
 
 ## 5. 다국어 지원 (i18n)
@@ -60,6 +61,7 @@ Mozzy Indonesia 프로젝트의 Phase 3 "Jobs Domain MVP" 개발이 완료되었
 - **P3-J01 ~ P3-J07**: Jobs Domain MVP 구현 (`64bce1b`)
 - **P3-J08**: Jobs Final QA & i18n Fix (`44090ab`)
 - **P3-J09**: Firestore Rules Hardening (`f1ece2c`)
+- **P3-J10**: Jobs Counter Integrity & Report Finalization (`[SHA]`)
 
 ---
 **최종 업데이트**: 2026-05-08

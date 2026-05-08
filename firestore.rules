@@ -240,8 +240,13 @@ service cloud.firestore {
             && request.resource.data.ownerId == resource.data.ownerId
             && request.resource.data.createdAt == resource.data.createdAt)
           ||
-          // Others can only increment applicantCount or chatCount
-          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applicantCount', 'chatCount', 'updatedAt']))
+          // Others can only increment applicantCount or chatCount by exactly 1
+          (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applicantCount', 'chatCount', 'updatedAt'])
+            && (request.resource.data.applicantCount == resource.data.applicantCount || request.resource.data.applicantCount == resource.data.applicantCount + 1)
+            && (request.resource.data.chatCount == resource.data.chatCount || request.resource.data.chatCount == resource.data.chatCount + 1)
+            && request.resource.data.ownerId == resource.data.ownerId
+            && request.resource.data.status == resource.data.status
+            && request.resource.data.isDeleted == resource.data.isDeleted)
         );
 
       allow delete: if false; // MVP: No deletion, use isDeleted

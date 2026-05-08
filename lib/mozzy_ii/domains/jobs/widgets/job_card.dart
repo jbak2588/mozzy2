@@ -73,7 +73,7 @@ class JobCard extends StatelessWidget {
                     Colors.blue[800]!,
                   ),
                   _buildChip(
-                    'jobs.workType.${job.workType.name}'.tr(),
+                    'jobs.workTypes.${job.workType.name}'.tr(),
                     Colors.orange[100]!,
                     Colors.orange[800]!,
                   ),

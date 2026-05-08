@@ -13,7 +13,9 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Retry",
-    "timeout": "Connection timeout. Please try again."
+    "timeout": "Connection timeout. Please try again.",
+    "all": "All",
+    "chat": "Chat"
   },
   "auth": {
     "login": "Login",
@@ -375,7 +377,7 @@
       "internship": "Internship",
       "daily": "Daily"
     },
-    "workType": {
+    "workTypes": {
       "onsite": "On-site",
       "hybrid": "Hybrid",
       "remote": "Remote"
@@ -436,7 +438,6 @@
     "statusUpdated": "Applicant status updated",
     "statusUpdateFailed": "Failed to update status",
     "continueChat": "Continue Chat",
-    "alreadyApplied": "You have already applied",
     "closedCannotApply": "Job is closed",
     "ownerOnlyApplicants": "Only the job owner can view applicants"
   }

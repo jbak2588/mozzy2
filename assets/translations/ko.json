@@ -13,7 +13,9 @@
     "loading": "로딩 중...",
     "error": "오류가 발생했습니다",
     "retry": "재시도",
-    "timeout": "연결 시간이 초과되었습니다. 다시 시도해 주세요."
+    "timeout": "연결 시간이 초과되었습니다. 다시 시도해 주세요.",
+    "all": "전체",
+    "chat": "채팅"
   },
   "auth": {
     "login": "로그인",
@@ -375,7 +377,7 @@
       "internship": "인턴",
       "daily": "일용직"
     },
-    "workType": {
+    "workTypes": {
       "onsite": "현장 근무",
       "hybrid": "하이브리드",
       "remote": "원격 근무"
@@ -436,7 +438,6 @@
     "statusUpdated": "지원자 상태가 업데이트되었습니다",
     "statusUpdateFailed": "상태 업데이트에 실패했습니다",
     "continueChat": "채팅 이어가기",
-    "alreadyApplied": "이미 지원한 공고입니다",
     "closedCannotApply": "마감된 공고입니다",
     "ownerOnlyApplicants": "공고 작성자만 지원자를 볼 수 있습니다"
   }

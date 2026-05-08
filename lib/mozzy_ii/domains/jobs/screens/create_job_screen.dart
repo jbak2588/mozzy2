@@ -78,7 +78,7 @@ class _CreateJobScreenState extends ConsumerState<CreateJobScreen> {
                             label: 'jobs.workType'.tr(),
                             value: _workType,
                             items: WorkType.values,
-                            itemLabel: (v) => 'jobs.workType.${v.name}'.tr(),
+                            itemLabel: (v) => 'jobs.workTypes.${v.name}'.tr(),
                             onChanged: (v) => setState(() => _workType = v!),
                           ),
                         ),

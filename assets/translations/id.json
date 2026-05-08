@@ -13,7 +13,9 @@
     "loading": "Memuat...",
     "error": "Terjadi kesalahan",
     "retry": "Coba lagi",
-    "timeout": "Waktu koneksi habis. Silakan coba lagi."
+    "timeout": "Waktu koneksi habis. Silakan coba lagi.",
+    "all": "Semua",
+    "chat": "Chat"
   },
   "auth": {
     "login": "Masuk",
@@ -240,7 +242,7 @@
     "auditQueueItem": "Item antrian",
     "auditProduct": "Produk",
     "auditNote": "Catatan",
-    "243": "Beli COD",
+    "codBuy": "Beli COD",
     "codDeal": "Deal COD",
     "deals": "Transaksi",
     "purchases": "Pembelian",
@@ -378,7 +380,7 @@
       "internship": "Magang",
       "daily": "Harian"
     },
-    "workType": {
+    "workTypes": {
       "onsite": "On-site",
       "hybrid": "Hybrid",
       "remote": "Remote"
@@ -439,7 +441,6 @@
     "statusUpdated": "Status pelamar diperbarui",
     "statusUpdateFailed": "Gagal memperbarui status",
     "continueChat": "Lanjut Chat",
-    "alreadyApplied": "Kamu sudah melamar",
     "closedCannotApply": "Lowongan sudah ditutup",
     "ownerOnlyApplicants": "Hanya pembuat lowongan yang dapat melihat pelamar"
   }

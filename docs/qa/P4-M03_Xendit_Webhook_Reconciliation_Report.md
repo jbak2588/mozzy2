@@ -53,7 +53,7 @@ Xendit PG사로부터 수신되는 결제 상태 변경 알림(Webhook)을 처�
 - **P4-M04 Boost Activation**: `payments` 상태가 `paid`로 변경됨을 트리거로 하여 실제 `job_posts`의 부스트 필드를 업데이트하는 로직 구현 필요.
 
 ## 7. Git 정보
-- **Commit SHA**: [SHA를 작업 완료 보고 시 기입 예정]
+- **Commit SHA**: c49727c
 - **Push 여부**: YES
 - **Git Status Clean**: YES
 

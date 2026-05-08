@@ -458,7 +458,11 @@
     "invoiceCreated": "Payment link created",
     "invoiceCreateFailed": "Failed to create payment",
     "providerConfigMissing": "Payment configuration missing",
-    "invoiceOpenFailed": "Failed to open payment page"
+    "invoiceOpenFailed": "Failed to open payment page",
+    "webhookPending": "Waiting for payment confirmation",
+    "paymentConfirmed": "Payment has been confirmed",
+    "paymentExpired": "Payment expired",
+    "paymentFailed": "Payment failed"
   },
   "monetization": {
     "jobBoost": "Job Boost",

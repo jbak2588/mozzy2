@@ -458,7 +458,11 @@
     "invoiceCreated": "결제 링크가 생성되었습니다",
     "invoiceCreateFailed": "결제 생성에 실패했습니다",
     "providerConfigMissing": "결제 설정이 누락되었습니다",
-    "invoiceOpenFailed": "결제 페이지를 열 수 없습니다"
+    "invoiceOpenFailed": "결제 페이지를 열 수 없습니다",
+    "webhookPending": "결제 확인 대기 중",
+    "paymentConfirmed": "결제가 확인되었습니다",
+    "paymentExpired": "결제가 만료되었습니다",
+    "paymentFailed": "결제에 실패했습니다"
   },
   "monetization": {
     "jobBoost": "공고 부스트",

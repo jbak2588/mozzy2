@@ -333,7 +333,7 @@ async function sendPushToUser(userId, payload) {
     }
 }
 
-const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const axios = require("axios");
 
 // Boost Packages Policy
@@ -505,3 +505,158 @@ exports.createJobBoostPayment = onCall(async (request) => {
         status: "pending"
     };
 });
+
+/**
+ * Monetization: Xendit Webhook Reconciliation
+ */
+exports.xenditWebhook = onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+        return res.status(405).send("Method Not Allowed");
+    }
+
+    const payload = req.body;
+    const callbackToken = req.headers["x-callback-token"];
+    const expectedToken = process.env.XENDIT_WEBHOOK_VERIFICATION_TOKEN;
+    const isMockMode = process.env.PAYMENT_MOCK_MODE === "true";
+
+    // 1. Verification
+    if (!isMockMode) {
+        if (!expectedToken) {
+            console.error("XENDIT_WEBHOOK_VERIFICATION_TOKEN is missing");
+            return res.status(500).send("Server Configuration Error");
+        }
+        if (callbackToken !== expectedToken) {
+            console.warn("Invalid Xendit callback token received");
+            return res.status(401).send("Unauthorized");
+        }
+    }
+
+    const { external_id: paymentId, status: xenditStatus, id: xenditInvoiceId } = payload;
+
+    if (!paymentId) {
+        console.warn("Xendit Webhook missing external_id");
+        return res.status(400).send("Missing external_id");
+    }
+
+    try {
+        const paymentRef = admin.firestore().collection("payments").doc(paymentId);
+        
+        await admin.firestore().runTransaction(async (transaction) => {
+            const paymentDoc = await transaction.get(paymentRef);
+            
+            if (!paymentDoc.exists) {
+                console.warn(`Payment document not found for external_id: ${paymentId}`);
+                return; 
+            }
+
+            const paymentData = paymentDoc.data();
+            
+            // Check provider
+            if (paymentData.provider !== "xendit") {
+                console.warn(`Provider mismatch for payment ${paymentId}: expected xendit, got ${paymentData.provider}`);
+                return;
+            }
+
+            // Status Precedence & Idempotency
+            const currentStatus = paymentData.status;
+            const newStatus = mapXenditInvoiceStatus(xenditStatus);
+
+            if (shouldSkipUpdate(currentStatus, newStatus)) {
+                console.log(`Skipping status update for ${paymentId}: ${currentStatus} -> ${newStatus}`);
+                return;
+            }
+
+            // Amount Validation
+            if (payload.amount && payload.amount !== paymentData.amount) {
+                console.warn(`Amount mismatch for payment ${paymentId}: payload ${payload.amount}, doc ${paymentData.amount}`);
+                if (newStatus === "paid") {
+                    console.error(`Fraud suspected: amount mismatch on PAID status for ${paymentId}`);
+                    return;
+                }
+            }
+
+            const updateData = {
+                status: newStatus,
+                rawProviderStatus: xenditStatus,
+                webhookLastReceivedAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                providerInvoiceId: xenditInvoiceId || paymentData.providerInvoiceId,
+                providerInvoiceUrl: payload.invoice_url || paymentData.providerInvoiceUrl,
+            };
+
+            if (payload.paid_at) {
+                updateData.paidAt = admin.firestore.Timestamp.fromDate(new Date(payload.paid_at));
+            }
+            if (payload.expiry_date) {
+                updateData.expiredAt = admin.firestore.Timestamp.fromDate(new Date(payload.expiry_date));
+            }
+
+            transaction.update(paymentRef, updateData);
+            console.log(`Updated payment ${paymentId} status to ${newStatus} (${xenditStatus})`);
+        });
+
+        return res.status(200).send("Webhook processed");
+    } catch (error) {
+        console.error("Error processing Xendit Webhook:", error);
+        return res.status(500).send("Internal Server Error");
+    }
+});
+
+/**
+ * Xendit Status Mapping Helper
+ */
+function mapXenditInvoiceStatus(status) {
+    switch (status) {
+        case "PAID":
+        case "SETTLED":
+            return "paid";
+        case "EXPIRED":
+            return "expired";
+        case "FAILED":
+            return "failed";
+        case "PENDING":
+        case "ACTIVE":
+            return "pending";
+        default:
+            return "pending";
+    }
+}
+
+/**
+ * Status Transition Logic
+ * Prevents downgrading from final statuses
+ */
+function shouldSkipUpdate(current, next) {
+    if (current === next) return true;
+    
+    const statusRank = {
+        'created': 0,
+        'pending': 1,
+        'paid': 2,
+        'failed': 2,
+        'expired': 2,
+        'cancelled': 2,
+        'refunded': 3
+    };
+
+    const currentRank = statusRank[current] || 0;
+    const nextRank = statusRank[next] || 0;
+
+    // Allow expired -> paid (rare but possible in some PG flows)
+    if (current === "expired" && next === "paid") return false;
+
+    // Prevent downgrade
+    if (nextRank < currentRank) return true;
+
+    // If same rank and current is already a final status, skip
+    const isCurrentFinal = currentRank >= 2;
+    if (nextRank === currentRank && isCurrentFinal) return true;
+
+    return false;
+}
+
+// Export helpers for testing
+exports._testHelpers = {
+    mapXenditInvoiceStatus,
+    shouldSkipUpdate
+};

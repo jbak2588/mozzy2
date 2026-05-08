@@ -7,12 +7,12 @@ import '../models/payment_model.dart';
 part 'payment_provider.g.dart';
 
 @riverpod
-PaymentRepository paymentRepository(PaymentRepositoryRef ref) {
+PaymentRepository paymentRepository(Ref ref) {
   return FirestorePaymentRepository(FirebaseFirestore.instance);
 }
 
 @riverpod
-Stream<PaymentModel?> paymentDetail(PaymentDetailRef ref, String paymentId) {
+Stream<PaymentModel?> paymentDetail(Ref ref, String paymentId) {
   final repo = ref.watch(paymentRepositoryProvider);
   return repo.watchPayment(paymentId);
 }

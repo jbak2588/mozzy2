@@ -229,8 +229,8 @@ return $default(_that.id,_that.provider,_that.providerMode,_that.productType,_th
 /// @nodoc
 @JsonSerializable()
 
-class _PaymentModel implements PaymentModel {
-  const _PaymentModel({required this.id, required this.provider, required this.providerMode, required this.productType, required this.relatedDomain, required this.relatedId, required this.buyerId, this.sellerId, this.ownerId, required this.amount, this.currency = 'IDR', required this.status, this.providerInvoiceId, this.providerInvoiceUrl, this.externalId, final  Map<String, dynamic> metadata = const {}, @SafeDateTimeConverter() required this.createdAt, @SafeDateTimeConverter() required this.updatedAt, @OptionalSafeDateTimeConverter() this.paidAt, @OptionalSafeDateTimeConverter() this.expiredAt, @OptionalSafeDateTimeConverter() this.webhookLastReceivedAt, this.rawProviderStatus}): _metadata = metadata;
+class _PaymentModel extends PaymentModel {
+  const _PaymentModel({required this.id, required this.provider, required this.providerMode, required this.productType, required this.relatedDomain, required this.relatedId, required this.buyerId, this.sellerId, this.ownerId, required this.amount, this.currency = 'IDR', required this.status, this.providerInvoiceId, this.providerInvoiceUrl, this.externalId, final  Map<String, dynamic> metadata = const {}, @SafeDateTimeConverter() required this.createdAt, @SafeDateTimeConverter() required this.updatedAt, @OptionalSafeDateTimeConverter() this.paidAt, @OptionalSafeDateTimeConverter() this.expiredAt, @OptionalSafeDateTimeConverter() this.webhookLastReceivedAt, this.rawProviderStatus}): _metadata = metadata,super._();
   factory _PaymentModel.fromJson(Map<String, dynamic> json) => _$PaymentModelFromJson(json);
 
 @override final  String id;

@@ -8,7 +8,9 @@ part 'payment_model.freezed.dart';
 part 'payment_model.g.dart';
 
 @freezed
-class PaymentModel with _$PaymentModel {
+abstract class PaymentModel with _$PaymentModel {
+  const PaymentModel._();
+
   const factory PaymentModel({
     required String id,
     required PaymentProviderType provider,

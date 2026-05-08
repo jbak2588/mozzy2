@@ -54,7 +54,7 @@ final class PaymentRepositoryProvider
   }
 }
 
-String _$paymentRepositoryHash() => r'9574e29a34aa0286ab24b11389c041a7157d7d06';
+String _$paymentRepositoryHash() => r'9aff8465dd5adb012719f9908afe2a9bf9d0a894';
 
 @ProviderFor(paymentDetail)
 final paymentDetailProvider = PaymentDetailFamily._();
@@ -111,7 +111,7 @@ final class PaymentDetailProvider
   }
 }
 
-String _$paymentDetailHash() => r'6c00c9f1ed407912fb9e46f3a152d0ac5953d3c4';
+String _$paymentDetailHash() => r'623aa7e9fba3cac5549b4234c8947b5f6eee54e3';
 
 final class PaymentDetailFamily extends $Family
     with $FunctionalFamilyOverride<Stream<PaymentModel?>, String> {

@@ -273,6 +273,14 @@
         { "fieldPath": "ownerId", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "job_posts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "boostStatus", "order": "ASCENDING" },
+        { "fieldPath": "boostActiveUntil", "order": "ASCENDING" }
+      ]
     }
   ]
 }

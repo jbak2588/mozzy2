@@ -61,4 +61,14 @@
 - **P4-M03**: Xendit 웹후크(Webhook) 연동을 통한 결제 상태 자동 동기화 및 상태 전이 무결성 로직 구현.
 - **P4-M04**: 결제 완료(`paid`) 이벤트를 트리거로 하는 Job Boost 자동 활성화 로직 구현 (기간 계산, 시그널 가중치 부여, 클라이언트 정렬 반영).
 - **P4-M04B**: 부스트 관련 필드(8종)에 대한 클라이언트 직접 수정 전면 차단 (`firestore.rules` hardening) 및 Activation 로직 helper 분리.
-- **P4-M05**: 관리자용 결제 정산 및 감사(Audit) 뷰 구현.
+- **P4-M05**: 만료된 Boost 자동 처리(`expired`)를 위한 Cloud Scheduler 도입 및 결제/상태 변경 이력 추적을 위한 `monetization_audit_logs` 컬렉션 기반 구축.
+
+## 8. Audit & Scheduler 정책 (P4-M05)
+- **Monetization Audit Logs**:
+  - 결제 생성, 상태 변경, 부스트 활성화/만료 등 모든 중요 이벤트를 `monetization_audit_logs` 컬렉션에 기록함.
+  - 보안을 위해 클라이언트의 직접 읽기/쓰기를 전면 차단하고 Admin SDK/System에서만 관리함.
+  - 결정적 ID(Deterministic ID)를 사용하여 부스트 활성화(`job_boost_activated_{paymentId}`) 등 중복 기록을 방지함.
+- **Boost Expiry Scheduler**:
+  - `expireJobBoosts` Cloud Scheduler를 통해 주기적(매 1시간)으로 만료 대상 공고를 조회함.
+  - `boostStatus == "active"` 이면서 `boostActiveUntil <= now`인 문서를 대상으로 `expired` 상태 전환 및 `boostSignalScore = 0.0` 처리를 수행함.
+  - 대량 처리를 위해 Batch 업데이트를 사용하며, 각 처리 건에 대해 감사 로그를 남김.

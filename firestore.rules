@@ -282,6 +282,8 @@ service cloud.firestore {
               && request.resource.data.jobId == resource.data.jobId)
           );
       }
+    }
+
     // [6] Payments
     match /payments/{paymentId} {
       allow read: if isAuthenticated() &&
@@ -290,6 +292,11 @@ service cloud.firestore {
          resource.data.ownerId == request.auth.uid);
 
       allow create, update, delete: if false; // Only via Cloud Functions / Admin SDK
+    }
+
+    // [7] Monetization Audit Logs
+    match /monetization_audit_logs/{auditId} {
+      allow read, write: if false; // Admin/System only
     }
   }
 }

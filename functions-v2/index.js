@@ -1,4 +1,5 @@
 const { onDocumentCreated, onDocumentUpdated } = require("firebase-functions/v2/firestore");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
@@ -592,6 +593,29 @@ exports.xenditWebhook = onRequest(async (req, res) => {
             }
 
             transaction.update(paymentRef, updateData);
+            
+            // Audit Log: payment_status_changed
+            const auditData = buildAuditLogData({
+                type: "payment_status_changed",
+                relatedDomain: "payments",
+                relatedId: paymentId,
+                paymentId,
+                actorType: "webhook",
+                actorId: "xendit",
+                beforeStatus: currentStatus,
+                afterStatus: newStatus,
+                amount: paymentData.amount,
+                currency: paymentData.currency,
+                metadata: {
+                    provider: "xendit",
+                    rawProviderStatus: xenditStatus,
+                    providerInvoiceId: xenditInvoiceId
+                }
+            });
+            const auditId = buildAuditLogId("payment_status_changed", paymentId, paymentId);
+            const auditRef = admin.firestore().collection("monetization_audit_logs").doc(auditId);
+            transaction.set(auditRef, { ...auditData, id: auditId });
+
             console.log(`Updated payment ${paymentId} status to ${newStatus} (${xenditStatus})`);
         });
 
@@ -707,8 +731,71 @@ function buildJobBoostUpdate(paymentId, paymentData, paidAtOrNow) {
         boostDurationDays: durationDays,
         boostSignalScore: 100.0,
         lastBoostedAt: boostStartedAt,
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        updatedAt: admin.firestore.Timestamp.now()
     };
+}
+
+function isBoostExpiredForScheduler(jobData, nowTimestamp) {
+    if (jobData.boostStatus !== "active") return false;
+    if (!jobData.boostActiveUntil) return false;
+    
+    const activeUntil = jobData.boostActiveUntil.toDate();
+    const now = nowTimestamp.toDate();
+    
+    return activeUntil <= now;
+}
+
+function buildBoostExpiredUpdate() {
+    return {
+        boostStatus: "expired",
+        boostSignalScore: 0.0,
+        updatedAt: admin.firestore.Timestamp.now()
+    };
+}
+
+function buildAuditLogData({
+    type,
+    relatedDomain,
+    relatedId,
+    paymentId = null,
+    jobId = null,
+    actorType,
+    actorId = null,
+    beforeStatus = null,
+    afterStatus = null,
+    amount = null,
+    currency = null,
+    metadata = {}
+}) {
+    return {
+        type,
+        relatedDomain,
+        relatedId,
+        paymentId,
+        jobId,
+        actorType,
+        actorId,
+        beforeStatus,
+        afterStatus,
+        amount,
+        currency,
+        metadata,
+        createdAt: admin.firestore.Timestamp.now()
+    };
+}
+
+function buildAuditLogId(type, relatedId, paymentId = null) {
+    if (type === "job_boost_activated" && paymentId) {
+        return `job_boost_activated_${paymentId}`;
+    }
+    if (type === "job_boost_expired" && relatedId) {
+        return `job_boost_expired_${relatedId}_${Date.now()}`;
+    }
+    if (type === "payment_status_changed" && paymentId) {
+        // We use a timestamp for status changes as one payment can change status multiple times
+        return `payment_status_changed_${paymentId}_${Date.now()}`;
+    }
+    return `audit_${relatedId}_${Date.now()}`;
 }
 
 // Export helpers for testing
@@ -718,7 +805,11 @@ exports._testHelpers = {
     resolveBoostDurationDays,
     calculateBoostActiveUntil,
     shouldActivateJobBoost,
-    buildJobBoostUpdate
+    buildJobBoostUpdate,
+    isBoostExpiredForScheduler,
+    buildBoostExpiredUpdate,
+    buildAuditLogData,
+    buildAuditLogId
 };
 
 /**
@@ -777,9 +868,91 @@ exports.onPaymentPaidActivateJobBoost = onDocumentUpdated("payments/{paymentId}"
                 updatedAt: admin.firestore.FieldValue.serverTimestamp()
             });
 
+            // 5. Audit Log: job_boost_activated
+            const auditData = buildAuditLogData({
+                type: "job_boost_activated",
+                relatedDomain: "jobs",
+                relatedId: jobId,
+                paymentId,
+                jobId,
+                actorType: "system",
+                actorId: "onPaymentPaidActivateJobBoost",
+                beforeStatus: jobData.boostStatus || "none",
+                afterStatus: "active",
+                amount: afterData.amount,
+                currency: afterData.currency,
+                metadata: {
+                    packageId: afterData.metadata?.packageId,
+                    durationDays: jobUpdate.boostDurationDays,
+                    boostActiveUntil: jobUpdate.boostActiveUntil
+                }
+            });
+            const auditId = buildAuditLogId("job_boost_activated", jobId, paymentId);
+            const auditRef = admin.firestore().collection("monetization_audit_logs").doc(auditId);
+            transaction.set(auditRef, { ...auditData, id: auditId });
+
             console.log(`Successfully activated job boost for job ${jobId}`);
         });
     } catch (error) {
         console.error(`Error activating job boost for ${paymentId}:`, error);
+    }
+});
+
+/**
+ * Monetization: Job Boost Expiry Scheduler
+ * Runs every hour to check for expired boosts
+ */
+exports.expireJobBoosts = onSchedule("every 1 hours", async (event) => {
+    const now = admin.firestore.Timestamp.now();
+
+    const expiredJobsQuery = await admin.firestore().collection("job_posts")
+        .where("boostStatus", "==", "active")
+        .where("boostActiveUntil", "<=", now)
+        .limit(250)
+        .get();
+
+    if (expiredJobsQuery.empty) {
+        console.log("No expired job boosts found");
+        return;
+    }
+
+    console.log(`Found ${expiredJobsQuery.size} expired job boosts`);
+
+    const batch = admin.firestore().batch();
+    const auditLogs = [];
+
+    expiredJobsQuery.docs.forEach(doc => {
+        const jobData = doc.data();
+        const jobId = doc.id;
+
+        batch.update(doc.ref, buildBoostExpiredUpdate());
+
+        // Prepare audit log
+        const auditData = buildAuditLogData({
+            type: "job_boost_expired",
+            relatedDomain: "jobs",
+            relatedId: jobId,
+            jobId: jobId,
+            paymentId: jobData.boostPaymentId || null,
+            actorType: "scheduler",
+            actorId: "expireJobBoosts",
+            beforeStatus: "active",
+            afterStatus: "expired",
+            metadata: {
+                boostActiveUntil: jobData.boostActiveUntil,
+                boostPaymentId: jobData.boostPaymentId
+            }
+        });
+        const auditId = buildAuditLogId("job_boost_expired", jobId);
+        const auditRef = admin.firestore().collection("monetization_audit_logs").doc(auditId);
+        
+        batch.set(auditRef, { ...auditData, id: auditId });
+    });
+
+    try {
+        await batch.commit();
+        console.log(`Successfully expired ${expiredJobsQuery.size} job boosts`);
+    } catch (error) {
+        console.error("Error committing boost expiry batch:", error);
     }
 });

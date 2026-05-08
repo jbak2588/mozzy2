@@ -332,3 +332,121 @@ async function sendPushToUser(userId, payload) {
         console.error(`Error sending FCM to ${userId}:`, error);
     }
 }
+
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const axios = require("axios");
+
+// Boost Packages Policy
+const BOOST_PACKAGES = {
+    'job_boost_1_day': { amount: 15000, durationDays: 1, title: 'Boost 1 hari' },
+    'job_boost_3_days': { amount: 40000, durationDays: 3, title: 'Boost 3 hari' },
+    'job_boost_7_days': { amount: 90000, durationDays: 7, title: 'Boost 7 hari' }
+};
+
+/**
+ * Monetization: Create Job Boost Payment Intent
+ */
+exports.createJobBoostPayment = onCall(async (request) => {
+    const { jobId, packageId, provider = "xendit" } = request.data;
+    const auth = request.auth;
+
+    if (!auth) {
+        throw new HttpsError("unauthenticated", "Authentication required");
+    }
+
+    const userId = auth.uid;
+
+    // 1. Get Job Info
+    const jobDoc = await admin.firestore().collection("job_posts").doc(jobId).get();
+    if (!jobDoc.exists) {
+        throw new HttpsError("not-found", "Job post not found");
+    }
+
+    const jobData = jobDoc.data();
+
+    // 2. Security Validations
+    if (jobData.ownerId !== userId) {
+        throw new HttpsError("permission-denied", "Only the owner can boost this job");
+    }
+
+    if (jobData.status !== "open" || jobData.isDeleted) {
+        throw new HttpsError("failed-precondition", "Job is not in an active state");
+    }
+
+    // 3. Package Validation
+    const pkg = BOOST_PACKAGES[packageId];
+    if (!pkg) {
+        throw new HttpsError("invalid-argument", "Invalid boost package selected");
+    }
+
+    // 4. Duplicate Check (Active Boost)
+    if (jobData.boostActiveUntil && jobData.boostActiveUntil.toDate() > new Date()) {
+        throw new HttpsError("already-exists", "This job already has an active boost");
+    }
+
+    // 5. Create Payment Document
+    const paymentId = admin.firestore().collection("payments").doc().id;
+    const now = admin.firestore.FieldValue.serverTimestamp();
+
+    const paymentData = {
+        id: paymentId,
+        provider: provider,
+        providerMode: "sandbox", // TODO: Switch to production based on config
+        productType: "jobBoost",
+        relatedDomain: "jobs",
+        relatedId: jobId,
+        buyerId: userId,
+        ownerId: userId,
+        sellerId: null,
+        amount: pkg.amount,
+        currency: "IDR",
+        status: "created",
+        externalId: paymentId,
+        metadata: {
+            packageId: packageId,
+            durationDays: pkg.durationDays,
+            jobTitle: jobData.title
+        },
+        createdAt: now,
+        updatedAt: now
+    };
+
+    // 6. Provider Invoice Creation (Xendit Sandbox)
+    let providerInvoiceId = null;
+    let providerInvoiceUrl = null;
+
+    if (provider === "xendit") {
+        try {
+            // Mocking Xendit API call for now if keys are missing, 
+            // but structure follows Xendit Invoice API
+            const xenditSecretKey = process.env.XENDIT_SECRET_KEY || "xnd_development_mock_key";
+            const authHeader = Buffer.from(`${xenditSecretKey}:`).toString('base64');
+
+            // In real implementation:
+            // const response = await axios.post('https://api.xendit.co/v2/invoices', { ... }, { headers: { Authorization: `Basic ${authHeader}` } });
+            
+            // Mock Success Response for P4-M02
+            providerInvoiceId = `inv_${paymentId}`;
+            providerInvoiceUrl = `https://checkout-staging.xendit.co/v2/${providerInvoiceId}`;
+
+            paymentData.status = "pending";
+            paymentData.providerInvoiceId = providerInvoiceId;
+            paymentData.providerInvoiceUrl = providerInvoiceUrl;
+        } catch (error) {
+            console.error("Xendit API Error:", error);
+            throw new HttpsError("internal", "Failed to communicate with payment provider");
+        }
+    } else {
+        throw new HttpsError("unimplemented", "Selected provider is not yet supported");
+    }
+
+    // 7. Persist and Return
+    await admin.firestore().collection("payments").doc(paymentId).set(paymentData);
+
+    return {
+        paymentId: paymentId,
+        invoiceUrl: providerInvoiceUrl,
+        providerInvoiceId: providerInvoiceId,
+        status: "pending"
+    };
+});

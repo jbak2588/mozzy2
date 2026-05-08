@@ -29,6 +29,8 @@ import '../../domains/jobs/screens/job_detail_screen.dart';
 import '../../domains/jobs/screens/create_job_screen.dart';
 import '../../domains/jobs/screens/my_jobs_screen.dart';
 import '../../domains/jobs/screens/job_applicants_screen.dart';
+import '../../domains/jobs/screens/job_boost_purchase_screen.dart';
+import '../../domains/payments/screens/payment_status_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -206,9 +208,24 @@ final routerProvider = Provider<GoRouter>((ref) {
                   return JobApplicantsScreen(jobId: jobId);
                 },
               ),
+              GoRoute(
+                path: 'boost',
+                builder: (context, state) {
+                  final jobId = state.pathParameters['jobId']!;
+                  return JobBoostPurchaseScreen(jobId: jobId);
+                },
+              ),
             ],
           ),
         ],
+      ),
+
+      GoRoute(
+        path: '/payments/:paymentId',
+        builder: (context, state) {
+          final paymentId = state.pathParameters['paymentId']!;
+          return PaymentStatusScreen(paymentId: paymentId);
+        },
       ),
 
       // Feature placeholder routes — must be available in debug and release

@@ -461,6 +461,17 @@
   "monetization": {
     "jobBoost": "Job Boost",
     "marketplaceBoost": "Item Boost",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "boostLowongan": "Boost Job",
+    "chooseBoostPackage": "Choose boost package",
+    "boostDescription": "Show your job post more often in the local area.",
+    "boost1Day": "Boost 1 day",
+    "boost3Days": "Boost 3 days",
+    "boost7Days": "Boost 7 day",
+    "activeBoost": "Job is currently boosted",
+    "payNow": "Pay Now",
+    "createPaymentFailed": "Failed to create payment",
+    "ownerOnlyBoost": "Only the job owner can boost this job",
+    "closedJobCannotBoost": "Closed jobs cannot be boosted"
   }
 }

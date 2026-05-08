@@ -464,6 +464,17 @@
   "monetization": {
     "jobBoost": "Boost Lowongan",
     "marketplaceBoost": "Boost Barang",
-    "comingSoon": "Segera hadir"
+    "comingSoon": "Segera hadir",
+    "boostLowongan": "Boost Lowongan",
+    "chooseBoostPackage": "Pilih paket boost",
+    "boostDescription": "Tampilkan lowongan kamu lebih sering di area sekitar.",
+    "boost1Day": "Boost 1 hari",
+    "boost3Days": "Boost 3 hari",
+    "boost7Days": "Boost 7 hari",
+    "activeBoost": "Lowongan sedang di-boost",
+    "payNow": "Bayar Sekarang",
+    "createPaymentFailed": "Gagal membuat pembayaran",
+    "ownerOnlyBoost": "Hanya pemilik lowongan yang dapat melakukan boost",
+    "closedJobCannotBoost": "Lowongan yang sudah ditutup tidak dapat di-boost"
   }
 }

@@ -185,6 +185,21 @@ class JobDetailScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
+                onPressed: () => context.push('/jobs/${job.id}/boost'),
+                icon: const Icon(Icons.bolt),
+                label: Text('monetization.boostLowongan'.tr()),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange.shade700,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
                 onPressed: () => context.push('/jobs/${job.id}/applicants'),
                 icon: const Icon(Icons.people_outline),
                 label: Text('jobs.viewApplicantsCount'.tr(namedArgs: {'count': job.applicantCount.toString()})),

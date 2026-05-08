@@ -63,5 +63,39 @@ void main() {
       );
       expect(boostedJob.isBoostActive, isFalse);
     });
+
+    test('hasBoostHistory should be true if boostPaymentId exists', () {
+      final boostedJob = baseJob.copyWith(boostPaymentId: 'pay_123');
+      expect(boostedJob.hasBoostHistory, isTrue);
+    });
+
+    test('hasBoostHistory should be true if lastBoostedAt exists', () {
+      final boostedJob = baseJob.copyWith(lastBoostedAt: now);
+      expect(boostedJob.hasBoostHistory, isTrue);
+    });
+
+    test('isBoostExpired should be true when status is active and until is in past', () {
+      final boostedJob = baseJob.copyWith(
+        boostStatus: 'active',
+        boostActiveUntil: past,
+      );
+      expect(boostedJob.isBoostExpired, isTrue);
+    });
+
+    test('isBoostExpired should be false when status is active and until is in future', () {
+      final boostedJob = baseJob.copyWith(
+        boostStatus: 'active',
+        boostActiveUntil: future,
+      );
+      expect(boostedJob.isBoostExpired, isFalse);
+    });
+
+    test('isBoostExpired should be false when status is none', () {
+      final boostedJob = baseJob.copyWith(
+        boostStatus: 'none',
+        boostActiveUntil: past,
+      );
+      expect(boostedJob.isBoostExpired, isFalse);
+    });
   });
 }

@@ -655,10 +655,70 @@ function shouldSkipUpdate(current, next) {
     return false;
 }
 
+function resolveBoostDurationDays(packageId, metadataDurationDays) {
+    if (metadataDurationDays && typeof metadataDurationDays === 'number' && metadataDurationDays > 0) {
+        return metadataDurationDays;
+    }
+    if (packageId === 'job_boost_1_day') return 1;
+    if (packageId === 'job_boost_3_days') return 3;
+    if (packageId === 'job_boost_7_days') return 7;
+    return 1; // Default fallback
+}
+
+function calculateBoostActiveUntil(startTimestampOrDate, durationDays) {
+    const start = (startTimestampOrDate && typeof startTimestampOrDate.toDate === 'function')
+        ? startTimestampOrDate.toDate()
+        : (startTimestampOrDate instanceof Date ? startTimestampOrDate : new Date());
+    
+    const until = new Date(start);
+    until.setDate(until.getDate() + durationDays);
+    return admin.firestore.Timestamp.fromDate(until);
+}
+
+function shouldActivateJobBoost(beforeData, afterData) {
+    if (!beforeData || !afterData) return false;
+    
+    // Status Transition: non-paid to paid
+    const isPaidNow = afterData.status === "paid";
+    const wasAlreadyPaid = beforeData.status === "paid";
+    if (wasAlreadyPaid || !isPaidNow) return false;
+
+    // Product check
+    if (afterData.productType !== "jobBoost" || afterData.relatedDomain !== "jobs") return false;
+
+    // Idempotency check
+    if (afterData.metadata && afterData.metadata.boostActivated) return false;
+
+    return true;
+}
+
+function buildJobBoostUpdate(paymentId, paymentData, paidAtOrNow) {
+    const packageId = paymentData.metadata?.packageId;
+    const durationDays = resolveBoostDurationDays(packageId, paymentData.metadata?.durationDays);
+    const boostStartedAt = paidAtOrNow || paymentData.paidAt || admin.firestore.Timestamp.now();
+    const boostActiveUntil = calculateBoostActiveUntil(boostStartedAt, durationDays);
+
+    return {
+        boostStatus: "active",
+        boostPaymentId: paymentId,
+        boostPackageId: packageId || "manual",
+        boostStartedAt: boostStartedAt,
+        boostActiveUntil: boostActiveUntil,
+        boostDurationDays: durationDays,
+        boostSignalScore: 100.0,
+        lastBoostedAt: boostStartedAt,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+}
+
 // Export helpers for testing
 exports._testHelpers = {
     mapXenditInvoiceStatus,
-    shouldSkipUpdate
+    shouldSkipUpdate,
+    resolveBoostDurationDays,
+    calculateBoostActiveUntil,
+    shouldActivateJobBoost,
+    buildJobBoostUpdate
 };
 
 /**
@@ -668,13 +728,8 @@ exports.onPaymentPaidActivateJobBoost = onDocumentUpdated("payments/{paymentId}"
     const beforeData = event.data.before.data();
     const afterData = event.data.after.data();
 
-    // 1. Status Transition Check (Must be from non-paid to paid)
-    if (beforeData.status === "paid" || afterData.status !== "paid") {
-        return;
-    }
-
-    // 2. Product Type Check
-    if (afterData.productType !== "jobBoost" || afterData.relatedDomain !== "jobs") {
+    // 1. Check if activation is needed
+    if (!shouldActivateJobBoost(beforeData, afterData)) {
         return;
     }
 
@@ -684,12 +739,6 @@ exports.onPaymentPaidActivateJobBoost = onDocumentUpdated("payments/{paymentId}"
 
     if (!jobId) {
         console.error(`Missing relatedId for jobBoost payment ${paymentId}`);
-        return;
-    }
-
-    // 3. Idempotency Check
-    if (afterData.metadata && afterData.metadata.boostActivated) {
-        console.log(`Boost already activated for payment ${paymentId}`);
         return;
     }
 
@@ -706,7 +755,7 @@ exports.onPaymentPaidActivateJobBoost = onDocumentUpdated("payments/{paymentId}"
 
             const jobData = jobDoc.data();
 
-            // 4. Verification
+            // 2. Verification
             if (jobData.ownerId !== userId) {
                 console.error(`User mismatch for boost activation: payment buyer ${userId}, job owner ${jobData.ownerId}`);
                 return;
@@ -717,37 +766,11 @@ exports.onPaymentPaidActivateJobBoost = onDocumentUpdated("payments/{paymentId}"
                 return;
             }
 
-            // 5. Calculate Boost Period
-            const packageId = afterData.metadata?.packageId;
-            let durationDays = afterData.metadata?.durationDays;
-
-            if (!durationDays) {
-                if (packageId === 'job_boost_1_day') durationDays = 1;
-                else if (packageId === 'job_boost_3_days') durationDays = 3;
-                else if (packageId === 'job_boost_7_days') durationDays = 7;
-                else durationDays = 1;
-            }
-
-            const boostStartedAt = afterData.paidAt || admin.firestore.Timestamp.now();
-            const boostActiveUntilDate = new Date(boostStartedAt.toDate());
-            boostActiveUntilDate.setDate(boostActiveUntilDate.getDate() + durationDays);
-
-            // 6. Update Job Post
-            const jobUpdate = {
-                boostStatus: "active",
-                boostPaymentId: paymentId,
-                boostPackageId: packageId || "manual",
-                boostStartedAt: boostStartedAt,
-                boostActiveUntil: admin.firestore.Timestamp.fromDate(boostActiveUntilDate),
-                boostDurationDays: durationDays,
-                boostSignalScore: 100.0,
-                lastBoostedAt: boostStartedAt,
-                updatedAt: admin.firestore.FieldValue.serverTimestamp()
-            };
-
+            // 3. Update Job Post
+            const jobUpdate = buildJobBoostUpdate(paymentId, afterData);
             transaction.update(jobRef, jobUpdate);
 
-            // 7. Mark Payment as Activated
+            // 4. Mark Payment as Activated
             transaction.update(paymentRef, {
                 'metadata.boostActivated': true,
                 'metadata.boostActivatedAt': admin.firestore.FieldValue.serverTimestamp(),

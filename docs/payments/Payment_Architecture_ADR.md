@@ -60,4 +60,5 @@
 - **P4-M02B**: 실제 Xendit Sandbox Invoice API 연동 및 중복 결제 방지 로직 추가.
 - **P4-M03**: Xendit 웹후크(Webhook) 연동을 통한 결제 상태 자동 동기화 및 상태 전이 무결성 로직 구현.
 - **P4-M04**: 결제 완료(`paid`) 이벤트를 트리거로 하는 Job Boost 자동 활성화 로직 구현 (기간 계산, 시그널 가중치 부여, 클라이언트 정렬 반영).
+- **P4-M04B**: 부스트 관련 필드(8종)에 대한 클라이언트 직접 수정 전면 차단 (`firestore.rules` hardening) 및 Activation 로직 helper 분리.
 - **P4-M05**: 관리자용 결제 정산 및 감사(Audit) 뷰 구현.

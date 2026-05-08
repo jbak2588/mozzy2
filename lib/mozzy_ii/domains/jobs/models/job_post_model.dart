@@ -89,6 +89,13 @@ abstract class JobPostModel with _$JobPostModel implements MozzyPostContract {
       boostActiveUntil != null &&
       boostActiveUntil!.isAfter(DateTime.now());
 
+  bool get hasBoostHistory => boostPaymentId != null || lastBoostedAt != null;
+
+  bool get isBoostExpired =>
+      boostStatus == 'active' &&
+      boostActiveUntil != null &&
+      boostActiveUntil!.isBefore(DateTime.now());
+
   factory JobPostModel.fromJson(Map<String, dynamic> json) => _$JobPostModelFromJson(json);
 
   @override

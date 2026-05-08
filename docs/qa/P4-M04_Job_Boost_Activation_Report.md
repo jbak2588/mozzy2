@@ -53,5 +53,11 @@
 - **Git Status Clean**: YES
 
 ---
+
+### [P4-M04B 후속 보강 완료]
+- **보안 강화**: `boostPackageId`, `lastBoostedAt` 등 모든 부스트 필드에 대한 클라이언트 직접 수정 차단 완료 (`firestore.rules`).
+- **테스트 보강**: Cloud Function helper 분리 및 유닛 테스트 추가, `JobCard` 위젯 테스트 추가 완료.
+- **문서화**: Staging 검증 체크리스트 및 P4-M04B 리포트 작성 완료.
+
 **작성일**: 2026-05-08
 **담당 에이전트**: Antigravity

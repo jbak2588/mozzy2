@@ -61,6 +61,21 @@ class PaymentStatusScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 if (payment.status == PaymentStatus.paid && payment.productType.name == 'jobBoost')
                   Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Text(
+                      'payment.boostActivated'.tr(),
+                      style: TextStyle(
+                        color: Colors.green[700],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                if (payment.status == PaymentStatus.paid && 
+                    payment.productType.name == 'jobBoost' && 
+                    payment.relatedId != null)
+                  Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: SizedBox(
                       width: double.infinity,

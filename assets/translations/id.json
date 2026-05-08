@@ -443,5 +443,27 @@
     "continueChat": "Lanjut Chat",
     "closedCannotApply": "Lowongan sudah ditutup",
     "ownerOnlyApplicants": "Hanya pembuat lowongan yang dapat melihat pelamar"
+  },
+  "payment": {
+    "title": "Pembayaran",
+    "status": "Status Pembayaran",
+    "created": "Dibuat",
+    "pending": "Menunggu pembayaran",
+    "paid": "Pembayaran berhasil",
+    "failed": "Pembayaran gagal",
+    "expired": "Pembayaran kedaluwarsa",
+    "cancelled": "Pembayaran dibatalkan",
+    "refunded": "Dana dikembalikan",
+    "openInvoice": "Buka pembayaran",
+    "checkStatus": "Cek status",
+    "amount": "Jumlah",
+    "provider": "Penyedia pembayaran",
+    "invoiceCreated": "Link pembayaran berhasil dibuat",
+    "invoiceCreateFailed": "Gagal membuat pembayaran"
+  },
+  "monetization": {
+    "jobBoost": "Boost Lowongan",
+    "marketplaceBoost": "Boost Barang",
+    "comingSoon": "Segera hadir"
   }
 }

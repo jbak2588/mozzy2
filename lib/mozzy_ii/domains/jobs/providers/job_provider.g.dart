@@ -271,7 +271,7 @@ final class JobActionControllerProvider
 }
 
 String _$jobActionControllerHash() =>
-    r'87ab9189048d5d59766d55d7f50cfde175c69413';
+    r'f022c5c3300580a2943cb341e22c2a8e1e7e46f2';
 
 abstract class _$JobActionController extends $Notifier<AsyncValue<void>> {
   AsyncValue<void> build();

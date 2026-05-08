@@ -278,6 +278,14 @@ service cloud.firestore {
               && request.resource.data.jobId == resource.data.jobId)
           );
       }
+    // [6] Payments
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() &&
+        (resource.data.buyerId == request.auth.uid ||
+         resource.data.sellerId == request.auth.uid ||
+         resource.data.ownerId == request.auth.uid);
+
+      allow create, update, delete: if false; // Only via Cloud Functions / Admin SDK
     }
   }
 }

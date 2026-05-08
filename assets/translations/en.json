@@ -440,5 +440,27 @@
     "continueChat": "Continue Chat",
     "closedCannotApply": "Job is closed",
     "ownerOnlyApplicants": "Only the job owner can view applicants"
+  },
+  "payment": {
+    "title": "Payment",
+    "status": "Payment Status",
+    "created": "Created",
+    "pending": "Pending",
+    "paid": "Payment successful",
+    "failed": "Payment failed",
+    "expired": "Payment expired",
+    "cancelled": "Payment cancelled",
+    "refunded": "Refunded",
+    "openInvoice": "Open payment",
+    "checkStatus": "Check status",
+    "amount": "Amount",
+    "provider": "Payment provider",
+    "invoiceCreated": "Payment link created successfully",
+    "invoiceCreateFailed": "Failed to create payment"
+  },
+  "monetization": {
+    "jobBoost": "Job Boost",
+    "marketplaceBoost": "Item Boost",
+    "comingSoon": "Coming soon"
   }
 }

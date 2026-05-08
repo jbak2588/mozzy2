@@ -27,12 +27,17 @@ Mozzy Indonesia 프로젝트의 Phase 3 "Jobs Domain MVP" 개발이 완료되었
 - `/jobs/{jobId}/applicants`: 지원자 목록 페이지 (Owner 전용).
 - 알림 클릭 시 해당 경로로 자동 이동 처리 완료.
 
-## 4. 보안 및 권한 (Firestore Rules)
-- 구인글 읽기: 누구나 가능 (Archived는 Owner 전용).
-- 구인글 관리: Owner만 가능.
-- 지원자 목록: Owner만 가능.
-- 지원자 본인 데이터: 지원자 본인 및 Owner만 가능.
-- 상태 변경: Owner만 가능.
+## 4. 보안 및 권한 (Firestore Rules Hardening)
+- **접근 제어**:
+  - 구인글 읽기: 누구나 가능 (Archived는 Owner 전용).
+  - 구인글 관리: Owner만 가능 (OwnerId, CreatedAt 수정 불가).
+  - 지원자 목록: Owner만 가능.
+  - 지원자 본인 데이터: 지원자 본인 및 Owner만 가능.
+- **필드 하드닝 (hasOnly 적용)**:
+  - 지원자 상태 변경: **Owner만 가능**. Applicant 본인은 `status` 필드 수정 불가.
+  - Applicant 수정 범위: 채팅 메타데이터(`chatRoomId`, `lastInteractionAt` 등) 및 `updatedAt` 필드로 제한.
+  - Immutable Fields: `jobId`, `applicantId`, `appliedAt` 등 핵심 식별자 필드는 생성 후 수정 불가.
+  - 알림 및 채팅: `isRead` 등 허용된 필드 외 모든 수정 시도 차단.
 
 ## 5. 다국어 지원 (i18n)
 - 인도네시아어(id), 영어(en), 한국어(ko) 완벽 지원.
@@ -51,6 +56,11 @@ Mozzy Indonesia 프로젝트의 Phase 3 "Jobs Domain MVP" 개발이 완료되었
 - **Job Boost**: 유료 결제(Midtrans)를 통한 공고 상단 노출 기능.
 - **자동 매칭**: 구직자 프로필과 공고의 기술 스택을 비교하여 매칭 점수 제공.
 
+## 8. 작업 이력 (Commit History)
+- **P3-J01 ~ P3-J07**: Jobs Domain MVP 구현 (`64bce1b`)
+- **P3-J08**: Jobs Final QA & i18n Fix (`44090ab`)
+- **P3-J09**: Firestore Rules Hardening (`[SHA]`)
+
 ---
-**작성일**: 2026-05-08
+**최종 업데이트**: 2026-05-08
 **담당 에이전트**: Antigravity (AI Agent)

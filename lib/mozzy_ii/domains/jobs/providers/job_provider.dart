@@ -52,7 +52,24 @@ final nearbyJobsProvider = StreamProvider.family.autoDispose<List<JobPostModel>,
     kecamatan: kecamatan,
     category: filters.category,
     jobType: filters.jobType,
-  );
+  ).map((jobs) {
+    // Client-side sorting for Boosted jobs (MVP)
+    final sortedJobs = List<JobPostModel>.from(jobs);
+    sortedJobs.sort((a, b) {
+      // 1. Boosted status (active boost first)
+      if (a.isBoostActive && !b.isBoostActive) return -1;
+      if (!a.isBoostActive && b.isBoostActive) return 1;
+      
+      // 2. Signal Score (if both or neither are boosted)
+      if (a.signalScore != b.signalScore) {
+        return b.signalScore.compareTo(a.signalScore);
+      }
+      
+      // 3. Recency
+      return b.createdAt.compareTo(a.createdAt);
+    });
+    return sortedJobs;
+  });
 });
 
 final jobDetailProvider = FutureProvider.family.autoDispose<JobPostModel?, String>((ref, jobId) {

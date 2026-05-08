@@ -51,6 +51,9 @@ class JobDetailScreen extends ConsumerWidget {
                         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
+                      if (isOwner && job.isBoostActive)
+                        _buildBoostStatus(job),
+                      const SizedBox(height: 8),
                       Text(
                         job.companyName,
                         style: TextStyle(fontSize: 18, color: Colors.grey[700], fontWeight: FontWeight.w500),
@@ -185,11 +188,13 @@ class JobDetailScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => context.push('/jobs/${job.id}/boost'),
+                onPressed: job.isBoostActive ? null : () => context.push('/jobs/${job.id}/boost'),
                 icon: const Icon(Icons.bolt),
-                label: Text('monetization.boostLowongan'.tr()),
+                label: Text(job.isBoostActive 
+                  ? 'monetization.boostAlreadyActive'.tr() 
+                  : 'monetization.boostLowongan'.tr()),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange.shade700,
+                  backgroundColor: job.isBoostActive ? Colors.grey : Colors.orange.shade700,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -255,6 +260,41 @@ class JobDetailScreen extends ConsumerWidget {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBoostStatus(JobPostModel job) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.purple[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.purple[200]!),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.bolt, color: Colors.purple),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'monetization.boostActive'.tr(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.purple),
+                ),
+                Text(
+                  'monetization.boostActiveUntil'.tr(namedArgs: {
+                    'date': MozzyFormatters.formatDateID(job.boostActiveUntil!)
+                  }),
+                  style: const TextStyle(fontSize: 12, color: Colors.purple),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

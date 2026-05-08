@@ -235,10 +235,11 @@ service cloud.firestore {
 
       allow update: if isAuthenticated()
         && (
-          // Owner can update everything except immutable fields
+          // Owner can update everything except immutable fields and boost fields
           (resource.data.ownerId == request.auth.uid
             && request.resource.data.ownerId == resource.data.ownerId
-            && request.resource.data.createdAt == resource.data.createdAt)
+            && request.resource.data.createdAt == resource.data.createdAt
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['boostStatus', 'boostPaymentId', 'boostActiveUntil', 'boostSignalScore']))
           ||
           // Others can only increment applicantCount or chatCount by exactly 1
           (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['applicantCount', 'chatCount', 'updatedAt'])

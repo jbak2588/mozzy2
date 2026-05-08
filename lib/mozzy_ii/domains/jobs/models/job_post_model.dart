@@ -66,6 +66,14 @@ abstract class JobPostModel with _$JobPostModel implements MozzyPostContract {
     @Default(0) int viewCount,
     @Default(false) bool isDeleted,
     @Default(false) bool isClosed,
+    @Default('none') String boostStatus,
+    String? boostPaymentId,
+    String? boostPackageId,
+    @OptionalSafeDateTimeConverter() DateTime? boostStartedAt,
+    @OptionalSafeDateTimeConverter() DateTime? boostActiveUntil,
+    @Default(0) int boostDurationDays,
+    @Default(0.0) double boostSignalScore,
+    @OptionalSafeDateTimeConverter() DateTime? lastBoostedAt,
     @SafeDateTimeConverter() required DateTime createdAt,
     @SafeDateTimeConverter() required DateTime updatedAt,
     @SafeDateTimeConverter() required DateTime expiresAt,
@@ -75,6 +83,11 @@ abstract class JobPostModel with _$JobPostModel implements MozzyPostContract {
 
   @override
   String get userId => ownerId;
+
+  bool get isBoostActive =>
+      boostStatus == 'active' &&
+      boostActiveUntil != null &&
+      boostActiveUntil!.isAfter(DateTime.now());
 
   factory JobPostModel.fromJson(Map<String, dynamic> json) => _$JobPostModelFromJson(json);
 

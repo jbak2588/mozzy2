@@ -465,7 +465,9 @@
     "webhookPending": "Menunggu konfirmasi pembayaran",
     "paymentConfirmed": "Pembayaran telah dikonfirmasi",
     "paymentExpired": "Pembayaran kedaluwarsa",
-    "paymentFailed": "Pembayaran gagal"
+    "paymentFailed": "Pembayaran gagal",
+    "boostWillActivate": "Boost akan segera aktif setelah pembayaran dikonfirmasi",
+    "boostActivated": "Boost lowongan aktif"
   },
   "monetization": {
     "jobBoost": "Boost Lowongan",
@@ -481,6 +483,12 @@
     "payNow": "Bayar Sekarang",
     "createPaymentFailed": "Gagal membuat pembayaran",
     "ownerOnlyBoost": "Hanya pemilik lowongan yang dapat melakukan boost",
-    "closedJobCannotBoost": "Lowongan yang sudah ditutup tidak dapat di-boost"
+    "closedJobCannotBoost": "Lowongan yang sudah ditutup tidak dapat di-boost",
+    "boosted": "Dipromosikan",
+    "boostActive": "Boost aktif",
+    "boostProcessing": "Boost sedang diproses",
+    "boostActiveUntil": "Aktif sampai {{date}}",
+    "boostAlreadyActive": "Lowongan ini sedang di-boost",
+    "viewBoostedJob": "Lihat Lowongan"
   }
 }

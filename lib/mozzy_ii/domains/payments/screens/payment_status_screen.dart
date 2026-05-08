@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/payment_provider.dart';
 import '../models/payment_status.dart';
 import '../../../core/utils/formatters.dart';
@@ -58,6 +59,23 @@ class PaymentStatusScreen extends ConsumerWidget {
                     ),
                   ),
                 const SizedBox(height: 16),
+                if (payment.status == PaymentStatus.paid && payment.productType.name == 'jobBoost')
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => context.push('/jobs/${payment.relatedId}'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: Text('monetization.viewBoostedJob'.tr()),
+                      ),
+                    ),
+                  ),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton(

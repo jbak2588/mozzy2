@@ -51,6 +51,20 @@ _JobPostModel _$JobPostModelFromJson(Map<String, dynamic> json) =>
       viewCount: (json['viewCount'] as num?)?.toInt() ?? 0,
       isDeleted: json['isDeleted'] as bool? ?? false,
       isClosed: json['isClosed'] as bool? ?? false,
+      boostStatus: json['boostStatus'] as String? ?? 'none',
+      boostPaymentId: json['boostPaymentId'] as String?,
+      boostPackageId: json['boostPackageId'] as String?,
+      boostStartedAt: const OptionalSafeDateTimeConverter().fromJson(
+        json['boostStartedAt'],
+      ),
+      boostActiveUntil: const OptionalSafeDateTimeConverter().fromJson(
+        json['boostActiveUntil'],
+      ),
+      boostDurationDays: (json['boostDurationDays'] as num?)?.toInt() ?? 0,
+      boostSignalScore: (json['boostSignalScore'] as num?)?.toDouble() ?? 0.0,
+      lastBoostedAt: const OptionalSafeDateTimeConverter().fromJson(
+        json['lastBoostedAt'],
+      ),
       createdAt: const SafeDateTimeConverter().fromJson(json['createdAt']),
       updatedAt: const SafeDateTimeConverter().fromJson(json['updatedAt']),
       expiresAt: const SafeDateTimeConverter().fromJson(json['expiresAt']),
@@ -87,6 +101,20 @@ Map<String, dynamic> _$JobPostModelToJson(_JobPostModel instance) =>
       'viewCount': instance.viewCount,
       'isDeleted': instance.isDeleted,
       'isClosed': instance.isClosed,
+      'boostStatus': instance.boostStatus,
+      'boostPaymentId': instance.boostPaymentId,
+      'boostPackageId': instance.boostPackageId,
+      'boostStartedAt': const OptionalSafeDateTimeConverter().toJson(
+        instance.boostStartedAt,
+      ),
+      'boostActiveUntil': const OptionalSafeDateTimeConverter().toJson(
+        instance.boostActiveUntil,
+      ),
+      'boostDurationDays': instance.boostDurationDays,
+      'boostSignalScore': instance.boostSignalScore,
+      'lastBoostedAt': const OptionalSafeDateTimeConverter().toJson(
+        instance.lastBoostedAt,
+      ),
       'createdAt': const SafeDateTimeConverter().toJson(instance.createdAt),
       'updatedAt': const SafeDateTimeConverter().toJson(instance.updatedAt),
       'expiresAt': const SafeDateTimeConverter().toJson(instance.expiresAt),

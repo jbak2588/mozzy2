@@ -462,7 +462,9 @@
     "webhookPending": "Waiting for payment confirmation",
     "paymentConfirmed": "Payment has been confirmed",
     "paymentExpired": "Payment expired",
-    "paymentFailed": "Payment failed"
+    "paymentFailed": "Payment failed",
+    "boostWillActivate": "Boost will activate soon after payment is confirmed",
+    "boostActivated": "Job boost active"
   },
   "monetization": {
     "jobBoost": "Job Boost",
@@ -478,6 +480,12 @@
     "payNow": "Pay Now",
     "createPaymentFailed": "Failed to create payment",
     "ownerOnlyBoost": "Only the job owner can boost this job",
-    "closedJobCannotBoost": "Closed jobs cannot be boosted"
+    "closedJobCannotBoost": "Closed jobs cannot be boosted",
+    "boosted": "Boosted",
+    "boostActive": "Boost active",
+    "boostProcessing": "Boost processing",
+    "boostActiveUntil": "Active until {{date}}",
+    "boostAlreadyActive": "This job is already boosted",
+    "viewBoostedJob": "View Job"
   }
 }

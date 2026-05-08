@@ -224,8 +224,8 @@ return $default(_that.id,_that.type,_that.relatedDomain,_that.relatedId,_that.pa
 /// @nodoc
 @JsonSerializable()
 
-class _MonetizationAuditLogModel implements MonetizationAuditLogModel {
-  const _MonetizationAuditLogModel({required this.id, required this.type, required this.relatedDomain, required this.relatedId, this.paymentId, this.jobId, required this.actorType, this.actorId, this.beforeStatus, this.afterStatus, this.amount, this.currency, final  Map<String, dynamic> metadata = const {}, @SafeDateTimeConverter() required this.createdAt}): _metadata = metadata;
+class _MonetizationAuditLogModel extends MonetizationAuditLogModel {
+  const _MonetizationAuditLogModel({required this.id, required this.type, required this.relatedDomain, required this.relatedId, this.paymentId, this.jobId, required this.actorType, this.actorId, this.beforeStatus, this.afterStatus, this.amount, this.currency, final  Map<String, dynamic> metadata = const {}, @SafeDateTimeConverter() required this.createdAt}): _metadata = metadata,super._();
   factory _MonetizationAuditLogModel.fromJson(Map<String, dynamic> json) => _$MonetizationAuditLogModelFromJson(json);
 
 @override final  String id;

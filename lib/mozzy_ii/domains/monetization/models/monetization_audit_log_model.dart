@@ -23,6 +23,15 @@ abstract class MonetizationAuditLogModel with _$MonetizationAuditLogModel {
     @SafeDateTimeConverter() required DateTime createdAt,
   }) = _MonetizationAuditLogModel;
 
+  const MonetizationAuditLogModel._();
+
+  bool get isPaymentEvent =>
+      type.startsWith('payment_') || relatedDomain == 'payments';
+  bool get isJobBoostEvent =>
+      type.startsWith('job_boost_') || relatedDomain == 'jobs';
+
+  String get displayTypeKey => 'admin.$type';
+
   factory MonetizationAuditLogModel.fromJson(Map<String, dynamic> json) =>
       _$MonetizationAuditLogModelFromJson(json);
 }

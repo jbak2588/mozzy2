@@ -487,5 +487,17 @@
     "boostActiveUntil": "Active until {{date}}",
     "boostAlreadyActive": "This job is already boosted",
     "viewBoostedJob": "View Job"
+  },
+  "admin": {
+    "accessDenied": "Access denied",
+    "monetizationAudit": "Monetization Audit",
+    "auditLogs": "Audit Logs",
+    "payment_status_changed": "Payment status changed",
+    "job_boost_activated": "Job boost activated",
+    "job_boost_expired": "Job boost expired",
+    "payment_created": "Payment created",
+    "beforeAfter": "{{before}} → {{after}}",
+    "noAuditLogs": "No audit logs yet.",
+    "adminOnly": "This page is for admins only."
   }
 }

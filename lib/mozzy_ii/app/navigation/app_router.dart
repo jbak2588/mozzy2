@@ -31,6 +31,7 @@ import '../../domains/jobs/screens/my_jobs_screen.dart';
 import '../../domains/jobs/screens/job_applicants_screen.dart';
 import '../../domains/jobs/screens/job_boost_purchase_screen.dart';
 import '../../domains/payments/screens/payment_status_screen.dart';
+import '../../domains/monetization/screens/admin_monetization_audit_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -263,6 +264,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/notifications',
         builder: (context, state) => const NotificationListScreen(),
+      ),
+      GoRoute(
+        path: '/admin/monetization/audit',
+        builder: (context, state) => const AdminMonetizationAuditScreen(),
       ),
     ],
   );

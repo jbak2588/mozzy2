@@ -40,9 +40,17 @@
 
 ## 6. Git Status
 - **Branch**: main
-- **Status**: clean (nothing to commit)
-- **Push 여부**: YES (종료 시 수행 예정)
+- **Commit SHA**: 580f188
+- **Status**: clean
+- **Push 여부**: YES
 
-## 7. 남은 이슈
+## 7. P4-M05 검증 요약
+- expireJobBoosts scheduler 구현 완료
+- monetization_audit_logs 보안 규칙 적용 완료
+- functions test 42 passing
+- Flutter analyze PASS
+- Jobs/Payments tests PASS
+
+## 8. 남은 이슈
 - 관리자용 UI 대시보드 전체 구현 (향후 단계).
 - Audit Log 보존 정책 (TTL 등) 검토 필요.

@@ -490,5 +490,17 @@
     "boostActiveUntil": "Aktif sampai {{date}}",
     "boostAlreadyActive": "Lowongan ini sedang di-boost",
     "viewBoostedJob": "Lihat Lowongan"
+  },
+  "admin": {
+    "accessDenied": "Akses ditolak",
+    "monetizationAudit": "Audit Monetisasi",
+    "auditLogs": "Log Audit",
+    "payment_status_changed": "Status pembayaran berubah",
+    "job_boost_activated": "Boost lowongan aktif",
+    "job_boost_expired": "Boost lowongan berakhir",
+    "payment_created": "Pembayaran dibuat",
+    "beforeAfter": "{{before}} → {{after}}",
+    "noAuditLogs": "Belum ada log audit.",
+    "adminOnly": "Halaman ini hanya untuk admin."
   }
 }

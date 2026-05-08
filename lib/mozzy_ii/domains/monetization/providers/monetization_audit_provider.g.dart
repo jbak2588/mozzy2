@@ -58,6 +58,168 @@ final class MonetizationAuditRepositoryProvider
 String _$monetizationAuditRepositoryHash() =>
     r'9f7f437e1bee1c546c187af7f8e89bccd9af2123';
 
+@ProviderFor(recentAuditLogs)
+final recentAuditLogsProvider = RecentAuditLogsFamily._();
+
+final class RecentAuditLogsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<MonetizationAuditLogModel>>,
+          List<MonetizationAuditLogModel>,
+          Stream<List<MonetizationAuditLogModel>>
+        >
+    with
+        $FutureModifier<List<MonetizationAuditLogModel>>,
+        $StreamProvider<List<MonetizationAuditLogModel>> {
+  RecentAuditLogsProvider._({
+    required RecentAuditLogsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'recentAuditLogsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$recentAuditLogsHash();
+
+  @override
+  String toString() {
+    return r'recentAuditLogsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<List<MonetizationAuditLogModel>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<MonetizationAuditLogModel>> create(Ref ref) {
+    final argument = this.argument as int;
+    return recentAuditLogs(ref, limit: argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RecentAuditLogsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$recentAuditLogsHash() => r'5438dd5e42dba046df9dadb717a36ff7d4ee5ff4';
+
+final class RecentAuditLogsFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          Stream<List<MonetizationAuditLogModel>>,
+          int
+        > {
+  RecentAuditLogsFamily._()
+    : super(
+        retry: null,
+        name: r'recentAuditLogsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  RecentAuditLogsProvider call({int limit = 50}) =>
+      RecentAuditLogsProvider._(argument: limit, from: this);
+
+  @override
+  String toString() => r'recentAuditLogsProvider';
+}
+
+@ProviderFor(auditLogsByType)
+final auditLogsByTypeProvider = AuditLogsByTypeFamily._();
+
+final class AuditLogsByTypeProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<MonetizationAuditLogModel>>,
+          List<MonetizationAuditLogModel>,
+          Stream<List<MonetizationAuditLogModel>>
+        >
+    with
+        $FutureModifier<List<MonetizationAuditLogModel>>,
+        $StreamProvider<List<MonetizationAuditLogModel>> {
+  AuditLogsByTypeProvider._({
+    required AuditLogsByTypeFamily super.from,
+    required (String, {int limit}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'auditLogsByTypeProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$auditLogsByTypeHash();
+
+  @override
+  String toString() {
+    return r'auditLogsByTypeProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<List<MonetizationAuditLogModel>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<MonetizationAuditLogModel>> create(Ref ref) {
+    final argument = this.argument as (String, {int limit});
+    return auditLogsByType(ref, argument.$1, limit: argument.limit);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AuditLogsByTypeProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$auditLogsByTypeHash() => r'7bb40adb8972252004715ab9955e76955902a2ab';
+
+final class AuditLogsByTypeFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          Stream<List<MonetizationAuditLogModel>>,
+          (String, {int limit})
+        > {
+  AuditLogsByTypeFamily._()
+    : super(
+        retry: null,
+        name: r'auditLogsByTypeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AuditLogsByTypeProvider call(String type, {int limit = 50}) =>
+      AuditLogsByTypeProvider._(argument: (type, limit: limit), from: this);
+
+  @override
+  String toString() => r'auditLogsByTypeProvider';
+}
+
 @ProviderFor(jobBoostAuditLogs)
 final jobBoostAuditLogsProvider = JobBoostAuditLogsFamily._();
 

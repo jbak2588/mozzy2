@@ -10,8 +10,36 @@ class MonetizationAuditRepository {
   CollectionReference<Map<String, dynamic>> get _collection =>
       _firestore.collection('monetization_audit_logs');
 
-  /// Note: Client read is currently prohibited by Firestore Rules.
-  /// This repository is prepared for future admin dashboard use.
+  /// Admin-only / future admin console
+  Stream<List<MonetizationAuditLogModel>> watchRecentAuditLogs({int limit = 50}) {
+    return _collection
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => MonetizationAuditLogModel.fromJson({
+                  ...doc.data(),
+                  'id': doc.id,
+                }))
+            .toList());
+  }
+
+  /// Admin-only / future admin console
+  Stream<List<MonetizationAuditLogModel>> watchAuditLogsByType(String type,
+      {int limit = 50}) {
+    return _collection
+        .where('type', isEqualTo: type)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => MonetizationAuditLogModel.fromJson({
+                  ...doc.data(),
+                  'id': doc.id,
+                }))
+            .toList());
+  }
+
   Stream<List<MonetizationAuditLogModel>> watchLogsByJobId(String jobId) {
     return _collection
         .where('jobId', isEqualTo: jobId)

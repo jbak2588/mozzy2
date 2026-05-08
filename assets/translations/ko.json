@@ -487,5 +487,17 @@
     "boostActiveUntil": "{{date}}까지 활성",
     "boostAlreadyActive": "이미 부스트 중인 공고입니다",
     "viewBoostedJob": "공고 보기"
+  },
+  "admin": {
+    "accessDenied": "접근 거부됨",
+    "monetizationAudit": "수익화 감사",
+    "auditLogs": "감사 로그",
+    "payment_status_changed": "결제 상태 변경됨",
+    "job_boost_activated": "공고 부스트 활성화됨",
+    "job_boost_expired": "공고 부스트 만료됨",
+    "payment_created": "결제 생성됨",
+    "beforeAfter": "{{before}} → {{after}}",
+    "noAuditLogs": "감사 로그가 없습니다.",
+    "adminOnly": "관리자 전용 페이지입니다."
   }
 }

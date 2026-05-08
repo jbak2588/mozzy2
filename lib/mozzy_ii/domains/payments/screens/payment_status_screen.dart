@@ -73,8 +73,7 @@ class PaymentStatusScreen extends ConsumerWidget {
                     ),
                   ),
                 if (payment.status == PaymentStatus.paid && 
-                    payment.productType.name == 'jobBoost' && 
-                    payment.relatedId != null)
+                    payment.productType.name == 'jobBoost')
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: SizedBox(

@@ -43,7 +43,7 @@ P4-M04에서 구현된 Job Boost Activation 기능을 보안적으로 강화하�
 - **Cloud Scheduler**: 만료된 부스트의 `boostStatus`를 `expired`로 자동 전환하는 서버 측 배치 작업은 추후 관리자 기능 단계에서 도입 예정.
 
 ## 7. Git 정보
-- **Commit SHA**: [SHA를 작업 완료 보고 시 기입 예정]
+- **Commit SHA**: 7386dae
 - **Push 여부**: YES
 - **Git Status Clean**: YES
 

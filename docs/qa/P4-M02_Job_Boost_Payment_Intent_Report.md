@@ -75,7 +75,7 @@ Jobs 도메인의 첫 수익화 기능인 "Job Boost"의 결제 생성 흐름을
 - **P4-M04 Boost Activation**: `paid` 상태가 확인된 후 실제 `job_posts` 문서에 부스트 필드를 업데이트하여 상단 노출을 활성화하는 로직.
 
 ## 8. Git 정보
-- **Commit SHA**: [SHA를 작업 완료 보고 시 기입 예정]
+- **Commit SHA**: 1088010
 - **Push 여부**: YES
 - **Git Status Clean**: YES
 

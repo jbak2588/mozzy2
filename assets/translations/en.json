@@ -455,8 +455,10 @@
     "checkStatus": "Check status",
     "amount": "Amount",
     "provider": "Payment provider",
-    "invoiceCreated": "Payment link created successfully",
-    "invoiceCreateFailed": "Failed to create payment"
+    "invoiceCreated": "Payment link created",
+    "invoiceCreateFailed": "Failed to create payment",
+    "providerConfigMissing": "Payment configuration missing",
+    "invoiceOpenFailed": "Failed to open payment page"
   },
   "monetization": {
     "jobBoost": "Job Boost",

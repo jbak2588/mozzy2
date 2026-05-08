@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/utils/formatters.dart';
 import '../providers/job_provider.dart';
 import '../../monetization/providers/boost_package_provider.dart';
 import '../../monetization/models/boost_package_model.dart';
@@ -114,9 +113,11 @@ class _JobBoostPurchaseScreenState extends ConsumerState<JobBoostPurchaseScreen>
       provider: PaymentProviderType.xendit,
     );
 
-    if (result != null && mounted) {
+    if (!context.mounted) return;
+
+    if (result != null) {
       context.push('/payments/${result.paymentId}');
-    } else if (mounted) {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('monetization.createPaymentFailed'.tr())),
       );

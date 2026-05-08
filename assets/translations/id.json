@@ -459,7 +459,9 @@
     "amount": "Jumlah",
     "provider": "Penyedia pembayaran",
     "invoiceCreated": "Link pembayaran berhasil dibuat",
-    "invoiceCreateFailed": "Gagal membuat pembayaran"
+    "invoiceCreateFailed": "Gagal membuat pembayaran",
+    "providerConfigMissing": "Konfigurasi pembayaran belum siap",
+    "invoiceOpenFailed": "Gagal membuka halaman pembayaran"
   },
   "monetization": {
     "jobBoost": "Boost Lowongan",

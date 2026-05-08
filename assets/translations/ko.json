@@ -456,7 +456,9 @@
     "amount": "금액",
     "provider": "결제 수단",
     "invoiceCreated": "결제 링크가 생성되었습니다",
-    "invoiceCreateFailed": "결제 생성에 실패했습니다"
+    "invoiceCreateFailed": "결제 생성에 실패했습니다",
+    "providerConfigMissing": "결제 설정이 누락되었습니다",
+    "invoiceOpenFailed": "결제 페이지를 열 수 없습니다"
   },
   "monetization": {
     "jobBoost": "공고 부스트",

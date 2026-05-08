@@ -384,6 +384,31 @@ exports.createJobBoostPayment = onCall(async (request) => {
         throw new HttpsError("already-exists", "This job already has an active boost");
     }
 
+    // 4.1. Check for existing Pending Payment (Reuse existing invoice if possible)
+    const existingPayments = await admin.firestore().collection("payments")
+        .where("relatedDomain", "==", "jobs")
+        .where("relatedId", "==", jobId)
+        .where("buyerId", "==", userId)
+        .where("productType", "==", "jobBoost")
+        .where("status", "in", ["created", "pending"])
+        .get();
+
+    // Filter by packageId manually to avoid complex indexing for now
+    const existingPayment = existingPayments.docs.find(doc => doc.data().metadata?.packageId === packageId);
+    if (existingPayment) {
+        const data = existingPayment.data();
+        if (data.providerInvoiceUrl) {
+            console.log(`Reusing existing pending payment: ${data.id}`);
+            return {
+                paymentId: data.id,
+                invoiceUrl: data.providerInvoiceUrl,
+                providerInvoiceId: data.providerInvoiceId,
+                status: data.status,
+                reused: true
+            };
+        }
+    }
+
     // 5. Create Payment Document
     const paymentId = admin.firestore().collection("payments").doc().id;
     const now = admin.firestore.FieldValue.serverTimestamp();
@@ -411,30 +436,60 @@ exports.createJobBoostPayment = onCall(async (request) => {
         updatedAt: now
     };
 
-    // 6. Provider Invoice Creation (Xendit Sandbox)
-    let providerInvoiceId = null;
-    let providerInvoiceUrl = null;
+    // 6. Provider Invoice Creation
+    const xenditSecretKey = process.env.XENDIT_SECRET_KEY;
+    const isMockMode = process.env.PAYMENT_MOCK_MODE === "true";
 
     if (provider === "xendit") {
-        try {
-            // Mocking Xendit API call for now if keys are missing, 
-            // but structure follows Xendit Invoice API
-            const xenditSecretKey = process.env.XENDIT_SECRET_KEY || "xnd_development_mock_key";
-            const authHeader = Buffer.from(`${xenditSecretKey}:`).toString('base64');
+        if (!xenditSecretKey && !isMockMode) {
+            console.error("XENDIT_SECRET_KEY is missing and PAYMENT_MOCK_MODE is not true");
+            throw new HttpsError("failed-precondition", "Payment provider configuration missing");
+        }
 
-            // In real implementation:
-            // const response = await axios.post('https://api.xendit.co/v2/invoices', { ... }, { headers: { Authorization: `Basic ${authHeader}` } });
-            
-            // Mock Success Response for P4-M02
-            providerInvoiceId = `inv_${paymentId}`;
-            providerInvoiceUrl = `https://checkout-staging.xendit.co/v2/${providerInvoiceId}`;
-
+        if (isMockMode) {
+            console.log("Creating MOCK Xendit Invoice");
+            paymentData.providerInvoiceId = `mock_inv_${paymentId}`;
+            paymentData.providerInvoiceUrl = `https://checkout-staging.xendit.co/v2/mock_inv_${paymentId}`;
+            paymentData.rawProviderStatus = "PENDING_MOCK";
             paymentData.status = "pending";
-            paymentData.providerInvoiceId = providerInvoiceId;
-            paymentData.providerInvoiceUrl = providerInvoiceUrl;
-        } catch (error) {
-            console.error("Xendit API Error:", error);
-            throw new HttpsError("internal", "Failed to communicate with payment provider");
+        } else {
+            try {
+                const authHeader = Buffer.from(`${xenditSecretKey}:`).toString('base64');
+                const response = await axios.post('https://api.xendit.co/v2/invoices', {
+                    external_id: paymentId,
+                    amount: pkg.amount,
+                    currency: "IDR",
+                    description: `Job Boost - ${jobData.title}`,
+                    payer_email: auth.token.email || null,
+                    success_redirect_url: `mozzy://payments/${paymentId}`,
+                    failure_redirect_url: `mozzy://payments/${paymentId}`,
+                    metadata: {
+                        jobId,
+                        packageId,
+                        productType: "jobBoost",
+                        durationDays: pkg.durationDays,
+                        ownerId: userId
+                    }
+                }, {
+                    headers: {
+                        'Authorization': `Basic ${authHeader}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const invoice = response.data;
+                paymentData.providerInvoiceId = invoice.id;
+                paymentData.providerInvoiceUrl = invoice.invoice_url;
+                paymentData.rawProviderStatus = invoice.status;
+                paymentData.status = "pending";
+                
+                if (invoice.expiry_date) {
+                    paymentData.expiredAt = admin.firestore.Timestamp.fromDate(new Date(invoice.expiry_date));
+                }
+            } catch (error) {
+                console.error("Xendit API Error:", error.response?.data || error.message);
+                throw new HttpsError("internal", "Failed to communicate with payment provider");
+            }
         }
     } else {
         throw new HttpsError("unimplemented", "Selected provider is not yet supported");
@@ -445,8 +500,8 @@ exports.createJobBoostPayment = onCall(async (request) => {
 
     return {
         paymentId: paymentId,
-        invoiceUrl: providerInvoiceUrl,
-        providerInvoiceId: providerInvoiceId,
+        invoiceUrl: paymentData.providerInvoiceUrl,
+        providerInvoiceId: paymentData.providerInvoiceId,
         status: "pending"
     };
 });

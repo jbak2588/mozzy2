@@ -60,7 +60,7 @@ firebase functions:config:set xendit.secret_key="xnd_development_..."
 - **P4-M04 Boost Activation**: `paid` 상태 확인 시 실제 구인글의 노출 가중치(signalScore) 및 만료 시간 업데이트 로직 필요.
 
 ## 8. Git 정보
-- **Commit SHA**: [SHA를 작업 완료 보고 시 기입 예정]
+- **Commit SHA**: 5ae9659
 - **Push 여부**: YES
 - **Git Status Clean**: YES
 

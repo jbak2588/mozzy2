@@ -41,7 +41,7 @@ Phase 4 수익화 시스템의 기반이 되는 공통 결제 아키텍처를 �
 - Midtrans 연동 로직 구체화
 
 ## 5. 증빙 (Commits)
-- Commit: 182c189 — P4-M01 implement monetization foundation and payment provider architecture
+- Commit: 4cde346 — P4-M01B finalize payment foundation docs and tests
 - Push Target: origin/main
 - Push Status: YES
 

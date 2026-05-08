@@ -498,6 +498,15 @@
     "payment_created": "Payment created",
     "beforeAfter": "{{before}} → {{after}}",
     "noAuditLogs": "No audit logs yet.",
-    "adminOnly": "This page is for admins only."
+    "adminOnly": "This page is for admins only.",
+    "checkingPermission": "Checking admin permission...",
+    "permissionDenied": "You do not have admin access.",
+    "permissionDeniedDetail": "Contact the system owner if this access is required.",
+    "adminRole": "Admin Role",
+    "superAdmin": "Super Admin",
+    "financeAdmin": "Finance Admin",
+    "opsAdmin": "Operations Admin",
+    "supportAdmin": "Support Admin",
+    "refreshPermission": "Refresh permission"
   }
 }

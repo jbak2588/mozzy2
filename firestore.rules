@@ -49,6 +49,10 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
     // [1] 사용자 프로필
     match /users/{userId} {
       allow read: if isAuthenticated();
@@ -296,7 +300,8 @@ service cloud.firestore {
 
     // [7] Monetization Audit Logs
     match /monetization_audit_logs/{auditId} {
-      allow read, write: if false; // Admin/System only
+      allow read: if isAdmin();
+      allow write: if false; // System only
     }
   }
 }

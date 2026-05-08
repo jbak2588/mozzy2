@@ -501,6 +501,15 @@
     "payment_created": "Pembayaran dibuat",
     "beforeAfter": "{{before}} → {{after}}",
     "noAuditLogs": "Belum ada log audit.",
-    "adminOnly": "Halaman ini hanya untuk admin."
+    "adminOnly": "Halaman ini hanya untuk admin.",
+    "checkingPermission": "Memeriksa izin admin...",
+    "permissionDenied": "Kamu tidak memiliki akses admin.",
+    "permissionDeniedDetail": "Hubungi pemilik sistem jika akses ini diperlukan.",
+    "adminRole": "Role admin",
+    "superAdmin": "Super Admin",
+    "financeAdmin": "Admin Keuangan",
+    "opsAdmin": "Admin Operasional",
+    "supportAdmin": "Admin Bantuan",
+    "refreshPermission": "Refresh izin"
   }
 }

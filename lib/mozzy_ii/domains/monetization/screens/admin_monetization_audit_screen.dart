@@ -5,8 +5,9 @@ import '../providers/monetization_audit_provider.dart';
 import '../widgets/audit_log_card.dart';
 import '../widgets/audit_type_filter_bar.dart';
 
-/// Temporary admin guard.
-/// In production, this should be controlled by user custom claims / roles.
+import '../../admin/providers/admin_auth_provider.dart';
+
+/// Temporary admin guard override for local development.
 const bool kEnableLocalAdminScreens = false;
 
 class AdminMonetizationAuditScreen extends ConsumerStatefulWidget {
@@ -23,32 +24,63 @@ class _AdminMonetizationAuditScreenState
 
   @override
   Widget build(BuildContext context) {
-    // 1. Admin Guard Check
-    final isAdminEnabled = const bool.fromEnvironment('ENABLE_ADMIN_SCREENS',
-            defaultValue: false) ||
-        kEnableLocalAdminScreens;
+    // 1. Admin Guard Check (Custom Claims based)
+    final adminClaimsAsync = ref.watch(adminAuthProvider);
 
-    if (!isAdminEnabled) {
-      return Scaffold(
+    return adminClaimsAsync.when(
+      loading: () => Scaffold(
         appBar: AppBar(title: const Text('admin.monetizationAudit').tr()),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
+              const CircularProgressIndicator(),
               const SizedBox(height: 16),
-              Text(
-                'admin.accessDenied'.tr(),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              Text('admin.adminOnly'.tr()),
+              const Text('admin.checkingPermission').tr(),
             ],
           ),
         ),
-      );
-    }
+      ),
+      error: (err, stack) => Scaffold(
+        appBar: AppBar(title: const Text('admin.monetizationAudit').tr()),
+        body: Center(child: Text('Error checking admin permission: $err')),
+      ),
+      data: (claims) {
+        final isAdminEnabled = const bool.fromEnvironment('ENABLE_ADMIN_SCREENS',
+                defaultValue: false) ||
+            kEnableLocalAdminScreens ||
+            claims.isAdmin;
 
+        if (!isAdminEnabled) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('admin.monetizationAudit').tr()),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  Text(
+                    'admin.accessDenied'.tr(),
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text('admin.permissionDenied').tr(),
+                  const SizedBox(height: 8),
+                  const Text('admin.permissionDeniedDetail',
+                      textAlign: TextAlign.center).tr(),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return _buildAuditContent(context);
+      },
+    );
+  }
+
+  Widget _buildAuditContent(BuildContext context) {
     // 2. Main Admin Content
     final auditLogsAsync = _selectedType == null
         ? ref.watch(recentAuditLogsProvider(limit: 50))

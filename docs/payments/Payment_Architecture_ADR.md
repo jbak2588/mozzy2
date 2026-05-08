@@ -73,7 +73,8 @@
   - `boostStatus == "active"` 이면서 `boostActiveUntil <= now`인 문서를 대상으로 `expired` 상태 전환 및 `boostSignalScore = 0.0` 처리를 수행함.
   - 대량 처리를 위해 Batch 업데이트를 사용하며, 각 처리 건에 대해 감사 로그를 남김.
 
-## 9. Admin Read-only Foundation (P4-M05B)
-- **접근 제어**: 아직 정식 Admin Role 시스템이 구축되지 않았으므로, 클라이언트 측 `AdminMonetizationAuditScreen`은 임시 `kEnableLocalAdminScreens` 가드에 의해 보호됨.
-- **보안 유지**: `monetization_audit_logs` 컬렉션에 대한 Firestore Rules는 여전히 `read, write: if false`를 유지함. 실제 운영 Admin은 향후 Admin SDK 또는 Custom Claims 기반으로 권한이 부여될 예정임.
-- **감사 가시성**: 관리자는 결제 상태 변경, 부스트 활성화/만료 이력을 타임라인 형태로 조회할 수 있으며, 관련 도메인 ID(JobID, PaymentID)를 통해 추적 가능함.
+## 9. Admin Role & Custom Claims Foundation (P4-M06)
+- **Custom Claims 기반 권한 관리**: Firebase Custom Claims (`admin: true`, `adminRole: "..."`)를 도입하여 정식 관리자 권한 체계를 구축함.
+- **접근 제어 강화**: `AdminMonetizationAuditScreen`은 이제 `adminClaimsProvider`를 통해 실제 사용자의 custom claims를 검증하며, 권한이 없는 사용자의 접근을 원천 차단함.
+- **Firestore Rules 업데이트**: `monetization_audit_logs` 컬렉션에 대해 `isAdmin()` (custom claim 기반) 사용자에게 `read` 권한을 부여함. `write`는 여전히 시스템 전용으로 금지됨.
+- **관심사 분리**: 관리자 권한 부여 및 수정은 앱 내부가 아닌 Firebase Admin SDK(서버 측 경로)를 통해서만 가능하도록 정책을 수립함.

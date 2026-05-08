@@ -36,11 +36,11 @@ class AuditLogCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             _buildDetailRow(context, 'Domain', log.relatedDomain),
-            _buildDetailRow(context, 'Related ID', log.relatedId),
+            _buildDetailRow(context, 'Related ID', _truncate(log.relatedId)),
             if (log.paymentId != null)
-              _buildDetailRow(context, 'Payment ID', log.paymentId!),
+              _buildDetailRow(context, 'Payment ID', _truncate(log.paymentId!)),
             if (log.jobId != null)
-              _buildDetailRow(context, 'Job ID', log.jobId!),
+              _buildDetailRow(context, 'Job ID', _truncate(log.jobId!)),
             if (log.beforeStatus != null || log.afterStatus != null)
               _buildDetailRow(
                 context,
@@ -54,17 +54,26 @@ class AuditLogCard extends StatelessWidget {
               _buildDetailRow(
                 context,
                 'Amount',
-                '${log.currency ?? 'IDR'} ${log.amount}',
+                NumberFormat.currency(
+                  locale: 'id_ID',
+                  symbol: 'Rp ',
+                  decimalDigits: 0,
+                ).format(log.amount),
               ),
             const SizedBox(height: 8),
             Text(
-              'Actor: ${log.actorType} (${log.actorId ?? 'N/A'})',
+              'Actor: ${log.actorType} (${_truncate(log.actorId ?? 'N/A')})',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _truncate(String value, {int length = 12}) {
+    if (value.length <= length) return value;
+    return '${value.substring(0, length)}...';
   }
 
   Widget _buildDetailRow(BuildContext context, String label, String value) {

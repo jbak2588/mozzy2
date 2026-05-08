@@ -48,7 +48,7 @@
 - **Cloud Scheduler**: 부스트 기간 만료 시 `boostStatus`를 자동으로 `expired`로 변경하는 크론 작업은 Phase 4-M05 이후 도입 고려 (현재는 UI/조회 레벨에서 `boostActiveUntil`로 필터링).
 
 ## 6. Git 정보
-- **Commit SHA**: [SHA를 작업 완료 보고 시 기입 예정]
+- **Commit SHA**: c36945e
 - **Push 여부**: YES
 - **Git Status Clean**: YES
 

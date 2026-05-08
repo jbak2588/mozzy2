@@ -59,7 +59,7 @@ Mozzy Indonesia 프로젝트의 Phase 3 "Jobs Domain MVP" 개발이 완료되었
 ## 8. 작업 이력 (Commit History)
 - **P3-J01 ~ P3-J07**: Jobs Domain MVP 구현 (`64bce1b`)
 - **P3-J08**: Jobs Final QA & i18n Fix (`44090ab`)
-- **P3-J09**: Firestore Rules Hardening (`[SHA]`)
+- **P3-J09**: Firestore Rules Hardening (`f1ece2c`)
 
 ---
 **최종 업데이트**: 2026-05-08

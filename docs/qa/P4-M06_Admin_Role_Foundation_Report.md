@@ -50,7 +50,7 @@ match /monetization_audit_logs/{auditId} {
 
 ## 6. Git Status
 - **Branch**: main
-- **Commit SHA**: 71fa476
+- **Commit SHA**: 5bda619
 - **Status**: clean
 - **Push 여부**: YES
 

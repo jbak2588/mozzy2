@@ -55,13 +55,14 @@ Mozzy Indonesia 프로젝트의 Phase 3 "Jobs Domain MVP" 개발이 완료되었
 - **AI 직무 설명**: 구인글 작성 시 제목을 바탕으로 상세 내용 자동 생성 (Gemini 3.0 연동).
 - **면접 일정 관리**: 채팅 내에서 면접 일정을 제안하고 캘린더에 등록하는 기능.
 - **Job Boost**: 유료 결제(Midtrans)를 통한 공고 상단 노출 기능.
+- **Git Commit**: 60c8d7c
 - **자동 매칭**: 구직자 프로필과 공고의 기술 스택을 비교하여 매칭 점수 제공.
 
 ## 8. 작업 이력 (Commit History)
 - **P3-J01 ~ P3-J07**: Jobs Domain MVP 구현 (`64bce1b`)
 - **P3-J08**: Jobs Final QA & i18n Fix (`44090ab`)
 - **P3-J09**: Firestore Rules Hardening (`f1ece2c`)
-- **P3-J10**: Jobs Counter Integrity & Report Finalization (`[SHA]`)
+- **P3-J10**: Jobs Counter Integrity & Report Finalization (`60c8d7c`)
 
 ---
 **최종 업데이트**: 2026-05-08

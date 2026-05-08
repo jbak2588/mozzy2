@@ -33,4 +33,4 @@ Jobs 도메인의 핵심 지표인 지원자 수와 채팅 문의 수에 대한 
 
 ---
 **작성자**: Antigravity (AI Agent)
-**Git Commit**: [SHA를 작업 완료 보고 시 기입 예정]
+**Git Commit**: 60c8d7c

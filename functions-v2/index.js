@@ -820,7 +820,9 @@ exports._testHelpers = {
     normalizeSemanticIntent,
     sanitizeSemanticRankingItems,
     parseGeminiRankingResponse,
-    getGeminiModel: () => process.env.GEMINI_MODEL || "gemini-3-flash-preview"
+    getGeminiModel: () => process.env.GEMINI_MODEL || "gemini-3-flash-preview",
+    ALLOWED_FEED_INTERACTION_TYPES: ["impression", "card_tap", "detail_open", "cta_tap"],
+    FORBIDDEN_FEED_INTERACTION_FIELDS: ["intent", "searchQuery", "email", "phone", "exactAddress", "paymentId", "auditId", "fcmToken", "prompt"]
 };
 
 /**
@@ -1173,3 +1175,80 @@ Expected JSON Output Format:
 
 Only return the JSON object.`;
 }
+
+/**
+ * Smart Feed: Interaction Logging
+ */
+const ALLOWED_FEED_INTERACTION_TYPES = ["impression", "card_tap", "detail_open", "cta_tap"];
+const FORBIDDEN_FEED_INTERACTION_FIELDS = ["intent", "searchQuery", "email", "phone", "exactAddress", "paymentId", "auditId", "fcmToken", "prompt"];
+
+exports.logFeedInteraction = onCall(async (request) => {
+    const { data, auth } = request;
+
+    if (!auth) {
+        throw new HttpsError("unauthenticated", "Authentication required");
+    }
+
+    const {
+        eventType,
+        feedItemId,
+        sourceId,
+        sourceType,
+        route,
+        position,
+        isPromoted,
+        hasSemanticIntent,
+        intentLengthBucket,
+        countryCode,
+        locationParts,
+        clientCreatedAt,
+        metadata = {}
+    } = data;
+
+    // 1. Basic Validation
+    if (!eventType || !ALLOWED_FEED_INTERACTION_TYPES.includes(eventType)) {
+        throw new HttpsError("invalid-argument", `Invalid event type: ${eventType}`);
+    }
+
+    if (!feedItemId || !sourceId || !sourceType) {
+        throw new HttpsError("invalid-argument", "Missing required fields: feedItemId, sourceId, sourceType");
+    }
+
+    // 2. Data Cleaning & Sanitization
+    const cleanedMetadata = {};
+    if (metadata && typeof metadata === 'object') {
+        Object.keys(metadata).forEach(key => {
+            if (!FORBIDDEN_FEED_INTERACTION_FIELDS.includes(key)) {
+                cleanedMetadata[key] = metadata[key];
+            }
+        });
+    }
+
+    const interactionData = {
+        userId: auth.uid,
+        sessionId: data.sessionId || "unknown",
+        eventType,
+        feedItemId,
+        sourceId,
+        sourceType,
+        route: route || "unknown",
+        position: Math.max(0, Math.min(parseInt(position) || 0, 100)),
+        isPromoted: !!isPromoted,
+        hasSemanticIntent: !!hasSemanticIntent,
+        intentLengthBucket: intentLengthBucket || "none",
+        countryCode: countryCode || "ID",
+        locationParts: locationParts || {},
+        clientCreatedAt: clientCreatedAt || null,
+        metadata: cleanedMetadata,
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    // 3. Save to Firestore
+    try {
+        await admin.firestore().collection("feed_interactions").add(interactionData);
+        return { ok: true };
+    } catch (error) {
+        console.error("Error logging feed interaction:", error);
+        throw new HttpsError("internal", "Failed to log interaction");
+    }
+});

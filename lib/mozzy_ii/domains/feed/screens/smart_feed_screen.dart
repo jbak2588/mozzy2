@@ -6,6 +6,11 @@ import '../widgets/feed_item_card.dart';
 import '../widgets/feed_type_chip_bar.dart';
 import '../widgets/smart_feed_search_bar.dart';
 
+import '../models/feed_interaction_event.dart';
+import '../models/feed_interaction_type.dart';
+import '../providers/feed_interaction_provider.dart';
+import '../providers/feed_session_provider.dart';
+
 class SmartFeedScreen extends ConsumerWidget {
   const SmartFeedScreen({super.key});
 
@@ -13,6 +18,11 @@ class SmartFeedScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feedAsync = ref.watch(smartFeedProvider);
     final filteredItems = ref.watch(filteredSmartFeedProvider);
+    final searchIntent = ref.watch(smartFeedSearchIntentProvider);
+    final hasIntent = searchIntent.isNotEmpty;
+    final intentLengthBucket = hasIntent 
+        ? (searchIntent.length <= 10 ? 'short' : (searchIntent.length <= 30 ? 'medium' : 'long'))
+        : 'none';
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +58,36 @@ class SmartFeedScreen extends ConsumerWidget {
                   child: ListView.builder(
                     itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
-                      return FeedItemCard(item: filteredItems[index]);
+                      final item = filteredItems[index];
+                      
+                      // Log impression once per item per screen session
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        final seenItems = ref.read(seenItemsProvider);
+                        if (!seenItems.value.contains(item.id)) {
+                          seenItems.value = {...seenItems.value, item.id};
+                          
+                          final event = FeedInteractionEvent(
+                            eventType: FeedInteractionType.impression,
+                            feedItemId: item.id,
+                            sourceId: item.sourceId,
+                            sourceType: item.type.name,
+                            position: index,
+                            isPromoted: item.isPromoted,
+                            hasSemanticIntent: hasIntent,
+                            intentLengthBucket: intentLengthBucket,
+                            sessionId: ref.read(feedSessionIdProvider),
+                            clientCreatedAt: DateTime.now(),
+                          );
+                          ref.read(feedInteractionRepositoryProvider).logInteraction(event);
+                        }
+                      });
+
+                      return FeedItemCard(
+                        item: item,
+                        position: index,
+                        hasSemanticIntent: hasIntent,
+                        intentLengthBucket: intentLengthBucket,
+                      );
                     },
                   ),
                 );

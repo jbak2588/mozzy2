@@ -72,3 +72,7 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 ## 12. P5-S04E 업데이트 (Gemini Secret Runtime Smoke Test)
 - **Secret Manager Integration**: `GEMINI_API_KEY`를 Firebase Secret Manager를 통해 주입하는 구조를 최종 확정하고 Smoke Test를 완료함.
 - **Model Standardization**: `gemini-3-flash-preview` 모델을 기본 런타임 모델로 확정함.
+
+## 13. P5-S05 업데이트 (Smart Feed Interaction Logging Foundation)
+- **Interaction Logging**: `logFeedInteraction` Cloud Function 및 Flutter 로깅 레이어를 구축하여 `impression`, `card_tap` 등의 기본 신호를 privacy-safe하게 수집하기 시작함.
+- **Engagement Signal**: 수집된 데이터는 향후 `engagementScore` 계산 및 개인화 랭킹의 기초 자료로 활용될 예정임.

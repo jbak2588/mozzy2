@@ -68,6 +68,14 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **Standard Model**: `gemini-3-flash-preview` 모델을 표준으로 사용하며, 서버 환경 변수를 통해 모델명을 제어합니다.
 - **Secret Management**: `GEMINI_API_KEY`는 Firebase Secret Manager를 통해 관리하며, 클라이언트와 격리된 환경에서만 사용됩니다.
 
+## 10. Interaction Logging (P5-S05)
+상호작용 로그 수집 시 아래의 프라이버시 원칙을 준수합니다.
+
+- **최소 수집**: 서비스 품질 측정에 필요한 최소한의 이벤트(`impression`, `card_tap`, `detail_open`, `cta_tap`)만 수집합니다.
+- **검색 의도 비저장**: 사용자가 입력한 검색 의도(Intent) 원문은 저장하지 않으며, `hasSemanticIntent` 및 `intentLengthBucket`('short', 'medium', 'long') 정보만 수집합니다.
+- **PII 차단**: 서버 측(`FORBIDDEN_FEED_INTERACTION_FIELDS`)에서 이메일, 전화번호, 상세 주소 등이 포함된 필드를 필터링하여 저장을 차단합니다.
+- **비식별 세션**: 앱 실행 시 생성되는 휘발성 `sessionId`를 사용하며, 이를 영구적인 사용자 프로필과 연결하여 장기 추적하지 않습니다.
+
 ---
 최종 수정일: 2026-05-09
-상태: P5-S04D Gemini Model & Secret Setup 단계 반영
+상태: P5-S05 Interaction Logging Foundation 단계 반영

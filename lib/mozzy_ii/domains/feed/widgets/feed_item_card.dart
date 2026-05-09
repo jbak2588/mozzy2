@@ -1,22 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/feed_item_model.dart';
 import '../models/feed_item_type.dart';
+import '../models/feed_interaction_event.dart';
+import '../models/feed_interaction_type.dart';
+import '../providers/feed_interaction_provider.dart';
+import '../providers/feed_session_provider.dart';
 
-class FeedItemCard extends StatelessWidget {
+class FeedItemCard extends ConsumerWidget {
   final FeedItemModel item;
+  final int position;
+  final bool hasSemanticIntent;
+  final String? intentLengthBucket;
 
-  const FeedItemCard({super.key, required this.item});
+  const FeedItemCard({
+    super.key,
+    required this.item,
+    required this.position,
+    this.hasSemanticIntent = false,
+    this.intentLengthBucket,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
       child: InkWell(
-        onTap: () => context.push(item.route),
+        onTap: () {
+          // Log interaction
+          final event = FeedInteractionEvent(
+            eventType: FeedInteractionType.cardTap,
+            feedItemId: item.id,
+            sourceId: item.sourceId,
+            sourceType: item.type.name,
+            route: item.route,
+            position: position,
+            isPromoted: item.isPromoted,
+            hasSemanticIntent: hasSemanticIntent,
+            intentLengthBucket: intentLengthBucket,
+            sessionId: ref.read(feedSessionIdProvider),
+            clientCreatedAt: DateTime.now(),
+          );
+          ref.read(feedInteractionRepositoryProvider).logInteraction(event);
+
+          // Navigate
+          context.push(item.route);
+        },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12),

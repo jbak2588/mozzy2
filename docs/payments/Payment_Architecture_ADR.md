@@ -73,8 +73,13 @@
   - `boostStatus == "active"` 이면서 `boostActiveUntil <= now`인 문서를 대상으로 `expired` 상태 전환 및 `boostSignalScore = 0.0` 처리를 수행함.
   - 대량 처리를 위해 Batch 업데이트를 사용하며, 각 처리 건에 대해 감사 로그를 남김.
 
-## 9. Admin Role & Custom Claims Foundation (P4-M06)
+## 9. Admin Role & Custom Claims Foundation (P4-M06 / P4-M06B)
 - **Custom Claims 기반 권한 관리**: Firebase Custom Claims (`admin: true`, `adminRole: "..."`)를 도입하여 정식 관리자 권한 체계를 구축함.
-- **접근 제어 강화**: `AdminMonetizationAuditScreen`은 이제 `adminClaimsProvider`를 통해 실제 사용자의 custom claims를 검증하며, 권한이 없는 사용자의 접근을 원천 차단함.
-- **Firestore Rules 업데이트**: `monetization_audit_logs` 컬렉션에 대해 `isAdmin()` (custom claim 기반) 사용자에게 `read` 권한을 부여함. `write`는 여전히 시스템 전용으로 금지됨.
+- **접근 제어 강화 (Hardening)**: 
+  - `AdminMonetizationAuditScreen`은 `canReadMonetizationAuditProvider`를 통해 `super_admin` 또는 `finance_admin` 권한을 가진 사용자만 접근을 허용함.
+  - `ops_admin` 및 `support_admin`은 해당 화면에 접근할 수 없으며 Access Denied 처리가 수행됨.
+- **Firestore Rules 업데이트**: 
+  - `monetization_audit_logs` 컬렉션의 `read` 권한은 `isSuperAdmin() || isFinanceAdmin()` 조건이 충족될 때만 허용함.
+  - `write`는 시스템 전용으로 상시 금지됨.
 - **관심사 분리**: 관리자 권한 부여 및 수정은 앱 내부가 아닌 Firebase Admin SDK(서버 측 경로)를 통해서만 가능하도록 정책을 수립함.
+- **Matrix**: 향후 결제/정산/환불 등 금융 관련 모든 리소스는 `finance_admin` 이상의 권한으로 제한하는 'Finance Isolation' 원칙을 적용함.

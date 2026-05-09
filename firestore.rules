@@ -53,6 +53,22 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.token.admin == true;
     }
 
+    function adminRole() {
+      return request.auth.token.adminRole;
+    }
+
+    function isSuperAdmin() {
+      return isAdmin() && request.auth.token.adminRole == "super_admin";
+    }
+
+    function isFinanceAdmin() {
+      return isAdmin() && request.auth.token.adminRole == "finance_admin";
+    }
+
+    function canReadMonetizationAudit() {
+      return isSuperAdmin() || isFinanceAdmin();
+    }
+
     // [1] 사용자 프로필
     match /users/{userId} {
       allow read: if isAuthenticated();
@@ -300,7 +316,7 @@ service cloud.firestore {
 
     // [7] Monetization Audit Logs
     match /monetization_audit_logs/{auditId} {
-      allow read: if isAdmin();
+      allow read: if canReadMonetizationAudit();
       allow write: if false; // System only
     }
   }

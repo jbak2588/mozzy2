@@ -26,6 +26,7 @@ class _AdminMonetizationAuditScreenState
   Widget build(BuildContext context) {
     // 1. Admin Guard Check (Custom Claims based)
     final adminClaimsAsync = ref.watch(adminAuthProvider);
+    final canReadAudit = ref.watch(canReadMonetizationAuditProvider);
 
     return adminClaimsAsync.when(
       loading: () => Scaffold(
@@ -46,30 +47,60 @@ class _AdminMonetizationAuditScreenState
         body: Center(child: Text('Error checking admin permission: $err')),
       ),
       data: (claims) {
-        final isAdminEnabled = const bool.fromEnvironment('ENABLE_ADMIN_SCREENS',
+        final isDevEnabled = const bool.fromEnvironment('ENABLE_ADMIN_SCREENS',
                 defaultValue: false) ||
-            kEnableLocalAdminScreens ||
-            claims.isAdmin;
+            kEnableLocalAdminScreens;
 
-        if (!isAdminEnabled) {
+        // Strict guard: must be admin AND (super_admin or finance_admin)
+        if (!isDevEnabled && !canReadAudit) {
           return Scaffold(
             appBar: AppBar(title: const Text('admin.monetizationAudit').tr()),
             body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  Text(
-                    'admin.accessDenied'.tr(),
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text('admin.permissionDenied').tr(),
-                  const SizedBox(height: 8),
-                  const Text('admin.permissionDeniedDetail',
-                      textAlign: TextAlign.center).tr(),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.lock_outline, size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text(
+                      'admin.accessDenied'.tr(),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'admin.monetizationAuditRequiresFinance',
+                      textAlign: TextAlign.center,
+                    ).tr(),
+                    const SizedBox(height: 24),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Text(
+                        'admin.currentRole'.tr(namedArgs: {
+                          'role': _formatRole(claims.adminRole, context),
+                        }),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () =>
+                          ref.read(adminAuthProvider.notifier).refreshClaims(),
+                      child: const Text('admin.refreshPermission').tr(),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -78,6 +109,22 @@ class _AdminMonetizationAuditScreenState
         return _buildAuditContent(context);
       },
     );
+  }
+
+  String _formatRole(String? role, BuildContext context) {
+    if (role == null) return 'admin.unknownRole'.tr();
+    switch (role) {
+      case 'super_admin':
+        return 'admin.superAdmin'.tr();
+      case 'finance_admin':
+        return 'admin.financeAdmin'.tr();
+      case 'ops_admin':
+        return 'admin.opsAdmin'.tr();
+      case 'support_admin':
+        return 'admin.supportAdmin'.tr();
+      default:
+        return role;
+    }
   }
 
   Widget _buildAuditContent(BuildContext context) {

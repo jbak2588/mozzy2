@@ -16,14 +16,28 @@ The standard custom claims for a Mozzy admin are:
 - **admin**: (boolean) Must be `true` for any administrative access.
 - **adminRole**: (string) Defines the specific scope of the administrator.
 
-## 2. Admin Roles
+| Role | Description | Monetization Audit Access |
+| :--- | :--- | :--- |
+| `super_admin` | Full access to all administrative screens and logs. | **ALLOWED** |
+| `finance_admin` | Access to finance-related reports and logs. | **ALLOWED** |
+| `ops_admin` | Access to operational moderation and reports. | DENIED |
+| `support_admin` | Read-only access for customer support. | DENIED |
 
-| Role | Description |
-| :--- | :--- |
-| `super_admin` | Full access to all administrative screens, audit logs, and user management. |
-| `finance_admin` | Access to monetization audit logs, payments, and settlement reports. |
-| `ops_admin` | Access to operational reports, jobs, and marketplace moderation. |
-| `support_admin` | Read-only access to user data and transaction history for customer support. |
+## 3. Monetization Audit Log Access
+
+Monetization audit logs (`monetization_audit_logs` collection) contain sensitive financial state changes. Access is restricted at both the UI and Database level:
+
+- **UI Guard**: `AdminMonetizationAuditScreen` uses `canReadMonetizationAuditProvider` which requires either `super_admin` or `finance_admin`.
+- **Database Guard**: Firestore Rules use the `canReadMonetizationAudit()` helper to enforce the same policy.
+
+### Example: Setting Finance Admin
+
+```javascript
+await admin.auth().setCustomUserClaims(uid, {
+  admin: true,
+  adminRole: "finance_admin"
+});
+```
 
 ## 3. Setting Admin Claims
 

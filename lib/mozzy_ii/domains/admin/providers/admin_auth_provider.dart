@@ -44,3 +44,12 @@ String? adminRole(Ref ref) {
     orElse: () => null,
   );
 }
+
+@riverpod
+bool canReadMonetizationAudit(Ref ref) {
+  final claimsAsync = ref.watch(adminAuthProvider);
+  return claimsAsync.maybeWhen(
+    data: (claims) => claims.canReadMonetizationAudit,
+    orElse: () => false,
+  );
+}

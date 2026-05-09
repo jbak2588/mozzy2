@@ -48,5 +48,29 @@ void main() {
       expect(fromJson.adminRole, model.adminRole);
       expect(fromJson.claimsUpdatedAt, model.claimsUpdatedAt);
     });
+
+    test('role helpers return correct values', () {
+      const superAdmin = AdminClaimsModel(isAdmin: true, adminRole: 'super_admin');
+      const financeAdmin = AdminClaimsModel(isAdmin: true, adminRole: 'finance_admin');
+      const opsAdmin = AdminClaimsModel(isAdmin: true, adminRole: 'ops_admin');
+      const supportAdmin = AdminClaimsModel(isAdmin: true, adminRole: 'support_admin');
+      const unknownAdmin = AdminClaimsModel(isAdmin: true, adminRole: 'unknown');
+      const nonAdmin = AdminClaimsModel(isAdmin: false, adminRole: 'finance_admin');
+
+      expect(superAdmin.isSuperAdmin, isTrue);
+      expect(superAdmin.canReadMonetizationAudit, isTrue);
+
+      expect(financeAdmin.isFinanceAdmin, isTrue);
+      expect(financeAdmin.canReadMonetizationAudit, isTrue);
+
+      expect(opsAdmin.isOpsAdmin, isTrue);
+      expect(opsAdmin.canReadMonetizationAudit, isFalse);
+
+      expect(supportAdmin.isSupportAdmin, isTrue);
+      expect(supportAdmin.canReadMonetizationAudit, isFalse);
+
+      expect(unknownAdmin.canReadMonetizationAudit, isFalse);
+      expect(nonAdmin.canReadMonetizationAudit, isFalse);
+    });
   });
 }

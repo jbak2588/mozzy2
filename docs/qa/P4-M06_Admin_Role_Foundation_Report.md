@@ -54,7 +54,6 @@ match /monetization_audit_logs/{auditId} {
 - **Status**: clean
 - **Push 여부**: YES
 
-## 7. 남은 이슈
+- **P4-M06B Scope Hardening**: 세부 역할(`adminRole`)별 화면 항목 필터링 및 Firestore Rules 강화 완료.
 - 관리자 권한 변경 시 실시간 반영을 위한 Token Refresh UX 고도화.
 - Admin 전용 Composite Index 추가 (데이터 양 증가 시 필요).
-- 세부 역할(`adminRole`)별 화면 항목 필터링 적용.

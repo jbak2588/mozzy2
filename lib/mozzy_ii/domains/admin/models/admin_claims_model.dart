@@ -48,4 +48,11 @@ class AdminClaimsModel {
       claimsUpdatedAt: claimsUpdatedAt ?? this.claimsUpdatedAt,
     );
   }
+
+  bool get isSuperAdmin => isAdmin && adminRole == 'super_admin';
+  bool get isFinanceAdmin => isAdmin && adminRole == 'finance_admin';
+  bool get isOpsAdmin => isAdmin && adminRole == 'ops_admin';
+  bool get isSupportAdmin => isAdmin && adminRole == 'support_admin';
+
+  bool get canReadMonetizationAudit => isSuperAdmin || isFinanceAdmin;
 }

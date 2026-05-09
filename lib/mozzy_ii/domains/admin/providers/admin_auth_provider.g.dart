@@ -134,3 +134,45 @@ final class AdminRoleProvider
 }
 
 String _$adminRoleHash() => r'173cf9aa622bcf8467e66a70ed087169cf565d7e';
+
+@ProviderFor(canReadMonetizationAudit)
+final canReadMonetizationAuditProvider = CanReadMonetizationAuditProvider._();
+
+final class CanReadMonetizationAuditProvider
+    extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  CanReadMonetizationAuditProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'canReadMonetizationAuditProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$canReadMonetizationAuditHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return canReadMonetizationAudit(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$canReadMonetizationAuditHash() =>
+    r'ea7225ad20d206d5646858bcd3aa13e6182cb462';

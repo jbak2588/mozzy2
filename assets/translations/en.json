@@ -524,6 +524,8 @@
     "noFilteredItems": "No content for this category.",
     "unknownLocation": "Unknown location",
     "error": "Failed to load feed.",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "legacyHome": "Legacy Home",
+    "loading": "Loading feed..."
   }
 }

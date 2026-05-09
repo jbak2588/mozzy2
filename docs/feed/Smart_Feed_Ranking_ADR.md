@@ -34,3 +34,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **AI Ranking**: Gemini API를 사용하여 사용자의 과거 행동 패턴과 피드 콘텐츠 간의 유사도를 점수화(Semantic Ranking).
 - **Ads Integration**: 단순 부스트 외에 정교한 타겟팅 광고 슬롯 도입.
 - **Geo-fencing**: 사용자가 이동할 때마다 실시간으로 거리 점수를 재계산하는 하이퍼로컬 최적화.
+
+## 6. P5-S02 업데이트 (Home Integration)
+- **Home/Beranda 연결**: 기존 `HomeScreen`을 대신하여 `SmartFeedScreen`이 서비스의 기본 홈 화면으로 설정됨. 기존 홈은 `/legacy-home`으로 보존.
+- **Widget Test 보강**: `EasyLocalization` 및 `ProviderScope`를 포함한 테스트 헬퍼(`TestLocalizationApp`)를 도입하여 UI 테스트 안정화.
+- **안정성 강화**: 피드 구성 요소 중 하나가 실패하더라도 나머지 콘텐츠는 노출되도록 `SmartFeedRepository` 스트림 처리 개선.
+- **정렬 안정화**: 점수가 동일할 경우 최신순, ID순으로 정렬되도록 Tie-breaker 로직 강화.

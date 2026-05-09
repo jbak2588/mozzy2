@@ -81,7 +81,18 @@ class FeedRankingService extends _$FeedRankingService {
       return item.copyWith(finalScore: score);
     }).toList();
     
-    scoredItems.sort((a, b) => b.finalScore.compareTo(a.finalScore));
+    scoredItems.sort((a, b) {
+      // 1. Final Score DESC
+      final scoreComparison = b.finalScore.compareTo(a.finalScore);
+      if (scoreComparison != 0) return scoreComparison;
+      
+      // 2. Created At DESC (Tie-breaker 1)
+      final dateComparison = b.createdAt.compareTo(a.createdAt);
+      if (dateComparison != 0) return dateComparison;
+      
+      // 3. Source ID ASC (Tie-breaker 2 - Deterministic)
+      return a.sourceId.compareTo(b.sourceId);
+    });
     return scoredItems;
   }
 }

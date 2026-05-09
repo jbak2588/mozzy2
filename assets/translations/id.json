@@ -527,6 +527,8 @@
     "noFilteredItems": "Tidak ada konten untuk kategori ini.",
     "unknownLocation": "Lokasi tidak diketahui",
     "error": "Gagal memuat feed.",
-    "refresh": "Muat ulang"
+    "refresh": "Muat ulang",
+    "legacyHome": "Home lama",
+    "loading": "Memuat feed..."
   }
 }

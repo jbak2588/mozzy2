@@ -30,21 +30,20 @@ class FirestoreSmartFeedRepository implements SmartFeedRepository {
         .orderBy('createdAt', descending: true)
         .limit(limit ~/ 2);
 
-    // Combine using RxDart
+    // Combine using RxDart with error handling for individual streams
     return Rx.combineLatest2(
-      jobsQuery.snapshots(),
-      productsQuery.snapshots(),
-      (QuerySnapshot jobsSnap, QuerySnapshot productsSnap) {
-        final jobs = jobsSnap.docs.map((doc) {
+      jobsQuery.snapshots().map<QuerySnapshot?>((s) => s).onErrorReturn(null),
+      productsQuery.snapshots().map<QuerySnapshot?>((s) => s).onErrorReturn(null),
+      (QuerySnapshot? jobsSnap, QuerySnapshot? productsSnap) {
+        final jobs = jobsSnap?.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
           return JobFeedMapper.map(JobPostModel.fromJson({...data, 'id': doc.id}));
-        }).toList();
+        }).toList() ?? [];
 
-        final products = productsSnap.docs.map((doc) {
+        final products = productsSnap?.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
-          // products are in a subcollection, so we need to handle geoPath correctly if not present
           return ProductFeedMapper.map(ProductModel.fromJson({...data, 'id': doc.id}));
-        }).toList();
+        }).toList() ?? [];
 
         return [...jobs, ...products];
       },

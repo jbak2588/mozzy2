@@ -77,6 +77,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/home',
+                builder: (context, state) => const SmartFeedScreen(),
+              ),
+              GoRoute(
+                path: '/legacy-home',
                 builder: (context, state) => const HomeScreen(),
               ),
             ],

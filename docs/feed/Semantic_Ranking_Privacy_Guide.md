@@ -90,6 +90,13 @@ Staging 환경(mozzy-v2)에서의 실시간 동작 검증을 완료했습니다.
 - **Rules Enforcement**: 클라이언트에서 `feed_interactions` 컬렉션에 대한 직접적인 접근(Read/Write)이 보안 규칙에 의해 차단됨을 확인했습니다.
 - **Sanitization Sync**: 클라이언트와 서버 양측의 필터링 로직이 동기화되어 PII 유출을 2중으로 방어하고 있음을 확인했습니다.
 
+## 13. 참여 지표 집계 (P5-S06)
+Raw 상호작용 로그를 기반으로 콘텐츠의 인기도를 집계하는 과정에서도 프라이버시 원칙을 준수합니다.
+
+- **No UserId in Summaries**: 집계 데이터(`feed_engagement_summaries`)에는 특정 사용자를 식별할 수 있는 정보가 일체 포함되지 않습니다.
+- **Session Anonymization**: 고유 세션 수를 집계할 때도 세션 ID의 원문이나 사용자 매핑 정보를 저장하지 않고 카운트만 유지합니다.
+- **Query Protection**: 검색 의도(Intent) 보너스 집계 시에도 검색어 원문은 절대 수집하거나 집계 테이블에 남기지 않습니다.
+
 ---
 최종 수정일: 2026-05-11
-상태: P5-S05C Runtime QA 반영 및 최종 Handoff 준비 완료
+상태: P5-S06 Engagement Aggregation 반영 및 랭킹 루프 완성

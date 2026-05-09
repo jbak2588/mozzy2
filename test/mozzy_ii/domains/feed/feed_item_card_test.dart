@@ -23,7 +23,7 @@ void main() {
 
       await pumpMozzyTestApp(
         tester,
-        FeedItemCard(item: item),
+        FeedItemCard(item: item, position: 0),
       );
 
       await tester.pumpAndSettle();
@@ -49,7 +49,7 @@ void main() {
 
       await pumpMozzyTestApp(
         tester,
-        FeedItemCard(item: item),
+        FeedItemCard(item: item, position: 1),
       );
 
       await tester.pumpAndSettle();

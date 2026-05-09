@@ -293,7 +293,7 @@ final class SmartFeedProvider
   }
 }
 
-String _$smartFeedHash() => r'3c3fd31a119e50a30902164cce0c18ad4f31654b';
+String _$smartFeedHash() => r'686027af13143c4935ee07934067138fc14c40ab';
 
 @ProviderFor(FeedFilter)
 final feedFilterProvider = FeedFilterProvider._();
@@ -391,4 +391,4 @@ final class FilteredSmartFeedProvider
   }
 }
 
-String _$filteredSmartFeedHash() => r'926b774a1bd3d8cb371075d2339e444f349131e4';
+String _$filteredSmartFeedHash() => r'e65a42940d630afd2daeb27e8bd60603309b367d';

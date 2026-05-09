@@ -9,6 +9,9 @@ import '../services/mock_semantic_ranking_adapter.dart';
 import '../services/feed_semantic_sanitizer.dart';
 import '../services/semantic_ranking_service.dart';
 import '../services/gemini_semantic_ranking_adapter.dart';
+import '../repositories/feed_engagement_repository.dart';
+import 'feed_engagement_provider.dart';
+import 'package:rxdart/rxdart.dart';
 import '../../../geo/providers/location_provider.dart';
 
 part 'smart_feed_provider.g.dart';
@@ -71,23 +74,37 @@ Stream<List<FeedItemModel>> smartFeed(Ref ref) {
   final rankingService = ref.watch(feedRankingServiceProvider.notifier);
   final semanticService = ref.watch(semanticRankingServiceProvider);
   final intent = ref.watch(smartFeedSearchIntentProvider);
+  final engagementRepo = ref.watch(feedEngagementRepositoryProvider);
   
   final locationParts = locationAsync.value;
   final context = locationParts != null ? UserLocationContext(locationParts: locationParts) : null;
 
-  return repository.getSmartFeed(locationFilter: locationParts).asyncMap((items) async {
-    // 1. Initial rule-based ranking
-    final rankedItems = rankingService.rankItems(items, context: context);
+  return repository.getSmartFeed(locationFilter: locationParts).switchMap((items) {
+    if (items.isEmpty) return Stream.value([]);
     
-    // 2. Apply semantic ranking if intent exists
-    if (intent.isNotEmpty) {
-      return await semanticService.applySemanticScores(
-        items: rankedItems,
-        userIntent: intent,
-      );
-    }
-    
-    return rankedItems;
+    return engagementRepo.watchEngagementSummaries(items: items).asyncMap((summaries) async {
+      // Inject engagement scores
+      final itemsWithEngagement = items.map((item) {
+        final key = '${item.type.name}_${item.sourceId}';
+        final summary = summaries[key];
+        return item.copyWith(
+          engagementScore: summary?.engagementScore ?? 0.0,
+        );
+      }).toList();
+      
+      // 1. Initial rule-based ranking (now with engagement scores)
+      final rankedItems = rankingService.rankItems(itemsWithEngagement, context: context);
+      
+      // 2. Apply semantic ranking if intent exists
+      if (intent.isNotEmpty) {
+        return await semanticService.applySemanticScores(
+          items: rankedItems,
+          userIntent: intent,
+        );
+      }
+      
+      return rankedItems;
+    });
   });
 }
 

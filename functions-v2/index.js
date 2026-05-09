@@ -430,6 +430,64 @@ const BOOST_PACKAGES = {
 };
 
 /**
+ * Smart Feed: Engagement Aggregation
+ */
+const ENGAGEMENT_WEIGHTS = {
+    impression: 0.1,
+    card_tap: 2.0,
+    detail_open: 3.0,
+    cta_tap: 5.0,
+    semantic_intent_bonus: 0.5
+};
+
+function calculateEngagementScore(counts) {
+    const rawScore = 
+        (counts.impression || 0) * ENGAGEMENT_WEIGHTS.impression +
+        (counts.card_tap || 0) * ENGAGEMENT_WEIGHTS.card_tap +
+        (counts.detail_open || 0) * ENGAGEMENT_WEIGHTS.detail_open +
+        (counts.cta_tap || 0) * ENGAGEMENT_WEIGHTS.cta_tap +
+        (counts.semantic_intent || 0) * ENGAGEMENT_WEIGHTS.semantic_intent_bonus;
+    
+    return Math.min(30.0, rawScore);
+}
+
+function buildEngagementSummaryId(sourceType, sourceId) {
+    return `${sourceType}_${sourceId}`;
+}
+
+function groupFeedInteractions(interactions) {
+    const groups = {};
+    interactions.forEach(doc => {
+        const data = doc.data();
+        const key = buildEngagementSummaryId(data.sourceType, data.sourceId);
+        if (!groups[key]) {
+            groups[key] = {
+                sourceType: data.sourceType,
+                sourceId: data.sourceId,
+                feedItemId: data.feedItemId,
+                counts: { impression: 0, card_tap: 0, detail_open: 0, cta_tap: 0, semantic_intent: 0 },
+                sessions: new Set(),
+                lastInteractionAt: data.createdAt
+            };
+        }
+        
+        if (ENGAGEMENT_WEIGHTS[data.eventType]) {
+            groups[key].counts[data.eventType]++;
+        }
+        if (data.hasSemanticIntent) {
+            groups[key].counts.semantic_intent++;
+        }
+        if (data.sessionId) {
+            groups[key].sessions.add(data.sessionId);
+        }
+        if (data.createdAt && (!groups[key].lastInteractionAt || data.createdAt > groups[key].lastInteractionAt)) {
+            groups[key].lastInteractionAt = data.createdAt;
+        }
+    });
+    return groups;
+}
+
+/**
  * Monetization: Create Job Boost Payment Intent
  */
 exports.createJobBoostPayment = onCall(async (request) => {
@@ -907,7 +965,10 @@ exports._testHelpers = {
     sanitizeFeedInteractionMetadata,
     clampInteractionPosition,
     isAllowedFeedInteractionType,
-    sanitizeFeedInteractionPayload
+    sanitizeFeedInteractionPayload,
+    calculateEngagementScore,
+    buildEngagementSummaryId,
+    groupFeedInteractions
 };
 
 /**
@@ -1276,5 +1337,56 @@ exports.logFeedInteraction = onCall(async (request) => {
     } catch (error) {
         console.error("Error logging feed interaction:", error);
         throw new HttpsError("internal", "Failed to log interaction");
+    }
+});
+
+exports.aggregateFeedEngagement = onSchedule("every 1 hours", async (event) => {
+    const firestore = admin.firestore();
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+
+    try {
+        const snapshot = await firestore.collection("feed_interactions")
+            .where("createdAt", ">=", admin.firestore.Timestamp.fromDate(sevenDaysAgo))
+            .get();
+
+        if (snapshot.empty) {
+            console.log("No interactions to aggregate in the last 7 days");
+            return;
+        }
+
+        const groups = groupFeedInteractions(snapshot.docs);
+        const batch = firestore.batch();
+
+        Object.keys(groups).forEach(summaryId => {
+            const group = groups[summaryId];
+            const score = calculateEngagementScore(group.counts);
+            
+            const summaryData = {
+                id: summaryId,
+                sourceType: group.sourceType,
+                sourceId: group.sourceId,
+                feedItemId: group.feedItemId,
+                impressionCount: group.counts.impression,
+                cardTapCount: group.counts.card_tap,
+                detailOpenCount: group.counts.detail_open,
+                ctaTapCount: group.counts.cta_tap,
+                semanticIntentCount: group.counts.semantic_intent,
+                totalInteractions: Object.values(group.counts).reduce((a, b) => a + b, 0),
+                uniqueSessionCount: group.sessions.size,
+                engagementScore: score,
+                lastInteractionAt: group.lastInteractionAt,
+                lastAggregatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                window: "all_time" // Placeholder for MVP
+            };
+
+            const summaryRef = firestore.collection("feed_engagement_summaries").doc(summaryId);
+            batch.set(summaryRef, summaryData, { merge: true });
+        });
+
+        await batch.commit();
+        console.log(`Successfully aggregated ${Object.keys(groups).length} engagement summaries`);
+    } catch (error) {
+        console.error("Error in aggregateFeedEngagement:", error);
     }
 });

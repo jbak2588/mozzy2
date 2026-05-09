@@ -324,5 +324,11 @@ service cloud.firestore {
       allow read: if false;
       allow create, update, delete: if false; // Only via Cloud Functions
     }
+
+    // [9] Feed Engagement Summaries
+    match /feed_engagement_summaries/{summaryId} {
+      allow read: if isAuthenticated();
+      allow create, update, delete: if false; // Only via Cloud Functions
+    }
   }
 }

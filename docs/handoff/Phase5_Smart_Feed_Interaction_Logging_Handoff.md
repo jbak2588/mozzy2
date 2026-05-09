@@ -53,4 +53,5 @@
 - **BigQuery Export**: 대규모 데이터 분석을 위한 Firestore-to-BigQuery 연동.
 
 ## Final Status
-P5-S05 Interaction Logging line is complete after P5-S05C runtime QA. Raw interaction events are now ready for aggregation in P5-S06.
+P5-S05 Interaction Logging line is complete.
+P5-S06 Engagement Aggregation is now implemented, enabling raw logs to be processed into content popularity scores (Engagement Score) which are automatically reflected in the Smart Feed ranking.

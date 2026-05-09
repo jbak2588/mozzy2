@@ -281,6 +281,13 @@
         { "fieldPath": "boostStatus", "order": "ASCENDING" },
         { "fieldPath": "boostActiveUntil", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "feed_interactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
     }
   ]
 }

@@ -86,3 +86,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 ## 15. P5-S05C 업데이트 (Interaction Logging Runtime QA & Handoff)
 - **Runtime Validation**: Staging 환경(mozzy-v2) 배포 및 Smoke Test를 통해 `card_tap`, `impression` 등의 이벤트가 스키마에 맞춰 정확히 수집됨을 확인하고 P5-S05 계열 작업을 마무리함.
 - **Aggregation Readiness**: 상호작용 데이터 수집 레이어가 안정화됨에 따라, 다음 단계인 P5-S06에서 본격적인 데이터 집계 및 랭킹 피드백 루프 구현이 가능해짐.
+
+## 16. P5-S06 업데이트 (Engagement Signal Aggregation)
+- **Aggregation Layer**: `feed_interactions`의 raw 로그를 1시간 단위로 집계하여 `feed_engagement_summaries`에 저장하는 Scheduled Cloud Function을 도입함.
+- **Rule-based Scoring**: 클릭(2.0), 상세 보기(3.0), 액션(5.0), 노출(0.1) 등의 가중치를 부여하여 콘텐츠의 인기도를 정량화함.
+- **Clamp Strategy**: Engagement Score는 최대 30.0점으로 제한하여, 유료 광고(Boost, 100.0)의 효과를 보존하면서도 자연스러운 양질의 콘텐츠가 상단에 노출되도록 설계함.
+- **Privacy-Preserving Summary**: 집계 데이터에는 개인 식별 정보(UserId)나 검색어 원문을 포함하지 않아 개인정보 유출 위험을 원천 차단함.

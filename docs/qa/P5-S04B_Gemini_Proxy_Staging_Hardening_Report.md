@@ -50,6 +50,6 @@ Gemini Cloud Functions 프록시의 Staging 배포 안정성을 확보하기 위
 - **Push 여부**: YES
 
 ## 8. 남은 이슈
-- Staging 환경 배포 후 실제 `AI_MOCK_MODE=false` 설정에서의 Gemini 1.5 Flash 응답 품질 및 속도 최종 확인 필요.
+- Staging 환경 배포 후 실제 `AI_MOCK_MODE=false` 설정에서의 `gemini-3-flash-preview` 응답 품질 및 속도 최종 확인 필요.
 
 **완료 (SUCCESS)**

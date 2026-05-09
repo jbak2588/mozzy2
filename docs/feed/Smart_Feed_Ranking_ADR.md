@@ -66,5 +66,5 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Staging Policy**: `AI_MOCK_MODE`와 `ENABLE_GEMINI_RANKING` 플래그 조합을 통한 단계별 검증 절차 수립.
 
 ## 11. P5-S04C 업데이트 (Gemini Live Staging E2E Validation)
-- **E2E Validation**: 실제 Gemini 1.5 Flash API를 사용하여 Staging 환경에서의 Live Mode 동작을 검증함.
+- **E2E Validation**: 실제 `gemini-3-flash-preview` API를 사용하여 Staging 환경에서의 Live Mode 동작을 검증함.
 - **Latency & Reliability**: 평균 2초 내외의 응답 속도와 예외 발생 시 안전한 Rule-based Fallback을 확인하여 프로덕션 배포 준비를 마침.

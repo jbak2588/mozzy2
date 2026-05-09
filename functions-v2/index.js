@@ -1,8 +1,12 @@
 const { onDocumentCreated, onDocumentUpdated } = require("firebase-functions/v2/firestore");
 const { onSchedule } = require("firebase-functions/v2/scheduler");
+const { defineSecret } = require("firebase-functions/params");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
+
+const geminiApiKey = defineSecret("GEMINI_API_KEY");
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3-flash-preview";
 
 exports.onChatMessageCreated = onDocumentCreated("chat_rooms/{roomId}/messages/{messageId}", async (event) => {
     const snapshot = event.data;
@@ -815,7 +819,8 @@ exports._testHelpers = {
     clampSemanticScore,
     normalizeSemanticIntent,
     sanitizeSemanticRankingItems,
-    parseGeminiRankingResponse
+    parseGeminiRankingResponse,
+    getGeminiModel: () => process.env.GEMINI_MODEL || "gemini-3-flash-preview"
 };
 
 /**
@@ -966,7 +971,7 @@ exports.expireJobBoosts = onSchedule("every 1 hours", async (event) => {
 /**
  * Smart Feed: Rank Feed Items with Gemini AI
  */
-exports.rankSmartFeedWithGemini = onCall(async (request) => {
+exports.rankSmartFeedWithGemini = onCall({ secrets: [geminiApiKey] }, async (request) => {
     const { intent, languageCode = "id", items } = request.data;
     const auth = request.auth;
 
@@ -987,7 +992,7 @@ exports.rankSmartFeedWithGemini = onCall(async (request) => {
     const sanitizedItems = sanitizeSemanticRankingItems(items);
 
     const isMockMode = process.env.AI_MOCK_MODE === "true";
-    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const apiKey = geminiApiKey.value();
 
     if (isMockMode) {
         console.log("Using Mock Mode for Gemini Semantic Ranking");
@@ -995,14 +1000,14 @@ exports.rankSmartFeedWithGemini = onCall(async (request) => {
         return { results, provider: "gemini", mode: "mock" };
     }
 
-    if (!geminiApiKey) {
+    if (!apiKey && !isMockMode) {
         console.error("GEMINI_API_KEY is missing and AI_MOCK_MODE is not true");
         throw new HttpsError("failed-precondition", "AI service configuration missing");
     }
 
     // 2. Call Gemini API
     try {
-        const results = await callGeminiForRanking(normalizedIntent, sanitizedItems, languageCode, geminiApiKey);
+        const results = await callGeminiForRanking(normalizedIntent, sanitizedItems, languageCode, apiKey);
         return { results, provider: "gemini", mode: "live" };
     } catch (error) {
         console.error("Gemini API Error:", error.message);
@@ -1089,9 +1094,10 @@ function mockGeminiRanking(intent, items) {
  */
 async function callGeminiForRanking(intent, items, languageCode, apiKey) {
     const prompt = buildGeminiRankingPrompt(intent, items, languageCode);
+    const modelName = process.env.GEMINI_MODEL || "gemini-3-flash-preview";
     
     const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
         {
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {

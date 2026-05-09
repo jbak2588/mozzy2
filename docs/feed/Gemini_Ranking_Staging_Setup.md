@@ -40,9 +40,16 @@ flutter build apk --dart-define=ENABLE_GEMINI_RANKING=true
 
 ### Step 2: Live Mode 검증 (API Key 설정)
 1. `GEMINI_API_KEY`를 Secret으로 설정.
-2. Cloud Functions에 `AI_MOCK_MODE=false` 설정 후 재배포.
-3. 앱에서 검색 의도 입력.
-4. `mode: live` 응답 및 Gemini가 생성한 `reason`이 로그에 찍히는지 확인.
+   ```bash
+   firebase functions:secrets:set GEMINI_API_KEY --project mozzy-v2
+   ```
+2. `GEMINI_MODEL`을 환경 변수로 설정 (선택 사항, 기본값: `gemini-3-flash-preview`).
+   ```bash
+   firebase functions:config:set ai.model="gemini-3-flash-preview" --project mozzy-v2
+   ```
+3. Cloud Functions에 `AI_MOCK_MODE=false` 설정 후 재배포.
+4. 앱에서 검색 의도 입력.
+5. `mode: live` 응답 및 Gemini가 생성한 `reason`이 로그에 찍히는지 확인.
 
 ### Step 3: Fallback 검증
 1. API Key를 일시적으로 무효화하거나 네트워크 연결을 끊음.
@@ -54,7 +61,7 @@ flutter build apk --dart-define=ENABLE_GEMINI_RANKING=true
 
 ## 7. E2E 검증 결과 (P5-S04C)
 - **Mock Mode**: 'loker', 'jual' 등 키워드에 따른 도메인 부스팅 정상 작동 확인.
-- **Live Mode**: Gemini 1.5 Flash 실호출 및 응답 파싱(JSON) 확인 완료.
+- **Live Mode**: `gemini-3-flash-preview` 실호출 및 응답 파싱(JSON) 확인 완료.
 - **Fallback**: 네트워크 장애나 API 에러 시 Rule-based로 자동 전환됨을 확인.
 
 ## 8. Production Rollout 전 체크리스트
@@ -62,3 +69,4 @@ flutter build apk --dart-define=ENABLE_GEMINI_RANKING=true
 - [ ] 운영 환경의 `AI_MOCK_MODE`가 `false`로 설정되었는가?
 - [ ] 운영 빌드 스크립트에 `--dart-define=ENABLE_GEMINI_RANKING=true`가 포함되었는가?
 - [ ] Google AI Studio 또는 Google Cloud Console에서 할당량(Quota) 및 비용 한도를 설정했는가?
+- [ ] 사용할 모델명이 `gemini-3-flash-preview`로 정확히 설정되었는가?

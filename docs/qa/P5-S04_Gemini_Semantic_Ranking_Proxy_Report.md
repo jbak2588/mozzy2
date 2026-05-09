@@ -26,7 +26,7 @@ Gemini AI를 안전하고 비용 효율적으로 호출하기 위한 Firebase Cl
   - 검색 의도(Intent) 최대 100자 제한.
   - 아이템 최대 30개 제한.
   - 허용 리스트(Allowlist) 필드만 포함하도록 강제 필터링.
-- **Gemini Integration**: `axios`를 사용하여 REST API로 Gemini 1.5 Flash 모델 호출.
+- **Gemini Integration**: `axios`를 사용하여 REST API로 `gemini-3-flash-preview` 모델 호출.
 - **Mock Mode**: `AI_MOCK_MODE=true`인 경우 API 호출 없이 서버 내 Mock 로직으로 응답.
 
 ### 3.2 Flutter GeminiSemanticRankingAdapter

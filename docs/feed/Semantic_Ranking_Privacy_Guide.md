@@ -64,6 +64,10 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **Log Masking**: Functions 로그에 민감정보나 API Key가 노출되지 않음을 확인했습니다.
 - **Intent Storage**: 사용자의 검색 Intent는 랭킹 계산을 위한 휘발성 데이터로만 사용되며, DB에 저장되지 않음을 보장합니다.
 
+## 9. P5-S04D 모델 표준화 및 Secret 관리
+- **Standard Model**: `gemini-3-flash-preview` 모델을 표준으로 사용하며, 서버 환경 변수를 통해 모델명을 제어합니다.
+- **Secret Management**: `GEMINI_API_KEY`는 Firebase Secret Manager를 통해 관리하며, 클라이언트와 격리된 환경에서만 사용됩니다.
+
 ---
 최종 수정일: 2026-05-09
-상태: P5-S04C Live Staging E2E 검증 완료
+상태: P5-S04D Gemini Model & Secret Setup 단계 반영

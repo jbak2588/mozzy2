@@ -38,6 +38,7 @@ Gemini Semantic Ranking Proxy의 Staging E2E 검증을 완료했습니다. Mock 
 - **Latency**: Mock Mode (~100ms), Live Mode (1.5s ~ 3s).
 - **Item Limit**: 클라이언트/서버 양측에서 30개 아이템 제한 로직 정상 동작 확인.
 - **Cost Control**: `ENABLE_GEMINI_RANKING` 기본값이 `false`이므로 명시적 활성화 시에만 비용 발생.
+- **Standard Model**: `gemini-3-flash-preview` (P5-S04D 단계에서 확정)
 
 ## 6. 테스트 결과
 - **flutter analyze**: 0 issues (Fix 완료: deprecated member, dead null aware, underscores)
@@ -52,6 +53,7 @@ Gemini Semantic Ranking Proxy의 Staging E2E 검증을 완료했습니다. Mock 
 ## 8. Git Status
 - **Branch**: main
 - **Implementation Commit SHA**: 234a979
+- **Final Docs Commit SHA**: 90eab9d
 - **Push 여부**: YES
 
 ## 9. 결론

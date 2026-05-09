@@ -149,4 +149,16 @@ describe("Gemini Semantic Ranking Cloud Function", () => {
             expect(results[1].score).to.equal(0);
         });
     });
+
+    describe("getGeminiModel", () => {
+        it("should return gemini-3-flash-preview as default", () => {
+            expect(helpers.getGeminiModel()).to.equal("gemini-3-flash-preview");
+        });
+
+        it("should return GEMINI_MODEL if environment variable is set", () => {
+            process.env.GEMINI_MODEL = "test-model";
+            expect(helpers.getGeminiModel()).to.equal("test-model");
+            delete process.env.GEMINI_MODEL;
+        });
+    });
 });

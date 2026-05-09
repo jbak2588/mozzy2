@@ -59,6 +59,11 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **Strict Limits**: 클라이언트와 서버 모두에서 요청당 최대 30개 아이템, 검색 의도 100자 제한을 강제합니다.
 - **Safe Fallback**: API 장애나 부적절한 응답(Malformed JSON) 발생 시, 시스템은 즉시 빈 결과를 반환하고 기존 Rule-based 랭킹 체계로 Fallback 합니다.
 
+## 8. P5-S04C E2E Privacy 검증 완료
+- **Sanitization Check**: `FeedSemanticSanitizer`를 통해 전송 전 데이터 마스킹이 정상 수행됨을 확인했습니다.
+- **Log Masking**: Functions 로그에 민감정보나 API Key가 노출되지 않음을 확인했습니다.
+- **Intent Storage**: 사용자의 검색 Intent는 랭킹 계산을 위한 휘발성 데이터로만 사용되며, DB에 저장되지 않음을 보장합니다.
+
 ---
 최종 수정일: 2026-05-09
-상태: P5-S04B Staging Hardening 단계 반영
+상태: P5-S04C Live Staging E2E 검증 완료

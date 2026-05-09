@@ -58,7 +58,7 @@ class FeedRankingService extends _$FeedRankingService {
   }
 
   double calculateSemanticScore(FeedItemModel item) {
-    return (item.semanticScore ?? 0.0) * FeedRankingSignal.maxSemanticScore;
+    return item.semanticScore * FeedRankingSignal.maxSemanticScore;
   }
 
   double calculateFinalScore(

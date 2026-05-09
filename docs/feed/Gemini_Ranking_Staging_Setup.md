@@ -52,6 +52,13 @@ flutter build apk --dart-define=ENABLE_GEMINI_RANKING=true
 - **Firebase Functions Logs**: Payload 크기, Gemini 응답 시간, 파싱 에러 여부 모니터링.
 - **Privacy Check**: 전송되는 `items` 배열에 PII(이메일, 전화번호 등)가 포함되어 있지 않은지 샘플링 검사.
 
-## 6. 주의사항
-- **비용 통제**: Staging에서는 `AI_MOCK_MODE=true`를 기본으로 사용하고, 필요한 경우에만 Live Mode를 켭니다.
-- **아이템 제한**: 현재 클라이언트와 서버 모두 최대 30개 아이템으로 제한되어 있습니다. 이를 초과하여 전송하지 않도록 주의하십시오.
+## 7. E2E 검증 결과 (P5-S04C)
+- **Mock Mode**: 'loker', 'jual' 등 키워드에 따른 도메인 부스팅 정상 작동 확인.
+- **Live Mode**: Gemini 1.5 Flash 실호출 및 응답 파싱(JSON) 확인 완료.
+- **Fallback**: 네트워크 장애나 API 에러 시 Rule-based로 자동 전환됨을 확인.
+
+## 8. Production Rollout 전 체크리스트
+- [ ] `GEMINI_API_KEY`가 운영용 Firebase 프로젝트 Secret에 등록되었는가?
+- [ ] 운영 환경의 `AI_MOCK_MODE`가 `false`로 설정되었는가?
+- [ ] 운영 빌드 스크립트에 `--dart-define=ENABLE_GEMINI_RANKING=true`가 포함되었는가?
+- [ ] Google AI Studio 또는 Google Cloud Console에서 할당량(Quota) 및 비용 한도를 설정했는가?

@@ -112,6 +112,6 @@ List<FeedItemModel> filteredSmartFeed(Ref ref) {
       return items.where((item) => item.type.name == filter).toList();
     },
     loading: () => [],
-    error: (_, __) => [],
+    error: (e, s) => [],
   );
 }

@@ -83,6 +83,13 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **Strict Wire Format**: 서버 표준인 snake_case (`card_tap`, `detail_open` 등) 형식을 강제하여 데이터 유실을 방지합니다.
 - **Approximate Impression**: 현재 Impression은 리스트 빌더 기반의 대략적인 노출(Approximate)을 기록하며, 상세한 Viewport Visibility 추적은 향후 필요 시 도입합니다.
 
+## 12. Runtime QA 및 최종 검증 (P5-S05C)
+Staging 환경(mozzy-v2)에서의 실시간 동작 검증을 완료했습니다.
+
+- **Intent Original Text**: 사용자의 검색 의도 원문(`intent`, `query`)이 Firestore에 저장되지 않음을 최종 확인했습니다.
+- **Rules Enforcement**: 클라이언트에서 `feed_interactions` 컬렉션에 대한 직접적인 접근(Read/Write)이 보안 규칙에 의해 차단됨을 확인했습니다.
+- **Sanitization Sync**: 클라이언트와 서버 양측의 필터링 로직이 동기화되어 PII 유출을 2중으로 방어하고 있음을 확인했습니다.
+
 ---
-최종 수정일: 2026-05-10
-상태: P5-S05B Interaction Logging Contract Hardening 반영
+최종 수정일: 2026-05-11
+상태: P5-S05C Runtime QA 반영 및 최종 Handoff 준비 완료

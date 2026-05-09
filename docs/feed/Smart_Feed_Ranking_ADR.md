@@ -82,3 +82,7 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Privacy Hardening**: `forbiddenMetadataKeys`를 도입하여 클라이언트 측에서 `query`, `email`, `phone`, `userId` 등 민감 정보가 포함된 키를 상호작용 메타데이터에서 제거함.
 - **Validation Refactoring**: Cloud Functions의 검증 로직을 `sanitizeFeedInteractionPayload` 등의 독립된 Helper로 분리하고, 70여 개의 테스트 케이스를 통해 비정상적인 데이터(잘못된 이벤트 타입, 위치 범위 초과 등)에 대한 방어 로직을 검증함.
 - **Asynchronous Logging**: `unawaited`를 사용하여 로깅 호출이 UI 스레드나 화면 전환을 방해하지 않도록 처리하고, `FirebaseFunctionsException` 처리를 강화하여 로깅 실패가 사용자 경험에 영향을 주지 않도록 함.
+
+## 15. P5-S05C 업데이트 (Interaction Logging Runtime QA & Handoff)
+- **Runtime Validation**: Staging 환경(mozzy-v2) 배포 및 Smoke Test를 통해 `card_tap`, `impression` 등의 이벤트가 스키마에 맞춰 정확히 수집됨을 확인하고 P5-S05 계열 작업을 마무리함.
+- **Aggregation Readiness**: 상호작용 데이터 수집 레이어가 안정화됨에 따라, 다음 단계인 P5-S06에서 본격적인 데이터 집계 및 랭킹 피드백 루프 구현이 가능해짐.

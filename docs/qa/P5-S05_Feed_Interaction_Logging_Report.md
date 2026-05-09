@@ -45,7 +45,7 @@ Smart Feed에서 사용자의 상호작용(`impression`, `card_tap`)을 수집�
 
 ## 9. Git Status
 - **Branch**: main
-- **Implementation Commit SHA**: [IMPLEMENTATION_SHA]
-- **Final Docs Commit SHA**: [DOCS_SHA]
+- **Implementation Commit SHA**: 9012669
+- **Final Docs Commit SHA**: f240d43
 - **Status**: clean
 - **Push 여부**: YES

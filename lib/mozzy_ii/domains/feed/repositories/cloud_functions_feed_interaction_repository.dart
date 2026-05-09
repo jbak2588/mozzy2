@@ -13,19 +13,17 @@ class CloudFunctionsFeedInteractionRepository implements FeedInteractionReposito
   Future<void> logInteraction(FeedInteractionEvent event) async {
     try {
       final callable = _functions.httpsCallable('logFeedInteraction');
-      // Fire and forget: don't wait for completion to avoid blocking UI
-      callable.call(event.toSafeJson()).then((_) {
-        if (kDebugMode) {
-          print('Logged interaction: ${event.eventType.name} for ${event.feedItemId}');
-        }
-      }).catchError((e) {
-        if (kDebugMode) {
-          print('Failed to log interaction: $e');
-        }
-      });
+      await callable.call(event.toSafeJson());
+      if (kDebugMode) {
+        debugPrint('Logged interaction: ${event.eventType.wireValue} for ${event.feedItemId}');
+      }
+    } on FirebaseFunctionsException catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to log feed interaction: ${e.code} - ${e.message}');
+      }
     } catch (e) {
       if (kDebugMode) {
-        print('Error calling interaction function: $e');
+        debugPrint('Error calling interaction function: $e');
       }
     }
   }

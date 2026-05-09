@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -78,7 +79,9 @@ class SmartFeedScreen extends ConsumerWidget {
                             sessionId: ref.read(feedSessionIdProvider),
                             clientCreatedAt: DateTime.now(),
                           );
-                          ref.read(feedInteractionRepositoryProvider).logInteraction(event);
+                          unawaited(
+                            ref.read(feedInteractionRepositoryProvider).logInteraction(event),
+                          );
                         }
                       });
 

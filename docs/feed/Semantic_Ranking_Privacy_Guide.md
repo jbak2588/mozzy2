@@ -76,6 +76,13 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **PII 차단**: 서버 측(`FORBIDDEN_FEED_INTERACTION_FIELDS`)에서 이메일, 전화번호, 상세 주소 등이 포함된 필드를 필터링하여 저장을 차단합니다.
 - **비식별 세션**: 앱 실행 시 생성되는 휘발성 `sessionId`를 사용하며, 이를 영구적인 사용자 프로필과 연결하여 장기 추적하지 않습니다.
 
+## 11. Interaction Contract Hardening (P5-S05B)
+상호작용 데이터의 보안과 정합성을 높이기 위해 아래 조치를 추가했습니다.
+
+- **Client-side Metadata Filtering**: Flutter 클라이언트 단계에서 `forbiddenMetadataKeys`를 정의하여 `query`, `intent`, `email`, `phone` 등 민감한 키가 상호작용 메타데이터에 포함되지 않도록 사전 필터링합니다.
+- **Strict Wire Format**: 서버 표준인 snake_case (`card_tap`, `detail_open` 등) 형식을 강제하여 데이터 유실을 방지합니다.
+- **Approximate Impression**: 현재 Impression은 리스트 빌더 기반의 대략적인 노출(Approximate)을 기록하며, 상세한 Viewport Visibility 추적은 향후 필요 시 도입합니다.
+
 ---
-최종 수정일: 2026-05-09
-상태: P5-S05 Interaction Logging Foundation 단계 반영
+최종 수정일: 2026-05-10
+상태: P5-S05B Interaction Logging Contract Hardening 반영

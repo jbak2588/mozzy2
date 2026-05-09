@@ -76,3 +76,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 ## 13. P5-S05 업데이트 (Smart Feed Interaction Logging Foundation)
 - **Interaction Logging**: `logFeedInteraction` Cloud Function 및 Flutter 로깅 레이어를 구축하여 `impression`, `card_tap` 등의 기본 신호를 privacy-safe하게 수집하기 시작함.
 - **Engagement Signal**: 수집된 데이터는 향후 `engagementScore` 계산 및 개인화 랭킹의 기초 자료로 활용될 예정임.
+
+## 14. P5-S05B 업데이트 (Interaction Logging Contract Hardening)
+- **Contract Standardization**: Flutter와 Cloud Functions 간의 통신 규격을 snake_case(`card_tap`, `detail_open` 등)로 통일하고, `FeedInteractionType`의 `wireValue` 프로퍼티를 통해 명시적인 직렬화 체계를 구축함.
+- **Privacy Hardening**: `forbiddenMetadataKeys`를 도입하여 클라이언트 측에서 `query`, `email`, `phone`, `userId` 등 민감 정보가 포함된 키를 상호작용 메타데이터에서 제거함.
+- **Validation Refactoring**: Cloud Functions의 검증 로직을 `sanitizeFeedInteractionPayload` 등의 독립된 Helper로 분리하고, 70여 개의 테스트 케이스를 통해 비정상적인 데이터(잘못된 이벤트 타입, 위치 범위 초과 등)에 대한 방어 로직을 검증함.
+- **Asynchronous Logging**: `unawaited`를 사용하여 로깅 호출이 UI 스레드나 화면 전환을 방해하지 않도록 처리하고, `FirebaseFunctionsException` 처리를 강화하여 로깅 실패가 사용자 경험에 영향을 주지 않도록 함.

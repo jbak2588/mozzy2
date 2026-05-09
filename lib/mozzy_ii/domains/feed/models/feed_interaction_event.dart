@@ -35,9 +35,35 @@ class FeedInteractionEvent {
     this.metadata,
   });
 
+  static const Set<String> forbiddenMetadataKeys = {
+    'intent',
+    'searchQuery',
+    'query',
+    'email',
+    'phone',
+    'exactAddress',
+    'paymentId',
+    'auditId',
+    'fcmToken',
+    'prompt',
+    'userId',
+    'ownerId',
+  };
+
+  Map<String, dynamic> _safeMetadata(Map<String, dynamic>? metadata) {
+    if (metadata == null) return const {};
+    final cleaned = <String, dynamic>{};
+    for (final entry in metadata.entries) {
+      if (!forbiddenMetadataKeys.contains(entry.key)) {
+        cleaned[entry.key] = entry.value;
+      }
+    }
+    return cleaned;
+  }
+
   Map<String, dynamic> toSafeJson() {
     return {
-      'eventType': eventType.name,
+      'eventType': eventType.wireValue,
       'feedItemId': feedItemId,
       'sourceId': sourceId,
       'sourceType': sourceType,
@@ -50,7 +76,7 @@ class FeedInteractionEvent {
       'locationParts': locationParts,
       'clientCreatedAt': clientCreatedAt?.toIso8601String(),
       'sessionId': sessionId,
-      'metadata': metadata,
+      'metadata': _safeMetadata(metadata),
     };
   }
 }

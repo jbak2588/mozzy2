@@ -341,6 +341,87 @@ async function sendPushToUser(userId, payload) {
 const { onCall, onRequest, HttpsError } = require("firebase-functions/v2/https");
 const axios = require("axios");
 
+/**
+ * Smart Feed: Interaction Logging
+ */
+const ALLOWED_FEED_INTERACTION_TYPES = ["impression", "card_tap", "detail_open", "cta_tap"];
+const FORBIDDEN_FEED_INTERACTION_FIELDS = [
+    "intent", "searchQuery", "query", "email", "phone", 
+    "exactAddress", "paymentId", "auditId", "fcmToken", 
+    "prompt", "userId", "ownerId"
+];
+
+function sanitizeFeedInteractionMetadata(metadata) {
+    const cleanedMetadata = {};
+    if (metadata && typeof metadata === 'object') {
+        Object.keys(metadata).forEach(key => {
+            if (!FORBIDDEN_FEED_INTERACTION_FIELDS.includes(key)) {
+                cleanedMetadata[key] = metadata[key];
+            }
+        });
+    }
+    return cleanedMetadata;
+}
+
+function clampInteractionPosition(position) {
+    const pos = parseInt(position);
+    if (isNaN(pos)) return 0;
+    return Math.max(0, Math.min(pos, 100));
+}
+
+function isAllowedFeedInteractionType(eventType) {
+    return ALLOWED_FEED_INTERACTION_TYPES.includes(eventType);
+}
+
+function sanitizeFeedInteractionPayload(data, uid) {
+    const {
+        eventType,
+        feedItemId,
+        sourceId,
+        sourceType,
+        route,
+        position,
+        isPromoted,
+        hasSemanticIntent,
+        intentLengthBucket,
+        countryCode,
+        locationParts,
+        clientCreatedAt,
+        metadata = {},
+        sessionId
+    } = data;
+
+    if (!eventType || !isAllowedFeedInteractionType(eventType)) {
+        throw new HttpsError("invalid-argument", `Invalid event type: ${eventType}`);
+    }
+
+    if (!feedItemId || !sourceId || !sourceType) {
+        throw new HttpsError("invalid-argument", "Missing required fields: feedItemId, sourceId, sourceType");
+    }
+
+    const ALLOWED_BUCKETS = ["none", "short", "medium", "long"];
+    const bucket = ALLOWED_BUCKETS.includes(intentLengthBucket) ? intentLengthBucket : "none";
+
+    return {
+        userId: uid,
+        sessionId: sessionId || "unknown",
+        eventType,
+        feedItemId,
+        sourceId,
+        sourceType,
+        route: route || "unknown",
+        position: clampInteractionPosition(position),
+        isPromoted: !!isPromoted,
+        hasSemanticIntent: !!hasSemanticIntent,
+        intentLengthBucket: bucket,
+        countryCode: countryCode || "ID",
+        locationParts: locationParts || {},
+        clientCreatedAt: clientCreatedAt || null,
+        metadata: sanitizeFeedInteractionMetadata(metadata),
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+}
+
 // Boost Packages Policy
 const BOOST_PACKAGES = {
     'job_boost_1_day': { amount: 15000, durationDays: 1, title: 'Boost 1 hari' },
@@ -821,8 +902,12 @@ exports._testHelpers = {
     sanitizeSemanticRankingItems,
     parseGeminiRankingResponse,
     getGeminiModel: () => process.env.GEMINI_MODEL || "gemini-3-flash-preview",
-    ALLOWED_FEED_INTERACTION_TYPES: ["impression", "card_tap", "detail_open", "cta_tap"],
-    FORBIDDEN_FEED_INTERACTION_FIELDS: ["intent", "searchQuery", "email", "phone", "exactAddress", "paymentId", "auditId", "fcmToken", "prompt"]
+    ALLOWED_FEED_INTERACTION_TYPES,
+    FORBIDDEN_FEED_INTERACTION_FIELDS,
+    sanitizeFeedInteractionMetadata,
+    clampInteractionPosition,
+    isAllowedFeedInteractionType,
+    sanitizeFeedInteractionPayload
 };
 
 /**
@@ -1176,12 +1261,6 @@ Expected JSON Output Format:
 Only return the JSON object.`;
 }
 
-/**
- * Smart Feed: Interaction Logging
- */
-const ALLOWED_FEED_INTERACTION_TYPES = ["impression", "card_tap", "detail_open", "cta_tap"];
-const FORBIDDEN_FEED_INTERACTION_FIELDS = ["intent", "searchQuery", "email", "phone", "exactAddress", "paymentId", "auditId", "fcmToken", "prompt"];
-
 exports.logFeedInteraction = onCall(async (request) => {
     const { data, auth } = request;
 
@@ -1189,61 +1268,8 @@ exports.logFeedInteraction = onCall(async (request) => {
         throw new HttpsError("unauthenticated", "Authentication required");
     }
 
-    const {
-        eventType,
-        feedItemId,
-        sourceId,
-        sourceType,
-        route,
-        position,
-        isPromoted,
-        hasSemanticIntent,
-        intentLengthBucket,
-        countryCode,
-        locationParts,
-        clientCreatedAt,
-        metadata = {}
-    } = data;
+    const interactionData = sanitizeFeedInteractionPayload(data, auth.uid);
 
-    // 1. Basic Validation
-    if (!eventType || !ALLOWED_FEED_INTERACTION_TYPES.includes(eventType)) {
-        throw new HttpsError("invalid-argument", `Invalid event type: ${eventType}`);
-    }
-
-    if (!feedItemId || !sourceId || !sourceType) {
-        throw new HttpsError("invalid-argument", "Missing required fields: feedItemId, sourceId, sourceType");
-    }
-
-    // 2. Data Cleaning & Sanitization
-    const cleanedMetadata = {};
-    if (metadata && typeof metadata === 'object') {
-        Object.keys(metadata).forEach(key => {
-            if (!FORBIDDEN_FEED_INTERACTION_FIELDS.includes(key)) {
-                cleanedMetadata[key] = metadata[key];
-            }
-        });
-    }
-
-    const interactionData = {
-        userId: auth.uid,
-        sessionId: data.sessionId || "unknown",
-        eventType,
-        feedItemId,
-        sourceId,
-        sourceType,
-        route: route || "unknown",
-        position: Math.max(0, Math.min(parseInt(position) || 0, 100)),
-        isPromoted: !!isPromoted,
-        hasSemanticIntent: !!hasSemanticIntent,
-        intentLengthBucket: intentLengthBucket || "none",
-        countryCode: countryCode || "ID",
-        locationParts: locationParts || {},
-        clientCreatedAt: clientCreatedAt || null,
-        metadata: cleanedMetadata,
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
-    };
-
-    // 3. Save to Firestore
     try {
         await admin.firestore().collection("feed_interactions").add(interactionData);
         return { ok: true };

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -45,7 +46,9 @@ class FeedItemCard extends ConsumerWidget {
             sessionId: ref.read(feedSessionIdProvider),
             clientCreatedAt: DateTime.now(),
           );
-          ref.read(feedInteractionRepositoryProvider).logInteraction(event);
+          unawaited(
+            ref.read(feedInteractionRepositoryProvider).logInteraction(event),
+          );
 
           // Navigate
           context.push(item.route);

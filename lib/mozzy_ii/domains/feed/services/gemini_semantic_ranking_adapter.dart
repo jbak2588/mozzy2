@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'semantic_ranking_adapter.dart';
 import '../models/semantic_ranking_payload.dart';
@@ -19,34 +20,47 @@ class GeminiSemanticRankingAdapter implements SemanticRankingAdapter {
     required String userIntent,
     String languageCode = 'id',
   }) async {
-    if (payloads.isEmpty) return [];
+    final trimmedIntent = userIntent.trim();
+    if (payloads.isEmpty || trimmedIntent.isEmpty) return [];
+
+    // Client-side safety: Limit to 30 items
+    final itemsToRank = payloads.length > 30 ? payloads.take(30).toList() : payloads;
 
     try {
       final response = await _functions
           .httpsCallable('rankSmartFeedWithGemini')
           .call({
-        'intent': userIntent,
+        'intent': trimmedIntent,
         'languageCode': languageCode,
-        'items': payloads.map((p) => p.toSafeJson()).toList(),
+        'items': itemsToRank.map((p) => p.toSafeJson()).toList(),
       });
 
-      final data = response.data as Map<String, dynamic>;
-      final results = data['results'] as List<dynamic>;
+      final data = response.data;
+      if (data is! Map) return [];
+      
+      final results = data['results'];
+      if (results is! List) return [];
 
       return results.map((r) {
-        final map = Map<String, dynamic>.from(r as Map);
+        if (r is! Map) return null;
+        final map = Map<String, dynamic>.from(r);
+        
+        final rawScore = map['score'];
+        final double score = rawScore is num ? rawScore.toDouble() : 0.0;
+        
         return SemanticRankingResult(
-          feedItemId: map['feedItemId'] as String,
-          score: (map['score'] as num).toDouble(),
-          reason: map['reason'] as String?,
+          feedItemId: map['feedItemId']?.toString() ?? '',
+          score: score.clamp(0.0, 30.0),
+          reason: map['reason']?.toString(),
         );
-      }).toList();
+      }).whereType<SemanticRankingResult>().toList();
     } on FirebaseFunctionsException catch (e) {
-      // Return empty list on failure to allow rule-based ranking fallback
-      print('GeminiSemanticRankingAdapter Firebase Error: ${e.code} - ${e.message}');
+      // Log error but allow rule-based ranking fallback
+      // Using debugPrint to follow project patterns (seen in MarketplaceAiConfig)
+      debugPrint('GeminiSemanticRankingAdapter Firebase Error: ${e.code} - ${e.message}');
       return [];
     } catch (e) {
-      print('GeminiSemanticRankingAdapter Error: $e');
+      debugPrint('GeminiSemanticRankingAdapter Error: $e');
       return [];
     }
   }

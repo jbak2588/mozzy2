@@ -54,6 +54,11 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **Feature Flag**: `ENABLE_GEMINI_RANKING` 컴파일 타임 플래그를 통해 활성화 여부를 제어합니다.
 - **Mock Fallback**: API Key가 없거나 `AI_MOCK_MODE`가 활성화된 경우 서버 측 Mock 로직을 통해 결정론적 결과를 반환하여 안정성을 유지합니다.
 
+## 7. P5-S04B 검증 및 하드닝
+- **Prompt Privacy**: 서버 측 `sanitizeSemanticRankingItems`를 통해 허용되지 않은 필드가 프롬프트 JSON에 포함되는 것을 원천 차단합니다.
+- **Strict Limits**: 클라이언트와 서버 모두에서 요청당 최대 30개 아이템, 검색 의도 100자 제한을 강제합니다.
+- **Safe Fallback**: API 장애나 부적절한 응답(Malformed JSON) 발생 시, 시스템은 즉시 빈 결과를 반환하고 기존 Rule-based 랭킹 체계로 Fallback 합니다.
+
 ---
 최종 수정일: 2026-05-09
-상태: P5-S04 Cloud Functions Proxy 통합 단계 반영
+상태: P5-S04B Staging Hardening 단계 반영

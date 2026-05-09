@@ -64,7 +64,89 @@ describe("Gemini Semantic Ranking Cloud Function", () => {
         it("should clamp scores between 0 and 30", () => {
             expect(helpers.clampSemanticScore(50)).to.equal(30);
             expect(helpers.clampSemanticScore(-10)).to.equal(0);
-            expect(helpers.clampSemanticScore(25)).to.equal(25);
+            expect(helpers.clampSemanticScore(25.5)).to.equal(25.5);
+            expect(helpers.clampSemanticScore("20")).to.equal(20);
+            expect(helpers.clampSemanticScore("invalid")).to.equal(0);
+        });
+    });
+
+    describe("normalizeSemanticIntent", () => {
+        it("should trim and truncate intent", () => {
+            const longIntent = "  " + "a".repeat(150) + "  ";
+            const normalized = helpers.normalizeSemanticIntent(longIntent);
+            expect(normalized.length).to.equal(100);
+            expect(normalized.startsWith(" ")).to.be.false;
+            expect(normalized.endsWith(" ")).to.be.false;
+        });
+
+        it("should handle null/empty intent", () => {
+            expect(helpers.normalizeSemanticIntent(null)).to.equal("");
+            expect(helpers.normalizeSemanticIntent("")).to.equal("");
+        });
+    });
+
+    describe("sanitizeSemanticRankingItems", () => {
+        it("should limit to 30 items", () => {
+            const items = Array(50).fill({ feedItemId: "1" });
+            const sanitized = helpers.sanitizeSemanticRankingItems(items);
+            expect(sanitized.length).to.equal(30);
+        });
+
+        it("should only keep allowed fields and remove sensitive ones", () => {
+            const items = [{
+                feedItemId: "1",
+                title: "Job",
+                ownerId: "user123", // Forbidden
+                email: "test@example.com", // Forbidden
+                paymentId: "pay999" // Forbidden
+            }];
+            const sanitized = helpers.sanitizeSemanticRankingItems(items);
+            expect(sanitized[0].feedItemId).to.equal("1");
+            expect(sanitized[0].title).to.equal("Job");
+            expect(sanitized[0].ownerId).to.be.undefined;
+            expect(sanitized[0].email).to.be.undefined;
+            expect(sanitized[0].paymentId).to.be.undefined;
+        });
+    });
+
+    describe("parseGeminiRankingResponse", () => {
+        const items = [{ feedItemId: "1" }, { feedItemId: "2" }];
+
+        it("should parse valid JSON response", () => {
+            const content = JSON.stringify({
+                results: [
+                    { feedItemId: "1", score: 25.5, reason: "Match" },
+                    { feedItemId: "2", score: 5.0, reason: "Low" }
+                ]
+            });
+            const results = helpers.parseGeminiRankingResponse(content, items);
+            expect(results.length).to.equal(2);
+            expect(results[0].score).to.equal(25.5);
+            expect(results[1].score).to.equal(5.0);
+        });
+
+        it("should handle malformed JSON", () => {
+            const content = "invalid json";
+            expect(() => helpers.parseGeminiRankingResponse(content, items)).to.throw("Invalid response format");
+        });
+
+        it("should handle missing items in response with score 0", () => {
+            const content = JSON.stringify({
+                results: [{ feedItemId: "1", score: 10 }]
+            });
+            const results = helpers.parseGeminiRankingResponse(content, items);
+            expect(results[0].score).to.equal(10);
+            expect(results[1].score).to.equal(0);
+            expect(results[1].reason).to.equal("No specific reason provided");
+        });
+
+        it("should clamp scores from Gemini", () => {
+            const content = JSON.stringify({
+                results: [{ feedItemId: "1", score: 100 }, { feedItemId: "2", score: -50 }]
+            });
+            const results = helpers.parseGeminiRankingResponse(content, items);
+            expect(results[0].score).to.equal(30);
+            expect(results[1].score).to.equal(0);
         });
     });
 });

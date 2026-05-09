@@ -1,5 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/semantic_ranking_payload.dart';
+import 'package:mozzy/mozzy_ii/domains/feed/services/feed_semantic_sanitizer.dart';
+import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_model.dart';
+import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_type.dart';
 
 void main() {
   group('SemanticRankingPayload Privacy Tests', () {
@@ -35,13 +38,40 @@ void main() {
 
       // Check for forbidden fields (sanity check)
       final forbiddenFields = [
-        'userId', 'ownerId', 'email', 'phone', 'NIK', 'fcmToken', 
-        'paymentId', 'auditId', 'rawPrompt', 'exactAddress'
+        'userId',
+        'ownerId',
+        'email',
+        'phone',
+        'NIK',
+        'fcmToken',
+        'paymentId',
+        'auditId',
+        'rawPrompt',
+        'exactAddress'
       ];
-      
+
       for (final field in forbiddenFields) {
         expect(json.containsKey(field), isFalse, reason: 'Field $field should not be in payload');
       }
+    });
+
+    test('sanitizer should remove email and phone patterns', () {
+      final sanitizer = FeedSemanticSanitizer();
+      final item = FeedItemModel(
+        id: '1',
+        sourceId: '1',
+        type: FeedItemType.job,
+        title: 'T',
+        description: 'Call 0812345678 or mail me@test.com',
+        createdAt: DateTime.now(),
+        route: '/r',
+      );
+
+      final payload = sanitizer.sanitize(item);
+      expect(payload.publicSummary, isNot(contains('0812345678')));
+      expect(payload.publicSummary, isNot(contains('me@test.com')));
+      expect(payload.publicSummary, contains('[PHONE]'));
+      expect(payload.publicSummary, contains('[EMAIL]'));
     });
   });
 }

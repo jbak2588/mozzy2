@@ -58,3 +58,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Payload Policy**: 서버 측에서 최대 30개 아이템 제한, 금지 필드 필터링, `request.auth` 검증을 수행하여 비용 및 개인정보 유출 방지.
 - **Rollout Flag**: `ENABLE_GEMINI_RANKING` 컴파일 플래그를 통해 점진적 배포가 가능하도록 구현.
 - **Mock Fallback**: 서버 환경 변수(`AI_MOCK_MODE`)에 따라 Gemini API 대신 결정론적 Mock 로직을 수행할 수 있도록 하여 테스트 및 비용 통제 유연성 확보.
+
+## 10. P5-S04B 업데이트 (Gemini Proxy Staging Hardening)
+- **Modular Helpers**: Cloud Functions 로직을 `normalize`, `sanitize`, `parse` 등으로 모듈화하여 유닛 테스트 커버리지를 강화함.
+- **Client Hardening**: Flutter 어댑터에서 빈 입력 처리, 30개 아이템 제한, 비정상 응답 처리 및 점수 Clamp(0~30) 로직을 추가하여 안정성을 높임.
+- **Privacy Enforcement**: `ownerId`, `email` 등 금지 필드가 페이로드 및 프롬프트에 포함되지 않도록 서버 측 필터링을 강제함.
+- **Staging Policy**: `AI_MOCK_MODE`와 `ENABLE_GEMINI_RANKING` 플래그 조합을 통한 단계별 검증 절차 수립.

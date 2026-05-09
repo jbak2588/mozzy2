@@ -83,6 +83,69 @@ void main() {
 
       expect(results, isEmpty);
     });
+
+    test('should not call callable if payloads is empty', () async {
+      await adapter.rank(payloads: [], userIntent: 'test');
+      verifyNever(mockFunctions.httpsCallable(any));
+    });
+
+    test('should not call callable if intent is empty', () async {
+      await adapter.rank(
+        payloads: [const SemanticRankingPayload(feedItemId: '1', sourceId: 's', type: 't', title: 't')],
+        userIntent: '   ',
+      );
+      verifyNever(mockFunctions.httpsCallable(any));
+    });
+
+    test('should truncate to 30 items before calling', () async {
+      final manyPayloads = List.generate(
+        40,
+        (i) => SemanticRankingPayload(
+          feedItemId: '$i',
+          sourceId: 's',
+          type: 't',
+          title: 't',
+        ),
+      );
+
+      when(mockFunctions.httpsCallable(any)).thenReturn(mockCallable);
+      when(mockCallable.call(any)).thenAnswer((_) async => FakeHttpsCallableResult({'results': []}));
+
+      await adapter.rank(payloads: manyPayloads, userIntent: 'test');
+
+      final captured = verify(mockCallable.call(captureAny)).captured.single as Map<String, dynamic>;
+      final items = captured['items'] as List;
+      expect(items.length, 30);
+    });
+
+    test('should handle malformed response safely', () async {
+      when(mockFunctions.httpsCallable(any)).thenReturn(mockCallable);
+      when(mockCallable.call(any)).thenAnswer((_) async => FakeHttpsCallableResult('not a map'));
+
+      final results = await adapter.rank(
+        payloads: [const SemanticRankingPayload(feedItemId: '1', sourceId: 's', type: 't', title: 't')],
+        userIntent: 'test',
+      );
+      expect(results, isEmpty);
+    });
+
+    test('should clamp scores from response', () async {
+      when(mockFunctions.httpsCallable(any)).thenReturn(mockCallable);
+      when(mockCallable.call(any)).thenAnswer((_) async => FakeHttpsCallableResult({
+            'results': [
+              {'feedItemId': '1', 'score': 50.0},
+              {'feedItemId': '2', 'score': -10.0}
+            ]
+          }));
+
+      final results = await adapter.rank(payloads: [
+        const SemanticRankingPayload(feedItemId: '1', sourceId: 's', type: 't', title: 't'),
+        const SemanticRankingPayload(feedItemId: '2', sourceId: 's', type: 't', title: 't'),
+      ], userIntent: 'test');
+
+      expect(results[0].score, 30.0);
+      expect(results[1].score, 0.0);
+    });
   });
 }
 

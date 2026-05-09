@@ -812,7 +812,10 @@ exports._testHelpers = {
     buildAuditLogId,
     mockGeminiRanking,
     buildGeminiRankingPrompt,
-    clampSemanticScore: (s) => Math.max(0, Math.min(s, 30.0))
+    clampSemanticScore,
+    normalizeSemanticIntent,
+    sanitizeSemanticRankingItems,
+    parseGeminiRankingResponse
 };
 
 /**
@@ -980,23 +983,8 @@ exports.rankSmartFeedWithGemini = onCall(async (request) => {
     }
 
     // 1. Validation & Truncation
-    const normalizedIntent = intent.trim().substring(0, 100);
-    const sanitizedItems = items.slice(0, 30).map(item => {
-        // Enforce allowlist
-        return {
-            feedItemId: item.feedItemId,
-            sourceId: item.sourceId,
-            type: item.type,
-            title: item.title,
-            publicSummary: item.publicSummary,
-            category: item.category,
-            locationHint: item.locationHint,
-            isPromoted: item.isPromoted,
-            isTrusted: item.isTrusted,
-            ageBucket: item.ageBucket,
-            languageCode: item.languageCode
-        };
-    });
+    const normalizedIntent = normalizeSemanticIntent(intent);
+    const sanitizedItems = sanitizeSemanticRankingItems(items);
 
     const isMockMode = process.env.AI_MOCK_MODE === "true";
     const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -1018,11 +1006,49 @@ exports.rankSmartFeedWithGemini = onCall(async (request) => {
         return { results, provider: "gemini", mode: "live" };
     } catch (error) {
         console.error("Gemini API Error:", error.message);
-        // Fallback to mock results if API fails (Optional, depending on policy)
-        // Here we throw error to let client decide fallback to rule-based or mock
         throw new HttpsError("internal", `Failed to process semantic ranking: ${error.message}`);
     }
 });
+
+/**
+ * Helper: Normalize Intent
+ */
+function normalizeSemanticIntent(intent) {
+    if (!intent || typeof intent !== "string") return "";
+    return intent.trim().substring(0, 100);
+}
+
+/**
+ * Helper: Sanitize Items
+ */
+function sanitizeSemanticRankingItems(items) {
+    if (!items || !Array.isArray(items)) return [];
+    return items.slice(0, 30).map(item => {
+        // Enforce allowlist: only keep safe fields
+        return {
+            feedItemId: item.feedItemId,
+            sourceId: item.sourceId,
+            type: item.type,
+            title: item.title,
+            publicSummary: item.publicSummary,
+            category: item.category,
+            locationHint: item.locationHint,
+            isPromoted: item.isPromoted,
+            isTrusted: item.isTrusted,
+            ageBucket: item.ageBucket,
+            languageCode: item.languageCode
+        };
+    });
+}
+
+/**
+ * Helper: Clamp Score
+ */
+function clampSemanticScore(score) {
+    const s = parseFloat(score);
+    if (isNaN(s)) return 0;
+    return Math.max(0, Math.min(s, 30.0));
+}
 
 /**
  * Mock helper for Gemini Semantic Ranking
@@ -1052,7 +1078,7 @@ function mockGeminiRanking(intent, items) {
 
         return {
             feedItemId: item.feedItemId,
-            score: Math.min(score, 30.0),
+            score: clampSemanticScore(score),
             reason: reason.trim()
         };
     });
@@ -1083,6 +1109,13 @@ async function callGeminiForRanking(intent, items, languageCode, apiKey) {
         throw new Error("Empty response from Gemini");
     }
 
+    return parseGeminiRankingResponse(content, items);
+}
+
+/**
+ * Helper: Parse Gemini Response
+ */
+function parseGeminiRankingResponse(content, items) {
     try {
         const parsed = JSON.parse(content);
         const results = parsed.results || [];
@@ -1091,7 +1124,7 @@ async function callGeminiForRanking(intent, items, languageCode, apiKey) {
             const result = results.find(r => r.feedItemId === inputItem.feedItemId);
             return {
                 feedItemId: inputItem.feedItemId,
-                score: Math.max(0, Math.min(result?.score || 0, 30.0)),
+                score: clampSemanticScore(result?.score || 0),
                 reason: result?.reason || "No specific reason provided"
             };
         });
@@ -1101,6 +1134,9 @@ async function callGeminiForRanking(intent, items, languageCode, apiKey) {
     }
 }
 
+/**
+ * Helper: Build Prompt
+ */
 function buildGeminiRankingPrompt(intent, items, languageCode) {
     return `You are a ranking assistant for a hyperlocal super-app called Mozzy.
 Your task is to rank the provided feed items based on their relevance to the user's search intent.

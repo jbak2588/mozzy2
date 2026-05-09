@@ -45,6 +45,10 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 - **Intent-based Execution**: 무분별한 API 호출을 방지하기 위해 사용자 의도(Search Intent)가 명확한 경우에만 AI Ranking을 실행합니다.
 - **Score Limitation**: AI 점수는 기존 Rule-based 점수 체계를 보조하는 용도로만 사용하며, 최대 30점 이내로 가중치를 제한합니다.
 
+## 5. 검색 의도(Intent) 데이터 처리
+- **Intent Sanitization**: 사용자가 입력한 검색 의도 데이터 또한 `FeedSemanticSanitizer`를 거치거나 100자 이하의 길이 제한을 적용하여 남용을 방지합니다.
+- **Log Retention**: 이번 단계(P5-S03B)에서는 사용자의 검색 의도를 영구 저장하거나 로그로 수집하지 않습니다. 향후 수집 시 별도의 개인정보 처리 방침 고지 및 동의 절차를 거쳐야 합니다.
+
 ---
 최종 수정일: 2026-05-09
-상태: P5-S03 준비 단계 반영
+상태: P5-S03B UI 통합 단계 반영

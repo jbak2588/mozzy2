@@ -529,6 +529,11 @@
     "error": "Gagal memuat feed.",
     "refresh": "Muat ulang",
     "legacyHome": "Home lama",
-    "loading": "Memuat feed..."
+    "loading": "Memuat feed...",
+    "searchHint": "Cari pekerjaan, barang, atau kebutuhan lokal",
+    "search": "Cari",
+    "clearSearch": "Hapus",
+    "semanticRankingActive": "Ranking: {}",
+    "semanticRankingInfo": "Hasil diurutkan berdasarkan relevansi pencarian."
   }
 }

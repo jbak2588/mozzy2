@@ -41,7 +41,18 @@ class SmartFeedSearchIntent extends _$SmartFeedSearchIntent {
   @override
   String build() => '';
   
-  void setIntent(String intent) => state = intent;
+  void setIntent(String intent) {
+    final normalized = intent.trim();
+    if (normalized.length > 100) {
+      state = normalized.substring(0, 100);
+    } else {
+      state = normalized;
+    }
+  }
+
+  void clearIntent() => state = '';
+
+  bool get hasIntent => state.isNotEmpty;
 }
 
 @riverpod

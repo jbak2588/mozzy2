@@ -36,11 +36,19 @@ class MockSemanticRankingAdapter implements SemanticRankingAdapter {
         }
 
         // Domain matching
-        if ((intent.contains('job') || intent.contains('kerja') || intent.contains('loker')) &&
+        if ((intent.contains('job') || 
+             intent.contains('kerja') || 
+             intent.contains('lowongan') || 
+             intent.contains('loker')) &&
             payload.type == 'job') {
           score += 10.0;
           reason = (reason == null) ? 'Job domain match' : '$reason + Job domain match';
-        } else if ((intent.contains('market') || intent.contains('jual') || intent.contains('barang')) &&
+        } else if ((intent.contains('market') || 
+                    intent.contains('jual') || 
+                    intent.contains('beli') || 
+                    intent.contains('barang') || 
+                    intent.contains('bekas') || 
+                    intent.contains('murah')) &&
             payload.type == 'marketplaceProduct') {
           score += 10.0;
           reason = (reason == null) ? 'Marketplace domain match' : '$reason + Marketplace domain match';

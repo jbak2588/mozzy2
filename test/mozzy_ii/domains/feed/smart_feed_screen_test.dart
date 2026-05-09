@@ -4,6 +4,7 @@ import 'package:mozzy/mozzy_ii/domains/feed/screens/smart_feed_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/providers/smart_feed_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_model.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_type.dart';
+import 'package:mozzy/mozzy_ii/domains/feed/widgets/smart_feed_search_bar.dart';
 import '../../../helpers/test_localization_app.dart';
 
 void main() {
@@ -19,6 +20,16 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('SmartFeedScreen displays SearchBar', (WidgetTester tester) async {
+      await pumpMozzyTestApp(
+        tester,
+        const SmartFeedScreen(),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SmartFeedSearchBar), findsOneWidget);
     });
 
     testWidgets('SmartFeedScreen shows items when data is available', (WidgetTester tester) async {

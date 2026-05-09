@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../providers/smart_feed_provider.dart';
 import '../widgets/feed_item_card.dart';
 import '../widgets/feed_type_chip_bar.dart';
+import '../widgets/smart_feed_search_bar.dart';
 
 class SmartFeedScreen extends ConsumerWidget {
   const SmartFeedScreen({super.key});
@@ -25,6 +26,7 @@ class SmartFeedScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
+          const SmartFeedSearchBar(),
           const FeedTypeChipBar(),
           Expanded(
             child: feedAsync.when(

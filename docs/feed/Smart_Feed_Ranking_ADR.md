@@ -46,3 +46,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Privacy-Safe Payload**: AI 서버로 전송 전 이메일, 전화번호 등 민감정보를 제거하는 `FeedSemanticSanitizer` 구현.
 - **Mock & Skeleton**: 실제 API 호출 전 로컬 검증을 위한 `MockSemanticRankingAdapter` 및 서버 프록시 설계를 위한 `GeminiSemanticRankingAdapter` 스켈레톤 구축.
 - **Hybrid Ranking**: 기존 Rule-based 점수(Boost, Distance 등)를 유지하면서 AI 점수를 보조 신호(최대 30점)로 결합하는 하이브리드 체계 수립.
+
+## 8. P5-S03B 업데이트 (Semantic Intent UI Integration)
+- **UI Trigger**: 사용자가 명시적으로 검색 의도(Intent)를 입력할 수 있는 `SmartFeedSearchBar` 구현 및 상단 배치.
+- **Intent Provider**: `smartFeedSearchIntentProvider`를 통해 입력된 의도를 관리하며, 100자 제한 및 공백 제거 로직 적용.
+- **On-demand Ranking**: 검색 의도가 있을 때만 AI 세만틱 랭킹이 트리거되도록 하여 API 비용 및 리소스 최적화.
+- **Mock 보강**: 인도네시아어 키워드(loker, jual, beli 등)를 Mock 어댑터에 추가하여 실제 서비스 흐름 검증.

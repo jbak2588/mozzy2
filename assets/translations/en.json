@@ -526,6 +526,11 @@
     "error": "Failed to load feed.",
     "refresh": "Refresh",
     "legacyHome": "Legacy Home",
-    "loading": "Loading feed..."
+    "loading": "Loading feed...",
+    "searchHint": "Search jobs, products, or local needs",
+    "search": "Search",
+    "clearSearch": "Clear",
+    "semanticRankingActive": "Ranking: {}",
+    "semanticRankingInfo": "Results are ranked by search relevance."
   }
 }

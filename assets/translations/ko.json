@@ -526,6 +526,11 @@
     "error": "피드를 불러오지 못했습니다.",
     "refresh": "새로고침",
     "legacyHome": "이전 홈",
-    "loading": "피드 불러오는 중..."
+    "loading": "피드 불러오는 중...",
+    "searchHint": "일자리, 장터 또는 지역 소식 검색",
+    "search": "검색",
+    "clearSearch": "초기화",
+    "semanticRankingActive": "랭킹: {}",
+    "semanticRankingInfo": "검색 관련도 순으로 정렬된 결과입니다."
   }
 }

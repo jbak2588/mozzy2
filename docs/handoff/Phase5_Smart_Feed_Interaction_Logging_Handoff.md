@@ -51,3 +51,6 @@
 - **P5-S06 Engagement Aggregation**: 수집된 로그를 바탕으로 아이템별 `engagementScore`를 계산하여 랭킹에 반영.
 - **P5-S07 Detailed Impression**: Viewport visibility detection을 통한 정밀 노출 로깅 도입.
 - **BigQuery Export**: 대규모 데이터 분석을 위한 Firestore-to-BigQuery 연동.
+
+## Final Status
+P5-S05 Interaction Logging line is complete after P5-S05C runtime QA. Raw interaction events are now ready for aggregation in P5-S06.

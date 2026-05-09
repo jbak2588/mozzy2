@@ -17,4 +17,7 @@ class FeedRankingSignal {
   
   // Engagement Weights
   static const double engagementMultiplier = 1.0; // Scaled by count
+
+  // Semantic Weights
+  static const double maxSemanticScore = 30.0;
 }

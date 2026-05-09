@@ -55,7 +55,204 @@ final class SmartFeedRepositoryProvider
 }
 
 String _$smartFeedRepositoryHash() =>
-    r'280b92cc15ff73ea1710c2f23d7773c2f363a02b';
+    r'3bc5ab4c59429be2eccdf4f7bc0ab918b4f67a80';
+
+@ProviderFor(semanticRankingAdapter)
+final semanticRankingAdapterProvider = SemanticRankingAdapterProvider._();
+
+final class SemanticRankingAdapterProvider
+    extends
+        $FunctionalProvider<
+          SemanticRankingAdapter,
+          SemanticRankingAdapter,
+          SemanticRankingAdapter
+        >
+    with $Provider<SemanticRankingAdapter> {
+  SemanticRankingAdapterProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'semanticRankingAdapterProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$semanticRankingAdapterHash();
+
+  @$internal
+  @override
+  $ProviderElement<SemanticRankingAdapter> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SemanticRankingAdapter create(Ref ref) {
+    return semanticRankingAdapter(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SemanticRankingAdapter value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SemanticRankingAdapter>(value),
+    );
+  }
+}
+
+String _$semanticRankingAdapterHash() =>
+    r'e90f3d121606310bf6359c1c4dc41996209fcddd';
+
+@ProviderFor(feedSemanticSanitizer)
+final feedSemanticSanitizerProvider = FeedSemanticSanitizerProvider._();
+
+final class FeedSemanticSanitizerProvider
+    extends
+        $FunctionalProvider<
+          FeedSemanticSanitizer,
+          FeedSemanticSanitizer,
+          FeedSemanticSanitizer
+        >
+    with $Provider<FeedSemanticSanitizer> {
+  FeedSemanticSanitizerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'feedSemanticSanitizerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$feedSemanticSanitizerHash();
+
+  @$internal
+  @override
+  $ProviderElement<FeedSemanticSanitizer> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FeedSemanticSanitizer create(Ref ref) {
+    return feedSemanticSanitizer(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FeedSemanticSanitizer value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FeedSemanticSanitizer>(value),
+    );
+  }
+}
+
+String _$feedSemanticSanitizerHash() =>
+    r'df1b2b8292d79ebf37eb32dce797311c234b4779';
+
+@ProviderFor(semanticRankingService)
+final semanticRankingServiceProvider = SemanticRankingServiceProvider._();
+
+final class SemanticRankingServiceProvider
+    extends
+        $FunctionalProvider<
+          SemanticRankingService,
+          SemanticRankingService,
+          SemanticRankingService
+        >
+    with $Provider<SemanticRankingService> {
+  SemanticRankingServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'semanticRankingServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$semanticRankingServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<SemanticRankingService> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  SemanticRankingService create(Ref ref) {
+    return semanticRankingService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SemanticRankingService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SemanticRankingService>(value),
+    );
+  }
+}
+
+String _$semanticRankingServiceHash() =>
+    r'dad8ed79fdc79c28c4e70c26077c283622e2ad70';
+
+@ProviderFor(SmartFeedSearchIntent)
+final smartFeedSearchIntentProvider = SmartFeedSearchIntentProvider._();
+
+final class SmartFeedSearchIntentProvider
+    extends $NotifierProvider<SmartFeedSearchIntent, String> {
+  SmartFeedSearchIntentProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'smartFeedSearchIntentProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$smartFeedSearchIntentHash();
+
+  @$internal
+  @override
+  SmartFeedSearchIntent create() => SmartFeedSearchIntent();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$smartFeedSearchIntentHash() =>
+    r'6673f62cb6adccda14bb1c667ae6222971dacee6';
+
+abstract class _$SmartFeedSearchIntent extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String, String>,
+              String,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
 
 @ProviderFor(smartFeed)
 final smartFeedProvider = SmartFeedProvider._();
@@ -96,7 +293,7 @@ final class SmartFeedProvider
   }
 }
 
-String _$smartFeedHash() => r'1c93cb7055eaa84bc43af881b8cb8c4edf05e00c';
+String _$smartFeedHash() => r'3c3fd31a119e50a30902164cce0c18ad4f31654b';
 
 @ProviderFor(FeedFilter)
 final feedFilterProvider = FeedFilterProvider._();
@@ -194,4 +391,4 @@ final class FilteredSmartFeedProvider
   }
 }
 
-String _$filteredSmartFeedHash() => r'73509137274b3a991d1b38cff94ab36f9009db8e';
+String _$filteredSmartFeedHash() => r'926b774a1bd3d8cb371075d2339e444f349131e4';

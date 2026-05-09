@@ -57,6 +57,10 @@ class FeedRankingService extends _$FeedRankingService {
     return item.engagementScore * FeedRankingSignal.engagementMultiplier;
   }
 
+  double calculateSemanticScore(FeedItemModel item) {
+    return (item.semanticScore ?? 0.0) * FeedRankingSignal.maxSemanticScore;
+  }
+
   double calculateFinalScore(
     FeedItemModel item, {
     UserLocationContext? context,
@@ -69,8 +73,9 @@ class FeedRankingService extends _$FeedRankingService {
     final trust = calculateTrustScore(item);
     final distance = calculateDistanceScore(item, context);
     final engagement = calculateEngagementScore(item);
+    final semantic = item.semanticScore;
     
-    return boost + freshness + trust + distance + engagement;
+    return boost + freshness + trust + distance + engagement + semantic;
   }
 
   List<FeedItemModel> rankItems(List<FeedItemModel> items, {UserLocationContext? context, DateTime? now}) {

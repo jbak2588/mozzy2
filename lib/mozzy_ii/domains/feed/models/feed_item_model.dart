@@ -31,6 +31,9 @@ abstract class FeedItemModel with _$FeedItemModel {
     @Default(0.0) double distanceScore,
     @Default(0.0) double boostScore,
     @Default(0.0) double engagementScore,
+    @Default(0.0) double semanticScore,
+    String? semanticReason,
+    @OptionalSafeDateTimeConverter() DateTime? semanticScoredAt,
     @Default(0.0) double finalScore,
     
     required String route,

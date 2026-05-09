@@ -4,6 +4,10 @@ import '../models/user_location_context.dart';
 import '../repositories/smart_feed_repository.dart';
 import '../repositories/firestore_smart_feed_repository.dart';
 import '../services/feed_ranking_service.dart';
+import '../services/semantic_ranking_adapter.dart';
+import '../services/mock_semantic_ranking_adapter.dart';
+import '../services/feed_semantic_sanitizer.dart';
+import '../services/semantic_ranking_service.dart';
 import '../../../geo/providers/location_provider.dart';
 
 part 'smart_feed_provider.g.dart';
@@ -14,16 +18,56 @@ SmartFeedRepository smartFeedRepository(Ref ref) {
 }
 
 @riverpod
+SemanticRankingAdapter semanticRankingAdapter(Ref ref) {
+  return MockSemanticRankingAdapter();
+}
+
+@riverpod
+FeedSemanticSanitizer feedSemanticSanitizer(Ref ref) {
+  return FeedSemanticSanitizer();
+}
+
+@riverpod
+SemanticRankingService semanticRankingService(Ref ref) {
+  return SemanticRankingService(
+    adapter: ref.watch(semanticRankingAdapterProvider),
+    sanitizer: ref.watch(feedSemanticSanitizerProvider),
+    rankingService: ref.watch(feedRankingServiceProvider.notifier),
+  );
+}
+
+@riverpod
+class SmartFeedSearchIntent extends _$SmartFeedSearchIntent {
+  @override
+  String build() => '';
+  
+  void setIntent(String intent) => state = intent;
+}
+
+@riverpod
 Stream<List<FeedItemModel>> smartFeed(Ref ref) {
   final repository = ref.watch(smartFeedRepositoryProvider);
   final locationAsync = ref.watch(locationProvider);
   final rankingService = ref.watch(feedRankingServiceProvider.notifier);
+  final semanticService = ref.watch(semanticRankingServiceProvider);
+  final intent = ref.watch(smartFeedSearchIntentProvider);
   
   final locationParts = locationAsync.value;
   final context = locationParts != null ? UserLocationContext(locationParts: locationParts) : null;
 
-  return repository.getSmartFeed(locationFilter: locationParts).map((items) {
-    return rankingService.rankItems(items, context: context);
+  return repository.getSmartFeed(locationFilter: locationParts).asyncMap((items) async {
+    // 1. Initial rule-based ranking
+    final rankedItems = rankingService.rankItems(items, context: context);
+    
+    // 2. Apply semantic ranking if intent exists
+    if (intent.isNotEmpty) {
+      return await semanticService.applySemanticScores(
+        items: rankedItems,
+        userIntent: intent,
+      );
+    }
+    
+    return rankedItems;
   });
 }
 

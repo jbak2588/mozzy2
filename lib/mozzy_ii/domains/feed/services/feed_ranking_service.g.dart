@@ -42,7 +42,7 @@ final class FeedRankingServiceProvider
 }
 
 String _$feedRankingServiceHash() =>
-    r'2327741323fa0f79150e339ef1646d16025d3308';
+    r'61731a51c853270af60df40ca9a0b0c425f58319';
 
 abstract class _$FeedRankingService extends $Notifier<void> {
   void build();

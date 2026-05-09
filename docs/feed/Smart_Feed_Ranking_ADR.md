@@ -40,3 +40,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Widget Test 보강**: `EasyLocalization` 및 `ProviderScope`를 포함한 테스트 헬퍼(`TestLocalizationApp`)를 도입하여 UI 테스트 안정화.
 - **안정성 강화**: 피드 구성 요소 중 하나가 실패하더라도 나머지 콘텐츠는 노출되도록 `SmartFeedRepository` 스트림 처리 개선.
 - **정렬 안정화**: 점수가 동일할 경우 최신순, ID순으로 정렬되도록 Tie-breaker 로직 강화.
+
+## 7. P5-S03 업데이트 (AI Semantic Ranking Preparation)
+- **Semantic Score 도입**: `FeedItemModel`에 `semanticScore`, `semanticReason` 필드를 추가하여 AI 기반의 세만틱 랭킹을 수용할 수 있는 구조 마련.
+- **Privacy-Safe Payload**: AI 서버로 전송 전 이메일, 전화번호 등 민감정보를 제거하는 `FeedSemanticSanitizer` 구현.
+- **Mock & Skeleton**: 실제 API 호출 전 로컬 검증을 위한 `MockSemanticRankingAdapter` 및 서버 프록시 설계를 위한 `GeminiSemanticRankingAdapter` 스켈레톤 구축.
+- **Hybrid Ranking**: 기존 Rule-based 점수(Boost, Distance 등)를 유지하면서 AI 점수를 보조 신호(최대 30점)로 결합하는 하이브리드 체계 수립.

@@ -38,7 +38,7 @@ P5-S05에서 구축된 Interaction Logging 인프라를 기반으로, 서버와 
 
 ## 10. Git Status
 - **Branch**: main
-- **Implementation Commit SHA**: [IMPLEMENTATION_SHA]
-- **Final Docs Commit SHA**: [DOCS_SHA]
+- **Implementation Commit SHA**: a96e078
+- **Final Docs Commit SHA**: 7480e60
 - **Status**: clean
 - **Push 여부**: YES

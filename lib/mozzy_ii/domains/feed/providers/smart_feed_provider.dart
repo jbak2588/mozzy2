@@ -8,6 +8,7 @@ import '../services/semantic_ranking_adapter.dart';
 import '../services/mock_semantic_ranking_adapter.dart';
 import '../services/feed_semantic_sanitizer.dart';
 import '../services/semantic_ranking_service.dart';
+import '../services/gemini_semantic_ranking_adapter.dart';
 import '../../../geo/providers/location_provider.dart';
 
 part 'smart_feed_provider.g.dart';
@@ -19,6 +20,14 @@ SmartFeedRepository smartFeedRepository(Ref ref) {
 
 @riverpod
 SemanticRankingAdapter semanticRankingAdapter(Ref ref) {
+  const enableGeminiRanking = bool.fromEnvironment(
+    'ENABLE_GEMINI_RANKING',
+    defaultValue: false,
+  );
+
+  if (enableGeminiRanking) {
+    return GeminiSemanticRankingAdapter();
+  }
   return MockSemanticRankingAdapter();
 }
 

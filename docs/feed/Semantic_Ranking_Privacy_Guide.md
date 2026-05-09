@@ -38,17 +38,22 @@ AI Ranking을 위해 외부 API(예: Gemini)로 전송되는 데이터는 서비
 
 ## 3. 보안 아키텍처
 - **Client-side Secret 금지**: Gemini API Key 등 민감한 API Key를 Flutter 클라이언트 코드에 직접 포함하지 않습니다.
-- **Server Proxy 사용**: 모든 AI Ranking 요청은 Firebase Cloud Functions 또는 백엔드 프록시를 통해서만 수행되어야 합니다 (P5-S04 구현 예정).
-- **Mocking**: 개발 및 테스트 환경에서는 `MockSemanticRankingAdapter`를 사용하여 실제 외부 API 호출 없이 기능을 검증합니다.
+- **Server Proxy 사용**: 모든 AI Ranking 요청은 Firebase Cloud Functions (`rankSmartFeedWithGemini`) 프록시를 통해서만 수행됩니다.
+- **Request Validation**: 서버 측에서 `request.auth`를 필수로 확인하며, 허용되지 않은 필드(Blocklist)가 포함된 경우 요청을 거부하거나 필터링합니다.
 
 ## 4. 비용 및 통제
 - **Intent-based Execution**: 무분별한 API 호출을 방지하기 위해 사용자 의도(Search Intent)가 명확한 경우에만 AI Ranking을 실행합니다.
+- **Batch Limitation**: 한 번의 요청당 최대 30개의 아이템으로 제한하여 API 비용 및 응답 속도를 최적화합니다.
 - **Score Limitation**: AI 점수는 기존 Rule-based 점수 체계를 보조하는 용도로만 사용하며, 최대 30점 이내로 가중치를 제한합니다.
 
 ## 5. 검색 의도(Intent) 데이터 처리
-- **Intent Sanitization**: 사용자가 입력한 검색 의도 데이터 또한 `FeedSemanticSanitizer`를 거치거나 100자 이하의 길이 제한을 적용하여 남용을 방지합니다.
-- **Log Retention**: 이번 단계(P5-S03B)에서는 사용자의 검색 의도를 영구 저장하거나 로그로 수집하지 않습니다. 향후 수집 시 별도의 개인정보 처리 방침 고지 및 동의 절차를 거쳐야 합니다.
+- **Intent Sanitization**: 사용자가 입력한 검색 의도 데이터 또한 100자 이하의 길이 제한을 적용하여 남용을 방지합니다.
+- **Log Retention**: 사용자의 검색 의도를 영구 저장하거나 로그로 수집하지 않습니다.
+
+## 6. Rollout 정책
+- **Feature Flag**: `ENABLE_GEMINI_RANKING` 컴파일 타임 플래그를 통해 활성화 여부를 제어합니다.
+- **Mock Fallback**: API Key가 없거나 `AI_MOCK_MODE`가 활성화된 경우 서버 측 Mock 로직을 통해 결정론적 결과를 반환하여 안정성을 유지합니다.
 
 ---
 최종 수정일: 2026-05-09
-상태: P5-S03B UI 통합 단계 반영
+상태: P5-S04 Cloud Functions Proxy 통합 단계 반영

@@ -52,3 +52,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Intent Provider**: `smartFeedSearchIntentProvider`를 통해 입력된 의도를 관리하며, 100자 제한 및 공백 제거 로직 적용.
 - **On-demand Ranking**: 검색 의도가 있을 때만 AI 세만틱 랭킹이 트리거되도록 하여 API 비용 및 리소스 최적화.
 - **Mock 보강**: 인도네시아어 키워드(loker, jual, beli 등)를 Mock 어댑터에 추가하여 실제 서비스 흐름 검증.
+
+## 9. P5-S04 업데이트 (Gemini Semantic Ranking Proxy)
+- **Functions Proxy**: 클라이언트에서 직접 Gemini API를 호출하지 않고, Firebase Cloud Functions (`rankSmartFeedWithGemini`)를 통해 호출하는 보안 구조 확립.
+- **Payload Policy**: 서버 측에서 최대 30개 아이템 제한, 금지 필드 필터링, `request.auth` 검증을 수행하여 비용 및 개인정보 유출 방지.
+- **Rollout Flag**: `ENABLE_GEMINI_RANKING` 컴파일 플래그를 통해 점진적 배포가 가능하도록 구현.
+- **Mock Fallback**: 서버 환경 변수(`AI_MOCK_MODE`)에 따라 Gemini API 대신 결정론적 Mock 로직을 수행할 수 있도록 하여 테스트 및 비용 통제 유연성 확보.

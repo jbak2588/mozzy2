@@ -809,7 +809,10 @@ exports._testHelpers = {
     isBoostExpiredForScheduler,
     buildBoostExpiredUpdate,
     buildAuditLogData,
-    buildAuditLogId
+    buildAuditLogId,
+    mockGeminiRanking,
+    buildGeminiRankingPrompt,
+    clampSemanticScore: (s) => Math.max(0, Math.min(s, 30.0))
 };
 
 /**
@@ -956,3 +959,175 @@ exports.expireJobBoosts = onSchedule("every 1 hours", async (event) => {
         console.error("Error committing boost expiry batch:", error);
     }
 });
+
+/**
+ * Smart Feed: Rank Feed Items with Gemini AI
+ */
+exports.rankSmartFeedWithGemini = onCall(async (request) => {
+    const { intent, languageCode = "id", items } = request.data;
+    const auth = request.auth;
+
+    if (!auth) {
+        throw new HttpsError("unauthenticated", "Authentication required");
+    }
+
+    if (!intent || typeof intent !== "string") {
+        throw new HttpsError("invalid-argument", "Intent is required");
+    }
+
+    if (!items || !Array.isArray(items)) {
+        throw new HttpsError("invalid-argument", "Items must be an array");
+    }
+
+    // 1. Validation & Truncation
+    const normalizedIntent = intent.trim().substring(0, 100);
+    const sanitizedItems = items.slice(0, 30).map(item => {
+        // Enforce allowlist
+        return {
+            feedItemId: item.feedItemId,
+            sourceId: item.sourceId,
+            type: item.type,
+            title: item.title,
+            publicSummary: item.publicSummary,
+            category: item.category,
+            locationHint: item.locationHint,
+            isPromoted: item.isPromoted,
+            isTrusted: item.isTrusted,
+            ageBucket: item.ageBucket,
+            languageCode: item.languageCode
+        };
+    });
+
+    const isMockMode = process.env.AI_MOCK_MODE === "true";
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+
+    if (isMockMode) {
+        console.log("Using Mock Mode for Gemini Semantic Ranking");
+        const results = mockGeminiRanking(normalizedIntent, sanitizedItems);
+        return { results, provider: "gemini", mode: "mock" };
+    }
+
+    if (!geminiApiKey) {
+        console.error("GEMINI_API_KEY is missing and AI_MOCK_MODE is not true");
+        throw new HttpsError("failed-precondition", "AI service configuration missing");
+    }
+
+    // 2. Call Gemini API
+    try {
+        const results = await callGeminiForRanking(normalizedIntent, sanitizedItems, languageCode, geminiApiKey);
+        return { results, provider: "gemini", mode: "live" };
+    } catch (error) {
+        console.error("Gemini API Error:", error.message);
+        // Fallback to mock results if API fails (Optional, depending on policy)
+        // Here we throw error to let client decide fallback to rule-based or mock
+        throw new HttpsError("internal", `Failed to process semantic ranking: ${error.message}`);
+    }
+});
+
+/**
+ * Mock helper for Gemini Semantic Ranking
+ */
+function mockGeminiRanking(intent, items) {
+    const intentLower = intent.toLowerCase();
+    return items.map(item => {
+        let score = 0;
+        let reason = "Neutral match";
+
+        const titleMatch = item.title?.toLowerCase().includes(intentLower);
+        const summaryMatch = item.publicSummary?.toLowerCase().includes(intentLower);
+
+        if (titleMatch || summaryMatch) {
+            score += 15.0;
+            reason = "Keyword match in title/summary";
+        }
+
+        // Domain boost
+        if ((intentLower.includes("job") || intentLower.includes("kerja") || intentLower.includes("loker") || intentLower.includes("lowongan")) && item.type === "job") {
+            score += 10.0;
+            reason += " + Job domain relevance";
+        } else if ((intentLower.includes("jual") || intentLower.includes("beli") || intentLower.includes("barang") || intentLower.includes("bekas")) && item.type === "marketplaceProduct") {
+            score += 10.0;
+            reason += " + Marketplace domain relevance";
+        }
+
+        return {
+            feedItemId: item.feedItemId,
+            score: Math.min(score, 30.0),
+            reason: reason.trim()
+        };
+    });
+}
+
+/**
+ * Gemini API Caller
+ */
+async function callGeminiForRanking(intent, items, languageCode, apiKey) {
+    const prompt = buildGeminiRankingPrompt(intent, items, languageCode);
+    
+    const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+                responseMimeType: "application/json",
+            }
+        },
+        {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 8000 // 8 second timeout
+        }
+    );
+
+    const content = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!content) {
+        throw new Error("Empty response from Gemini");
+    }
+
+    try {
+        const parsed = JSON.parse(content);
+        const results = parsed.results || [];
+        
+        return items.map(inputItem => {
+            const result = results.find(r => r.feedItemId === inputItem.feedItemId);
+            return {
+                feedItemId: inputItem.feedItemId,
+                score: Math.max(0, Math.min(result?.score || 0, 30.0)),
+                reason: result?.reason || "No specific reason provided"
+            };
+        });
+    } catch (e) {
+        console.error("Failed to parse Gemini response:", content);
+        throw new Error("Invalid response format from Gemini");
+    }
+}
+
+function buildGeminiRankingPrompt(intent, items, languageCode) {
+    return `You are a ranking assistant for a hyperlocal super-app called Mozzy.
+Your task is to rank the provided feed items based on their relevance to the user's search intent.
+
+User Intent: "${intent}"
+Language: ${languageCode}
+
+Ranking Rules:
+1. Assign a score between 0 and 30 for each item.
+2. 30 means extremely relevant, 0 means not relevant at all.
+3. Be objective. Use the provided fields (title, summary, category, location) only.
+4. Do not mention user personal data.
+5. Return the results in a structured JSON format.
+
+Items to rank:
+${JSON.stringify(items, null, 2)}
+
+Expected JSON Output Format:
+{
+  "results": [
+    {
+      "feedItemId": "item_id_here",
+      "score": 25.5,
+      "reason": "Brief reason for this score"
+    }
+  ]
+}
+
+Only return the JSON object.`;
+}

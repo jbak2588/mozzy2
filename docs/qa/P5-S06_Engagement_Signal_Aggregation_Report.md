@@ -70,6 +70,6 @@
 
 ## 10. Git Status
 - **Branch**: main
-- **Commit SHA**: [COMMIT_SHA]
+- **Commit SHA**: 0d5799d
 - **Status**: clean
 - **Push 여부**: YES

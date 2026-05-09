@@ -68,3 +68,7 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 ## 11. P5-S04C 업데이트 (Gemini Live Staging E2E Validation)
 - **E2E Validation**: 실제 `gemini-3-flash-preview` API를 사용하여 Staging 환경에서의 Live Mode 동작을 검증함.
 - **Latency & Reliability**: 평균 2초 내외의 응답 속도와 예외 발생 시 안전한 Rule-based Fallback을 확인하여 프로덕션 배포 준비를 마침.
+
+## 12. P5-S04E 업데이트 (Gemini Secret Runtime Smoke Test)
+- **Secret Manager Integration**: `GEMINI_API_KEY`를 Firebase Secret Manager를 통해 주입하는 구조를 최종 확정하고 Smoke Test를 완료함.
+- **Model Standardization**: `gemini-3-flash-preview` 모델을 기본 런타임 모델로 확정함.

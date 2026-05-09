@@ -43,10 +43,10 @@ flutter build apk --dart-define=ENABLE_GEMINI_RANKING=true
    ```bash
    firebase functions:secrets:set GEMINI_API_KEY --project mozzy-v2
    ```
-2. `GEMINI_MODEL`을 환경 변수로 설정 (선택 사항, 기본값: `gemini-3-flash-preview`).
-   ```bash
-   firebase functions:config:set ai.model="gemini-3-flash-preview" --project mozzy-v2
-   ```
+2. `GEMINI_MODEL` 설정 (선택 사항).
+   - 기본값: `gemini-3-flash-preview`
+   - 모델 변경이 필요한 경우, Cloud Functions의 런타임 환경 변수로 `GEMINI_MODEL`을 주입하거나 `.env` 파일에 정의하십시오.
+   - 예: `GEMINI_MODEL=gemini-1.5-pro`
 3. Cloud Functions에 `AI_MOCK_MODE=false` 설정 후 재배포.
 4. 앱에서 검색 의도 입력.
 5. `mode: live` 응답 및 Gemini가 생성한 `reason`이 로그에 찍히는지 확인.

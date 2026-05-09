@@ -511,5 +511,19 @@
     "opsAdmin": "운영 관리자",
     "supportAdmin": "지원 관리자",
     "refreshPermission": "권한 새로고침"
+  },
+  "feed": {
+    "title": "스마트 피드",
+    "all": "전체",
+    "jobs": "구인구직",
+    "marketplace": "중고거래",
+    "localNews": "동네 소식",
+    "promoted": "홍보 중",
+    "trusted": "신뢰 등급",
+    "empty": "이 지역에 아직 콘텐츠가 없습니다.",
+    "noFilteredItems": "이 카테고리에 해당하는 콘텐츠가 없습니다.",
+    "unknownLocation": "알 수 없는 위치",
+    "error": "피드를 불러오지 못했습니다.",
+    "refresh": "새로고침"
   }
 }

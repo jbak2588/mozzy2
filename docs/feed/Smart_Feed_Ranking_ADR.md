@@ -1,0 +1,36 @@
+# ADR: Smart Feed Ranking Foundation (P5-S01)
+
+## 1. 개요 (Context)
+Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬 콘텐츠를 제공합니다. 사용자에게 가장 가치 있는 정보를 우선적으로 노출하기 위해, 도메인별 리스트를 통합하고 점수 기반으로 정렬하는 'Smart Feed' 엔진의 기초를 구축합니다.
+
+## 2. 도입 이유
+- **사용자 경험**: 여러 탭을 오가지 않고도 현재 위치에서 가장 중요한 업데이트를 한눈에 확인 가능.
+- **수익화 연동**: Phase 4에서 구현된 Job Boost 상품이 실제 피드 상단에 효과적으로 노출될 수 있는 기반 마련.
+- **확장성**: 향후 Gemini AI 기반의 개인화 추천으로 진화하기 위한 데이터 구조(FeedItemModel) 및 랭킹 인터페이스 정의.
+
+## 3. 설계 원칙
+
+### A. Rule-based Ranking (Phase 1)
+초기 단계에서는 복잡한 머신러닝 모델 대신 예측 가능하고 검증이 쉬운 규칙 기반(Rule-based) 점수 산정 방식을 채택합니다.
+- **Boost (100점)**: 유료 결제된 활성 부스트 아이템 우선순위.
+- **Freshness (최대 30점)**: 최신 콘텐츠 가산점 (24시간 이내 > 3일 이내 > 7일 이내).
+- **Trust (최대 20점)**: AI 검증 완료 또는 신뢰 등급 높은 사용자 콘텐츠 가산점.
+- **Distance (최대 20점)**: 동일 Kecamatan(구) > 동일 Kabupaten(시) 순으로 거리 가산점.
+- **Engagement**: 조회수, 좋아요, 지원수 등을 가중치로 반영.
+
+### B. Read-side Model (FeedItemModel)
+기존 `JobPostModel`, `ProductModel`을 직접 피드에서 사용하지 않고, 공통 인터페이스인 `FeedItemModel`로 매핑하여 사용합니다. 이는 도메인 간 결합도를 낮추고 피드 전용 로직을 분리하기 위함입니다.
+
+### C. Client-side Ranking
+데이터량이 초기 단계임을 고려하여, Firestore에서는 최신순으로 일정량(Limit 60)을 가져오고 실제 최종 점수 계산 및 정렬은 클라이언트(RankingService)에서 수행합니다. 이는 서버 비용 절감 및 빠른 로직 수정이 가능하게 합니다.
+
+## 4. 데이터 흐름
+1. `SmartFeedRepository`가 Jobs 및 Products 컬렉션에서 데이터를 스트림으로 가져옴.
+2. 각 도메인 Mapper를 통해 `FeedItemModel`로 변환.
+3. `FeedRankingService`가 현재 사용자 위치 및 시간을 기준으로 점수를 계산.
+4. `SmartFeedProvider`가 정렬된 리스트를 UI에 전달.
+
+## 5. 향후 확장 계획
+- **AI Ranking**: Gemini API를 사용하여 사용자의 과거 행동 패턴과 피드 콘텐츠 간의 유사도를 점수화(Semantic Ranking).
+- **Ads Integration**: 단순 부스트 외에 정교한 타겟팅 광고 슬롯 도입.
+- **Geo-fencing**: 사용자가 이동할 때마다 실시간으로 거리 점수를 재계산하는 하이퍼로컬 최적화.

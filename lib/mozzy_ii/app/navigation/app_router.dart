@@ -32,6 +32,7 @@ import '../../domains/jobs/screens/job_applicants_screen.dart';
 import '../../domains/jobs/screens/job_boost_purchase_screen.dart';
 import '../../domains/payments/screens/payment_status_screen.dart';
 import '../../domains/monetization/screens/admin_monetization_audit_screen.dart';
+import '../../domains/feed/screens/smart_feed_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -180,6 +181,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      
+      GoRoute(
+        path: '/feed',
+        builder: (context, state) => const SmartFeedScreen(),
       ),
 
       // 나머지 Feature 라우트

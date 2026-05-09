@@ -514,5 +514,19 @@
     "opsAdmin": "Admin Operasional",
     "supportAdmin": "Admin Bantuan",
     "refreshPermission": "Refresh izin"
+  },
+  "feed": {
+    "title": "Smart Feed",
+    "all": "Semua",
+    "jobs": "Lowongan",
+    "marketplace": "Marketplace",
+    "localNews": "Berita Lokal",
+    "promoted": "Dipromosikan",
+    "trusted": "Tepercaya",
+    "empty": "Belum ada konten di area ini.",
+    "noFilteredItems": "Tidak ada konten untuk kategori ini.",
+    "unknownLocation": "Lokasi tidak diketahui",
+    "error": "Gagal memuat feed.",
+    "refresh": "Muat ulang"
   }
 }

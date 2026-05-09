@@ -511,5 +511,19 @@
     "opsAdmin": "Operations Admin",
     "supportAdmin": "Support Admin",
     "refreshPermission": "Refresh permission"
+  },
+  "feed": {
+    "title": "Smart Feed",
+    "all": "All",
+    "jobs": "Jobs",
+    "marketplace": "Marketplace",
+    "localNews": "Local News",
+    "promoted": "Promoted",
+    "trusted": "Trusted",
+    "empty": "No content in this area yet.",
+    "noFilteredItems": "No content for this category.",
+    "unknownLocation": "Unknown location",
+    "error": "Failed to load feed.",
+    "refresh": "Refresh"
   }
 }

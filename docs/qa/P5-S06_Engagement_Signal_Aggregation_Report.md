@@ -29,7 +29,7 @@
   "impressionCount": "number",
   "cardTapCount": "number",
   "detailOpenCount": "number",
-  "cta_tapCount": "number",
+  "ctaTapCount": "number",
   "semanticIntentCount": "number",
   "engagementScore": "number (max 30.0)",
   "uniqueSessionCount": "number",
@@ -70,6 +70,7 @@
 
 ## 10. Git Status
 - **Branch**: main
-- **Commit SHA**: 0d5799d
+- **Implementation Commit SHA**: 0d5799d
+- **Final Docs Commit SHA**: d4289c6
 - **Status**: clean
 - **Push 여부**: YES

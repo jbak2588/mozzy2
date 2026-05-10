@@ -92,3 +92,9 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Rule-based Scoring**: 클릭(2.0), 상세 보기(3.0), 액션(5.0), 노출(0.1) 등의 가중치를 부여하여 콘텐츠의 인기도를 정량화함.
 - **Clamp Strategy**: Engagement Score는 최대 30.0점으로 제한하여, 유료 광고(Boost, 100.0)의 효과를 보존하면서도 자연스러운 양질의 콘텐츠가 상단에 노출되도록 설계함.
 - **Privacy-Preserving Summary**: 집계 데이터에는 개인 식별 정보(UserId)나 검색어 원문을 포함하지 않아 개인정보 유출 위험을 원천 차단함.
+
+## 17. P5-S06B 업데이트 (Engagement Aggregation Runtime QA & Hardening)
+- **Runtime Validation**: Staging 환경에서 `aggregateFeedEngagement` 실행 및 `feed_engagement_summaries` 생성을 검증하고, Smart Feed ranking에 실시간 반영됨을 확인하여 데이터 피드백 루프를 완성함.
+- **Contract Hardening**: 필드명(`ctaTapCount`) 통일 및 잘못된 데이터(Missing required fields)에 대한 서버 측 방어 로직을 강화함.
+- **Model Integrity**: Flutter `FeedEngagementSummary` 모델을 `abstract`로 선언하여 타입 안정성을 높이고 컴파일 에러를 해결함.
+- **Scalability**: RxDart `switchMap`과 `CombineLatestStream`을 활용한 집계 데이터 Watch 구조를 확립하여, 콘텐츠 인기도가 변할 때 피드 순위가 즉각 반영되는 기반을 마련함.

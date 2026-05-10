@@ -5,7 +5,9 @@ part 'feed_engagement_summary.freezed.dart';
 part 'feed_engagement_summary.g.dart';
 
 @freezed
-class FeedEngagementSummary with _$FeedEngagementSummary {
+abstract class FeedEngagementSummary with _$FeedEngagementSummary {
+  const FeedEngagementSummary._();
+
   const factory FeedEngagementSummary({
     required String id,
     required String sourceType,

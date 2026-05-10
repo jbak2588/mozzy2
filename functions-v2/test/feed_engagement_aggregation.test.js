@@ -40,6 +40,28 @@ describe("Feed Engagement Aggregation Cloud Function", () => {
         });
     });
 
+    describe("isValidEngagementInteraction", () => {
+        it("should return true for valid interaction", () => {
+            const data = { sourceType: "job", sourceId: "123", eventType: "impression" };
+            expect(helpers.isValidEngagementInteraction(data)).to.be.true;
+        });
+
+        it("should return false if sourceType is missing", () => {
+            const data = { sourceId: "123", eventType: "impression" };
+            expect(helpers.isValidEngagementInteraction(data)).to.be.false;
+        });
+
+        it("should return false if sourceId is missing", () => {
+            const data = { sourceType: "job", eventType: "impression" };
+            expect(helpers.isValidEngagementInteraction(data)).to.be.false;
+        });
+
+        it("should return false if eventType is missing", () => {
+            const data = { sourceType: "job", sourceId: "123" };
+            expect(helpers.isValidEngagementInteraction(data)).to.be.false;
+        });
+    });
+
     describe("groupFeedInteractions", () => {
         const mockInteractions = [
             {
@@ -102,6 +124,45 @@ describe("Feed Engagement Aggregation Cloud Function", () => {
             ];
             const groups = helpers.groupFeedInteractions(unknownEvent);
             expect(groups.job_job1.counts.impression).to.equal(0);
+        });
+
+        it("should skip invalid interactions", () => {
+            const invalidInteractions = [
+                {
+                    data: () => ({
+                        sourceType: "job",
+                        // missing sourceId
+                        eventType: "impression"
+                    })
+                }
+            ];
+            const groups = helpers.groupFeedInteractions(invalidInteractions);
+            expect(Object.keys(groups)).to.have.lengthOf(0);
+        });
+
+        it("should not count 'unknown' sessionId in uniqueSessionCount", () => {
+            const mockWithUnknownSession = [
+                {
+                    data: () => ({
+                        sourceType: "job",
+                        sourceId: "job1",
+                        eventType: "impression",
+                        sessionId: "unknown"
+                    })
+                },
+                {
+                    data: () => ({
+                        sourceType: "job",
+                        sourceId: "job1",
+                        eventType: "impression",
+                        sessionId: "real-session"
+                    })
+                }
+            ];
+            const groups = helpers.groupFeedInteractions(mockWithUnknownSession);
+            expect(groups.job_job1.sessions.size).to.equal(1);
+            expect(groups.job_job1.sessions.has("real-session")).to.be.true;
+            expect(groups.job_job1.sessions.has("unknown")).to.be.false;
         });
     });
 });

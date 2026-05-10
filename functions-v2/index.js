@@ -441,13 +441,13 @@ const ENGAGEMENT_WEIGHTS = {
 };
 
 function calculateEngagementScore(counts) {
-    const rawScore = 
+    const rawScore =
         (counts.impression || 0) * ENGAGEMENT_WEIGHTS.impression +
         (counts.card_tap || 0) * ENGAGEMENT_WEIGHTS.card_tap +
         (counts.detail_open || 0) * ENGAGEMENT_WEIGHTS.detail_open +
         (counts.cta_tap || 0) * ENGAGEMENT_WEIGHTS.cta_tap +
         (counts.semantic_intent || 0) * ENGAGEMENT_WEIGHTS.semantic_intent_bonus;
-    
+
     return Math.min(30.0, rawScore);
 }
 
@@ -455,10 +455,16 @@ function buildEngagementSummaryId(sourceType, sourceId) {
     return `${sourceType}_${sourceId}`;
 }
 
+function isValidEngagementInteraction(data) {
+    return Boolean(data.sourceType && data.sourceId && data.eventType);
+}
+
 function groupFeedInteractions(interactions) {
     const groups = {};
     interactions.forEach(doc => {
         const data = doc.data();
+        if (!isValidEngagementInteraction(data)) return;
+
         const key = buildEngagementSummaryId(data.sourceType, data.sourceId);
         if (!groups[key]) {
             groups[key] = {
@@ -470,14 +476,14 @@ function groupFeedInteractions(interactions) {
                 lastInteractionAt: data.createdAt
             };
         }
-        
+
         if (ENGAGEMENT_WEIGHTS[data.eventType]) {
             groups[key].counts[data.eventType]++;
         }
         if (data.hasSemanticIntent) {
             groups[key].counts.semantic_intent++;
         }
-        if (data.sessionId) {
+        if (data.sessionId && data.sessionId !== "unknown") {
             groups[key].sessions.add(data.sessionId);
         }
         if (data.createdAt && (!groups[key].lastInteractionAt || data.createdAt > groups[key].lastInteractionAt)) {
@@ -486,7 +492,6 @@ function groupFeedInteractions(interactions) {
     });
     return groups;
 }
-
 /**
  * Monetization: Create Job Boost Payment Intent
  */
@@ -968,6 +973,7 @@ exports._testHelpers = {
     sanitizeFeedInteractionPayload,
     calculateEngagementScore,
     buildEngagementSummaryId,
+    isValidEngagementInteraction,
     groupFeedInteractions
 };
 

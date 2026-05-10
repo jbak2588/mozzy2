@@ -97,6 +97,12 @@ Raw 상호작용 로그를 기반으로 콘텐츠의 인기도를 집계하는 �
 - **Session Anonymization**: 고유 세션 수를 집계할 때도 세션 ID의 원문이나 사용자 매핑 정보를 저장하지 않고 카운트만 유지합니다.
 - **Query Protection**: 검색 의도(Intent) 보너스 집계 시에도 검색어 원문은 절대 수집하거나 집계 테이블에 남기지 않습니다.
 
+## 14. Aggregation Runtime 검증 완료 (P5-S06B)
+Staging 환경 런타임 검증을 통해 아래 사항을 확정했습니다.
+- **Summary Privacy**: 실제 생성된 `feed_engagement_summaries` 문서에 `userId`, `sessionId`, `searchQuery`가 포함되지 않음을 확인했습니다.
+- **Contract Enforcement**: `ctaTapCount` 등의 필드명이 표준화되어 정합성이 유지됨을 확인했습니다.
+- **Defensive Filtering**: `sourceType`이나 `eventType`이 누락된 비정상 로그가 집계 결과에 영향을 주지 않도록 서버 측 필터링이 작동함을 확인했습니다.
+
 ---
 최종 수정일: 2026-05-11
-상태: P5-S06 Engagement Aggregation 반영 및 랭킹 루프 완성
+상태: P5-S06B Aggregation Runtime QA 및 계약 강화 완료

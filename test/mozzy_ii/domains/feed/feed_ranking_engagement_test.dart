@@ -85,5 +85,34 @@ void main() {
 
       expect(ranked.first.id, '2'); // Boosted item wins
     });
+
+    test('engagementScore 30 should be less than boostScore 100', () {
+      final item1 = FeedItemModel(
+        id: '1',
+        sourceId: 's1',
+        type: FeedItemType.job,
+        title: 'Max Engagement',
+        createdAt: now.subtract(const Duration(days: 10)),
+        engagementScore: 30.0,
+        isPromoted: false,
+        route: '/jobs/1',
+      );
+
+      final item2 = FeedItemModel(
+        id: '2',
+        sourceId: 's2',
+        type: FeedItemType.job,
+        title: 'Min Engagement with Boost',
+        createdAt: now.subtract(const Duration(days: 10)),
+        engagementScore: 0.0,
+        isPromoted: true,
+        route: '/jobs/2',
+      );
+
+      final score1 = rankingService.calculateFinalScore(item1, now: now);
+      final score2 = rankingService.calculateFinalScore(item2, now: now);
+
+      expect(score2, greaterThan(score1));
+    });
   });
 }

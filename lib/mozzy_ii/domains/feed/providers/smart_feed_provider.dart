@@ -9,7 +9,6 @@ import '../services/mock_semantic_ranking_adapter.dart';
 import '../services/feed_semantic_sanitizer.dart';
 import '../services/semantic_ranking_service.dart';
 import '../services/gemini_semantic_ranking_adapter.dart';
-import '../repositories/feed_engagement_repository.dart';
 import 'feed_engagement_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import '../../../geo/providers/location_provider.dart';

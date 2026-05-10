@@ -5,6 +5,6 @@ import '../repositories/firestore_feed_engagement_repository.dart';
 part 'feed_engagement_provider.g.dart';
 
 @riverpod
-FeedEngagementRepository feedEngagementRepository(FeedEngagementRepositoryRef ref) {
+FeedEngagementRepository feedEngagementRepository(Ref ref) {
   return FirestoreFeedEngagementRepository();
 }

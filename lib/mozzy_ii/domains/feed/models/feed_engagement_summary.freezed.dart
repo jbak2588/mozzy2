@@ -222,8 +222,8 @@ return $default(_that.id,_that.sourceType,_that.sourceId,_that.feedItemId,_that.
 /// @nodoc
 @JsonSerializable()
 
-class _FeedEngagementSummary implements FeedEngagementSummary {
-  const _FeedEngagementSummary({required this.id, required this.sourceType, required this.sourceId, this.feedItemId, this.impressionCount = 0, this.cardTapCount = 0, this.detailOpenCount = 0, this.ctaTapCount = 0, this.semanticIntentCount = 0, this.totalInteractions = 0, this.uniqueSessionCount = 0, this.engagementScore = 0.0, @OptionalSafeDateTimeConverter() this.lastInteractionAt, @OptionalSafeDateTimeConverter() this.lastAggregatedAt, this.window = 'all_time'});
+class _FeedEngagementSummary extends FeedEngagementSummary {
+  const _FeedEngagementSummary({required this.id, required this.sourceType, required this.sourceId, this.feedItemId, this.impressionCount = 0, this.cardTapCount = 0, this.detailOpenCount = 0, this.ctaTapCount = 0, this.semanticIntentCount = 0, this.totalInteractions = 0, this.uniqueSessionCount = 0, this.engagementScore = 0.0, @OptionalSafeDateTimeConverter() this.lastInteractionAt, @OptionalSafeDateTimeConverter() this.lastAggregatedAt, this.window = 'all_time'}): super._();
   factory _FeedEngagementSummary.fromJson(Map<String, dynamic> json) => _$FeedEngagementSummaryFromJson(json);
 
 @override final  String id;

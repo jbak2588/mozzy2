@@ -38,11 +38,12 @@ P5-S06에서 구현된 Engagement Aggregation 시스템의 런타임 안정성�
 ## 6. Git Status
 - **Branch**: main
 - **Implementation Commit SHA**: 0e25d79
-- **Final Docs Commit SHA**: c0b4c7e
+- **Final Docs Commit SHA**: 659a603
 - **Status**: clean
 - **Push 여부**: YES
 
 ## 7. 남은 이슈 및 향후 계획
 - **Real-time Aggregation**: 현재 1시간 주기 배치를 향후 트래픽 증가 시 Cloud Tasks 또는 Trigger 기반으로 전환 검토.
 - **Abuse Detection**: 동일 세션에서의 반복 클릭 등 어뷰징 신호를 걸러내는 필터링 로직 고도화 필요.
+
 

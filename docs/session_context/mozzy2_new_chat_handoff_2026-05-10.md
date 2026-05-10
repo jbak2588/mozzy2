@@ -46,12 +46,15 @@
 
 ## Phase 6 Beta Readiness Status
 - Phase 6 Beta Readiness Gap Audit completed.
-- Base HEAD: 60c5b34
+- P6-S01 Firebase App Distribution / TestFlight Readiness completed.
+- Base HEAD: 12c06d8
 - Audit HEAD: 60c5b34
 - Audit Report: docs/qa/Phase6_Beta_Readiness_Gap_Audit_2026-05-10.md
-- Next recommended task: P6-S01 Firebase App Distribution / TestFlight Readiness
+- Distribution Readiness Report: docs/release/Beta_Distribution_Readiness_2026-05-10.md
+- Workflow: .github/workflows/beta_distribution.yml
+- Next recommended task: P6-S02 Disable Unimplemented Beta Modules
 
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P5-S08 이후 상태를 검토한 다음 `Phase 6 Beta Readiness Gap Audit` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S01 이후 상태를 검토한 다음 `P6-S02 Disable Unimplemented Beta Modules` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

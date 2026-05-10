@@ -98,3 +98,8 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Contract Hardening**: 필드명(`ctaTapCount`) 통일 및 잘못된 데이터(Missing required fields)에 대한 서버 측 방어 로직을 강화함.
 - **Model Integrity**: Flutter `FeedEngagementSummary` 모델을 `abstract`로 선언하여 타입 안정성을 높이고 컴파일 에러를 해결함.
 - **Scalability**: RxDart `switchMap`과 `CombineLatestStream`을 활용한 집계 데이터 Watch 구조를 확립하여, 콘텐츠 인기도가 변할 때 피드 순위가 즉각 반영되는 기반을 마련함.
+
+## 18. P5-S06C 업데이트 (Aggregation Finalization & Scheduler Deploy)
+- **Scheduler Deployment**: `aggregateFeedEngagement` 스케줄 함수가 Staging 환경(`mozzy-v2`)에 정상 배포 및 등록됨을 확인함.
+- **SHA Alignment**: P5-S06B 보고서의 구현 커밋 SHA(`0e25d79`)를 실제 이력과 일치시키고 문서 정합성을 마감함.
+- **Ready for Precision**: 대략적인 노출(Approximate Impression) 기반의 집계 파이프라인이 안정화됨에 따라, 향후 정밀 노출(Viewport-based) 및 어뷰징 방지 로직 도입을 위한 준비를 마침.

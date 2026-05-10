@@ -37,7 +37,8 @@ P5-S06에서 구현된 Engagement Aggregation 시스템의 런타임 안정성�
 
 ## 6. Git Status
 - **Branch**: main
-- **Implementation Commit SHA**: 253cef2
+- **Implementation Commit SHA**: 0e25d79
+- **Final Docs Commit SHA**: [FINAL_SHA]
 - **Status**: clean
 - **Push 여부**: YES
 

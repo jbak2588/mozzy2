@@ -103,3 +103,4 @@ Mozzy는 구인구직, 중고거래, 동네 소식 등 다양한 하이퍼로컬
 - **Scheduler Deployment**: `aggregateFeedEngagement` 스케줄 함수가 Staging 환경(`mozzy-v2`)에 정상 배포 및 등록됨을 확인함.
 - **SHA Alignment**: P5-S06B 보고서의 구현 커밋 SHA(`0e25d79`)를 실제 이력과 일치시키고 문서 정합성을 마감함.
 - **Ready for Precision**: 대략적인 노출(Approximate Impression) 기반의 집계 파이프라인이 안정화됨에 따라, 향후 정밀 노출(Viewport-based) 및 어뷰징 방지 로직 도입을 위한 준비를 마침.
+\n## 19. P5-S07 업데이트 (Precision Viewport-based Impression Logging)\n- **Precision Tracking**: 단순 리스트 렌더링 기준의 노출 수집을 폐기하고, Viewport 상 50% 이상 면적이 800ms 이상 노출된 경우에만 impression을 기록하는 정밀 추적(ViewportImpressionTracker)을 도입함.\n- **Dedup Logging**: 한 세션 내에서 동일 아이템이 여러 번 노출되더라도 중복 기록되지 않도록 로컬 dedup 로직 적용.\n- **Server Validation**: 노출 기록 시 `impressionMode`, `visibleRatio`, `dwellMs` 메타데이터를 클라이언트에서 전송하고, 서버에서 임계값(Threshold) 검증을 거쳐 어뷰징 및 허수 노출을 방지함.

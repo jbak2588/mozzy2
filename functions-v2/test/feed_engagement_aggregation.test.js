@@ -165,4 +165,78 @@ describe("Feed Engagement Aggregation Cloud Function", () => {
             expect(groups.job_job1.sessions.has("unknown")).to.be.false;
         });
     });
+
+    describe("sanitizeFeedInteractionPayload", () => {
+        const basePayload = {
+            eventType: "impression",
+            feedItemId: "fi1",
+            sourceId: "src1",
+            sourceType: "job",
+            route: "/jobs/1",
+            position: 1,
+            isPromoted: false,
+            hasSemanticIntent: false,
+            intentLengthBucket: "none"
+        };
+
+        it("should allow valid viewport impression", () => {
+            const payload = {
+                ...basePayload,
+                impressionMode: "viewport",
+                visibleRatio: 0.6,
+                dwellMs: 1000
+            };
+            const result = helpers.sanitizeFeedInteractionPayload(payload, "uid123");
+            expect(result.impressionMode).to.equal("viewport");
+            expect(result.visibleRatio).to.equal(0.6);
+            expect(result.dwellMs).to.equal(1000);
+        });
+
+        it("should reject viewport impression if visibleRatio < 0.5", () => {
+            const payload = {
+                ...basePayload,
+                impressionMode: "viewport",
+                visibleRatio: 0.49,
+                dwellMs: 1000
+            };
+            expect(() => helpers.sanitizeFeedInteractionPayload(payload, "uid123"))
+                .to.throw("Viewport impression must have visibleRatio >= 0.5");
+        });
+
+        it("should reject viewport impression if dwellMs < 800", () => {
+            const payload = {
+                ...basePayload,
+                impressionMode: "viewport",
+                visibleRatio: 0.8,
+                dwellMs: 799
+            };
+            expect(() => helpers.sanitizeFeedInteractionPayload(payload, "uid123"))
+                .to.throw("Viewport impression must have 800 <= dwellMs <= 60000");
+        });
+
+        it("should reject viewport impression if dwellMs > 60000", () => {
+            const payload = {
+                ...basePayload,
+                impressionMode: "viewport",
+                visibleRatio: 0.8,
+                dwellMs: 60001
+            };
+            expect(() => helpers.sanitizeFeedInteractionPayload(payload, "uid123"))
+                .to.throw("Viewport impression must have 800 <= dwellMs <= 60000");
+        });
+
+        it("should ignore invalid fields like userId, sessionId, searchQuery from metadata", () => {
+            const payload = {
+                ...basePayload,
+                metadata: {
+                    userId: "hidden",
+                    searchQuery: "buy car"
+                }
+            };
+            const result = helpers.sanitizeFeedInteractionPayload(payload, "uid123");
+            expect(result.metadata.userId).to.be.undefined;
+            expect(result.metadata.searchQuery).to.be.undefined;
+            expect(result.userId).to.equal("uid123");
+        });
+    });
 });

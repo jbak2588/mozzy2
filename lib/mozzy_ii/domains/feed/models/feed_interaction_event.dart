@@ -15,6 +15,9 @@ class FeedInteractionEvent {
   final Map<String, dynamic> locationParts;
   final DateTime? clientCreatedAt;
   final String? sessionId;
+  final String? impressionMode;
+  final double? visibleRatio;
+  final int? dwellMs;
   final Map<String, dynamic>? metadata;
 
   FeedInteractionEvent({
@@ -32,6 +35,9 @@ class FeedInteractionEvent {
     this.locationParts = const {},
     this.clientCreatedAt,
     this.sessionId,
+    this.impressionMode,
+    this.visibleRatio,
+    this.dwellMs,
     this.metadata,
   });
 
@@ -76,6 +82,9 @@ class FeedInteractionEvent {
       'locationParts': locationParts,
       'clientCreatedAt': clientCreatedAt?.toIso8601String(),
       'sessionId': sessionId,
+      if (impressionMode != null) 'impressionMode': impressionMode,
+      if (visibleRatio != null) 'visibleRatio': visibleRatio,
+      if (dwellMs != null) 'dwellMs': dwellMs,
       'metadata': _safeMetadata(metadata),
     };
   }

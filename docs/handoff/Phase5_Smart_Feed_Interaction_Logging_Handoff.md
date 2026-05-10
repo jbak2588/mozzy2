@@ -47,7 +47,7 @@
 - **Batch Frequency**: 현재 1시간 주기 집계이므로 실시간 반응성(Real-time feedback)에는 한계가 있음.
 
 ## 6. 다음 단계 제안
-- **P5-S07 Detailed Impression**: Viewport visibility detection을 통한 정밀 노출 로깅 도입.
+- **P5-S07 Detailed Impression**: (완료) Viewport visibility detection을 통한 정밀 노출 로깅 도입.
 - **Abuse Detection**: 매크로 등을 통한 점수 조작 방지 필터링 고도화.
 - **Personalized Ranking**: 수집된 인기도 데이터를 넘어 사용자별 취향을 반영하는 개인화 엔진 도입.
 
@@ -56,9 +56,11 @@ P5-S06C confirms that `aggregateFeedEngagement` is deployed and that engagement 
 
 ## Final Phase 5 Interaction/Raking Loop Status
 P5-S06D finalized the documentation status after P5-S06C. The Smart Feed interaction-to-ranking loop is now complete and ready for Phase 5 final QA or precision impression work.
+P5-S07 completed the precision viewport-based impression tracking implementation.
 
 ## Final Status
 P5-S06B Engagement Aggregation Runtime QA is complete.
 P5-S06C Engagement Aggregation Finalization is complete.
 P5-S06D Final SHA Cleanup & New Chat Handoff is complete.
+P5-S07 Precision Viewport-based Impression Logging is complete.
 The data feedback loop (Raw Log → Aggregated Summary → Smart Feed Ranking) is fully verified and functional in the Staging environment.

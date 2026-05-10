@@ -6,6 +6,7 @@ import '../providers/smart_feed_provider.dart';
 import '../widgets/feed_item_card.dart';
 import '../widgets/feed_type_chip_bar.dart';
 import '../widgets/smart_feed_search_bar.dart';
+import '../widgets/viewport_impression_tracker.dart';
 
 import '../models/feed_interaction_event.dart';
 import '../models/feed_interaction_type.dart';
@@ -60,36 +61,42 @@ class SmartFeedScreen extends ConsumerWidget {
                     itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
-                      
-                      // Log impression once per item per screen session
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        final seenItems = ref.read(seenItemsProvider);
-                        if (!seenItems.value.contains(item.id)) {
-                          seenItems.value = {...seenItems.value, item.id};
-                          
-                          final event = FeedInteractionEvent(
-                            eventType: FeedInteractionType.impression,
-                            feedItemId: item.id,
-                            sourceId: item.sourceId,
-                            sourceType: item.type.name,
-                            position: index,
-                            isPromoted: item.isPromoted,
-                            hasSemanticIntent: hasIntent,
-                            intentLengthBucket: intentLengthBucket,
-                            sessionId: ref.read(feedSessionIdProvider),
-                            clientCreatedAt: DateTime.now(),
-                          );
-                          unawaited(
-                            ref.read(feedInteractionRepositoryProvider).logInteraction(event),
-                          );
-                        }
-                      });
 
-                      return FeedItemCard(
-                        item: item,
-                        position: index,
-                        hasSemanticIntent: hasIntent,
-                        intentLengthBucket: intentLengthBucket,
+                      return ViewportImpressionTracker(
+                        feedItemId: item.id,
+                        sourceId: item.sourceId,
+                        sourceType: item.type.name,
+                        onImpression: (visibleRatio, dwellMs) {
+                          final seenItems = ref.read(seenItemsProvider);
+                          if (!seenItems.value.contains(item.id)) {
+                            seenItems.value = {...seenItems.value, item.id};
+                            
+                            final event = FeedInteractionEvent(
+                              eventType: FeedInteractionType.impression,
+                              feedItemId: item.id,
+                              sourceId: item.sourceId,
+                              sourceType: item.type.name,
+                              position: index,
+                              isPromoted: item.isPromoted,
+                              hasSemanticIntent: hasIntent,
+                              intentLengthBucket: intentLengthBucket,
+                              sessionId: ref.read(feedSessionIdProvider),
+                              clientCreatedAt: DateTime.now(),
+                              impressionMode: 'viewport',
+                              visibleRatio: visibleRatio,
+                              dwellMs: dwellMs,
+                            );
+                            unawaited(
+                              ref.read(feedInteractionRepositoryProvider).logInteraction(event),
+                            );
+                          }
+                        },
+                        child: FeedItemCard(
+                          item: item,
+                          position: index,
+                          hasSemanticIntent: hasIntent,
+                          intentLengthBucket: intentLengthBucket,
+                        ),
                       );
                     },
                   ),

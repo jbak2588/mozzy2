@@ -388,7 +388,10 @@ function sanitizeFeedInteractionPayload(data, uid) {
         locationParts,
         clientCreatedAt,
         metadata = {},
-        sessionId
+        sessionId,
+        impressionMode,
+        visibleRatio,
+        dwellMs
     } = data;
 
     if (!eventType || !isAllowedFeedInteractionType(eventType)) {
@@ -397,6 +400,19 @@ function sanitizeFeedInteractionPayload(data, uid) {
 
     if (!feedItemId || !sourceId || !sourceType) {
         throw new HttpsError("invalid-argument", "Missing required fields: feedItemId, sourceId, sourceType");
+    }
+
+    if (eventType === "impression") {
+        if (impressionMode === "viewport") {
+            const ratio = parseFloat(visibleRatio);
+            const dwell = parseInt(dwellMs);
+            if (isNaN(ratio) || ratio < 0.5) {
+                throw new HttpsError("invalid-argument", "Viewport impression must have visibleRatio >= 0.5");
+            }
+            if (isNaN(dwell) || dwell < 800 || dwell > 60000) {
+                throw new HttpsError("invalid-argument", "Viewport impression must have 800 <= dwellMs <= 60000");
+            }
+        }
     }
 
     const ALLOWED_BUCKETS = ["none", "short", "medium", "long"];
@@ -417,6 +433,9 @@ function sanitizeFeedInteractionPayload(data, uid) {
         countryCode: countryCode || "ID",
         locationParts: locationParts || {},
         clientCreatedAt: clientCreatedAt || null,
+        impressionMode: impressionMode || "approximate",
+        visibleRatio: parseFloat(visibleRatio) || null,
+        dwellMs: parseInt(dwellMs) || null,
         metadata: sanitizeFeedInteractionMetadata(metadata),
         createdAt: admin.firestore.FieldValue.serverTimestamp()
     };

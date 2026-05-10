@@ -36,14 +36,14 @@
 - Phase5 Final QA & Handoff completed.
 - Latest verified HEAD: e754e9c
 - Phase 5 Smart Feed feedback loop is closed.
-- P5-S07 Precision Viewport-based Impression Logging is the next implementation task.
+- P5-S07 Precision Viewport-based Impression Logging is completed.
+- Approximate builder-triggered impression is no longer the primary signal.
 
 ## 6. Recommended Next Step
-1. P5-S07 Precision Viewport-based Impression Logging
-2. P5-S08 Abuse Detection / Anti-gaming Filters
-3. Phase 6 Beta Readiness Gap Audit
+1. P5-S08 Abuse Detection / Anti-gaming Filters
+2. Phase 6 Beta Readiness Gap Audit
 
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P5-S06D 이후 상태를 검토한 다음 `Phase5 Final QA & Handoff` 또는 `P5-S07 Precision Viewport-based Impression Logging` 중 어느 쪽이 먼저인지 판단해서 다음 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P5-S07 이후 상태를 검토한 다음 `P5-S08 Abuse Detection / Anti-gaming Filters` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

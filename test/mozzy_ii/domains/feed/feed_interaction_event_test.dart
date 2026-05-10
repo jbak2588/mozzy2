@@ -63,8 +63,8 @@ void main() {
       expect(json.containsKey('impressionMode'), isFalse);
       expect(json.containsKey('visibleRatio'), isFalse);
       expect(json.containsKey('dwellMs'), isFalse);
-      expect(json.containsKey('route'), isTrue); // It sends null if route is null, wait...
-      // Let's check how toSafeJson is implemented.
+      expect(json.containsKey('route'), isTrue);
+      expect(json['route'], isNull);
     });
   });
 }

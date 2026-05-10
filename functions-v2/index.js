@@ -344,12 +344,52 @@ const axios = require("axios");
 /**
  * Smart Feed: Interaction Logging
  */
-const ALLOWED_FEED_INTERACTION_TYPES = ["impression", "card_tap", "detail_open", "cta_tap"];
+const ALLOWED_FEED_INTERACTION_TYPES = ["impression", "card_tap", "detail_open", "cta_tap", "semantic_intent"];
 const FORBIDDEN_FEED_INTERACTION_FIELDS = [
     "intent", "searchQuery", "query", "email", "phone", 
     "exactAddress", "paymentId", "auditId", "fcmToken", 
     "prompt", "userId", "ownerId"
 ];
+
+const ALLOWED_SOURCE_TYPES = [
+    "job",
+    "marketplaceProduct",
+    "localNews",
+    "store",
+    "community"
+];
+
+const FORBIDDEN_TOP_LEVEL_FIELDS = [
+    "searchQuery",
+    "query",
+    "email",
+    "phone",
+    "phoneNumber",
+    "nik",
+    "ktp",
+    "exactGeoPoint"
+];
+
+function classifyFeedInteractionAbuse(payload) {
+    let isSuspicious = false;
+    let reason = null;
+    let severity = "none";
+
+    const pos = parseInt(payload.position);
+    if (!isNaN(pos) && (pos < 0 || pos > 500)) {
+        isSuspicious = true;
+        reason = "suspicious_position";
+        severity = "medium";
+    }
+
+    if (payload.dwellMs && parseInt(payload.dwellMs) > 60000) {
+        isSuspicious = true;
+        reason = "dwell_too_long";
+        severity = "high";
+    }
+
+    return { isSuspicious, reason, severity };
+}
 
 function sanitizeFeedInteractionMetadata(metadata) {
     const cleanedMetadata = {};
@@ -374,6 +414,12 @@ function isAllowedFeedInteractionType(eventType) {
 }
 
 function sanitizeFeedInteractionPayload(data, uid) {
+    FORBIDDEN_TOP_LEVEL_FIELDS.forEach(field => {
+        if (data[field] !== undefined) {
+            throw new HttpsError("invalid-argument", `Forbidden top-level field: ${field}`);
+        }
+    });
+
     const {
         eventType,
         feedItemId,
@@ -398,6 +444,10 @@ function sanitizeFeedInteractionPayload(data, uid) {
         throw new HttpsError("invalid-argument", `Invalid event type: ${eventType}`);
     }
 
+    if (!ALLOWED_SOURCE_TYPES.includes(sourceType)) {
+        throw new HttpsError("invalid-argument", `Invalid source type: ${sourceType}`);
+    }
+
     if (!feedItemId || !sourceId || !sourceType) {
         throw new HttpsError("invalid-argument", "Missing required fields: feedItemId, sourceId, sourceType");
     }
@@ -418,6 +468,12 @@ function sanitizeFeedInteractionPayload(data, uid) {
     const ALLOWED_BUCKETS = ["none", "short", "medium", "long"];
     const bucket = ALLOWED_BUCKETS.includes(intentLengthBucket) ? intentLengthBucket : "none";
 
+    const abuseCheckData = classifyFeedInteractionAbuse(data);
+    const abuseCheck = {
+        ...abuseCheckData,
+        checkedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
     return {
         userId: uid,
         sessionId: sessionId || "unknown",
@@ -437,6 +493,7 @@ function sanitizeFeedInteractionPayload(data, uid) {
         visibleRatio: parseFloat(visibleRatio) || null,
         dwellMs: parseInt(dwellMs) || null,
         metadata: sanitizeFeedInteractionMetadata(metadata),
+        abuseCheck: abuseCheck,
         createdAt: admin.firestore.FieldValue.serverTimestamp()
     };
 }
@@ -470,6 +527,14 @@ function calculateEngagementScore(counts) {
     return Math.min(30.0, rawScore);
 }
 
+const INTERACTION_CAPS = {
+    impression: 1,
+    card_tap: 3,
+    detail_open: 2,
+    cta_tap: 2,
+    semantic_intent: 3
+};
+
 function buildEngagementSummaryId(sourceType, sourceId) {
     return `${sourceType}_${sourceId}`;
 }
@@ -484,6 +549,10 @@ function groupFeedInteractions(interactions) {
         const data = doc.data();
         if (!isValidEngagementInteraction(data)) return;
 
+        if (data.abuseCheck && (data.abuseCheck.severity === "medium" || data.abuseCheck.severity === "high")) {
+            return; // Skip suspicious interactions from aggregation
+        }
+
         const key = buildEngagementSummaryId(data.sourceType, data.sourceId);
         if (!groups[key]) {
             groups[key] = {
@@ -492,21 +561,52 @@ function groupFeedInteractions(interactions) {
                 feedItemId: data.feedItemId,
                 counts: { impression: 0, card_tap: 0, detail_open: 0, cta_tap: 0, semantic_intent: 0 },
                 sessions: new Set(),
-                lastInteractionAt: data.createdAt
+                lastInteractionAt: data.createdAt,
+                sessionCounts: {}
             };
         }
 
-        if (ENGAGEMENT_WEIGHTS[data.eventType]) {
-            groups[key].counts[data.eventType]++;
+        const group = groups[key];
+        const sessId = data.sessionId || "unknown";
+
+        if (!group.sessionCounts[sessId]) {
+            group.sessionCounts[sessId] = {
+                impression: 0,
+                card_tap: 0,
+                detail_open: 0,
+                cta_tap: 0,
+                semantic_intent: 0
+            };
         }
+
+        const sessCounts = group.sessionCounts[sessId];
+        const eventType = data.eventType;
+        let capped = false;
+
+        if (ENGAGEMENT_WEIGHTS[eventType]) {
+            const cap = INTERACTION_CAPS[eventType] || 1;
+            if (sessCounts[eventType] < cap) {
+                sessCounts[eventType]++;
+                group.counts[eventType]++;
+            } else {
+                capped = true;
+            }
+        }
+
         if (data.hasSemanticIntent) {
-            groups[key].counts.semantic_intent++;
+            const cap = INTERACTION_CAPS.semantic_intent || 3;
+            if (sessCounts.semantic_intent < cap) {
+                sessCounts.semantic_intent++;
+                group.counts.semantic_intent++;
+            }
         }
-        if (data.sessionId && data.sessionId !== "unknown") {
-            groups[key].sessions.add(data.sessionId);
+
+        if (sessId !== "unknown" && !capped) {
+            group.sessions.add(sessId);
         }
-        if (data.createdAt && (!groups[key].lastInteractionAt || data.createdAt > groups[key].lastInteractionAt)) {
-            groups[key].lastInteractionAt = data.createdAt;
+        
+        if (!capped && data.createdAt && (!group.lastInteractionAt || data.createdAt > group.lastInteractionAt)) {
+            group.lastInteractionAt = data.createdAt;
         }
     });
     return groups;

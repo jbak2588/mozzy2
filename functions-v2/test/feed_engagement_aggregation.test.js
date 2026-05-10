@@ -164,6 +164,49 @@ describe("Feed Engagement Aggregation Cloud Function", () => {
             expect(groups.job_job1.sessions.has("real-session")).to.be.true;
             expect(groups.job_job1.sessions.has("unknown")).to.be.false;
         });
+
+        it("should exclude interactions with medium or high abuse severity", () => {
+            const interactions = [
+                {
+                    data: () => ({
+                        sourceType: "job", sourceId: "123", feedItemId: "fi", eventType: "impression", sessionId: "s1",
+                        abuseCheck: { severity: "high" }
+                    })
+                },
+                {
+                    data: () => ({
+                        sourceType: "job", sourceId: "123", feedItemId: "fi", eventType: "card_tap", sessionId: "s1",
+                        abuseCheck: { severity: "medium" }
+                    })
+                },
+                {
+                    data: () => ({
+                        sourceType: "job", sourceId: "123", feedItemId: "fi", eventType: "detail_open", sessionId: "s1",
+                        abuseCheck: { severity: "none" }
+                    })
+                }
+            ];
+            const groups = helpers.groupFeedInteractions(interactions);
+            expect(groups.job_123.counts.impression).to.equal(0);
+            expect(groups.job_123.counts.card_tap).to.equal(0);
+            expect(groups.job_123.counts.detail_open).to.equal(1);
+        });
+
+        it("should cap impressions to 1 per session", () => {
+            const interactions = Array.from({ length: 5 }).map(() => ({
+                data: () => ({ sourceType: "job", sourceId: "123", feedItemId: "fi", eventType: "impression", sessionId: "s1" })
+            }));
+            const groups = helpers.groupFeedInteractions(interactions);
+            expect(groups.job_123.counts.impression).to.equal(1);
+        });
+
+        it("should cap card_tap to 3 per session", () => {
+            const interactions = Array.from({ length: 10 }).map(() => ({
+                data: () => ({ sourceType: "job", sourceId: "123", feedItemId: "fi", eventType: "card_tap", sessionId: "s1" })
+            }));
+            const groups = helpers.groupFeedInteractions(interactions);
+            expect(groups.job_123.counts.card_tap).to.equal(3);
+        });
     });
 
     describe("sanitizeFeedInteractionPayload", () => {
@@ -178,6 +221,32 @@ describe("Feed Engagement Aggregation Cloud Function", () => {
             hasSemanticIntent: false,
             intentLengthBucket: "none"
         };
+
+        it("should allow valid interaction and set abuse severity to none", () => {
+            const result = helpers.sanitizeFeedInteractionPayload(basePayload, "uid123");
+            expect(result.abuseCheck).to.exist;
+            expect(result.abuseCheck.severity).to.equal("none");
+            expect(result.abuseCheck.isSuspicious).to.be.false;
+        });
+
+        it("should reject invalid sourceType", () => {
+            const payload = { ...basePayload, sourceType: "invalid_type" };
+            expect(() => helpers.sanitizeFeedInteractionPayload(payload, "uid123"))
+                .to.throw("Invalid source type: invalid_type");
+        });
+
+        it("should reject forbidden top-level fields like searchQuery", () => {
+            const payload = { ...basePayload, searchQuery: "loker" };
+            expect(() => helpers.sanitizeFeedInteractionPayload(payload, "uid123"))
+                .to.throw("Forbidden top-level field: searchQuery");
+        });
+
+        it("should mark position out of bounds as suspicious (medium severity)", () => {
+            const payload = { ...basePayload, position: 1000 };
+            const result = helpers.sanitizeFeedInteractionPayload(payload, "uid123");
+            expect(result.abuseCheck.severity).to.equal("medium");
+            expect(result.abuseCheck.reason).to.equal("suspicious_position");
+        });
 
         it("should allow valid viewport impression", () => {
             const payload = {

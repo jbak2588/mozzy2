@@ -122,4 +122,33 @@ void main() {
 
     expect(impressionLogged, isFalse);
   });
+
+  testWidgets('does not log impression if identifiers are empty', (WidgetTester tester) async {
+    bool impressionLogged = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ListView(
+            children: [
+              ViewportImpressionTracker(
+                feedItemId: '',
+                sourceId: '',
+                sourceType: '',
+                onImpression: (ratio, dwell) {
+                  impressionLogged = true;
+                },
+                child: const SizedBox(height: 100, width: double.infinity),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 850));
+
+    expect(impressionLogged, isFalse);
+  });
 }

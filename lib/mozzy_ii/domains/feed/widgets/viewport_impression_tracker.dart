@@ -46,6 +46,10 @@ class _ViewportImpressionTrackerState extends State<ViewportImpressionTracker> {
   void _onVisibilityChanged(VisibilityInfo info) {
     if (_hasLoggedImpression) return;
 
+    if (widget.feedItemId.isEmpty || widget.sourceId.isEmpty || widget.sourceType.isEmpty) {
+      return;
+    }
+
     if (info.visibleFraction >= widget.visibilityThreshold) {
       if (_dwellTimer == null) {
         final currentRatio = info.visibleFraction;

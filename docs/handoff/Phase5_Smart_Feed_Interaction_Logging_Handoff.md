@@ -48,7 +48,7 @@
 
 ## 6. 다음 단계 제안
 - **P5-S07 Detailed Impression**: (완료) Viewport visibility detection을 통한 정밀 노출 로깅 도입.
-- **Abuse Detection**: 매크로 등을 통한 점수 조작 방지 필터링 고도화.
+- **Abuse Detection**: (완료) P5-S08 Server-side abuseCheck 및 Aggregation capping 구현.
 - **Personalized Ranking**: 수집된 인기도 데이터를 넘어 사용자별 취향을 반영하는 개인화 엔진 도입.
 
 ## Final Aggregation Status
@@ -57,10 +57,12 @@ P5-S06C confirms that `aggregateFeedEngagement` is deployed and that engagement 
 ## Final Phase 5 Interaction/Raking Loop Status
 P5-S06D finalized the documentation status after P5-S06C. The Smart Feed interaction-to-ranking loop is now complete and ready for Phase 5 final QA or precision impression work.
 P5-S07 completed the precision viewport-based impression tracking implementation.
+P5-S08 completed server-side abuse classification and engagement score capping filters.
 
 ## Final Status
 P5-S06B Engagement Aggregation Runtime QA is complete.
 P5-S06C Engagement Aggregation Finalization is complete.
 P5-S06D Final SHA Cleanup & New Chat Handoff is complete.
 P5-S07 Precision Viewport-based Impression Logging is complete.
-The data feedback loop (Raw Log → Aggregated Summary → Smart Feed Ranking) is fully verified and functional in the Staging environment.
+P5-S08 Abuse Detection / Anti-gaming Filters is complete.
+The data feedback loop (Raw Log → Aggregated Summary → Smart Feed Ranking) is fully verified, privacy-safe, and manipulation-resistant in the Staging environment.

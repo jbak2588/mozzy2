@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/smart_feed_provider.dart';
 import '../widgets/feed_item_card.dart';
 import '../widgets/feed_type_chip_bar.dart';

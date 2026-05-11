@@ -106,7 +106,14 @@
 - Firebase App Distribution Upload: Manual/CLI path verified and ready.
 - Next recommended task: P6-S09 Real Device Smoke Test Execution
 
+## P6-S09 Real Device Smoke Test Status
+- P6-S09 Real Device Smoke Test Execution completed.
+- Base HEAD: 98c613a
+- Execution Report: docs/release/P6-S09_Real_Device_Smoke_Test_Execution_Report.md
+- Android Internal Build 1 smoke result: Conditional Go
+- Next recommended task: P6-S10 Beta Bug Fix Sprint
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S08 이후 상태를 검토한 다음 `P6-S09 Real Device Smoke Test Execution` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S09 이후 상태를 검토한 다음 `P6-S10 Beta Bug Fix Sprint` 또는 `P6-S10 Firebase Workflow / Secrets Setup` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

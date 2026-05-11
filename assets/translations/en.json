@@ -560,5 +560,36 @@
     "adminTitle": "Moderation",
     "hideContent": "Hide content",
     "dismissReport": "Dismiss report"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "subtitle": "Tell us what happened or what can be improved.",
+    "selectType": "Select a category",
+    "type": {
+      "bug": "Bug",
+      "suggestion": "Suggestion",
+      "usability": "Usability issue",
+      "payment": "Payment",
+      "account": "Account",
+      "safety": "Safety",
+      "other": "Other"
+    },
+    "messageLabel": "Your feedback",
+    "messageHint": "Please describe the issue or suggestion.",
+    "privacyNotice": "Please do not include ID numbers, passwords, or sensitive personal data.",
+    "contactPreference": "Contact preference",
+    "contactNone": "No contact needed",
+    "contactWhatsapp": "WhatsApp",
+    "contactEmail": "Email",
+    "contactValue": "Contact detail (optional)",
+    "submit": "Submit feedback",
+    "submitted": "Thank you. Your feedback has been submitted.",
+    "failed": "Could not submit feedback. Please try again.",
+    "openWhatsapp": "Contact us on WhatsApp",
+    "csNotConfigured": "CS channel is not configured yet.",
+    "adminTitle": "Beta Feedback",
+    "markInReview": "Mark in review",
+    "markResolved": "Mark resolved",
+    "dismiss": "Dismiss"
   }
 }

@@ -31,6 +31,11 @@ class SmartFeedScreen extends ConsumerWidget {
         title: Text('feed.title'.tr()),
         actions: [
           IconButton(
+            tooltip: 'feedback.title'.tr(),
+            icon: const Icon(Icons.feedback_outlined),
+            onPressed: () => context.push('/feedback'),
+          ),
+          IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.invalidate(smartFeedProvider),
           ),

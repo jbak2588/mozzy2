@@ -563,5 +563,36 @@
     "adminTitle": "Moderasi",
     "hideContent": "Sembunyikan konten",
     "dismissReport": "Abaikan laporan"
+  },
+  "feedback": {
+    "title": "Masukan",
+    "subtitle": "Beri tahu kami apa yang terjadi atau apa yang bisa ditingkatkan.",
+    "selectType": "Pilih kategori",
+    "type": {
+      "bug": "Bug",
+      "suggestion": "Saran",
+      "usability": "Masalah kegunaan",
+      "payment": "Pembayaran",
+      "account": "Akun",
+      "safety": "Keamanan",
+      "other": "Lainnya"
+    },
+    "messageLabel": "Masukan Anda",
+    "messageHint": "Mohon jelaskan masalah atau saran Anda.",
+    "privacyNotice": "Mohon jangan sertakan nomor ID, kata sandi, atau data pribadi sensitif.",
+    "contactPreference": "Preferensi kontak",
+    "contactNone": "Tidak perlu dihubungi",
+    "contactWhatsapp": "WhatsApp",
+    "contactEmail": "Email",
+    "contactValue": "Detail kontak (opsional)",
+    "submit": "Kirim masukan",
+    "submitted": "Terima kasih. Masukan Anda telah dikirim.",
+    "failed": "Gagal mengirim masukan. Silakan coba lagi.",
+    "openWhatsapp": "Hubungi kami di WhatsApp",
+    "csNotConfigured": "Saluran CS belum dikonfigurasi.",
+    "adminTitle": "Masukan Beta",
+    "markInReview": "Tandai sedang ditinjau",
+    "markResolved": "Tandai selesai",
+    "dismiss": "Abaikan"
   }
 }

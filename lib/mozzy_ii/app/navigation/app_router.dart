@@ -305,6 +305,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/admin/moderation',
         builder: (context, state) => const AdminModerationScreen(),
       ),
+      GoRoute(
+        path: '/admin/feedback',
+        builder: (context, state) => const AdminFeedbackScreen(),
+      ),
+      GoRoute(
+        path: '/feedback',
+        builder: (context, state) => const FeedbackScreen(),
+      ),
     ],
   );
 });

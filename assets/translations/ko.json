@@ -560,5 +560,36 @@
     "adminTitle": "모더레이션",
     "hideContent": "콘텐츠 숨기기",
     "dismissReport": "신고 무시"
+  },
+  "feedback": {
+    "title": "의견 보내기",
+    "subtitle": "버그 제보나 개선 제안을 보내주세요.",
+    "selectType": "카테고리 선택",
+    "type": {
+      "bug": "버그 제보",
+      "suggestion": "기능 제안",
+      "usability": "사용성 불편",
+      "payment": "결제 문의",
+      "account": "계정 문의",
+      "safety": "안전/신고",
+      "other": "기타"
+    },
+    "messageLabel": "의견 내용",
+    "messageHint": "내용을 상세히 적어주시면 큰 도움이 됩니다.",
+    "privacyNotice": "아이디, 비밀번호, 주민번호 등 민감한 개인정보는 포함하지 마세요.",
+    "contactPreference": "회신 방법",
+    "contactNone": "회신 필요 없음",
+    "contactWhatsapp": "WhatsApp",
+    "contactEmail": "이메일",
+    "contactValue": "연락처 (선택 사항)",
+    "submit": "제출하기",
+    "submitted": "감사합니다. 소중한 의견이 접수되었습니다.",
+    "failed": "의견 제출에 실패했습니다. 다시 시도해 주세요.",
+    "openWhatsapp": "WhatsApp으로 문의하기",
+    "csNotConfigured": "CS 채널이 아직 설정되지 않았습니다.",
+    "adminTitle": "베타 피드백 관리",
+    "markInReview": "검토 중으로 표시",
+    "markResolved": "해결됨으로 표시",
+    "dismiss": "무시"
   }
 }

@@ -1,0 +1,10 @@
+Analyzing mozzy2...                                             
+
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/mozzy_ii/domains/moderation/widgets/report_reason_sheet.dart:72:21 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/mozzy_ii/domains/moderation/widgets/report_reason_sheet.dart:73:21 • deprecated_member_use
+warning • The diagnostic 'must_be_immutable' doesn't need to be ignored here because it's already being ignored • test/mozzy_ii/domains/feed/feed_engagement_repository_test.mocks.dart:402:12 • duplicate_ignore
+warning • The diagnostic 'must_be_immutable' doesn't need to be ignored here because it's already being ignored • test/mozzy_ii/domains/feed/feed_engagement_repository_test.mocks.dart:814:12 • duplicate_ignore
+warning • The diagnostic 'must_be_immutable' doesn't need to be ignored here because it's already being ignored • test/mozzy_ii/domains/jobs/job_applicant_repository_test.mocks.dart:489:12 • duplicate_ignore
+warning • The diagnostic 'must_be_immutable' doesn't need to be ignored here because it's already being ignored • test/mozzy_ii/domains/jobs/job_applicant_repository_test.mocks.dart:1035:12 • duplicate_ignore
+warning • The diagnostic 'must_be_immutable' doesn't need to be ignored here because it's already being ignored • test/mozzy_ii/domains/jobs/job_applicant_repository_test.mocks.dart:1204:12 • duplicate_ignore
+

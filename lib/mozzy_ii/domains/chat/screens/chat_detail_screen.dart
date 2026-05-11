@@ -481,7 +481,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                       currentUserId: currentUserId,
                       targetUserId: targetUserId,
                     );
-                if (mounted) {
+                if (context.mounted) {
                   Navigator.of(context).pop();
                   ref.invalidate(isUserBlockedProvider(targetUserId));
                 }

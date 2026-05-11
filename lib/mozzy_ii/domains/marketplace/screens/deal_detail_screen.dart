@@ -308,7 +308,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
                       productTitle: deal.productTitle,
                       productImageUrl: deal.productImageUrl,
                     );
-                    if (mounted) {
+                    if (context.mounted) {
                       GoRouter.of(context).push('/chat/${room.id}');
                     }
                   },

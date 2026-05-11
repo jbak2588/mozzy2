@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mozzy/mozzy_ii/domains/account/screens/account_deletion_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/account/services/account_deletion_service.dart';
 import 'package:mozzy/mozzy_ii/domains/account/providers/account_deletion_providers.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
 
 @GenerateMocks([AccountDeletionService])
 import 'account_deletion_screen_test.mocks.dart';

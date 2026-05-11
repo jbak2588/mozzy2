@@ -309,7 +309,7 @@ class _DealDetailScreenState extends ConsumerState<DealDetailScreen> {
                       productImageUrl: deal.productImageUrl,
                     );
                     if (mounted) {
-                      context.push('/chat/${room.id}');
+                      GoRouter.of(context).push('/chat/${room.id}');
                     }
                   },
                   icon: const Icon(Icons.chat),

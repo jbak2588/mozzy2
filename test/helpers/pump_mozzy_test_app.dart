@@ -21,9 +21,9 @@ Future<void> pumpMozzyTestApp(
 
   await tester.pumpWidget(
     TestLocalizationApp(
-      child: child,
       overrides: overrides,
       locale: locale,
+      child: child,
     ),
   );
   

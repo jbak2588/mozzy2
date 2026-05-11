@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'notification_navigation_service.dart';
 import 'fcm_token_service.dart';
 import '../auth/auth_service.dart';
@@ -43,10 +42,10 @@ class NotificationService {
     // 4. Foreground message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // In foreground, we might show a toast or just let the badge update
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+      debugPrint('Got a message whilst in the foreground!');
+      debugPrint('Message data: ${message.data}');
       if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+        debugPrint('Message also contained a notification: ${message.notification}');
       }
     });
   }

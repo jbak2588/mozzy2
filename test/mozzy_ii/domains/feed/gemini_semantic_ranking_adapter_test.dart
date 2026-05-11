@@ -4,7 +4,6 @@ import 'package:mockito/annotations.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/services/gemini_semantic_ranking_adapter.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/semantic_ranking_payload.dart';
-import 'package:mozzy/mozzy_ii/domains/feed/services/semantic_ranking_adapter.dart';
 
 @GenerateNiceMocks([
   MockSpec<FirebaseFunctions>(),

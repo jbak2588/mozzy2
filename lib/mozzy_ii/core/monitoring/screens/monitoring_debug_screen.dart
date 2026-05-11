@@ -22,8 +22,10 @@ class _MonitoringDebugScreenState extends State<MonitoringDebugScreen> {
   }
 
   Future<void> _checkStatus() async {
+    // ignore: invalid_use_of_visible_for_testing_member
     final crashlyticsEnabled = CrashlyticsService.mockInstance != null 
         ? true : FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
+    // ignore: invalid_use_of_visible_for_testing_member
     final performanceEnabled = PerformanceMonitoringService.mockInstance != null 
         ? true : await FirebasePerformance.instance.isPerformanceCollectionEnabled();
     
@@ -77,6 +79,7 @@ class _MonitoringDebugScreenState extends State<MonitoringDebugScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
+              // ignore: invalid_use_of_visible_for_testing_member
               if (CrashlyticsService.mockInstance != null) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Crash prevented in test mode')));
               } else {

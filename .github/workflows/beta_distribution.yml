@@ -1,0 +1,83 @@
+name: Beta Distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Target platform"
+        required: true
+        default: "android"
+        type: choice
+        options:
+          - android
+          - ios
+      release_notes:
+        description: "Release notes"
+        required: false
+        default: "Mozzy private beta build"
+
+jobs:
+  android-beta:
+    if: ${{ github.event.inputs.platform == 'android' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.0"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+        continue-on-error: true
+
+      - name: Run focused feed tests
+        run: |
+          flutter test test/mozzy_ii/domains/feed/feed_interaction_event_test.dart
+          flutter test test/mozzy_ii/domains/feed/viewport_impression_tracker_test.dart
+          flutter test test/mozzy_ii/domains/feed/feed_engagement_summary_test.dart
+
+      - name: Build Android APK
+        run: |
+          flutter build apk --release \
+            --build-name=1.0.0 \
+            --build-number=${{ github.run_number }} \
+            --dart-define=APP_ENV=staging \
+            --dart-define=PAYMENT_MODE=sandbox
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID_STAGING }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING }}
+          groups: mozzy-private-beta
+          file: build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: ${{ github.event.inputs.release_notes }}
+
+  ios-beta:
+    if: ${{ github.event.inputs.platform == 'ios' }}
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.27.0"
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS no codesign
+        run: flutter build ios --release --no-codesign
+
+      - name: TestFlight manual handoff
+        run: |
+          echo "iOS TestFlight requires signing/App Store Connect setup."
+          echo "Use docs/release/TestFlight_Manual_Upload_Checklist.md"

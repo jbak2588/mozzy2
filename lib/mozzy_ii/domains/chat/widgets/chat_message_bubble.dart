@@ -30,7 +30,7 @@ class ChatMessageBubble extends StatelessWidget {
           boxShadow: [
             if (isMe)
               BoxShadow(
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -66,7 +66,7 @@ class ChatMessageBubble extends StatelessWidget {
                 Text(
                   DateFormat('HH:mm').format(message.createdAt.toLocal()),
                   style: TextStyle(
-                    color: (isMe ? Colors.white : Colors.black54).withOpacity(0.7),
+                    color: (isMe ? Colors.white : Colors.black54).withValues(alpha: 0.7),
                     fontSize: 10,
                   ),
                 ),
@@ -75,7 +75,7 @@ class ChatMessageBubble extends StatelessWidget {
                   Icon(
                     message.status == 'sent' ? Icons.done_all : Icons.access_time,
                     size: 12,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                   ),
                 ],
               ],

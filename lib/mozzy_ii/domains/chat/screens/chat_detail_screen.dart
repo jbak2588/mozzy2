@@ -129,7 +129,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
             );
           },
           loading: () => Text('chat.loading'.tr()),
-          error: (_, __) => Text('chat.error'.tr()),
+          error: (e, stack) => Text('chat.error'.tr()),
         ),
         actions: [
           PopupMenuButton<String>(
@@ -284,7 +284,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
               );
             },
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (e, stack) => const SizedBox.shrink(),
           ),
           
           // Message List
@@ -337,7 +337,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, __) => Center(child: Text('chat.error'.tr())),
+              error: (e, stack) => Center(child: Text('chat.error'.tr())),
             ),
           ),
           
@@ -353,7 +353,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 4,
                   offset: const Offset(0, -2),
                 ),
@@ -422,7 +422,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                 );
               },
               loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (e, stack) => const SizedBox.shrink(),
             ),
           ),
         ],
@@ -482,7 +482,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                       targetUserId: targetUserId,
                     );
                 if (mounted) {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                   ref.invalidate(isUserBlockedProvider(targetUserId));
                 }
               }
@@ -551,7 +551,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
         );
 
     if (mounted) {
-      Navigator.pop(context);
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('safety.reportSubmitted'.tr())),
       );

@@ -88,7 +88,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<FeedbackContactPreference>(
-              value: _contactPreference,
+              initialValue: _contactPreference,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),

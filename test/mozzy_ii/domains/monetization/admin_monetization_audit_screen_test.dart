@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:mozzy/mozzy_ii/domains/admin/providers/admin_auth_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/admin/models/admin_claims_model.dart';
 import 'package:mozzy/mozzy_ii/domains/monetization/screens/admin_monetization_audit_screen.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:mozzy/mozzy_ii/domains/moderation/models/report_model.dart';
 import 'package:mozzy/mozzy_ii/domains/moderation/widgets/report_reason_sheet.dart';
 

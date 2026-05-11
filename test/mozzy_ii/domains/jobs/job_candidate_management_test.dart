@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mozzy/mozzy_ii/domains/jobs/models/job_applicant_model.dart';
-import 'package:mozzy/mozzy_ii/domains/jobs/models/job_post_model.dart';
 
 void main() {
   group('Job Candidate Management Logic', () {

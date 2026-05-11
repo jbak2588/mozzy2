@@ -31,7 +31,7 @@ class ReportRepository {
       'status': status.name,
       'reviewedBy': adminId,
       'reviewedAt': FieldValue.serverTimestamp(),
-      if (adminNote != null) 'adminNote': adminNote,
+      'adminNote': ?adminNote,
     });
   }
 }

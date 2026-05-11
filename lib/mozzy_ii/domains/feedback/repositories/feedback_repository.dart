@@ -32,7 +32,7 @@ class FeedbackRepository {
       'resolvedBy': adminId,
       'resolvedAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
-      if (adminNote != null) 'adminNote': adminNote,
+      'adminNote': ?adminNote,
     });
   }
 }

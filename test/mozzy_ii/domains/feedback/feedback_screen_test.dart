@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mozzy/mozzy_ii/domains/feedback/screens/feedback_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/feedback/services/feedback_service.dart';

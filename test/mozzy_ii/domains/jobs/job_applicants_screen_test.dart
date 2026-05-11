@@ -5,9 +5,7 @@ import 'package:mozzy/mozzy_ii/domains/jobs/screens/job_applicants_screen.dart';
 import 'package:mozzy/mozzy_ii/domains/jobs/providers/job_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/jobs/providers/job_applicant_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/jobs/models/job_applicant_model.dart';
-import 'package:mozzy/mozzy_ii/domains/jobs/models/job_post_model.dart';
 import 'package:mozzy/mozzy_ii/domains/jobs/widgets/job_applicant_card.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 void main() {
   testWidgets('JobApplicantsScreen shows empty state', (tester) async {

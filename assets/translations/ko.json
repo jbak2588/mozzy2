@@ -532,5 +532,11 @@
     "clearSearch": "초기화",
     "semanticRankingActive": "랭킹: {}",
     "semanticRankingInfo": "검색 관련도 순으로 정렬된 결과입니다."
+  },
+  "beta": {
+    "comingSoonTitle": "준비 중",
+    "comingSoonBody": "이 기능은 다음 베타 업데이트를 위해 준비 중입니다.",
+    "backToHome": "홈으로 돌아가기",
+    "sandboxOnly": "프라이빗 베타 기간 동안에는 샌드박스 결제만 가능합니다."
   }
 }

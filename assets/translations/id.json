@@ -535,5 +535,11 @@
     "clearSearch": "Hapus",
     "semanticRankingActive": "Ranking: {}",
     "semanticRankingInfo": "Hasil diurutkan berdasarkan relevansi pencarian."
+  },
+  "beta": {
+    "comingSoonTitle": "Segera Hadir",
+    "comingSoonBody": "Fitur ini sedang disiapkan untuk pembaruan beta berikutnya.",
+    "backToHome": "Kembali ke Beranda",
+    "sandboxOnly": "Hanya pembayaran Sandbox selama beta pribadi."
   }
 }

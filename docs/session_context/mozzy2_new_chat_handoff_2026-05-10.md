@@ -54,7 +54,15 @@
 - Workflow: .github/workflows/beta_distribution.yml
 - Next recommended task: P6-S02 Disable Unimplemented Beta Modules
 
+## P6-S02 Beta Module Scope Status
+- P6-S02 Disable Unimplemented Beta Modules completed.
+- Base HEAD: ab457fb
+- Report: docs/qa/P6-S02_Disable_Unimplemented_Beta_Modules_Report.md
+- Beta 1 enabled modules: News, Marketplace, Jobs, Chat, Smart Feed, Notifications, Sandbox Payment/Boost
+- Beta 1 disabled modules: Auction, Clubs, Lost & Found, POM, Real Estate, Stores, Together
+- Next recommended task: P6-S03 Moderation / Report Handling Readiness
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S01 이후 상태를 검토한 다음 `P6-S02 Disable Unimplemented Beta Modules` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S02 이후 상태를 검토한 다음 `P6-S03 Moderation / Report Handling Readiness` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

@@ -33,6 +33,8 @@ import '../../domains/jobs/screens/job_boost_purchase_screen.dart';
 import '../../domains/payments/screens/payment_status_screen.dart';
 import '../../domains/monetization/screens/admin_monetization_audit_screen.dart';
 import '../../domains/feed/screens/smart_feed_screen.dart';
+import '../../core/config/beta_feature_flags.dart';
+import '../../shared/screens/feature_coming_soon_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -161,8 +163,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/stores',
-                builder: (context, state) =>
-                    const DummyScreen(title: 'Toko Sekitar (Stores)'),
+                builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.stores)
+                    ? const DummyScreen(title: 'Toko Sekitar (Stores)')
+                    : const FeatureComingSoonScreen(featureName: 'Toko Sekitar'),
               ),
             ],
           ),
@@ -242,27 +245,39 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Feature placeholder routes — must be available in debug and release
       GoRoute(
         path: '/auction',
-        builder: (context, state) => const DummyScreen(title: 'Lelang'),
+        builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.auction)
+            ? const DummyScreen(title: 'Lelang')
+            : const FeatureComingSoonScreen(featureName: 'Lelang'),
       ),
       GoRoute(
         path: '/clubs',
-        builder: (context, state) => const DummyScreen(title: 'Komunitas'),
+        builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.clubs)
+            ? const DummyScreen(title: 'Komunitas')
+            : const FeatureComingSoonScreen(featureName: 'Komunitas'),
       ),
       GoRoute(
         path: '/lost-found',
-        builder: (context, state) => const DummyScreen(title: 'Barang Hilang'),
+        builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.lostFound)
+            ? const DummyScreen(title: 'Barang Hilang')
+            : const FeatureComingSoonScreen(featureName: 'Barang Hilang'),
       ),
       GoRoute(
         path: '/pom',
-        builder: (context, state) => const DummyScreen(title: 'Pamer!'),
+        builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.pom)
+            ? const DummyScreen(title: 'Pamer!')
+            : const FeatureComingSoonScreen(featureName: 'Pamer!'),
       ),
       GoRoute(
         path: '/real-estate',
-        builder: (context, state) => const DummyScreen(title: 'Properti'),
+        builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.realEstate)
+            ? const DummyScreen(title: 'Properti')
+            : const FeatureComingSoonScreen(featureName: 'Properti'),
       ),
       GoRoute(
         path: '/together',
-        builder: (context, state) => const DummyScreen(title: 'Bareng Yuk!'),
+        builder: (context, state) => BetaFeatureFlags.isEnabled(MozzyFeatureKey.together)
+            ? const DummyScreen(title: 'Bareng Yuk!')
+            : const FeatureComingSoonScreen(featureName: 'Bareng Yuk!'),
       ),
       // Dev-only debug routes
       if (kDebugMode)

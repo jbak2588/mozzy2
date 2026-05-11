@@ -532,5 +532,11 @@
     "clearSearch": "Clear",
     "semanticRankingActive": "Ranking: {}",
     "semanticRankingInfo": "Results are ranked by search relevance."
+  },
+  "beta": {
+    "comingSoonTitle": "Coming Soon",
+    "comingSoonBody": "This feature is being prepared for the next beta update.",
+    "backToHome": "Back to Home",
+    "sandboxOnly": "Sandbox payment only during private beta."
   }
 }

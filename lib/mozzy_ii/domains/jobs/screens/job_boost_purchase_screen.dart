@@ -7,6 +7,7 @@ import '../../monetization/providers/boost_package_provider.dart';
 import '../../monetization/models/boost_package_model.dart';
 import '../../payments/providers/payment_action_provider.dart';
 import '../../payments/models/payment_provider_type.dart';
+import '../../../core/config/beta_feature_flags.dart';
 import '../widgets/job_boost_package_card.dart';
 
 class JobBoostPurchaseScreen extends ConsumerStatefulWidget {
@@ -68,6 +69,28 @@ class _JobBoostPurchaseScreenState extends ConsumerState<JobBoostPurchaseScreen>
                     ),
                   ),
                 ),
+                if (BetaFeatureFlags.isPrivateBeta && !BetaFeatureFlags.isPaymentProduction()) ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'beta.sandboxOnly'.tr(),
+                            style: const TextStyle(color: Colors.deepOrange),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 24),
                 Text(
                   'monetization.chooseBoostPackage'.tr(),

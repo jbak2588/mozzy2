@@ -24,12 +24,16 @@ class JobDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text('jobs.detail'.tr()),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.report_outlined),
-            onPressed: () {
-              // TODO: Implement report
+          jobAsync.whenOrNull(
+            data: (job) {
+              if (job == null) return const SizedBox.shrink();
+              return ReportButton(
+                targetType: ReportTargetType.jobs,
+                targetId: job.id,
+                targetOwnerId: job.employerId,
+              );
             },
-          ),
+          ) ?? const SizedBox.shrink(),
         ],
       ),
       body: jobAsync.when(

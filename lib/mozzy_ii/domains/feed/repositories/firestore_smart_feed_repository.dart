@@ -35,12 +35,20 @@ class FirestoreSmartFeedRepository implements SmartFeedRepository {
       jobsQuery.snapshots().map<QuerySnapshot?>((s) => s).onErrorReturn(null),
       productsQuery.snapshots().map<QuerySnapshot?>((s) => s).onErrorReturn(null),
       (QuerySnapshot? jobsSnap, QuerySnapshot? productsSnap) {
-        final jobs = jobsSnap?.docs.map((doc) {
+        final jobs = jobsSnap?.docs.where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final mStatus = data['moderationStatus'] as String?;
+          return mStatus != 'hidden' && mStatus != 'removed';
+        }).map((doc) {
           final data = doc.data() as Map<String, dynamic>;
           return JobFeedMapper.map(JobPostModel.fromJson({...data, 'id': doc.id}));
         }).toList() ?? [];
 
-        final products = productsSnap?.docs.map((doc) {
+        final products = productsSnap?.docs.where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final mStatus = data['moderationStatus'] as String?;
+          return mStatus != 'hidden' && mStatus != 'removed';
+        }).map((doc) {
           final data = doc.data() as Map<String, dynamic>;
           return ProductFeedMapper.map(ProductModel.fromJson({...data, 'id': doc.id}));
         }).toList() ?? [];

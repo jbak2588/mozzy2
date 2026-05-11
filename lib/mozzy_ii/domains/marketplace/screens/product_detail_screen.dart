@@ -23,7 +23,21 @@ class ProductDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       key: const Key('productDetailScreen'),
-      appBar: AppBar(title: Text('marketplace.detailTitle'.tr())),
+      appBar: AppBar(
+        title: Text('marketplace.detailTitle'.tr()),
+        actions: [
+          productAsync.whenOrNull(
+            data: (product) {
+              if (product == null) return const SizedBox.shrink();
+              return ReportButton(
+                targetType: ReportTargetType.marketplace,
+                targetId: product.id,
+                targetOwnerId: product.sellerId,
+              );
+            },
+          ) ?? const SizedBox.shrink(),
+        ],
+      ),
       body: productAsync.when(
         data: (product) {
           if (product == null) {

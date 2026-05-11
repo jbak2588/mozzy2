@@ -11,8 +11,7 @@ service cloud.firestore {
         && request.resource.data.location != null
         && request.resource.data.geoPath is string;
 
-      allow update, delete: if request.auth != null
-        && resource.data.userId == request.auth.uid;
+      allow update, delete: if (request.auth != null && resource.data.userId == request.auth.uid) || isAdmin();
 
       match /comments/{commentId} {
         allow read: if request.auth != null
@@ -47,6 +46,15 @@ service cloud.firestore {
     
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    match /reports/{reportId} {
+      allow read: if isAdmin();
+      allow create: if request.auth != null
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.status == "pending";
+      allow update: if isAdmin();
+      allow delete: if false;
     }
 
     function isAdmin() {
@@ -101,8 +109,7 @@ service cloud.firestore {
         && request.resource.data.geoPath.size() > 0
         && request.resource.data.trustScore >= 0.0;
         
-      allow update: if isOwner(resource.data.userId)
-        && request.resource.data.userId == resource.data.userId; // 작성자 변경 금지
+      allow update: if (isOwner(resource.data.userId) && request.resource.data.userId == resource.data.userId) || isAdmin();
         
       allow delete: if isOwner(resource.data.userId);
     }
@@ -253,7 +260,8 @@ service cloud.firestore {
         && request.resource.data.status == 'open'
         && request.resource.data.isDeleted == false;
 
-      allow update: if isAuthenticated()
+      allow update: if isAdmin() || (
+        isAuthenticated()
         && (
           // Owner can update everything except immutable fields and boost fields
           (resource.data.ownerId == request.auth.uid

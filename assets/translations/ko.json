@@ -538,5 +538,27 @@
     "comingSoonBody": "이 기능은 다음 베타 업데이트를 위해 준비 중입니다.",
     "backToHome": "홈으로 돌아가기",
     "sandboxOnly": "프라이빗 베타 기간 동안에는 샌드박스 결제만 가능합니다."
+  },
+  "moderation": {
+    "report": "신고하기",
+    "reportContent": "콘텐츠 신고",
+    "selectReason": "사유를 선택하세요",
+    "reason": {
+      "spam": "스팸",
+      "scam": "사기",
+      "offensive": "불쾌한 콘텐츠",
+      "illegal": "불법 콘텐츠",
+      "harassment": "괴롭힘",
+      "fake": "허위 정보",
+      "other": "기타"
+    },
+    "descriptionOptional": "추가 설명 (선택)",
+    "submitReport": "신고 제출",
+    "reportSubmitted": "신고가 접수되었습니다. 감사합니다.",
+    "reportFailed": "신고 제출에 실패했습니다. 다시 시도해 주세요.",
+    "contentHidden": "더 이상 사용할 수 없는 콘텐츠입니다.",
+    "adminTitle": "모더레이션",
+    "hideContent": "콘텐츠 숨기기",
+    "dismissReport": "신고 무시"
   }
 }

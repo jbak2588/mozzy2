@@ -538,5 +538,27 @@
     "comingSoonBody": "This feature is being prepared for the next beta update.",
     "backToHome": "Back to Home",
     "sandboxOnly": "Sandbox payment only during private beta."
+  },
+  "moderation": {
+    "report": "Report",
+    "reportContent": "Report Content",
+    "selectReason": "Select a reason",
+    "reason": {
+      "spam": "Spam",
+      "scam": "Scam or fraud",
+      "offensive": "Offensive content",
+      "illegal": "Illegal content",
+      "harassment": "Harassment",
+      "fake": "Fake information",
+      "other": "Other"
+    },
+    "descriptionOptional": "Additional details (optional)",
+    "submitReport": "Submit report",
+    "reportSubmitted": "Report submitted. Thank you.",
+    "reportFailed": "Could not submit report. Please try again.",
+    "contentHidden": "This content is no longer available.",
+    "adminTitle": "Moderation",
+    "hideContent": "Hide content",
+    "dismissReport": "Dismiss report"
   }
 }

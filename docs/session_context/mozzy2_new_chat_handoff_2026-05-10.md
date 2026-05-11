@@ -62,7 +62,14 @@
 - Beta 1 disabled modules: Auction, Clubs, Lost & Found, POM, Real Estate, Stores, Together
 - Next recommended task: P6-S03 Moderation / Report Handling Readiness
 
+## P6-S03 Moderation Status
+- P6-S03 Moderation / Report Handling Readiness completed.
+- Base HEAD: 14f2f33
+- Report: docs/qa/P6-S03_Moderation_Report_Handling_Readiness_Report.md
+- Beta 1 UGC safety baseline: report submission, admin review, content blind handling
+- Next recommended task: P6-S04 Crashlytics / Performance Monitoring Setup
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S02 이후 상태를 검토한 다음 `P6-S03 Moderation / Report Handling Readiness` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S03 이후 상태를 검토한 다음 `P6-S04 Crashlytics / Performance Monitoring Setup` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

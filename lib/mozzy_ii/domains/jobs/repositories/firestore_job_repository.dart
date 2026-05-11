@@ -127,8 +127,11 @@ class FirestoreJobRepository implements JobRepository {
   Stream<JobPostModel?> watchJobById(String jobId) {
     return _jobsRef.doc(jobId).snapshots().map((snapshot) {
       if (!snapshot.exists) return null;
+      final data = snapshot.data() as Map<String, dynamic>;
+      final mStatus = data['moderationStatus'] as String?;
+      if (mStatus == 'hidden' || mStatus == 'removed') return null;
       return JobPostModel.fromJson({
-        ...snapshot.data() as Map<String, dynamic>,
+        ...data,
         'id': snapshot.id,
       });
     });

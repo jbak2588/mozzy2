@@ -26,6 +26,8 @@ class PostRepository {
     final doc = await postsCollection.doc(postId).get();
     if (!doc.exists) return null;
     final data = doc.data() as Map<String, dynamic>;
+    final mStatus = data['moderationStatus'] as String?;
+    if (mStatus == 'hidden' || mStatus == 'removed') return null;
     return PostModel.fromJson({...data, 'id': doc.id});
   }
 

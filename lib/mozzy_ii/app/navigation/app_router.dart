@@ -294,6 +294,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/admin/monetization/audit',
         builder: (context, state) => const AdminMonetizationAuditScreen(),
       ),
+      GoRoute(
+        path: '/admin/moderation',
+        builder: (context, state) => const AdminModerationScreen(),
+      ),
     ],
   );
 });

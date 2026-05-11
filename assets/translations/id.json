@@ -541,5 +541,27 @@
     "comingSoonBody": "Fitur ini sedang disiapkan untuk pembaruan beta berikutnya.",
     "backToHome": "Kembali ke Beranda",
     "sandboxOnly": "Hanya pembayaran Sandbox selama beta pribadi."
+  },
+  "moderation": {
+    "report": "Laporkan",
+    "reportContent": "Laporkan Konten",
+    "selectReason": "Pilih alasan",
+    "reason": {
+      "spam": "Spam",
+      "scam": "Penipuan",
+      "offensive": "Konten tidak pantas",
+      "illegal": "Konten ilegal",
+      "harassment": "Pelecehan",
+      "fake": "Informasi palsu",
+      "other": "Lainnya"
+    },
+    "descriptionOptional": "Detail tambahan (opsional)",
+    "submitReport": "Kirim laporan",
+    "reportSubmitted": "Laporan terkirim. Terima kasih.",
+    "reportFailed": "Gagal mengirim laporan. Silakan coba lagi.",
+    "contentHidden": "Konten ini tidak lagi tersedia.",
+    "adminTitle": "Moderasi",
+    "hideContent": "Sembunyikan konten",
+    "dismissReport": "Abaikan laporan"
   }
 }

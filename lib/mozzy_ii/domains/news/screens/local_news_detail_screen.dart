@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../moderation/models/report_model.dart';
+import '../../moderation/widgets/report_button.dart';
 import '../providers/posts_provider.dart';
 import '../widgets/cross_link_section.dart';
 import '../widgets/comments_section.dart';
@@ -17,7 +19,21 @@ class LocalNewsDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       key: const Key('localNewsDetailScreen'),
-      appBar: AppBar(title: const Text('news.detailTitle').tr()),
+      appBar: AppBar(
+        title: const Text('news.detailTitle').tr(),
+        actions: [
+          postAsync.whenOrNull(
+            data: (post) {
+              if (post == null) return const SizedBox.shrink();
+              return ReportButton(
+                targetType: ReportTargetType.news,
+                targetId: post.id,
+                targetOwnerId: post.userId,
+              );
+            },
+          ) ?? const SizedBox.shrink(),
+        ],
+      ),
       body: postAsync.when(
         data: (post) {
           if (post == null) {

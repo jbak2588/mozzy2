@@ -1515,3 +1515,67 @@ exports.aggregateFeedEngagement = onSchedule("every 1 hours", async (event) => {
         console.error("Error in aggregateFeedEngagement:", error);
     }
 });
+
+// -----------------------------------------------------------------------------
+// P6-S03 Moderation: onReportCreated
+// -----------------------------------------------------------------------------
+exports.onReportCreated = onDocumentCreated("reports/{reportId}", async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) return;
+
+    const report = snapshot.data();
+    const targetType = report.targetType;
+    const targetId = report.targetId;
+    const status = report.status;
+
+    if (status !== 'pending') return;
+    if (!targetType || !targetId) return;
+
+    let targetRef;
+    const db = admin.firestore();
+    
+    // Simplification for Beta 1: assume countryCode is ID
+    switch (targetType) {
+        case 'news':
+            targetRef = db.doc('countries/ID/domains/local_news/posts/' + targetId);
+            break;
+        case 'marketplace':
+            targetRef = db.doc('countries/ID/domains/marketplace/products/' + targetId);
+            break;
+        case 'jobs':
+            targetRef = db.doc('job_posts/' + targetId);
+            break;
+        default:
+            console.log('Unsupported targetType: ' + targetType);
+            return;
+    }
+
+    try {
+        await db.runTransaction(async (transaction) => {
+            const targetDoc = await transaction.get(targetRef);
+            if (!targetDoc.exists) {
+                console.log('Target document not found: ' + targetRef.path);
+                return;
+            }
+
+            const data = targetDoc.data();
+            const currentReportCount = data.reportCount || 0;
+            const newReportCount = currentReportCount + 1;
+            
+            const updates = {
+                reportCount: newReportCount,
+                lastReportedAt: admin.firestore.FieldValue.serverTimestamp()
+            };
+
+            const mStatus = data.moderationStatus || 'visible';
+            if (newReportCount >= 3 && mStatus === 'visible') {
+                updates.moderationStatus = 'underReview';
+            }
+
+            transaction.update(targetRef, updates);
+        });
+        console.log('Successfully processed report ' + event.params.reportId);
+    } catch (e) {
+        console.error('Failed to process report ' + event.params.reportId + ':', e);
+    }
+});

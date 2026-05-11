@@ -7,6 +7,8 @@ import '../providers/job_provider.dart';
 import '../providers/job_applicant_provider.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../app/auth/auth_service.dart';
+import '../../moderation/models/report_model.dart';
+import '../../moderation/widgets/report_button.dart';
 
 class JobDetailScreen extends ConsumerWidget {
   final String jobId;
@@ -30,7 +32,7 @@ class JobDetailScreen extends ConsumerWidget {
               return ReportButton(
                 targetType: ReportTargetType.jobs,
                 targetId: job.id,
-                targetOwnerId: job.employerId,
+                targetOwnerId: job.ownerId,
               );
             },
           ) ?? const SizedBox.shrink(),

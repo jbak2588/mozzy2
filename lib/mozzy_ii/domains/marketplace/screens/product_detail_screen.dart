@@ -11,6 +11,8 @@ import '../models/deal_model.dart';
 import '../models/ai_verification_report_model.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/deal_provider.dart';
+import '../../moderation/models/report_model.dart';
+import '../../moderation/widgets/report_button.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({super.key, required this.productId});

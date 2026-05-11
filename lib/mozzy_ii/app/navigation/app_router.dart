@@ -35,6 +35,7 @@ import '../../domains/monetization/screens/admin_monetization_audit_screen.dart'
 import '../../domains/moderation/screens/admin_moderation_screen.dart';
 import '../../domains/feedback/screens/feedback_screen.dart';
 import '../../domains/feedback/screens/admin_feedback_screen.dart';
+import '../../domains/account/screens/account_deletion_screen.dart';
 import '../../domains/feed/screens/smart_feed_screen.dart';
 import '../../core/config/beta_feature_flags.dart';
 import '../../shared/screens/feature_coming_soon_screen.dart';

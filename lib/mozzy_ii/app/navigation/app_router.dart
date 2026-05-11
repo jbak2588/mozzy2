@@ -315,6 +315,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/feedback',
         builder: (context, state) => const FeedbackScreen(),
       ),
+      GoRoute(
+        path: '/account/delete',
+        builder: (context, state) => const AccountDeletionScreen(),
+      ),
     ],
   );
 });

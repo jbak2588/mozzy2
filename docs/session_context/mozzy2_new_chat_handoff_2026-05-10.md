@@ -83,7 +83,14 @@
 - Beta feedback baseline: in-app feedback form, privacy notice, admin review, WhatsApp CS entry
 - Next recommended task: P6-S06 Account Deletion / Data Cleanup
 
+## P6-S06 Account Deletion Status
+- P6-S06 Account Deletion / Data Cleanup completed.
+- Base HEAD: 17047d5
+- Report: docs/qa/P6-S06_Account_Deletion_Data_Cleanup_Report.md
+- Privacy baseline: user deletion request, server-side cleanup, anonymization policy, account delete UI
+- Next recommended task: P6-S07 Real Device Beta Smoke Test Checklist
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S05 이후 상태를 검토한 다음 `P6-S06 Account Deletion / Data Cleanup` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S06 이후 상태를 검토한 다음 `P6-S07 Real Device Beta Smoke Test Checklist` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

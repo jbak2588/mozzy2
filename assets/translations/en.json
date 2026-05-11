@@ -591,5 +591,19 @@
     "markInReview": "Mark in review",
     "markResolved": "Mark resolved",
     "dismiss": "Dismiss"
+  },
+  "accountDeletion": {
+    "title": "Delete Account",
+    "description": "You can request deletion of your account and personal data.",
+    "warning": "This action cannot be easily undone. Some records may be anonymized and retained for legal or safety reasons.",
+    "reasonLabel": "Reason (optional)",
+    "confirmCheckbox": "I understand that this action cannot be easily undone.",
+    "deleteButton": "Delete my account",
+    "confirmTitle": "Confirm account deletion",
+    "confirmBody": "Are you sure you want to request account deletion?",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "success": "Your account deletion request has been submitted.",
+    "failed": "Could not submit account deletion request. Please try again."
   }
 }

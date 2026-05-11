@@ -1579,3 +1579,149 @@ exports.onReportCreated = onDocumentCreated("reports/{reportId}", async (event) 
         console.error('Failed to process report ' + event.params.reportId + ':', e);
     }
 });
+
+// -----------------------------------------------------------------------------
+// P6-S06 Account Deletion: requestAccountDeletion
+// -----------------------------------------------------------------------------
+exports.requestAccountDeletion = onCall(async (request) => {
+    const { data, auth } = request;
+    if (!auth) {
+        throw new HttpsError("unauthenticated", "Authentication required");
+    }
+
+    const uid = auth.uid;
+    const reason = data.reason ? data.reason.substring(0, 500) : null;
+    const appVersion = data.appVersion || "unknown";
+    const platform = data.platform || "unknown";
+    const countryCode = data.countryCode || "ID";
+
+    const db = admin.firestore();
+    const requestRef = db.collection("account_deletion_requests").doc(uid);
+
+    try {
+        await requestRef.set({
+            userId: uid,
+            status: "requested",
+            reason: reason,
+            appVersion: appVersion,
+            platform: platform,
+            countryCode: countryCode,
+            requestedAt: admin.firestore.FieldValue.serverTimestamp(),
+            processedAt: null,
+            errorMessage: null
+        });
+        return { success: true };
+    } catch (e) {
+        console.error("Failed to create deletion request:", e);
+        throw new HttpsError("internal", "Failed to create deletion request");
+    }
+});
+
+// -----------------------------------------------------------------------------
+// P6-S06 Account Deletion: onAccountDeletionRequested
+// -----------------------------------------------------------------------------
+exports.onAccountDeletionRequested = onDocumentCreated("account_deletion_requests/{uid}", async (event) => {
+    const snapshot = event.data;
+    if (!snapshot) return;
+
+    const uid = event.params.uid;
+    const db = admin.firestore();
+    const requestRef = db.collection("account_deletion_requests").doc(uid);
+
+    try {
+        await requestRef.update({ status: "processing" });
+
+        const batch = db.batch();
+
+        // 1. users/{uid} anonymization
+        const userRef = db.collection("users").doc(uid);
+        batch.update(userRef, {
+            isDeleted: true,
+            deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+            displayName: "Deleted User",
+            nickname: "Deleted User",
+            photoUrl: null,
+            phoneNumber: null,
+            email: null,
+            fcmTokens: []
+        });
+
+        // 2. UGC Anonymization (Job Posts)
+        const jobsSnapshot = await db.collection("job_posts").where("ownerId", "==", uid).get();
+        jobsSnapshot.docs.forEach(doc => {
+            batch.update(doc.ref, {
+                isDeleted: true,
+                moderationStatus: "removed",
+                deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+                deletedReason: "account_deleted",
+                ownerDisplayName: "Deleted User",
+                ownerPhotoUrl: null
+            });
+        });
+
+        // 3. UGC Anonymization (Marketplace Products)
+        const productsSnapshot = await db.collectionGroup("products").where("sellerId", "==", uid).get();
+        productsSnapshot.docs.forEach(doc => {
+            batch.update(doc.ref, {
+                isDeleted: true,
+                moderationStatus: "removed",
+                deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+                deletedReason: "account_deleted"
+            });
+        });
+
+        // 4. UGC Anonymization (Local News Posts)
+        const postsSnapshot = await db.collectionGroup("posts").where("userId", "==", uid).get();
+        postsSnapshot.docs.forEach(doc => {
+            batch.update(doc.ref, {
+                isDeleted: true,
+                moderationStatus: "removed",
+                deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+                deletedReason: "account_deleted"
+            });
+        });
+
+        // 5. Feedback cleanup
+        const feedbackSnapshot = await db.collection("feedback").where("userId", "==", uid).get();
+        feedbackSnapshot.docs.forEach(doc => {
+            batch.update(doc.ref, {
+                contactValue: null,
+                status: "dismissed",
+                adminNote: "User account deleted",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+        });
+
+        // 6. Reports cleanup
+        const reportsSnapshot = await db.collection("reports").where("reporterId", "==", uid).get();
+        reportsSnapshot.docs.forEach(doc => {
+            batch.update(doc.ref, {
+                reporterDeleted: true
+            });
+        });
+
+        await batch.commit();
+
+        // 7. Delete Firebase Auth User
+        try {
+            await admin.auth().deleteUser(uid);
+            console.log(`Successfully deleted Auth user ${uid}`);
+        } catch (authError) {
+            console.error(`Failed to delete Auth user ${uid}:`, authError);
+            // Even if auth delete fails (e.g. user already deleted), we mark as completed
+        }
+
+        await requestRef.update({
+            status: "completed",
+            processedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+
+    } catch (e) {
+        console.error(`Failed to process account deletion for ${uid}:`, e);
+        await requestRef.update({
+            status: "failed",
+            errorMessage: e.message,
+            processedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+    }
+});

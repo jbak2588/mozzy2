@@ -57,6 +57,15 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /account_deletion_requests/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid)
+        && request.resource.data.userId == uid
+        && request.resource.data.status == "requested";
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
     match /feedback/{feedbackId} {
       allow read: if isAdmin();
       allow create: if request.auth != null

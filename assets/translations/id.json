@@ -594,5 +594,19 @@
     "markInReview": "Tandai sedang ditinjau",
     "markResolved": "Tandai selesai",
     "dismiss": "Abaikan"
+  },
+  "accountDeletion": {
+    "title": "Hapus Akun",
+    "description": "Anda dapat meminta penghapusan akun 및 data pribadi Anda.",
+    "warning": "Tindakan ini tidak dapat dibatalkan dengan mudah. Beberapa catatan mungkin dikanonimkan 및 disimpan untuk alasan hukum 또는 keamanan.",
+    "reasonLabel": "Alasan (opsional)",
+    "confirmCheckbox": "Saya mengerti bahwa tindakan ini tidak dapat dibatalkan dengan mudah.",
+    "deleteButton": "Hapus akun saya",
+    "confirmTitle": "Konfirmasi penghapusan akun",
+    "confirmBody": "Apakah Anda yakin ingin meminta penghapusan akun?",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "success": "Permintaan penghapusan akun Anda telah dikirim.",
+    "failed": "Gagal mengirim permintaan penghapusan akun. Silakan coba lagi."
   }
 }

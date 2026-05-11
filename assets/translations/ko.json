@@ -591,5 +591,19 @@
     "markInReview": "검토 중으로 표시",
     "markResolved": "해결됨으로 표시",
     "dismiss": "무시"
+  },
+  "accountDeletion": {
+    "title": "계정 탈퇴",
+    "description": "계정 및 개인정보 삭제를 요청할 수 있습니다.",
+    "warning": "이 작업은 되돌릴 수 없습니다. 일부 기록은 법적 또는 안전상의 이유로 익명화되어 보관될 수 있습니다.",
+    "reasonLabel": "탈퇴 사유 (선택 사항)",
+    "confirmCheckbox": "이 작업은 되돌릴 수 없음을 이해했습니다.",
+    "deleteButton": "내 계정 삭제하기",
+    "confirmTitle": "계정 탈퇴 확인",
+    "confirmBody": "정말로 계정 탈퇴를 요청하시겠습니까?",
+    "cancel": "취소",
+    "confirm": "확인",
+    "success": "계정 탈퇴 요청이 접수되었습니다.",
+    "failed": "계정 탈퇴 요청을 제출하지 못했습니다. 다시 시도해 주세요."
   }
 }

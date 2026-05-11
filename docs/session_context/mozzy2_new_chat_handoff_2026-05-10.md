@@ -69,7 +69,14 @@
 - Beta 1 UGC safety baseline: report submission, admin review, content blind handling
 - Next recommended task: P6-S04 Crashlytics / Performance Monitoring Setup
 
+## P6-S04 Monitoring Status
+- P6-S04 Crashlytics / Performance Monitoring Setup completed.
+- Base HEAD: ef97f5d
+- Report: docs/qa/P6-S04_Crashlytics_Performance_Monitoring_Report.md
+- Beta monitoring baseline: Crashlytics, Flutter fatal errors, Platform errors, non-fatal helper, Performance traces
+- Next recommended task: P6-S05 Feedback / CS Channel Setup
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S03 이후 상태를 검토한 다음 `P6-S04 Crashlytics / Performance Monitoring Setup` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S04 이후 상태를 검토한 다음 `P6-S05 Feedback / CS Channel Setup` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

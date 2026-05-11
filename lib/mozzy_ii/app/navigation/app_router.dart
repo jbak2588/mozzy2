@@ -32,9 +32,11 @@ import '../../domains/jobs/screens/job_applicants_screen.dart';
 import '../../domains/jobs/screens/job_boost_purchase_screen.dart';
 import '../../domains/payments/screens/payment_status_screen.dart';
 import '../../domains/monetization/screens/admin_monetization_audit_screen.dart';
+import '../../domains/moderation/screens/admin_moderation_screen.dart';
 import '../../domains/feed/screens/smart_feed_screen.dart';
 import '../../core/config/beta_feature_flags.dart';
 import '../../shared/screens/feature_coming_soon_screen.dart';
+import '../../core/monitoring/screens/monitoring_debug_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -280,11 +282,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             : const FeatureComingSoonScreen(featureName: 'Bareng Yuk!'),
       ),
       // Dev-only debug routes
-      if (kDebugMode)
+      if (kDebugMode) ...[
         GoRoute(
           path: '/dev/profile',
           builder: (context, state) => const DevProfileScreen(),
         ),
+        GoRoute(
+          path: '/dev/monitoring',
+          builder: (context, state) => const MonitoringDebugScreen(),
+        ),
+      ],
       
       GoRoute(
         path: '/notifications',

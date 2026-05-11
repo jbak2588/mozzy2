@@ -10,6 +10,8 @@ import 'mozzy_ii/domains/marketplace/ai/marketplace_ai_config.dart';
 import 'mozzy_ii/app/theme/mozzy_theme.dart';
 import 'mozzy_ii/app/navigation/app_router.dart';
 import 'mozzy_ii/app/notifications/notification_initializer.dart';
+import 'mozzy_ii/core/monitoring/crashlytics_service.dart';
+import 'mozzy_ii/core/monitoring/performance_monitoring_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,16 @@ void main() async {
 
   // 3. Firebase 초기화
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // 3.1 Monitoring 초기화
+  await CrashlyticsService.initialize(
+    appEnv: const String.fromEnvironment('APP_ENV', defaultValue: 'staging'),
+    enabled: const bool.fromEnvironment('CRASHLYTICS_ENABLED', defaultValue: true),
+  );
+
+  await PerformanceMonitoringService.initialize(
+    enabled: const bool.fromEnvironment('PERFORMANCE_ENABLED', defaultValue: true),
+  );
 
   // 3.5 Google Sign-In 초기화 (dart-define로 Web Client ID 주입 필요)
   await GoogleSignInConfig.initialize();

@@ -177,7 +177,7 @@
   - Production Profile/Account Settings entry point
 - Android Build: 1.0.0+7
 - Android Beta 1 decision: Go
-- Next recommended task: P6-S13 Expand Tester Group
+- Next recommended task: P6-S13 Build 7 Final Beta Go Verification
 
 
 ## P6-S13 Build 7 Final Beta Go Verification Status
@@ -188,10 +188,22 @@
 - Chat/Pesan: Pass (Fallback UI implemented, indexes deployed)
 - Account Settings: Pass (Entry added to SmartFeed, screen implemented)
 - Android Beta 1 decision: Go
-- Next recommended task: P6-S14 Expand Tester Group
+- Next recommended task: P6-S14 Controlled Tester Group Expansion
+
+## P6-S14 Controlled Tester Group Expansion Status
+- P6-S14 Controlled Tester Group Expansion completed.
+- Base HEAD: bf5a355
+- Build: 1.0.0+7
+- Release Notes: docs/release/P6-S14_Android_Beta1_Build7_Tester_Release_Notes.md
+- Tester Instruction: docs/release/P6-S14_Beta_Tester_Instruction.md
+- Expansion Report: docs/release/P6-S14_Controlled_Tester_Group_Expansion_Report.md
+- Firebase App Distribution: Success
+- Tester group: mozzy-private-beta
+- Tester count: 5 (Initial expansion)
+- Next recommended task: P6-S15 Beta Monitoring 24h Report
 
 ## 7. Next Prompt for New Chat
 
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S13 Build 7 Final Beta Go Verification 이후 상태를 검토한 다음 Android Beta 1 Go/No-Go 결과에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S14 Controlled Tester Group Expansion 이후 상태를 검토한 다음 Firebase App Distribution 결과와 Android Beta 1 모니터링 상태에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

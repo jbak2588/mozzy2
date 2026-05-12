@@ -12,7 +12,8 @@
         "--dart-define=PRIVATE_BETA=true",
         "--dart-define=PAYMENT_PRODUCTION_ENABLED=false",
         "--dart-define=CRASHLYTICS_ENABLED=true",
-        "--dart-define=PERFORMANCE_ENABLED=true"
+        "--dart-define=PERFORMANCE_ENABLED=true",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}"
       ],
       "presentation": {
         "group": "safe",
@@ -31,7 +32,8 @@
         "--dart-define=PAYMENT_PRODUCTION_ENABLED=false",
         "--dart-define=CRASHLYTICS_ENABLED=true",
         "--dart-define=PERFORMANCE_ENABLED=true",
-        "--dart-define=BETA_CS_WHATSAPP=${env:BETA_CS_WHATSAPP}"
+        "--dart-define=BETA_CS_WHATSAPP=${env:BETA_CS_WHATSAPP}",
+        "--dart-define=GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}"
       ],
       "presentation": {
         "group": "safe",

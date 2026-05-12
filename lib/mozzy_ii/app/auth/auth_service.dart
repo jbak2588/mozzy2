@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'auth_failure.dart';
+import 'google_sign_in_config.dart';
 
 part 'auth_service.g.dart';
 
@@ -13,6 +15,11 @@ class AuthService {
 
   /// Google 로그인
   Future<UserCredential?> signInWithGoogle() async {
+    // 0. 필수 설정 확인
+    if (!GoogleSignInConfig.hasWebClientId) {
+      throw AuthFailure(AuthFailure.googleWebClientIdMissing);
+    }
+
     try {
       // 1. Google 로그인 프로세스 시작
       final googleUser = await GoogleSignIn.instance.authenticate();
@@ -27,7 +34,7 @@ class AuthService {
       }
 
       if (idToken == null || idToken.isEmpty) {
-        throw StateError('Google ID token is null or empty');
+        throw AuthFailure(AuthFailure.googleIdTokenMissing);
       }
 
       // 3. Firebase용 새 자격 증명 생성
@@ -36,23 +43,39 @@ class AuthService {
       // 4. Firebase 인증을 통해 로그인
       return await _auth.signInWithCredential(credential);
     } on GoogleSignInException catch (gse) {
+      final codeString = gse.code.toString();
       if (kDebugMode) {
         // ignore: avoid_print
-        print('DEBUG: GoogleSignInException: code=${gse.code}, details=${gse.details}');
+        print('DEBUG: GoogleSignInException: code=$codeString, details=${gse.details}');
       }
-      throw StateError('Google sign-in failed: [${gse.code}]');
+      
+      // GoogleSignInExceptionCode check (package dependent)
+      if (codeString.contains('canceled')) {
+        throw AuthFailure(AuthFailure.googleSignInCancelled);
+      }
+      
+      throw AuthFailure(AuthFailure.googleSignInUnknown, message: codeString);
     } on FirebaseAuthException catch (fae) {
       if (kDebugMode) {
         // ignore: avoid_print
         print('DEBUG: FirebaseAuthException: code=${fae.code}, message=${fae.message}');
       }
+      
+      if (fae.code == 'invalid-credential') {
+        throw AuthFailure(AuthFailure.firebaseAuthInvalidCredential);
+      }
+      if (fae.code == 'network-request-failed') {
+        throw AuthFailure(AuthFailure.firebaseAuthNetworkRequestFailed);
+      }
+      
       rethrow;
     } catch (e) {
       if (kDebugMode) {
         // ignore: avoid_print
         print('DEBUG: Unknown error during signInWithGoogle: $e');
       }
-      rethrow;
+      if (e is AuthFailure) rethrow;
+      throw AuthFailure(AuthFailure.googleSignInUnknown, message: e.toString());
     }
   }
 

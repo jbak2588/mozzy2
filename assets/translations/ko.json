@@ -27,7 +27,12 @@
     "send_otp": "인증번호 전송",
     "verify_otp": "인증번호 확인",
     "phone_hint": "예: 8123456789",
-    "otp_hint": "6자리 인증번호 입력"
+    "otp_hint": "6자리 인증번호 입력",
+    "google_login_failed": "구글 로그인에 실패했습니다. 다시 시도해 주세요.",
+    "google_login_cancelled": "구글 로그인이 취소되었습니다.",
+    "google_login_config_error": "구글 로그인 설정이 올바르지 않습니다.",
+    "google_login_network_error": "네트워크 오류가 발생했습니다. 연결을 확인해 주세요.",
+    "google_login_unknown_error": "구글로 로그인할 수 없습니다."
   },
   "geo": {
     "location_required": "위치 권한 필요",

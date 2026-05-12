@@ -4,8 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mozzy/mozzy_ii/app/auth/auth_service.dart';
 import 'package:mozzy/mozzy_ii/app/auth/auth_bootstrap.dart';
+import 'package:mozzy/mozzy_ii/app/auth/auth_failure.dart';
 import 'package:mozzy/mozzy_ii/core/config/integration_test_config.dart';
-// keep imports minimal; bootstrap provider handles repo/location work
 
 class AuthGate extends ConsumerWidget {
   const AuthGate({super.key});
@@ -28,20 +28,18 @@ class AuthGate extends ConsumerWidget {
       data: (user) {
         if (user == null) return const LoginScreen();
 
-        // 로그인된 상태 - use authBootstrapProvider to avoid repeated FutureBuilder runs
+        // 로그인된 상태
         String? uid;
         try {
           uid = user.uid;
         } catch (e) {
-          // In tests MockUser may throw for unstubbed properties. Fall back to
-          // showing a placeholder home to keep tests stable.
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!context.mounted) return;
             try {
               context.go('/home');
             } catch (_) {}
           });
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: Text('Home (navigation not configured)')),
           );
         }
@@ -87,12 +85,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await ref.read(authServiceProvider).signInWithGoogle();
     } catch (e) {
-      // 개발용 로깅
       debugPrint('signInWithGoogle error: $e');
       if (mounted) {
+        final message = _messageForAuthError(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('auth.google_login_failed'.tr()),
+            content: Text(message),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -102,6 +100,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  String _messageForAuthError(Object error) {
+    if (error is AuthFailure) {
+      switch (error.code) {
+        case AuthFailure.googleWebClientIdMissing:
+        case AuthFailure.googleIdTokenMissing:
+          return 'auth.google_login_config_error'.tr();
+        case AuthFailure.googleSignInCancelled:
+          return 'auth.google_login_cancelled'.tr();
+        case AuthFailure.firebaseAuthNetworkRequestFailed:
+          return 'auth.google_login_network_error'.tr();
+        case AuthFailure.firebaseAuthInvalidCredential:
+          return 'auth.google_login_failed'.tr();
+        default:
+          return 'auth.google_login_unknown_error'.tr();
+      }
+    }
+    
+    final raw = error.toString().toLowerCase();
+    if (raw.contains('network')) return 'auth.google_login_network_error'.tr();
+    if (raw.contains('cancel')) return 'auth.google_login_cancelled'.tr();
+    
+    return 'auth.google_login_failed'.tr();
   }
 
   @override

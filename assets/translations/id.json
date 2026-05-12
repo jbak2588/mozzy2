@@ -27,7 +27,12 @@
     "send_otp": "Kirim OTP",
     "verify_otp": "Verifikasi OTP",
     "phone_hint": "Contoh: 8123456789",
-    "otp_hint": "Masukkan 6 digit kode"
+    "otp_hint": "Masukkan 6 digit kode",
+    "google_login_failed": "Login Google gagal. Silakan coba lagi.",
+    "google_login_cancelled": "Login Google dibatalkan.",
+    "google_login_config_error": "Konfigurasi login Google tidak valid.",
+    "google_login_network_error": "Kesalahan jaringan. Periksa koneksi Anda.",
+    "google_login_unknown_error": "Tidak dapat masuk dengan Google."
   },
   "geo": {
     "location_required": "Izin Lokasi Diperlukan",

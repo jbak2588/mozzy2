@@ -27,7 +27,12 @@
     "send_otp": "Send OTP",
     "verify_otp": "Verify OTP",
     "phone_hint": "Example: 8123456789",
-    "otp_hint": "Enter 6 digit code"
+    "otp_hint": "Enter 6 digit code",
+    "google_login_failed": "Google login failed. Please try again.",
+    "google_login_cancelled": "Google login was cancelled.",
+    "google_login_config_error": "Google login is not configured correctly.",
+    "google_login_network_error": "Network error. Please check your connection.",
+    "google_login_unknown_error": "Could not log in with Google."
   },
   "geo": {
     "location_required": "Location Permission Required",

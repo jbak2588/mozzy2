@@ -7,6 +7,8 @@ class GoogleSignInConfig {
     'GOOGLE_WEB_CLIENT_ID',
   );
 
+  static bool get hasWebClientId => webClientId.trim().isNotEmpty;
+
   /// Call this once at startup (before runApp) with --dart-define
   static Future<void> initialize() async {
     if (IntegrationTestConfig.enabled) return;
@@ -20,10 +22,10 @@ class GoogleSignInConfig {
       }
     }
 
-    if (webClientId.isEmpty) {
+    if (!hasWebClientId) {
       if (kDebugMode) {
         // ignore: avoid_print
-        print('WARNING: GOOGLE_WEB_CLIENT_ID is missing. Google Sign-In idToken features might not work.');
+        print('WARNING: GOOGLE_WEB_CLIENT_ID is missing. Google Sign-In will be disabled.');
       }
       return;
     }

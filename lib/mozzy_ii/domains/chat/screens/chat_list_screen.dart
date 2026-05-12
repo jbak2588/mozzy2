@@ -151,19 +151,47 @@ class ChatListScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('chat.error'.tr()),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () => ref.refresh(userChatRoomsProvider),
-                child: Text('chat.retry'.tr()),
+        error: (e, stack) {
+          final isIndexError = e.toString().contains('failed-precondition') || 
+                               e.toString().contains('index');
+          
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    isIndexError ? Icons.construction : Icons.error_outline,
+                    size: 60,
+                    color: Colors.orange,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    isIndexError 
+                        ? 'chat.indexMissingTitle'.tr() 
+                        : 'chat.error'.tr(),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    isIndexError 
+                        ? 'chat.indexMissingBody'.tr() 
+                        : e.toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () => ref.refresh(userChatRoomsProvider),
+                    child: Text('chat.retry'.tr()),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

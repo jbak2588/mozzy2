@@ -56,11 +56,17 @@ class ChatRoomModel {
       jobTitle: json['jobTitle'] as String?,
       lastMessage: json['lastMessage'] as String?,
       lastMessageType: json['lastMessageType'] as String? ?? 'text',
-      lastMessageAt: (json['lastMessageAt'] as dynamic)?.toDate(),
+      lastMessageAt: json['lastMessageAt'] is DateTime 
+          ? json['lastMessageAt'] as DateTime 
+          : (json['lastMessageAt'] as dynamic)?.toDate(),
       lastSenderId: json['lastSenderId'] as String?,
       unreadCountByUser: Map<String, int>.from(json['unreadCountByUser'] ?? {}),
-      createdAt: (json['createdAt'] as dynamic)?.toDate() ?? DateTime.now(),
-      updatedAt: (json['updatedAt'] as dynamic)?.toDate() ?? DateTime.now(),
+      createdAt: json['createdAt'] is DateTime 
+          ? json['createdAt'] as DateTime 
+          : (json['createdAt'] as dynamic)?.toDate() ?? DateTime.now(),
+      updatedAt: json['updatedAt'] is DateTime 
+          ? json['updatedAt'] as DateTime 
+          : (json['updatedAt'] as dynamic)?.toDate() ?? DateTime.now(),
       isArchivedByUser: Map<String, bool>.from(json['isArchivedByUser'] ?? {}),
     );
   }

@@ -31,7 +31,9 @@ class ChatMessageModel {
       text: json['text'] as String,
       type: json['type'] as String? ?? 'text',
       imageUrl: json['imageUrl'] as String?,
-      createdAt: (json['createdAt'] as dynamic)?.toDate() ?? DateTime.now(),
+      createdAt: json['createdAt'] is DateTime 
+          ? json['createdAt'] as DateTime 
+          : (json['createdAt'] as dynamic)?.toDate() ?? DateTime.now(),
       readBy: List<String>.from(json['readBy'] ?? []),
       status: json['status'] as String? ?? 'sent',
       localTempId: json['localTempId'] as String?,

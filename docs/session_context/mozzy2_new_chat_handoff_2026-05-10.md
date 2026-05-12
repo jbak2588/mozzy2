@@ -168,7 +168,19 @@
 - Next recommended task: P6-S12 Beta Fix Sprint
 
 
+## P6-S12 Beta Fix Sprint Status
+- P6-S12 Beta Fix Sprint completed.
+- Base HEAD: d3242ca
+- Report: docs/release/P6-S12_Beta_Fix_Sprint_Report.md
+- Fixed P1:
+  - Chat Firestore index / fallback
+  - Production Profile/Account Settings entry point
+- Android Build: 1.0.0+7
+- Android Beta 1 decision: Go
+- Next recommended task: P6-S13 Expand Tester Group
+
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S11B 이후 상태를 검토한 다음 `P6-S11 Real Device Smoke Test Build 4` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S12 Beta Fix Sprint 이후 상태를 검토한 다음 Android Beta 1 Go/No-Go 결과에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

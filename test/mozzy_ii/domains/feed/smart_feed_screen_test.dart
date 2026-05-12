@@ -5,9 +5,14 @@ import 'package:mozzy/mozzy_ii/domains/feed/providers/smart_feed_provider.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_model.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_type.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/widgets/smart_feed_search_bar.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import '../../../helpers/test_localization_app.dart';
 
 void main() {
+  setUp(() {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+  });
+
   group('SmartFeedScreen Widget Tests', () {
     testWidgets('SmartFeedScreen shows loading state', (WidgetTester tester) async {
       await pumpMozzyTestApp(

@@ -192,6 +192,15 @@
       ]
     },
     {
+      "collectionGroup": "chat_rooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "type", "order": "ASCENDING" },
+        { "fieldPath": "jobId", "order": "ASCENDING" },
+        { "fieldPath": "participants", "arrayConfig": "CONTAINS" }
+      ]
+    },
+    {
       "collectionGroup": "job_posts",
       "queryScope": "COLLECTION",
       "fields": [

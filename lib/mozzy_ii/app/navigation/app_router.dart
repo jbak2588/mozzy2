@@ -36,6 +36,7 @@ import '../../domains/moderation/screens/admin_moderation_screen.dart';
 import '../../domains/feedback/screens/feedback_screen.dart';
 import '../../domains/feedback/screens/admin_feedback_screen.dart';
 import '../../domains/account/screens/account_deletion_screen.dart';
+import '../../domains/account/screens/account_settings_screen.dart';
 import '../../domains/feed/screens/smart_feed_screen.dart';
 import '../../core/config/beta_feature_flags.dart';
 import '../../shared/screens/feature_coming_soon_screen.dart';
@@ -319,6 +320,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/account/delete',
         builder: (context, state) => const AccountDeletionScreen(),
+      ),
+      GoRoute(
+        path: '/account/settings',
+        builder: (context, state) => const AccountSettingsScreen(),
       ),
     ],
   );

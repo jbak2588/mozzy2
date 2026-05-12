@@ -300,7 +300,9 @@
     "jobInquiry": "Inquiry Lowongan: {title}",
     "unreadMessages": "Pesan belum dibaca",
     "today": "Hari ini",
-    "yesterday": "Kemarin"
+    "yesterday": "Kemarin",
+    "indexMissingTitle": "Persiapan chat sedang berlangsung",
+    "indexMissingBody": "Daftar pesan sedang disiapkan untuk beta. Silakan coba lagi nanti."
   },
   "notification": {
     "chatMessage": "Pesan baru dari {name}",
@@ -613,5 +615,15 @@
     "confirm": "Konfirmasi",
     "success": "Permintaan penghapusan akun Anda telah dikirim.",
     "failed": "Gagal mengirim permintaan penghapusan akun. Silakan coba lagi."
+  },
+  "account": {
+    "settingsTitle": "Pengaturan Akun",
+    "profile": "Profil",
+    "logout": "Keluar",
+    "deleteAccount": "Hapus akun",
+    "appVersion": "Versi aplikasi",
+    "privateBeta": "Beta Pribadi",
+    "logoutSuccess": "Anda telah keluar.",
+    "logoutFailed": "Gagal keluar. Silakan coba lagi."
   }
 }

@@ -297,7 +297,9 @@
     "jobInquiry": "Job Inquiry: {title}",
     "unreadMessages": "Unread messages",
     "today": "Today",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "indexMissingTitle": "Chat setup in progress",
+    "indexMissingBody": "The chat list is being prepared for beta. Please try again later."
   },
   "notification": {
     "chatMessage": "New message from {name}",
@@ -610,5 +612,15 @@
     "confirm": "Confirm",
     "success": "Your account deletion request has been submitted.",
     "failed": "Could not submit account deletion request. Please try again."
+  },
+  "account": {
+    "settingsTitle": "Account Settings",
+    "profile": "Profile",
+    "logout": "Log out",
+    "deleteAccount": "Delete account",
+    "appVersion": "App version",
+    "privateBeta": "Private Beta",
+    "logoutSuccess": "You have been logged out.",
+    "logoutFailed": "Could not log out. Please try again."
   }
 }

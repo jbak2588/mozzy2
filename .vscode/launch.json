@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Mozzy (Android Beta - Staging)",
+      "name": "Mozzy SAFE RUN - Android Beta Staging",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -13,10 +13,14 @@
         "--dart-define=PAYMENT_PRODUCTION_ENABLED=false",
         "--dart-define=CRASHLYTICS_ENABLED=true",
         "--dart-define=PERFORMANCE_ENABLED=true"
-      ]
+      ],
+      "presentation": {
+        "group": "safe",
+        "order": 1
+      }
     },
     {
-      "name": "Mozzy (Android Beta - Staging + CS)",
+      "name": "Mozzy SAFE RUN - Android Beta Staging + CS",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -28,10 +32,14 @@
         "--dart-define=CRASHLYTICS_ENABLED=true",
         "--dart-define=PERFORMANCE_ENABLED=true",
         "--dart-define=BETA_CS_WHATSAPP=${env:BETA_CS_WHATSAPP}"
-      ]
+      ],
+      "presentation": {
+        "group": "safe",
+        "order": 2
+      }
     },
     {
-      "name": "Mozzy (Integration Test - Local News)",
+      "name": "Mozzy TEST - Local News",
       "request": "launch",
       "type": "dart",
       "program": "integration_test/local_news_e2e_test.dart",
@@ -39,10 +47,14 @@
         "--dart-define=MOZZY_INTEGRATION_TEST=true",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=dummy_client_id_for_test",
         "--dart-define=GEMINI_API_KEY=dummy_key_for_test"
-      ]
+      ],
+      "presentation": {
+        "group": "test",
+        "order": 10
+      }
     },
     {
-      "name": "Mozzy (Integration Test - Marketplace)",
+      "name": "Mozzy TEST - Marketplace",
       "request": "launch",
       "type": "dart",
       "program": "integration_test/marketplace_e2e_test.dart",
@@ -50,7 +62,11 @@
         "--dart-define=MOZZY_INTEGRATION_TEST=true",
         "--dart-define=GOOGLE_WEB_CLIENT_ID=dummy_client_id_for_test",
         "--dart-define=GEMINI_API_KEY=dummy_key_for_test"
-      ]
+      ],
+      "presentation": {
+        "group": "test",
+        "order": 11
+      }
     }
   ]
 }

@@ -1,6 +1,3 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "dart.flutterRunAdditionalArgs": [
-        "--dart-define-from-file=.local/mozzy_dev_env.json"
-    ]
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

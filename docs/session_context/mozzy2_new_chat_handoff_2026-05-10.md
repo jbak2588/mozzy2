@@ -124,16 +124,16 @@
 - Next recommended task: P6-S11 Real Device Smoke Test Build 2
 
 
-## P6-S11A Runtime Env Config Fix Status
-- P6-S11A Runtime Env Config Fix completed.
-- Base HEAD: 535cbae
-- Report: docs/release/P6-S11A_Runtime_Env_Config_Fix_Report.md
-- Real device launch blocker: `.local/mozzy_dev_env.json` missing
-- Fix: default launch no longer depends on `--dart-define-from-file`
-- Next recommended task: P6-S11 Real Device Smoke Test Build 3
+## P6-S11B VS Code Runtime Config Status
+- P6-S11B VS Code Runtime Config Hard Reset completed.
+- Base HEAD: f4f8bc4
+- Report: docs/release/P6-S11B_VSCode_Runtime_Config_Hard_Reset_Report.md
+- Issue: VS Code still injected `--dart-define-from-file=.local/mozzy_dev_env.json` via `settings.json`.
+- Result: **Fixed** (stale setting removed, launch.json re-organized)
+- Next recommended task: P6-S11 Real Device Smoke Test Build 4
 
 
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S11A 이후 상태를 검토한 다음 `P6-S11 Real Device Smoke Test Build 3` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S11B 이후 상태를 검토한 다음 `P6-S11 Real Device Smoke Test Build 4` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

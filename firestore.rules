@@ -298,7 +298,7 @@ service cloud.firestore {
             && request.resource.data.ownerId == resource.data.ownerId
             && request.resource.data.status == resource.data.status
             && request.resource.data.isDeleted == resource.data.isDeleted)
-        );
+        ));
 
       allow delete: if false; // MVP: No deletion, use isDeleted
 

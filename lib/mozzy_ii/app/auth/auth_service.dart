@@ -17,37 +17,41 @@ class AuthService {
   Future<UserCredential?> signInWithGoogle() async {
     // 0. 필수 설정 확인
     if (!GoogleSignInConfig.hasWebClientId) {
+      debugPrint('[AuthService] Aborting: GOOGLE_WEB_CLIENT_ID is missing.');
       throw AuthFailure(AuthFailure.googleWebClientIdMissing);
     }
 
     try {
+      debugPrint('[AuthService] Starting GoogleSignIn.authenticate()');
+      
       // 1. Google 로그인 프로세스 시작
       final googleUser = await GoogleSignIn.instance.authenticate();
+
+      debugPrint('[AuthService] Google user email=${googleUser.email}');
 
       // 2. Google 인증 세부 정보 획득
       final googleAuth = googleUser.authentication;
       final idToken = googleAuth.idToken;
 
-      if (kDebugMode) {
-        // ignore: avoid_print
-        print('DEBUG: Google idToken length: ${idToken?.length ?? 0}');
-      }
+      debugPrint('[AuthService] idToken length=${idToken?.length ?? 0}');
 
       if (idToken == null || idToken.isEmpty) {
+        debugPrint('[AuthService] Error: idToken is null or empty');
         throw AuthFailure(AuthFailure.googleIdTokenMissing);
       }
 
       // 3. Firebase용 새 자격 증명 생성
       final credential = GoogleAuthProvider.credential(idToken: idToken);
 
+      debugPrint('[AuthService] Attempting _auth.signInWithCredential(credential)');
+
       // 4. Firebase 인증을 통해 로그인
-      return await _auth.signInWithCredential(credential);
+      final result = await _auth.signInWithCredential(credential);
+      debugPrint('[AuthService] Firebase login successful. uid=${result.user?.uid}');
+      return result;
     } on GoogleSignInException catch (gse) {
       final codeString = gse.code.toString();
-      if (kDebugMode) {
-        // ignore: avoid_print
-        print('DEBUG: GoogleSignInException: code=$codeString, details=${gse.details}');
-      }
+      debugPrint('[AuthService] GoogleSignInException code=$codeString, details=${gse.details}');
       
       // GoogleSignInExceptionCode check (package dependent)
       if (codeString.contains('canceled')) {
@@ -56,10 +60,7 @@ class AuthService {
       
       throw AuthFailure(AuthFailure.googleSignInUnknown, message: codeString);
     } on FirebaseAuthException catch (fae) {
-      if (kDebugMode) {
-        // ignore: avoid_print
-        print('DEBUG: FirebaseAuthException: code=${fae.code}, message=${fae.message}');
-      }
+      debugPrint('[AuthService] FirebaseAuthException code=${fae.code}, message=${fae.message}');
       
       if (fae.code == 'invalid-credential') {
         throw AuthFailure(AuthFailure.firebaseAuthInvalidCredential);
@@ -70,10 +71,7 @@ class AuthService {
       
       rethrow;
     } catch (e) {
-      if (kDebugMode) {
-        // ignore: avoid_print
-        print('DEBUG: Unknown error during signInWithGoogle: $e');
-      }
+      debugPrint('[AuthService] Unknown Google login error=$e');
       if (e is AuthFailure) rethrow;
       throw AuthFailure(AuthFailure.googleSignInUnknown, message: e.toString());
     }
@@ -125,8 +123,7 @@ class AuthService {
           await GoogleSignIn.instance.disconnect();
         } catch (e) {
           if (kDebugMode) {
-            // ignore: avoid_print
-            print('[AuthService] Google disconnect failed, fallback to signOut: $e');
+            debugPrint('[AuthService] Google disconnect failed, fallback to signOut: $e');
           }
           await GoogleSignIn.instance.signOut();
         }
@@ -135,8 +132,7 @@ class AuthService {
       }
     } catch (e) {
       if (kDebugMode) {
-        // ignore: avoid_print
-        print('[AuthService] Google signOut failed: $e');
+        debugPrint('[AuthService] Google signOut failed: $e');
       }
     }
 

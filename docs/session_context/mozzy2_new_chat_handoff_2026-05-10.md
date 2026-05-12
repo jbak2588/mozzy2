@@ -132,6 +132,22 @@
 - Result: **Fixed** (stale setting removed, launch.json re-organized)
 - Next recommended task: P6-S11 Real Device Smoke Test Build 4
 
+## P6-S11C Google Sign-In Auth Regression Status
+- P6-S11C Google Sign-In Auth Regression Fix completed.
+- Base HEAD: 50adb66
+- Report: docs/release/P6-S11C_Google_SignIn_Auth_Regression_Fix_Report.md
+- Result: Fixed regression, restored GOOGLE_WEB_CLIENT_ID in launch.json, added AuthFailure class, improved i18n feedback.
+
+## P6-S11E Google Login Deep Diagnostics Status
+- P6-S11E Google Login Deep Diagnostics completed.
+- Base HEAD: 5263463
+- Report: docs/release/P6-S11E_Google_Login_Deep_Diagnostics_Report.md
+- Google Login: Fixed (Found incorrect environment variable GOOGLE_WEB_CLIENT_ID using Android Client ID instead of Web Client ID)
+- Actual failure code: ApiException: 10 / DEVELOPER_ERROR
+- idToken length: 0 (when misconfigured) -> Correct (after fix)
+- Firebase OAuth/SHA status: Verified and matched local debug keystore
+- Next recommended task: P6-S11 Real Device Smoke Test Build 6
+
 
 ## 7. Next Prompt for New Chat
 Paste this instruction:

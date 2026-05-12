@@ -148,6 +148,16 @@
 - Firebase OAuth/SHA status: Verified and matched local debug keystore
 - Next recommended task: P6-S11 Real Device Smoke Test Build 6
 
+## P6-S11F Google Login Build 6 Live Verification Status
+- P6-S11F Google Login Build 6 Live Verification completed.
+- Base HEAD: 6778121
+- Report: docs/release/P6-S11F_Google_Login_Build_6_Live_Verification_Report.md
+- Google Login: Fixed (Successfully verified on physical device)
+- idToken length: 1082
+- FirebaseAuth result: Success (uid: F1RhoJnK0uUQ1jPzvA9GuIG6U2w1)
+- Device: RR8N109B4JM (Samsung SM-N971N)
+- Next recommended task: P6-S11 Real Device Smoke Test Build 6
+
 
 ## 7. Next Prompt for New Chat
 Paste this instruction:

@@ -51,7 +51,10 @@ class _ReportReasonSheetState extends ConsumerState<ReportReasonSheet> {
               children: [
                 Text(
                   'moderation.reportContent'.tr(),
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -60,20 +63,25 @@ class _ReportReasonSheetState extends ConsumerState<ReportReasonSheet> {
               ],
             ),
             const SizedBox(height: 8),
-            Text('moderation.selectReason'.tr(), style: const TextStyle(fontWeight: FontWeight.w500)),
+            Text(
+              'moderation.selectReason'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
             const SizedBox(height: 8),
             Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                children: ReportReason.values.map((reason) {
-                  return RadioListTile<ReportReason>(
-                    title: Text('moderation.reason.${reason.name}'.tr()),
-                    value: reason,
-                    groupValue: _selectedReason,
-                    onChanged: (val) => setState(() => _selectedReason = val),
-                    contentPadding: EdgeInsets.zero,
-                  );
-                }).toList(),
+              child: RadioGroup<ReportReason>(
+                groupValue: _selectedReason,
+                onChanged: (value) => setState(() => _selectedReason = value),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: ReportReason.values.map((reason) {
+                    return RadioListTile<ReportReason>(
+                      title: Text('moderation.reason.${reason.name}'.tr()),
+                      value: reason,
+                      contentPadding: EdgeInsets.zero,
+                    );
+                  }).toList(),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -88,7 +96,9 @@ class _ReportReasonSheetState extends ConsumerState<ReportReasonSheet> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: _isSubmitting || _selectedReason == null ? null : _submit,
+              onPressed: _isSubmitting || _selectedReason == null
+                  ? null
+                  : _submit,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
@@ -111,15 +121,17 @@ class _ReportReasonSheetState extends ConsumerState<ReportReasonSheet> {
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(moderationServiceProvider).submitReport(
-        targetType: widget.targetType,
-        targetId: widget.targetId,
-        targetOwnerId: widget.targetOwnerId,
-        reason: _selectedReason!,
-        description: _descriptionController.text.trim(),
-        // Cannot easily get route from GoRouter here in a clean way without context, so skipping it
-      );
-      
+      await ref
+          .read(moderationServiceProvider)
+          .submitReport(
+            targetType: widget.targetType,
+            targetId: widget.targetId,
+            targetOwnerId: widget.targetOwnerId,
+            reason: _selectedReason!,
+            description: _descriptionController.text.trim(),
+            // Cannot easily get route from GoRouter here in a clean way without context, so skipping it
+          );
+
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -128,9 +140,9 @@ class _ReportReasonSheetState extends ConsumerState<ReportReasonSheet> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('moderation.reportFailed'.tr())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('moderation.reportFailed'.tr())));
       }
     } finally {
       if (mounted) {

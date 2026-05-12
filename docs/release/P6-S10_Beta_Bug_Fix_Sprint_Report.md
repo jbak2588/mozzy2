@@ -26,13 +26,12 @@
 
 ## 4. Analyzer Cleanup
 - Before: 25 warnings (reported) / 9 issues (actual at start of sprint)
-- After: 7 issues (2 deprecated info, 5 duplicate_ignore in mocks)
+- After: 0 issues (Verified with --fatal-infos)
 - Fixed categories:
   - use_build_context_synchronously: Fixed by using `context.mounted` in ChatDetailScreen and DealDetailScreen.
   - unused imports: Cleaned in Build 1.5/2 codebase.
-- Remaining warnings:
-  - RadioListTile groupValue/onChanged deprecation (Info only, Flutter 3.32+).
-  - duplicate_ignore in Mockito mocks (Mockito known issue).
+  - RadioListTile deprecation: Fixed in moderation/widgets/report_reason_sheet.dart by using RadioGroup.
+- Remaining warnings: None.
 
 
 ## 5. Test Results
@@ -46,7 +45,7 @@
 
 ## 6. Build 2 Distribution Readiness
 - APK path: build/app/outputs/flutter-apk/app-release.apk
-- APK size: 63.4MB
+- APK size: 60.5MB
 - Release notes: docs/release/P6-S10_Android_Internal_Build_2_Release_Notes.md
 - Upload status: **Success** (Uploaded version 1.0.0+2)
 - Tester invitation status: Active (Distributed to 'mozzy-private-beta')

@@ -2,7 +2,7 @@
 
 ## 1. Scope
 - Build 6 Google Login live verification
-- Physical device (`RR8N109B4JM`) login result
+- Physical device login result
 - Firebase OAuth / Web Client ID runtime confirmation
 
 ## 2. Repo / Build State
@@ -21,7 +21,8 @@
 - Package name: com.humantric.mozzy2
 
 ## 4. Device / Install
-- Device: Samsung SM-N971N (Physical)
+- Device: Samsung SM-N971N
+- Device serial: device_redacted
 - OS: Android 12
 - Install source: adb install
 - Previous app uninstalled: Yes
@@ -31,7 +32,7 @@
 - Google account picker: Success (Triggered via `adb shell input tap`)
 - idToken length: 1082 (Success!)
 - FirebaseAuth signInWithCredential: Success
-- currentUser: F1RhoJnK0uUQ1jPzvA9GuIG6U2w1
+- currentUser: uid_redacted
 - Home / Smart Feed navigation: Success (Verified via screenshot)
 - Snackbar raw key: None (Success)
 - Result: **Fixed**
@@ -39,9 +40,9 @@
 ## 6. Logs Summary
 - GoogleSignInConfig: `initialize() successful` (implicitly confirmed by flow)
 - AuthService: `Starting GoogleSignIn.authenticate()`
-- AuthService: `Google user email=jbak2588@gmail.com`
+- AuthService: `Google user email=user_redacted@example.com`
 - AuthService: `idToken length=1082`
-- AuthService: `Firebase login successful. uid=F1RhoJnK0uUQ1jPzvA9GuIG6U2w1`
+- AuthService: `Firebase login successful. uid=uid_redacted`
 - Filtered log file: `docs\release\P6-S11F_google_login_build6_filtered_log.txt`
 
 ## 7. Decision

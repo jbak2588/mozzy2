@@ -11,7 +11,7 @@
 - Repo: jbak2588/mozzy2
 - Branch: main
 - Base HEAD: 453e87a
-- New HEAD: [To be filled after commit]
+- New HEAD: fb045ad
 - Build 1: 1.0.0+1
 - Build 2: 1.0.0+2
 
@@ -59,3 +59,7 @@
 ## 8. Next Step
 - **P6-S11 Real Device Smoke Test Build 2:** Verify Build 2 on actual devices.
 - **P6-S11 Firebase Workflow / Secrets Setup:** Automate the build and distribution process via GitHub Actions.
+
+## 9. Post-Sprint Runtime Issue
+- Build 2 failed to launch from VS Code because `.vscode/launch.json` referenced missing `.local/mozzy_dev_env.json`.
+- This is being handled in P6-S11A Runtime Env Config Fix.

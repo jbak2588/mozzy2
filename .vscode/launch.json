@@ -2,26 +2,32 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Mozzy (Development - Local Env File)",
+      "name": "Mozzy (Android Beta - Staging)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
       "toolArgs": [
-        "--dart-define-from-file=.local/mozzy_dev_env.json"
+        "--dart-define=APP_ENV=staging",
+        "--dart-define=PAYMENT_MODE=sandbox",
+        "--dart-define=PRIVATE_BETA=true",
+        "--dart-define=PAYMENT_PRODUCTION_ENABLED=false",
+        "--dart-define=CRASHLYTICS_ENABLED=true",
+        "--dart-define=PERFORMANCE_ENABLED=true"
       ]
     },
     {
-      "name": "Mozzy (Development - Env Vars)",
+      "name": "Mozzy (Android Beta - Staging + CS)",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
       "toolArgs": [
-        "--dart-define",
-        "GOOGLE_WEB_CLIENT_ID=${env:GOOGLE_WEB_CLIENT_ID}",
-        "--dart-define",
-        "GEMINI_API_KEY=${env:GEMINI_API_KEY}",
-        "--dart-define",
-        "GEMINI_VISION_MODEL=gemini-3-flash-preview"
+        "--dart-define=APP_ENV=staging",
+        "--dart-define=PAYMENT_MODE=sandbox",
+        "--dart-define=PRIVATE_BETA=true",
+        "--dart-define=PAYMENT_PRODUCTION_ENABLED=false",
+        "--dart-define=CRASHLYTICS_ENABLED=true",
+        "--dart-define=PERFORMANCE_ENABLED=true",
+        "--dart-define=BETA_CS_WHATSAPP=${env:BETA_CS_WHATSAPP}"
       ]
     },
     {

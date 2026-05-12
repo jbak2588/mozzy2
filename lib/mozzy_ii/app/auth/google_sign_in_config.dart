@@ -21,9 +21,11 @@ class GoogleSignInConfig {
     }
 
     if (webClientId.isEmpty) {
-      throw StateError(
-        'GOOGLE_WEB_CLIENT_ID is missing. Run with --dart-define=\'GOOGLE_WEB_CLIENT_ID=<WEB_CLIENT_ID>\'.',
-      );
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print('WARNING: GOOGLE_WEB_CLIENT_ID is missing. Google Sign-In idToken features might not work.');
+      }
+      return;
     }
 
     try {

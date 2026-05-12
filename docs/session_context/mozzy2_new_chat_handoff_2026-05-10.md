@@ -124,7 +124,16 @@
 - Next recommended task: P6-S11 Real Device Smoke Test Build 2
 
 
+## P6-S11A Runtime Env Config Fix Status
+- P6-S11A Runtime Env Config Fix completed.
+- Base HEAD: 535cbae
+- Report: docs/release/P6-S11A_Runtime_Env_Config_Fix_Report.md
+- Real device launch blocker: `.local/mozzy_dev_env.json` missing
+- Fix: default launch no longer depends on `--dart-define-from-file`
+- Next recommended task: P6-S11 Real Device Smoke Test Build 3
+
+
 ## 7. Next Prompt for New Chat
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S09 이후 상태를 검토한 다음 `P6-S10 Beta Bug Fix Sprint` 또는 `P6-S10 Firebase Workflow / Secrets Setup` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S11A 이후 상태를 검토한 다음 `P6-S11 Real Device Smoke Test Build 3` 작업 지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

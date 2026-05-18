@@ -202,8 +202,31 @@
 - Tester count: 5 (Initial expansion)
 - Next recommended task: P6-S15 Beta Monitoring 24h Report
 
+## P6-S15 Beta Monitoring 24h Status
+- P6-S15 Beta Monitoring 24h Report completed.
+- Base HEAD: 1998875
+- Build: 1.0.0+7
+- Report: docs/release/P6-S15_Beta_Monitoring_24h_Report.md
+- Beta 1 status: Continue
+- P0 issues: 0
+- P1 issues: 0
+- Tester adoption: Low (0 activity detected in first 24h)
+- Next recommended task: P6-S16 Expand Tester Group 2
+
+## P6-S16 Expand Tester Group 2 Status
+- P6-S16 Expand Tester Group 2 completed.
+- Base HEAD: latest P6-S15 commit
+- Build: 1.0.0+7
+- Report: docs/release/P6-S16_Expand_Tester_Group_2_Report.md
+- Tester group: mozzy-private-beta
+- Previous tester count: 5
+- Total tester count: 15
+- Expansion status: Started
+- Observation period: 48 hours
+- Next recommended task: P6-S17 Beta Monitoring 48h Report
+
 ## 7. Next Prompt for New Chat
 
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S14 Controlled Tester Group Expansion 이후 상태를 검토한 다음 Firebase App Distribution 결과와 Android Beta 1 모니터링 상태에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S16 Expand Tester Group 2 이후 상태를 검토한 다음 48시간 모니터링 결과와 Beta 1 안정성에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

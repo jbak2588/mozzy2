@@ -100,6 +100,11 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     String? aiSuggestedCategory,
     String? aiConditionLabel,
     @OptionalSafeDateTimeConverter() DateTime? aiVerifiedAt,
+    
+    String? aiVerificationPaymentId,
+    @OptionalSafeDateTimeConverter() DateTime? aiVerificationRequestedAt,
+    @OptionalSafeDateTimeConverter() DateTime? aiVerificationPaidAt,
+    String? aiVerificationError,
 
     @SafeDateTimeConverter() required DateTime createdAt,
     @OptionalSafeDateTimeConverter() DateTime? updatedAt,

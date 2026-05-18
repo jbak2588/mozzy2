@@ -8,20 +8,33 @@ import '../payment_provider.dart';
 
 class XenditPaymentSheet extends ConsumerStatefulWidget {
   final PaymentRequest request;
+  final void Function(PaymentResult result)? onPaymentCreated;
+  final void Function(PaymentResult result)? onPaymentPaid;
 
   const XenditPaymentSheet({
     super.key,
     required this.request,
+    this.onPaymentCreated,
+    this.onPaymentPaid,
   });
 
-  static Future<PaymentResult?> show(BuildContext context, PaymentRequest request) {
+  static Future<PaymentResult?> show(
+    BuildContext context, 
+    PaymentRequest request, {
+    void Function(PaymentResult result)? onPaymentCreated,
+    void Function(PaymentResult result)? onPaymentPaid,
+  }) {
     return showModalBottomSheet<PaymentResult>(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => XenditPaymentSheet(request: request),
+      builder: (context) => XenditPaymentSheet(
+        request: request,
+        onPaymentCreated: onPaymentCreated,
+        onPaymentPaid: onPaymentPaid,
+      ),
     );
   }
 
@@ -43,10 +56,15 @@ class _XenditPaymentSheetState extends ConsumerState<XenditPaymentSheet> {
     try {
       final repository = ref.read(paymentRepositoryProvider);
       final result = await repository.requestPayment(widget.request);
+      widget.onPaymentCreated?.call(result);
       setState(() {
         _result = result;
         _isLoading = false;
       });
+      // Optionally handle immediate paid state (e.g. from mock or fast QRIS)
+      if (result.status == MozzyPaymentStatus.paid) {
+        widget.onPaymentPaid?.call(result);
+      }
     } catch (e) {
       setState(() {
         _error = e.toString();

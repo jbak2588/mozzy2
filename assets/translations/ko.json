@@ -179,6 +179,15 @@
     "aiVerificationNeedsReview": "검토 필요",
     "aiVerificationFailed": "AI 검수 실패",
     "aiVerificationError": "AI 검수 불가",
+    "aiVerification": {
+      "request": "AI 검수 요청",
+      "pendingPayment": "결제 대기 중",
+      "processing": "AI 검수 진행 중",
+      "completed": "AI 검수 완료",
+      "failed": "검수 실패",
+      "retry": "다시 시도",
+      "requiresImage": "AI 검수를 위해 최소 1장의 상품 사진이 필요합니다"
+    },
     "aiNeedsReview": "검토 필요",
     "aiRejected": "AI 검수 실패",
     "aiNotVerified": "미검증",

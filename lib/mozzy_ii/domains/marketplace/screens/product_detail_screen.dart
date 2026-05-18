@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/deal_provider.dart';
 import '../../moderation/models/report_model.dart';
 import '../../moderation/widgets/report_button.dart';
+import '../controllers/marketplace_ai_verification_controller.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
   const ProductDetailScreen({super.key, required this.productId});
@@ -118,7 +119,7 @@ class _ProductDetailContent extends ConsumerWidget {
                 const Divider(height: 32),
                 _buildSellerInfo(context),
                 const Divider(height: 32),
-                _buildAiVerification(context),
+                _buildAiVerification(context, ref, isSeller, userId),
                 const Divider(height: 32),
                 _buildAiReportHistory(context, ref),
                 const SizedBox(height: 32),
@@ -449,7 +450,7 @@ class _ProductDetailContent extends ConsumerWidget {
     );
   }
 
-  Widget _buildAiVerification(BuildContext context) {
+  Widget _buildAiVerification(BuildContext context, WidgetRef ref, bool isSeller, String? userId) {
     final statusColor = product.isAiVerified
         ? Colors.green
         : (product.aiVerificationStatus == 'failed'
@@ -548,6 +549,38 @@ class _ProductDetailContent extends ConsumerWidget {
                 style: const TextStyle(fontSize: 12, color: Colors.red),
               ),
             ),
+          ],
+          if (isSeller && !product.isAiVerified && product.aiVerificationStatus != 'processing') ...[
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: product.imageUrls.isEmpty
+                    ? null
+                    : () {
+                        if (userId != null) {
+                          ref.read(marketplaceAiVerificationControllerProvider).requestVerification(context, product, userId);
+                        }
+                      },
+                icon: const Icon(Icons.auto_awesome),
+                label: Text(
+                  product.aiVerificationStatus == 'payment_pending'
+                      ? 'marketplace.aiVerification.pendingPayment'.tr()
+                      : (product.aiVerificationStatus == 'failed'
+                          ? 'marketplace.aiVerification.retry'.tr()
+                          : 'marketplace.aiVerification.request'.tr()),
+                ),
+              ),
+            ),
+            if (product.imageUrls.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'marketplace.aiVerification.requiresImage'.tr(),
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
           ],
         ],
       ),

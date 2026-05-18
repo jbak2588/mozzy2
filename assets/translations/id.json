@@ -179,6 +179,15 @@
     "aiVerificationNeedsReview": "Perlu ditinjau",
     "aiVerificationFailed": "Verifikasi AI gagal",
     "aiVerificationError": "Verifikasi AI tidak tersedia",
+    "aiVerification": {
+      "request": "Minta Verifikasi AI",
+      "pendingPayment": "Menunggu Pembayaran",
+      "processing": "Verifikasi AI sedang diproses",
+      "completed": "Terverifikasi AI",
+      "failed": "Verifikasi gagal",
+      "retry": "Coba Lagi",
+      "requiresImage": "Verifikasi AI memerlukan minimal 1 foto produk"
+    },
     "aiNeedsReview": "Perlu ditinjau",
     "aiRejected": "Tidak lolos AI",
     "aiNotVerified": "Belum diverifikasi",

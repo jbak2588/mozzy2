@@ -58,6 +58,14 @@ _ProductModel _$ProductModelFromJson(
   aiVerifiedAt: const OptionalSafeDateTimeConverter().fromJson(
     json['aiVerifiedAt'],
   ),
+  aiVerificationPaymentId: json['aiVerificationPaymentId'] as String?,
+  aiVerificationRequestedAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['aiVerificationRequestedAt'],
+  ),
+  aiVerificationPaidAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['aiVerificationPaidAt'],
+  ),
+  aiVerificationError: json['aiVerificationError'] as String?,
   createdAt: const SafeDateTimeConverter().fromJson(json['createdAt']),
   updatedAt: const OptionalSafeDateTimeConverter().fromJson(json['updatedAt']),
   isDeleted: json['isDeleted'] as bool? ?? false,
@@ -100,6 +108,14 @@ Map<String, dynamic> _$ProductModelToJson(
   'aiVerifiedAt': const OptionalSafeDateTimeConverter().toJson(
     instance.aiVerifiedAt,
   ),
+  'aiVerificationPaymentId': instance.aiVerificationPaymentId,
+  'aiVerificationRequestedAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.aiVerificationRequestedAt,
+  ),
+  'aiVerificationPaidAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.aiVerificationPaidAt,
+  ),
+  'aiVerificationError': instance.aiVerificationError,
   'createdAt': const SafeDateTimeConverter().toJson(instance.createdAt),
   'updatedAt': const OptionalSafeDateTimeConverter().toJson(instance.updatedAt),
   'isDeleted': instance.isDeleted,

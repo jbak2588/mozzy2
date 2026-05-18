@@ -150,6 +150,7 @@ service cloud.firestore {
       allow update: if isAuthenticated()
         && resource.data.sellerId == request.auth.uid
         && request.resource.data.sellerId == resource.data.sellerId; // immutable sellerId
+        // TODO(P6-S33): restrict aiVerification fields to backend updates only (Option B implementation)
 
       allow delete: if isAuthenticated() && resource.data.sellerId == request.auth.uid;
 

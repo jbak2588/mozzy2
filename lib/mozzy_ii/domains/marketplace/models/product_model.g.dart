@@ -33,6 +33,12 @@ _ProductModel _$ProductModelFromJson(
   trustScore: (json['trustScore'] as num?)?.toDouble() ?? 0.3,
   signalScore: (json['signalScore'] as num?)?.toDouble() ?? 0.0,
   geoPath: json['geoPath'] as String,
+  discoveryChannels:
+      (json['discoveryChannels'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const <String>['feed', 'map', 'search'],
+  mapVisibility: json['mapVisibility'] as bool? ?? true,
   locationParts: json['locationParts'] == null
       ? null
       : LocationParts.fromJson(json['locationParts'] as Map<String, dynamic>),
@@ -80,6 +86,8 @@ Map<String, dynamic> _$ProductModelToJson(
   'trustScore': instance.trustScore,
   'signalScore': instance.signalScore,
   'geoPath': instance.geoPath,
+  'discoveryChannels': instance.discoveryChannels,
+  'mapVisibility': instance.mapVisibility,
   'locationParts': instance.locationParts?.toJson(),
   'countryCode': instance.countryCode,
   'isAiVerified': instance.isAiVerified,

@@ -85,8 +85,10 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @Default(0.3) double trustScore,
     @Default(0.0) double signalScore,
     required String geoPath,
+    @Default(<String>['feed', 'map', 'search']) List<String> discoveryChannels,
+    @Default(true) bool mapVisibility,
 
-    // ìœ위치 상세
+    // 위치 상세
     LocationParts? locationParts,
 
     @Default('ID') String countryCode,

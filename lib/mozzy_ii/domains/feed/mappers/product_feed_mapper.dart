@@ -5,7 +5,7 @@ import '../models/feed_item_type.dart';
 class ProductFeedMapper {
   static FeedItemModel map(ProductModel product) {
     return FeedItemModel(
-      id: 'prod_${product.id}',
+      id: 'marketplace_${product.id}',
       sourceId: product.id,
       type: FeedItemType.marketplaceProduct,
       title: product.title,

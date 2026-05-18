@@ -39,6 +39,7 @@ void main() {
 
       final item = JobFeedMapper.map(job);
 
+      expect(item.id, 'jobs_job123');
       expect(item.sourceId, 'job123');
       expect(item.type, FeedItemType.job);
       expect(item.title, 'Flutter Dev');
@@ -61,6 +62,7 @@ void main() {
 
       final item = ProductFeedMapper.map(product);
 
+      expect(item.id, 'marketplace_prod123');
       expect(item.sourceId, 'prod123');
       expect(item.type, FeedItemType.marketplaceProduct);
       expect(item.title, 'Used iPhone');

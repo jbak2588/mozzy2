@@ -5,7 +5,7 @@ import '../models/feed_item_type.dart';
 class JobFeedMapper {
   static FeedItemModel map(JobPostModel job) {
     return FeedItemModel(
-      id: 'job_${job.id}',
+      id: 'jobs_${job.id}',
       sourceId: job.id,
       type: FeedItemType.job,
       title: job.title,

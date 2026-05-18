@@ -30,19 +30,15 @@ class GoogleSignInConfig {
     try {
       // Initialize might fail on Android if SHA-1 is missing in Firebase Console
       await GoogleSignIn.instance.initialize(serverClientId: webClientId);
-      if (kDebugMode) {
-        debugPrint('[GoogleSignInConfig] GoogleSignIn.instance.initialize() successful');
-      }
+      debugPrint('[GoogleSignInConfig] GoogleSignIn.instance.initialize() successful');
     } catch (e, stack) {
+      // Always log critical initialization errors to adb logcat
+      debugPrint('ERROR: [GoogleSignInConfig] GoogleSignIn.instance.initialize() failed.');
+      debugPrint('This usually means SHA-1 is missing or mismatched in Firebase Console.');
+      debugPrint('Error: $e');
       if (kDebugMode) {
-        debugPrint('ERROR: [GoogleSignInConfig] GoogleSignIn.instance.initialize() failed.');
-        debugPrint('This usually means SHA-1 is missing or mismatched in Firebase Console.');
-        debugPrint('Error: $e');
         debugPrint('Stack: $stack');
       }
-      // Depending on requirements, we can rethrow or ignore.
-      // Ignoring allows the app to load, but Google Sign-In will fail later.
-      // throw e;
     }
   }
 }

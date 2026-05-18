@@ -255,10 +255,17 @@
   - Installed app: 5+
   - Logged in: 3+
   - Feedback submitted: 2+
-- Next recommended task: P6-S19 Tester Activation 24h Follow-up Report
+- Next recommended task: P6-S19 Google Login Runtime Blocker Reopen
+
+## P6-S19 Google Login Runtime Blocker Status
+- P6-S18 Tester Activation is paused.
+- Reason: Google Login still fails on real device.
+- Current symptom: HiddenActivity closes, then app exits with `Exited (-1)`.
+- Beta 1 status: Hold — Login Blocker.
+- Next recommended task: P6-S19 Google Login Runtime Blocker Reopen.
 
 ## 7. Next Prompt for New Chat
 
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S18 Beta Ops / Tester Activation Sprint 이후 상태를 검토한 다음 테스터 활성화 24시간 결과에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S19 Google Login Runtime Blocker Reopen 이후 상태를 검토한 다음 Google Login 차단 해소 여부에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”

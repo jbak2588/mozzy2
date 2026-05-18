@@ -53,3 +53,17 @@
 
 ## 8. Next Step
 - P6-S19 Tester Activation 24h Follow-up Report
+
+## 9. Post-Sprint Blocker Update
+
+Tester Activation is paused.
+
+Reason:
+- Real device Google Login is currently blocked.
+- Testers cannot complete the 5-minute mission if login fails.
+- Current runtime log shows Android Credential HiddenActivity flow followed by `Application finished / Exited (-1)`.
+
+Updated decision:
+- Tester Activation Sprint: Paused
+- Beta 1 status: Hold — Login Blocker
+- Next task: P6-S19 Google Login Runtime Blocker Reopen

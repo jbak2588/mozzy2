@@ -51,7 +51,9 @@ class AuthService {
       return result;
     } on GoogleSignInException catch (gse) {
       final codeString = gse.code.toString();
-      debugPrint('[AuthService] GoogleSignInException code=$codeString, details=${gse.details}');
+      debugPrint('[AuthService] GoogleSignInException:');
+      debugPrint('  - Code: $codeString');
+      debugPrint('  - Details: ${gse.details}');
       
       // GoogleSignInExceptionCode check (package dependent)
       if (codeString.contains('canceled')) {
@@ -60,7 +62,9 @@ class AuthService {
       
       throw AuthFailure(AuthFailure.googleSignInUnknown, message: codeString);
     } on FirebaseAuthException catch (fae) {
-      debugPrint('[AuthService] FirebaseAuthException code=${fae.code}, message=${fae.message}');
+      debugPrint('[AuthService] FirebaseAuthException:');
+      debugPrint('  - Code: ${fae.code}');
+      debugPrint('  - Message: ${fae.message}');
       
       if (fae.code == 'invalid-credential') {
         throw AuthFailure(AuthFailure.firebaseAuthInvalidCredential);
@@ -70,8 +74,9 @@ class AuthService {
       }
       
       rethrow;
-    } catch (e) {
-      debugPrint('[AuthService] Unknown Google login error=$e');
+    } catch (e, stack) {
+      debugPrint('[AuthService] Unknown Google login error: $e');
+      debugPrint('Stack trace: $stack');
       if (e is AuthFailure) rethrow;
       throw AuthFailure(AuthFailure.googleSignInUnknown, message: e.toString());
     }

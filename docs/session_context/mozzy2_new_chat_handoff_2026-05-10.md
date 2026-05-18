@@ -292,8 +292,16 @@
 - Current route/feed map documented: Yes
 - Next recommended task: P6-S22 Smart Feed Source Expansion Audit
 
-## 7. Next Prompt for New Chat
+## P6-S22 Dev Plan Alignment & Xendit Direction Status
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Other planning references excluded.
+- Payment provider override: Xendit
+- Alignment report: docs/release/P6-S22_Dev_Plan_Alignment_And_Xendit_Direction_Report.md
+- ADR: docs/adr/ADR-003-Xendit-As-Official-Payment-Gateway.md
+- Current plan alignment: Partial (Smart Feed missing News, Jobs missing Shared Contract, 6 features missing).
+- Major gaps: Smart Feed lacks Berita, ProductModel/JobPostModel missing some Shared Contract fields, Xendit Dart integration missing.
+- Recommended next task: P6-S23 Smart Feed Official Architecture Implementation Plan
 
-Paste this instruction:
+## Next Prompt for New Chat
 
-"Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S21 Tester Activation 24h Follow-up — Build 8 이후 상태를 검토한 다음 Beta 1 활성화 결과와 Smart Feed 연결 구조에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘."
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S22 Dev Plan Alignment & Xendit Direction 이후 상태를 검토한 다음 공식 기획서 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 다음 개발 작업을 지시해줘. 결제는 Xendit 기준으로만 판단하고, 다른 기획 문서는 참조하지 마.

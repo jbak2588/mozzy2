@@ -1,38 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../../core/config/integration_test_config.dart';
+
+import 'google_oauth_config.dart';
 
 class GoogleSignInConfig {
-  static const String webClientId = String.fromEnvironment(
-    'GOOGLE_WEB_CLIENT_ID',
-  );
+  static String get webClientId => GoogleOAuthConfig.webClientId;
 
-  static bool get hasWebClientId => webClientId.trim().isNotEmpty;
+  static bool get hasWebClientId => GoogleOAuthConfig.hasWebClientId;
 
-  /// Call this once at startup (before runApp) with --dart-define
   static Future<void> initialize() async {
-    if (IntegrationTestConfig.enabled) return;
-
-    if (kDebugMode) {
-      debugPrint('[GoogleSignInConfig] GOOGLE_WEB_CLIENT_ID length=${webClientId.length}');
-      if (webClientId.isNotEmpty) {
-        debugPrint('[GoogleSignInConfig] GOOGLE_WEB_CLIENT_ID prefix=${webClientId.substring(0, 12)}...');
-      }
-    }
-
     if (!hasWebClientId) {
-      if (kDebugMode) {
-        debugPrint('WARNING: [GoogleSignInConfig] GOOGLE_WEB_CLIENT_ID is missing. Google Sign-In will be disabled.');
-      }
+      debugPrint('[GoogleSignInConfig] Web Client ID is missing.');
       return;
     }
 
+    debugPrint('[GoogleSignInConfig] Web Client ID length=${webClientId.length}');
+    debugPrint('[GoogleSignInConfig] Web Client ID prefix=${webClientId.substring(0, 12)}...');
+
     try {
-      // Initialize might fail on Android if SHA-1 is missing in Firebase Console
-      await GoogleSignIn.instance.initialize(serverClientId: webClientId);
+      await GoogleSignIn.instance.initialize(
+        serverClientId: webClientId,
+      );
       debugPrint('[GoogleSignInConfig] GoogleSignIn.instance.initialize() successful');
     } catch (e, stack) {
-      // Always log critical initialization errors to adb logcat
       debugPrint('ERROR: [GoogleSignInConfig] GoogleSignIn.instance.initialize() failed.');
       debugPrint('This usually means SHA-1 is missing or mismatched in Firebase Console.');
       debugPrint('Error: $e');

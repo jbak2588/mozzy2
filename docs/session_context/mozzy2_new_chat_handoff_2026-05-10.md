@@ -257,12 +257,16 @@
   - Feedback submitted: 2+
 - Next recommended task: P6-S19 Google Login Runtime Blocker Reopen
 
-## P6-S19 Google Login Runtime Blocker Status
-- P6-S18 Tester Activation is paused.
-- Reason: Google Login still fails on real device.
-- Current symptom: HiddenActivity closes, then app exits with `Exited (-1)`.
-- Beta 1 status: Hold — Login Blocker.
-- Next recommended task: P6-S19 Google Login Runtime Blocker Reopen.
+## P6-S19 Google Login Single Source Fix Status
+- P6-S18 Tester Activation paused.
+- Reason: Google Login still failed on real device.
+- Root cause direction: unstable GOOGLE_WEB_CLIENT_ID env injection across builds.
+- Fix: Google OAuth Web Client ID moved to single committed config.
+- Build: 1.0.0+8
+- Report: docs/release/P6-S19_Google_Login_Single_Source_Fix_Report.md
+- Google Login: Fixed
+- Tester Activation: Resume
+- Next recommended task: P6-S20 Resume Tester Activation with Build 8
 
 ## 7. Next Prompt for New Chat
 

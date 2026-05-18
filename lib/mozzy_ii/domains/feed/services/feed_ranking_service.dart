@@ -1,5 +1,6 @@
 import '../models/feed_item_model.dart';
 import '../models/user_feed_context.dart';
+import 'feed_time_weight_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_ranking_service.g.dart';
@@ -39,7 +40,15 @@ class FeedRankingService extends _$FeedRankingService {
         (diversity * diversityWeight) +
         (trust * trustWeight);
 
-    return _clamp01(totalScore);
+    // Apply Time Weight as a dynamic multiplier
+    final timeWeightService = ref.read(feedTimeWeightServiceProvider.notifier);
+    final timeWeight = timeWeightService.getTimeWeight(
+      sourceType: item.type.name,
+      now: currentNow,
+      timezoneCode: context?.timezoneCode ?? 'WIB',
+    );
+
+    return _clamp01(totalScore * timeWeight);
   }
 
   /// Recency Score (0.0 ~ 1.0)
@@ -173,27 +182,65 @@ class FeedRankingService extends _$FeedRankingService {
   }) {
     final currentNow = now ?? DateTime.now();
 
-    final scoredItems = items.map((item) {
-      final signal = calculateSignalScore(
-        item: item,
-        context: context,
-        now: currentNow,
-      );
+    // 1. Calculate base scores (without diversity)
+    final initialScoredItems = items.map((item) {
+      final recency = calculateRecencyScore(item.createdAt, currentNow);
+      final relevance = calculateRelevanceScore(item: item, context: context);
+      final engagement = calculateEngagementScore(item);
+      final trust = calculateTrustScore(item.trustScore);
+
+      // Base total without diversity
+      final baseTotal = (recency * recencyWeight) +
+          (relevance * relevanceWeight) +
+          (engagement * engagementWeight) +
+          (trust * trustWeight);
+
       final boost = calculateBoostScore(item);
-      final total = boost + signal;
-      
-      return item.copyWith(signalScore: signal, finalScore: total);
+      final total = boost + baseTotal;
+
+      return item.copyWith(finalScore: total);
     }).toList();
 
-    scoredItems.sort((a, b) {
-      // 1. Final Score DESC (Boost + Signal)
-      final scoreComparison = b.finalScore.compareTo(a.finalScore);
-      if (scoreComparison != 0) return scoreComparison;
+    // 2. Initial sort
+    initialScoredItems.sort((a, b) => b.finalScore.compareTo(a.finalScore));
 
-      // 2. Created At DESC (Tie-breaker)
-      return b.createdAt.compareTo(a.createdAt);
-    });
+    // 3. Apply diversity penalty iteratively (Reranking)
+    final List<FeedItemModel> result = [];
+    final List<String> shownTypes = List.from(context?.recentlyShownTypes ?? []);
 
-    return scoredItems;
+    final List<FeedItemModel> remaining = List.from(initialScoredItems);
+
+    while (remaining.isNotEmpty) {
+      // Recalculate diversity and final score for the top few candidates
+      for (int i = 0; i < remaining.length && i < 10; i++) {
+        final item = remaining[i];
+        
+        // We need to re-fetch other components to get the true weighted signal
+        // or just use the pre-calculated base total. 
+        // Let's re-calculate signal fully for accuracy.
+        final signal = calculateSignalScore(
+          item: item,
+          context: context?.copyWith(recentlyShownTypes: shownTypes),
+          now: currentNow,
+        );
+        final boost = calculateBoostScore(item);
+        final total = boost + signal;
+        
+        remaining[i] = item.copyWith(signalScore: signal, finalScore: total);
+      }
+
+      // Re-sort candidates
+      remaining.sort((a, b) => b.finalScore.compareTo(a.finalScore));
+
+      // Pick the best one
+      final best = remaining.removeAt(0);
+      result.add(best);
+      
+      // Update history for next iteration
+      shownTypes.insert(0, best.type.name);
+      if (shownTypes.length > 10) shownTypes.removeLast();
+    }
+
+    return result;
   }
 }

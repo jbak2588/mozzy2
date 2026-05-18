@@ -364,6 +364,25 @@
 - Tests: Passed (17 tests)
 - Next recommended task: P6-S27 Time-Based Weighting + Diversity Ranking
 
+## P6-S27 Time-Based Weighting + Diversity Ranking Status
+
+- P6-S27 Time-Based Weighting + Diversity Ranking completed.
+- Base HEAD: dfb03b6
+- Report: docs/release/P6-S27_Time_Based_Weighting_And_Diversity_Ranking_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Smart Feed ADR: docs/adr/ADR-004-Smart-Feed-Official-Architecture.md
+- Payment provider: Xendit
+- Time-based weighting: Complete
+- WIB/WITA/WIT handling: Complete
+- recentlyShownTypes tracking: Complete (Reranking approach)
+- Diversity ranking: Complete
+- Berita Smart Feed preserved: Yes
+- Marketplace Smart Feed preserved: Yes
+- Jobs Smart Feed preserved: Yes
+- Boost policy observation documented: Yes
+- Tests: Passed
+- Next recommended task: P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Feasibility Review
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S26 Official signalScore Formula Implementation 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md`와 `docs/adr/ADR-004-Smart-Feed-Official-Architecture.md` 기준으로 P6-S27 Time-Based Weighting + Diversity Ranking 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S27 Time-Based Weighting + Diversity Ranking 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md`와 `docs/adr/ADR-004-Smart-Feed-Official-Architecture.md` 기준으로 P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Feasibility Review 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.

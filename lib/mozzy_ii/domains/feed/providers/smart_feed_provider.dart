@@ -76,7 +76,24 @@ Stream<List<FeedItemModel>> smartFeed(Ref ref) {
   final engagementRepo = ref.watch(feedEngagementRepositoryProvider);
   
   final locationParts = locationAsync.value;
-  final context = locationParts != null ? UserFeedContext(locationParts: locationParts) : null;
+  
+  // Resolve Timezone based on province (Track 1)
+  String timezoneCode = 'WIB';
+  final provinsi = locationParts?.idAddress?.provinsi;
+  if (provinsi != null) {
+    final prov = provinsi.toLowerCase();
+    if (prov.contains('bali') || prov.contains('nusa tenggara') || prov.contains('sulawesi') || prov.contains('kalimantan selatan') || prov.contains('kalimantan timur') || prov.contains('kalimantan utara')) {
+      timezoneCode = 'WITA';
+    } else if (prov.contains('maluku') || prov.contains('papua')) {
+      timezoneCode = 'WIT';
+    }
+  }
+
+  final context = UserFeedContext(
+    locationParts: locationParts,
+    timezoneCode: timezoneCode,
+    recentlyShownTypes: const [], // History tracking can be implemented via session provider
+  );
 
   return repository.getSmartFeed(locationFilter: locationParts).switchMap((items) {
     if (items.isEmpty) return Stream.value([]);

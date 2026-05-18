@@ -4,17 +4,15 @@ import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_type.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/user_feed_context.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/services/feed_ranking_service.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
-
-class MockFeedRankingService extends FeedRankingService {
-  MockFeedRankingService() : super();
-}
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   late FeedRankingService service;
   final now = DateTime(2026, 5, 9, 16, 0);
 
   setUp(() {
-    service = MockFeedRankingService();
+    final container = ProviderContainer();
+    service = container.read(feedRankingServiceProvider.notifier);
   });
 
   group('FeedRankingService Official Formula', () {

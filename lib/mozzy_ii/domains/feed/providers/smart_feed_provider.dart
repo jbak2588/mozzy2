@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/feed_item_model.dart';
-import '../models/user_location_context.dart';
+import '../models/user_feed_context.dart';
 import '../repositories/smart_feed_repository.dart';
 import '../repositories/firestore_smart_feed_repository.dart';
 import '../services/feed_ranking_service.dart';
@@ -76,7 +76,7 @@ Stream<List<FeedItemModel>> smartFeed(Ref ref) {
   final engagementRepo = ref.watch(feedEngagementRepositoryProvider);
   
   final locationParts = locationAsync.value;
-  final context = locationParts != null ? UserLocationContext(locationParts: locationParts) : null;
+  final context = locationParts != null ? UserFeedContext(locationParts: locationParts) : null;
 
   return repository.getSmartFeed(locationFilter: locationParts).switchMap((items) {
     if (items.isEmpty) return Stream.value([]);

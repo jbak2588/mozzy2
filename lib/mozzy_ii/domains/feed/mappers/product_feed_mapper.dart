@@ -18,6 +18,9 @@ class ProductFeedMapper {
       trustScore: product.trustScore,
       locationParts: product.locationParts,
       locationText: product.locationParts?.idAddress?.kecamatan,
+      likesCount: product.likesCount,
+      viewsCount: product.viewsCount,
+      chatsCount: product.chatsCount,
       route: '/marketplace/${product.id}',
     );
   }

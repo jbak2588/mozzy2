@@ -348,6 +348,22 @@
 - Tests: Passed
 - Next recommended task: P6-S26 Official signalScore Formula Implementation
 
+## P6-S26 Official signalScore Formula Implementation Status
+
+- P6-S26 Official signalScore Formula Implementation completed.
+- Base HEAD: b9e354f
+- Report: docs/release/P6-S26_Official_signalScore_Formula_Implementation_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Smart Feed ADR: docs/adr/ADR-004-Smart-Feed-Official-Architecture.md
+- Payment provider: Xendit
+- Official formula implemented: Yes
+- FeedRankingService: Complete
+- Berita Smart Feed preserved: Yes
+- Marketplace Smart Feed preserved: Yes
+- Jobs Smart Feed preserved: Yes
+- Tests: Passed (17 tests)
+- Next recommended task: P6-S27 Time-Based Weighting + Diversity Ranking
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S25 Product / Job Shared Contract Normalization 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md`와 `docs/adr/ADR-004-Smart-Feed-Official-Architecture.md` 기준으로 P6-S26 Official signalScore Formula Implementation 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S26 Official signalScore Formula Implementation 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md`와 `docs/adr/ADR-004-Smart-Feed-Official-Architecture.md` 기준으로 P6-S27 Time-Based Weighting + Diversity Ranking 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.

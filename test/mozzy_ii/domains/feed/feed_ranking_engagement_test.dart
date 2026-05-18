@@ -15,29 +15,30 @@ void main() {
   });
 
   group('FeedRankingService Engagement Integration', () {
-    test('calculateEngagementScore should multiply engagementScore by multiplier', () {
+    test('calculateEngagementScore should reflect raw counts', () {
       final item = FeedItemModel(
         id: '1',
         sourceId: 's1',
         type: FeedItemType.job,
         title: 'Job 1',
-        createdAt: now.subtract(const Duration(days: 10)), // No freshness bonus
-        engagementScore: 10.0,
+        createdAt: now.subtract(const Duration(days: 10)),
+        likesCount: 10, // 10*3 = 30
+        commentsCount: 5, // 5*5 = 25
+        // Total 55 -> Normalized 1.0
         route: '/jobs/1',
       );
 
-      // engagementMultiplier is 1.0 in current FeedRankingSignal
-      expect(rankingService.calculateEngagementScore(item), 10.0);
+      expect(rankingService.calculateEngagementScore(item), 1.0);
     });
 
-    test('rankItems should prioritize item with higher engagementScore', () {
+    test('rankItems should prioritize item with higher engagement counts', () {
       final item1 = FeedItemModel(
         id: '1',
         sourceId: 's1',
         type: FeedItemType.job,
         title: 'Low Engagement',
-        createdAt: now.subtract(const Duration(days: 10)),
-        engagementScore: 5.0,
+        createdAt: now.subtract(const Duration(days: 1)),
+        viewsCount: 2, // 2*1 = 2 -> Normalized 0.25
         route: '/jobs/1',
       );
 
@@ -46,26 +47,25 @@ void main() {
         sourceId: 's2',
         type: FeedItemType.job,
         title: 'High Engagement',
-        createdAt: now.subtract(const Duration(days: 10)),
-        engagementScore: 25.0,
+        createdAt: now.subtract(const Duration(days: 1)),
+        likesCount: 20, // 20*3 = 60 -> Normalized 1.0
         route: '/jobs/2',
       );
 
       final ranked = rankingService.rankItems([item1, item2], now: now);
 
       expect(ranked.first.id, '2');
-      expect(ranked.first.engagementScore, 25.0);
       expect(ranked.last.id, '1');
     });
 
-    test('engagementScore should not override boostScore', () {
+    test('engagement should not override boostScore', () {
       final item1 = FeedItemModel(
         id: '1',
         sourceId: 's1',
         type: FeedItemType.job,
         title: 'High Engagement No Boost',
-        createdAt: now.subtract(const Duration(days: 10)),
-        engagementScore: 30.0, // Max engagement
+        createdAt: now.subtract(const Duration(hours: 1)),
+        likesCount: 100, // Max engagement signal
         isPromoted: false,
         route: '/jobs/1',
       );
@@ -75,8 +75,8 @@ void main() {
         sourceId: 's2',
         type: FeedItemType.job,
         title: 'Low Engagement With Boost',
-        createdAt: now.subtract(const Duration(days: 10)),
-        engagementScore: 0.0,
+        createdAt: now.subtract(const Duration(hours: 1)),
+        likesCount: 0,
         isPromoted: true, // +100 bonus
         route: '/jobs/2',
       );
@@ -84,35 +84,6 @@ void main() {
       final ranked = rankingService.rankItems([item1, item2], now: now);
 
       expect(ranked.first.id, '2'); // Boosted item wins
-    });
-
-    test('engagementScore 30 should be less than boostScore 100', () {
-      final item1 = FeedItemModel(
-        id: '1',
-        sourceId: 's1',
-        type: FeedItemType.job,
-        title: 'Max Engagement',
-        createdAt: now.subtract(const Duration(days: 10)),
-        engagementScore: 30.0,
-        isPromoted: false,
-        route: '/jobs/1',
-      );
-
-      final item2 = FeedItemModel(
-        id: '2',
-        sourceId: 's2',
-        type: FeedItemType.job,
-        title: 'Min Engagement with Boost',
-        createdAt: now.subtract(const Duration(days: 10)),
-        engagementScore: 0.0,
-        isPromoted: true,
-        route: '/jobs/2',
-      );
-
-      final score1 = rankingService.calculateFinalScore(item1, now: now);
-      final score2 = rankingService.calculateFinalScore(item2, now: now);
-
-      expect(score2, greaterThan(score1));
     });
   });
 }

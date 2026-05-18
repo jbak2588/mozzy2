@@ -41,6 +41,9 @@ abstract class PostModel with _$PostModel implements MozzyPostContract {
     // Soft-delete flag and moderation counters
     @Default(false) bool isDeleted,
     @Default(0) int reportCount,
+    @Default(0) int likesCount,
+    @Default(0) int commentsCount,
+    @Default(0) int viewsCount,
 
     // Visibility and discovery
     @Default(true) bool mapVisibility,

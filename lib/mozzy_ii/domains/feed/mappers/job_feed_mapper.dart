@@ -19,6 +19,9 @@ class JobFeedMapper {
       trustScore: job.trustScore,
       locationParts: job.locationParts,
       locationText: job.locationParts.idAddress?.kecamatan,
+      viewsCount: job.viewCount,
+      applicantsCount: job.applicantCount,
+      chatsCount: job.chatCount,
       route: '/jobs/${job.id}',
     );
   }

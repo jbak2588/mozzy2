@@ -1,103 +1,199 @@
 import '../models/feed_item_model.dart';
-import '../models/feed_ranking_signal.dart';
-import '../models/user_location_context.dart';
+import '../models/user_feed_context.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_ranking_service.g.dart';
 
 @riverpod
 class FeedRankingService extends _$FeedRankingService {
+  // Official Weights from ADR-004
+  static const double recencyWeight = 0.30;
+  static const double relevanceWeight = 0.25;
+  static const double engagementWeight = 0.20;
+  static const double diversityWeight = 0.15;
+  static const double trustWeight = 0.10;
+
   @override
   void build() {}
 
-  double calculateBoostScore(FeedItemModel item) {
-    return item.isPromoted ? FeedRankingSignal.activeBoostBonus : 0.0;
-  }
-
-  double calculateFreshnessScore(DateTime createdAt, DateTime now) {
-    final difference = now.difference(createdAt);
-    if (difference.inHours < 24) return FeedRankingSignal.freshnessWithin24h;
-    if (difference.inDays < 3) return FeedRankingSignal.freshnessWithin3Days;
-    if (difference.inDays < 7) return FeedRankingSignal.freshnessWithin7Days;
-    return 0.0;
-  }
-
-  double calculateTrustScore(FeedItemModel item) {
-    // Basic mapping: 0.0 ~ 1.0 trust score to bonus
-    if (item.trustScore > 0.8) return FeedRankingSignal.highTrustBonus;
-    if (item.trustScore > 0.5) return FeedRankingSignal.midTrustBonus;
-    return 0.0;
-  }
-
-  double calculateDistanceScore(FeedItemModel item, UserLocationContext? context) {
-    if (context == null || item.locationParts == null) return 0.0;
-    
-    final userAddr = context.locationParts.idAddress;
-    final itemAddr = item.locationParts?.idAddress;
-    
-    if (userAddr == null || itemAddr == null) return 0.0;
-
-    // Check same kecamatan (district)
-    if (userAddr.provinsi == itemAddr.provinsi &&
-        userAddr.kabupaten == itemAddr.kabupaten &&
-        userAddr.kecamatan == itemAddr.kecamatan) {
-      return FeedRankingSignal.sameDistrictBonus;
-    }
-    
-    // Check same kabupaten (city/regency)
-    if (userAddr.provinsi == itemAddr.provinsi &&
-        userAddr.kabupaten == itemAddr.kabupaten) {
-      return FeedRankingSignal.sameCityBonus;
-    }
-    
-    return 0.0;
-  }
-
-  double calculateEngagementScore(FeedItemModel item) {
-    return item.engagementScore * FeedRankingSignal.engagementMultiplier;
-  }
-
-  double calculateSemanticScore(FeedItemModel item) {
-    return item.semanticScore * FeedRankingSignal.maxSemanticScore;
-  }
-
-  double calculateFinalScore(
-    FeedItemModel item, {
-    UserLocationContext? context,
+  /// Calculate the final signalScore (0.0 ~ 1.0) using the official formula.
+  double calculateSignalScore({
+    required FeedItemModel item,
+    UserFeedContext? context,
     DateTime? now,
   }) {
     final currentNow = now ?? DateTime.now();
-    
-    final boost = calculateBoostScore(item);
-    final freshness = calculateFreshnessScore(item.createdAt, currentNow);
-    final trust = calculateTrustScore(item);
-    final distance = calculateDistanceScore(item, context);
+
+    final recency = calculateRecencyScore(item.createdAt, currentNow);
+    final relevance = calculateRelevanceScore(item: item, context: context);
     final engagement = calculateEngagementScore(item);
-    final semantic = item.semanticScore;
-    
-    return boost + freshness + trust + distance + engagement + semantic;
+    final diversity = calculateDiversityScore(
+      sourceType: item.type.name,
+      recentlyShownTypes: context?.recentlyShownTypes ?? [],
+    );
+    final trust = calculateTrustScore(item.trustScore);
+
+    final totalScore = (recency * recencyWeight) +
+        (relevance * relevanceWeight) +
+        (engagement * engagementWeight) +
+        (diversity * diversityWeight) +
+        (trust * trustWeight);
+
+    return _clamp01(totalScore);
   }
 
-  List<FeedItemModel> rankItems(List<FeedItemModel> items, {UserLocationContext? context, DateTime? now}) {
+  /// Recency Score (0.0 ~ 1.0)
+  /// 0~1h: 1.0, 1~6h: 0.9, 6~24h: 0.75, 1~3d: 0.55, 3~7d: 0.35, 7d+: 0.15
+  double calculateRecencyScore(DateTime createdAt, DateTime now) {
+    final difference = now.difference(createdAt);
+    if (difference.isNegative) return 1.0; // Future safety
+
+    if (difference.inHours < 1) return 1.0;
+    if (difference.inHours < 6) return 0.9;
+    if (difference.inHours < 24) return 0.75;
+    if (difference.inDays < 3) return 0.55;
+    if (difference.inDays < 7) return 0.35;
+    return 0.15;
+  }
+
+  /// Relevance Score (0.0 ~ 1.0) - Location based
+  /// Same Kelurahan: 1.0, Kecamatan: 0.85, Kabupaten: 0.6, Provinsi: 0.35, Other: 0.15
+  double calculateRelevanceScore({
+    required FeedItemModel item,
+    UserFeedContext? context,
+  }) {
+    if (context == null || context.locationParts == null || item.locationParts == null) {
+      return 0.15; // Default fallback
+    }
+
+    final userAddr = context.locationParts!.idAddress;
+    final itemAddr = item.locationParts!.idAddress;
+
+    if (userAddr == null || itemAddr == null) return 0.15;
+
+    // Kelurahan check
+    if (userAddr.provinsi == itemAddr.provinsi &&
+        userAddr.kabupaten == itemAddr.kabupaten &&
+        userAddr.kecamatan == itemAddr.kecamatan &&
+        userAddr.kelurahan == itemAddr.kelurahan) {
+      return 1.0;
+    }
+
+    // Kecamatan check
+    if (userAddr.provinsi == itemAddr.provinsi &&
+        userAddr.kabupaten == itemAddr.kabupaten &&
+        userAddr.kecamatan == itemAddr.kecamatan) {
+      return 0.85;
+    }
+
+    // Kabupaten/City check
+    if (userAddr.provinsi == itemAddr.provinsi &&
+        userAddr.kabupaten == itemAddr.kabupaten) {
+      return 0.6;
+    }
+
+    // Provinsi check
+    if (userAddr.provinsi == itemAddr.provinsi) {
+      return 0.35;
+    }
+
+    return 0.15;
+  }
+
+  /// Engagement Score (0.0 ~ 1.0)
+  /// engagementRaw = (likes*3) + (comments*5) + (views*1) + (chats*4) + (applicants*4)
+  /// Normalized: 0: 0.0, 1~5: 0.25, 6~20: 0.5, 21~50: 0.75, 51+: 1.0
+  double calculateEngagementScore(FeedItemModel item) {
+    final raw = (item.likesCount * 3) +
+        (item.commentsCount * 5) +
+        (item.viewsCount * 1) +
+        (item.chatsCount * 4) +
+        (item.applicantsCount * 4);
+
+    if (raw == 0) return 0.0;
+    if (raw <= 5) return 0.25;
+    if (raw <= 20) return 0.5;
+    if (raw <= 50) return 0.75;
+    return 1.0;
+  }
+
+  /// Diversity Score (0.0 ~ 1.0)
+  /// repeated types reduce score.
+  double calculateDiversityScore({
+    required String sourceType,
+    required List<String> recentlyShownTypes,
+  }) {
+    if (recentlyShownTypes.isEmpty) return 1.0;
+
+    final count = recentlyShownTypes.take(5).where((t) => t == sourceType).length;
+
+    switch (count) {
+      case 0:
+        return 1.0;
+      case 1:
+        return 0.8;
+      case 2:
+        return 0.6;
+      case 3:
+        return 0.4;
+      default:
+        return 0.2;
+    }
+  }
+
+  /// Trust Score Component (0.0 ~ 1.0)
+  double calculateTrustScore(double? itemTrustScore) {
+    return _clamp01(itemTrustScore ?? 0.5);
+  }
+
+  /// Boost Score Component (High priority override)
+  double calculateBoostScore(FeedItemModel item) {
+    return item.isPromoted ? 100.0 : 0.0;
+  }
+
+  /// Compatibility method for existing callers.
+  double calculateFinalScore(
+    FeedItemModel item, {
+    UserFeedContext? context,
+    DateTime? now,
+  }) {
+    final boost = calculateBoostScore(item);
+    final signal = calculateSignalScore(item: item, context: context, now: now);
+    return boost + signal;
+  }
+
+  /// Clamp value between 0.0 and 1.0
+  double _clamp01(double value) => value.clamp(0.0, 1.0).toDouble();
+
+  /// Rank items using the official formula.
+  List<FeedItemModel> rankItems(
+    List<FeedItemModel> items, {
+    UserFeedContext? context,
+    DateTime? now,
+  }) {
     final currentNow = now ?? DateTime.now();
-    
+
     final scoredItems = items.map((item) {
-      final score = calculateFinalScore(item, context: context, now: currentNow);
-      return item.copyWith(finalScore: score);
+      final signal = calculateSignalScore(
+        item: item,
+        context: context,
+        now: currentNow,
+      );
+      final boost = calculateBoostScore(item);
+      final total = boost + signal;
+      
+      return item.copyWith(signalScore: signal, finalScore: total);
     }).toList();
-    
+
     scoredItems.sort((a, b) {
-      // 1. Final Score DESC
+      // 1. Final Score DESC (Boost + Signal)
       final scoreComparison = b.finalScore.compareTo(a.finalScore);
       if (scoreComparison != 0) return scoreComparison;
-      
-      // 2. Created At DESC (Tie-breaker 1)
-      final dateComparison = b.createdAt.compareTo(a.createdAt);
-      if (dateComparison != 0) return dateComparison;
-      
-      // 3. Source ID ASC (Tie-breaker 2 - Deterministic)
-      return a.sourceId.compareTo(b.sourceId);
+
+      // 2. Created At DESC (Tie-breaker)
+      return b.createdAt.compareTo(a.createdAt);
     });
+
     return scoredItems;
   }
 }

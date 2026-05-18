@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_model.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_type.dart';
-import 'package:mozzy/mozzy_ii/domains/feed/models/user_location_context.dart';
+import 'package:mozzy/mozzy_ii/domains/feed/models/user_feed_context.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/services/feed_ranking_service.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 
@@ -17,33 +17,18 @@ void main() {
     service = MockFeedRankingService();
   });
 
-  group('FeedRankingService', () {
-    test('calculateBoostScore returns 100 for promoted items', () {
-      final item = FeedItemModel(
-        id: '1',
-        sourceId: '1',
-        type: FeedItemType.job,
-        title: 'Title',
-        createdAt: now,
-        isPromoted: true,
-        route: '/',
-      );
-      expect(service.calculateBoostScore(item), 100.0);
+  group('FeedRankingService Official Formula', () {
+    test('calculateRecencyScore returns 1.0 for fresh items (<1h)', () {
+      final fresh = now.subtract(const Duration(minutes: 30));
+      expect(service.calculateRecencyScore(fresh, now), 1.0);
     });
 
-    test('calculateFreshnessScore returns correct scores', () {
-      final item2h = now.subtract(const Duration(hours: 2));
-      final item2d = now.subtract(const Duration(days: 2));
-      final item5d = now.subtract(const Duration(days: 5));
-      final item10d = now.subtract(const Duration(days: 10));
-
-      expect(service.calculateFreshnessScore(item2h, now), 30.0);
-      expect(service.calculateFreshnessScore(item2d, now), 20.0);
-      expect(service.calculateFreshnessScore(item5d, now), 10.0);
-      expect(service.calculateFreshnessScore(item10d, now), 0.0);
+    test('calculateRecencyScore returns 0.15 for old items (>7d)', () {
+      final old = now.subtract(const Duration(days: 10));
+      expect(service.calculateRecencyScore(old, now), 0.15);
     });
 
-    test('calculateDistanceScore returns correct scores for same location', () {
+    test('calculateRelevanceScore returns 1.0 for same Kelurahan', () {
       const location = LocationParts(
         countryCode: 'ID',
         latitude: 0,
@@ -56,9 +41,8 @@ void main() {
           kelurahan: 'Senayan',
         ),
       );
-      final context = UserLocationContext(locationParts: location);
-      
-      final itemSameDistrict = FeedItemModel(
+      final context = UserFeedContext(locationParts: location);
+      final item = FeedItemModel(
         id: '1',
         sourceId: '1',
         type: FeedItemType.job,
@@ -68,37 +52,52 @@ void main() {
         route: '/',
       );
 
-      final itemSameCity = FeedItemModel(
-        id: '2',
-        sourceId: '2',
+      expect(service.calculateRelevanceScore(item: item, context: context), 1.0);
+    });
+
+    test('calculateEngagementScore reflects likes and comments', () {
+      final item = FeedItemModel(
+        id: '1',
+        sourceId: '1',
         type: FeedItemType.job,
         title: 'Title',
         createdAt: now,
-        locationParts: const LocationParts(
-          countryCode: 'ID',
-          latitude: 0,
-          longitude: 0,
-          geoHash: 'abc',
-          idAddress: IndonesiaGeoAddress(
-            provinsi: 'DKI Jakarta',
-            kabupaten: 'Jakarta Selatan',
-            kecamatan: 'Tebet',
-            kelurahan: 'Tebet Barat',
-          ),
-        ),
+        likesCount: 10, // 10*3 = 30
+        commentsCount: 5, // 5*5 = 25
+        // total = 55 -> >50 should be 1.0
         route: '/',
       );
-
-      expect(service.calculateDistanceScore(itemSameDistrict, context), 20.0);
-      expect(service.calculateDistanceScore(itemSameCity, context), 10.0);
+      expect(service.calculateEngagementScore(item), 1.0);
     });
 
-    test('rankItems sorts items by finalScore', () {
+    test('calculateDiversityScore penalizes repeated types', () {
+      expect(service.calculateDiversityScore(
+        sourceType: 'job',
+        recentlyShownTypes: ['job', 'job', 'job'],
+      ), 0.4);
+    });
+
+    test('calculateSignalScore produces value between 0.0 and 1.0', () {
+      final item = FeedItemModel(
+        id: '1',
+        sourceId: '1',
+        type: FeedItemType.job,
+        title: 'Title',
+        createdAt: now,
+        trustScore: 0.8,
+        route: '/',
+      );
+      final score = service.calculateSignalScore(item: item, now: now);
+      expect(score, greaterThanOrEqualTo(0.0));
+      expect(score, lessThanOrEqualTo(1.0));
+    });
+
+    test('rankItems sorts by signalScore then createdAt', () {
       final itemLow = FeedItemModel(
         id: 'low',
         sourceId: '1',
         type: FeedItemType.job,
-        title: 'Low Score',
+        title: 'Low',
         createdAt: now.subtract(const Duration(days: 10)),
         route: '/',
       );
@@ -106,17 +105,15 @@ void main() {
         id: 'high',
         sourceId: '2',
         type: FeedItemType.job,
-        title: 'High Score',
-        createdAt: now,
-        isPromoted: true,
+        title: 'High',
+        createdAt: now.subtract(const Duration(hours: 1)),
+        trustScore: 1.0,
         route: '/',
       );
 
       final ranked = service.rankItems([itemLow, itemHigh], now: now);
-      
       expect(ranked.first.id, 'high');
       expect(ranked.last.id, 'low');
-      expect(ranked.first.finalScore, greaterThan(ranked.last.finalScore));
     });
   });
 }

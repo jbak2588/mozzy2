@@ -18,6 +18,9 @@ class NewsFeedMapper {
       trustScore: post.trustScore,
       locationParts: post.location,
       locationText: post.location.idAddress?.kecamatan,
+      likesCount: post.likesCount,
+      commentsCount: post.commentsCount,
+      viewsCount: post.viewsCount,
       route: '/news/${post.id}',
     );
   }

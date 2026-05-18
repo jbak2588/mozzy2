@@ -31,10 +31,18 @@ abstract class FeedItemModel with _$FeedItemModel {
     @Default(0.0) double distanceScore,
     @Default(0.0) double boostScore,
     @Default(0.0) double engagementScore,
+    @Default(0.0) double signalScore,
     @Default(0.0) double semanticScore,
     String? semanticReason,
     @OptionalSafeDateTimeConverter() DateTime? semanticScoredAt,
     @Default(0.0) double finalScore,
+    
+    // Raw Engagement counts for official signalScore calculation
+    @Default(0) int likesCount,
+    @Default(0) int commentsCount,
+    @Default(0) int viewsCount,
+    @Default(0) int chatsCount,
+    @Default(0) int applicantsCount,
     
     required String route,
   }) = _FeedItemModel;

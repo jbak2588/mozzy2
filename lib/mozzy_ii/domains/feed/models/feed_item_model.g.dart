@@ -33,12 +33,18 @@ _FeedItemModel _$FeedItemModelFromJson(
   distanceScore: (json['distanceScore'] as num?)?.toDouble() ?? 0.0,
   boostScore: (json['boostScore'] as num?)?.toDouble() ?? 0.0,
   engagementScore: (json['engagementScore'] as num?)?.toDouble() ?? 0.0,
+  signalScore: (json['signalScore'] as num?)?.toDouble() ?? 0.0,
   semanticScore: (json['semanticScore'] as num?)?.toDouble() ?? 0.0,
   semanticReason: json['semanticReason'] as String?,
   semanticScoredAt: const OptionalSafeDateTimeConverter().fromJson(
     json['semanticScoredAt'],
   ),
   finalScore: (json['finalScore'] as num?)?.toDouble() ?? 0.0,
+  likesCount: (json['likesCount'] as num?)?.toInt() ?? 0,
+  commentsCount: (json['commentsCount'] as num?)?.toInt() ?? 0,
+  viewsCount: (json['viewsCount'] as num?)?.toInt() ?? 0,
+  chatsCount: (json['chatsCount'] as num?)?.toInt() ?? 0,
+  applicantsCount: (json['applicantsCount'] as num?)?.toInt() ?? 0,
   route: json['route'] as String,
 );
 
@@ -67,12 +73,18 @@ Map<String, dynamic> _$FeedItemModelToJson(
   'distanceScore': instance.distanceScore,
   'boostScore': instance.boostScore,
   'engagementScore': instance.engagementScore,
+  'signalScore': instance.signalScore,
   'semanticScore': instance.semanticScore,
   'semanticReason': instance.semanticReason,
   'semanticScoredAt': const OptionalSafeDateTimeConverter().toJson(
     instance.semanticScoredAt,
   ),
   'finalScore': instance.finalScore,
+  'likesCount': instance.likesCount,
+  'commentsCount': instance.commentsCount,
+  'viewsCount': instance.viewsCount,
+  'chatsCount': instance.chatsCount,
+  'applicantsCount': instance.applicantsCount,
   'route': instance.route,
 };
 

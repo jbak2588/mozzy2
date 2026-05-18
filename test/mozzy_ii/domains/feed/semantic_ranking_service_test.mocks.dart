@@ -6,7 +6,7 @@
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i4;
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_model.dart' as _i5;
-import 'package:mozzy/mozzy_ii/domains/feed/models/user_location_context.dart'
+import 'package:mozzy/mozzy_ii/domains/feed/models/user_feed_context.dart'
     as _i6;
 import 'package:mozzy/mozzy_ii/domains/feed/services/feed_ranking_service.dart'
     as _i2;
@@ -58,36 +58,39 @@ class MockFeedRankingService extends _i1.Mock
   );
 
   @override
-  double calculateBoostScore(_i5.FeedItemModel? item) =>
+  double calculateSignalScore({
+    required _i5.FeedItemModel? item,
+    _i6.UserFeedContext? context,
+    DateTime? now,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#calculateBoostScore, [item]),
+            Invocation.method(#calculateSignalScore, [], {
+              #item: item,
+              #context: context,
+              #now: now,
+            }),
             returnValue: 0.0,
           )
           as double);
 
   @override
-  double calculateFreshnessScore(DateTime? createdAt, DateTime? now) =>
+  double calculateRecencyScore(DateTime? createdAt, DateTime? now) =>
       (super.noSuchMethod(
-            Invocation.method(#calculateFreshnessScore, [createdAt, now]),
+            Invocation.method(#calculateRecencyScore, [createdAt, now]),
             returnValue: 0.0,
           )
           as double);
 
   @override
-  double calculateTrustScore(_i5.FeedItemModel? item) =>
+  double calculateRelevanceScore({
+    required _i5.FeedItemModel? item,
+    _i6.UserFeedContext? context,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#calculateTrustScore, [item]),
-            returnValue: 0.0,
-          )
-          as double);
-
-  @override
-  double calculateDistanceScore(
-    _i5.FeedItemModel? item,
-    _i6.UserLocationContext? context,
-  ) =>
-      (super.noSuchMethod(
-            Invocation.method(#calculateDistanceScore, [item, context]),
+            Invocation.method(#calculateRelevanceScore, [], {
+              #item: item,
+              #context: context,
+            }),
             returnValue: 0.0,
           )
           as double);
@@ -101,9 +104,31 @@ class MockFeedRankingService extends _i1.Mock
           as double);
 
   @override
-  double calculateSemanticScore(_i5.FeedItemModel? item) =>
+  double calculateDiversityScore({
+    required String? sourceType,
+    required List<String>? recentlyShownTypes,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#calculateSemanticScore, [item]),
+            Invocation.method(#calculateDiversityScore, [], {
+              #sourceType: sourceType,
+              #recentlyShownTypes: recentlyShownTypes,
+            }),
+            returnValue: 0.0,
+          )
+          as double);
+
+  @override
+  double calculateTrustScore(double? itemTrustScore) =>
+      (super.noSuchMethod(
+            Invocation.method(#calculateTrustScore, [itemTrustScore]),
+            returnValue: 0.0,
+          )
+          as double);
+
+  @override
+  double calculateBoostScore(_i5.FeedItemModel? item) =>
+      (super.noSuchMethod(
+            Invocation.method(#calculateBoostScore, [item]),
             returnValue: 0.0,
           )
           as double);
@@ -111,7 +136,7 @@ class MockFeedRankingService extends _i1.Mock
   @override
   double calculateFinalScore(
     _i5.FeedItemModel? item, {
-    _i6.UserLocationContext? context,
+    _i6.UserFeedContext? context,
     DateTime? now,
   }) =>
       (super.noSuchMethod(
@@ -127,7 +152,7 @@ class MockFeedRankingService extends _i1.Mock
   @override
   List<_i5.FeedItemModel> rankItems(
     List<_i5.FeedItemModel>? items, {
-    _i6.UserLocationContext? context,
+    _i6.UserFeedContext? context,
     DateTime? now,
   }) =>
       (super.noSuchMethod(

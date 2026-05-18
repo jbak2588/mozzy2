@@ -33,6 +33,9 @@ _PostModel _$PostModelFromJson(Map<String, dynamic> json) => _PostModel(
   countryCode: json['countryCode'] as String? ?? 'ID',
   isDeleted: json['isDeleted'] as bool? ?? false,
   reportCount: (json['reportCount'] as num?)?.toInt() ?? 0,
+  likesCount: (json['likesCount'] as num?)?.toInt() ?? 0,
+  commentsCount: (json['commentsCount'] as num?)?.toInt() ?? 0,
+  viewsCount: (json['viewsCount'] as num?)?.toInt() ?? 0,
   mapVisibility: json['mapVisibility'] as bool? ?? true,
   discoveryChannels:
       (json['discoveryChannels'] as List<dynamic>?)
@@ -68,6 +71,9 @@ Map<String, dynamic> _$PostModelToJson(_PostModel instance) =>
       'countryCode': instance.countryCode,
       'isDeleted': instance.isDeleted,
       'reportCount': instance.reportCount,
+      'likesCount': instance.likesCount,
+      'commentsCount': instance.commentsCount,
+      'viewsCount': instance.viewsCount,
       'mapVisibility': instance.mapVisibility,
       'discoveryChannels': instance.discoveryChannels,
       'relayTargets': instance.relayTargets,

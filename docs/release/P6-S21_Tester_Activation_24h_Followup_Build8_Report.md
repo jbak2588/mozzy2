@@ -1,4 +1,4 @@
-# P6-S21 Tester Activation 24h Follow-up — Build 8 Report
+﻿# P6-S21 Tester Activation 24h Follow-up â€” Build 8 Report
 
 ## 1. Scope
 - Build 8 tester activation 24h follow-up
@@ -51,11 +51,11 @@
 - Functions errors: 0
 
 ## 7. Current Feed / Route Connection Map
-- Beranda / Smart Feed: `/home` → `SmartFeedScreen`
-- Jual / Marketplace: `/marketplace` → `MarketplaceListScreen`
-- Berita / Local News: `/news` → `LocalNewsListScreen`
-- Toko / Local Shop: `/stores` → `FeatureComingSoonScreen` (disabled in Beta)
-- Pesan / Chat: `/chat` → `ChatListScreen`
+- Beranda / Smart Feed: `/home` â†’ `SmartFeedScreen`
+- Jual / Marketplace: `/marketplace` â†’ `MarketplaceListScreen`
+- Berita / Local News: `/news` â†’ `LocalNewsListScreen`
+- Toko / Local Shop: `/stores` â†’ `FeatureComingSoonScreen` (disabled in Beta)
+- Pesan / Chat: `/chat` â†’ `ChatListScreen`
 - Jobs: `/jobs` route exists, but not in bottom tab
 - Find Friend: no route/domain connected yet
 - Smart Feed sources: currently includes `job_posts` + `products` only. Does NOT yet include Berita, Stores, Find Friend, Clubs, etc.

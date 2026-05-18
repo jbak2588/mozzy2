@@ -216,7 +216,27 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            Text(locText, style: Theme.of(context).textTheme.bodySmall),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(locText, style: Theme.of(context).textTheme.bodySmall),
+                ),
+                if (locationAsync.isLoading)
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else if (!locationAsync.hasValue || locationAsync.value == null)
+                  TextButton.icon(
+                    onPressed: () {
+                      ref.read(locationProvider.notifier).refreshLocation();
+                    },
+                    icon: const Icon(Icons.my_location, size: 16),
+                    label: Text('news.retryLocation'.tr()),
+                  ),
+              ],
+            ),
             const Spacer(),
             SizedBox(
               width: double.infinity,

@@ -50,7 +50,14 @@ class LocalNewsCard extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              Text(location, style: Theme.of(context).textTheme.bodySmall),
+              Expanded(
+                child: Text(
+                  location,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               const SizedBox(width: 8),
               Text(date, style: Theme.of(context).textTheme.bodySmall),
             ],

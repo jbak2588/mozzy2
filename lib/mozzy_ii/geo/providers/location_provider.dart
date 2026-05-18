@@ -102,6 +102,12 @@ class LocationNotifier extends AsyncNotifier<LocationParts?> {
   void updateLocationManually(LocationParts newLocation) {
     state = AsyncData(newLocation);
   }
+
+  /// 사용자가 명시적으로 위치 새로고침을 요청할 때 호출
+  Future<void> refreshLocation() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => _fetchCurrentLocation());
+  }
 }
 
 final locationProvider =

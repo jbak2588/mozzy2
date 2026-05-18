@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/mappers/job_feed_mapper.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/mappers/product_feed_mapper.dart';
+import 'package:mozzy/mozzy_ii/domains/feed/mappers/news_feed_mapper.dart';
 import 'package:mozzy/mozzy_ii/domains/feed/models/feed_item_type.dart';
 import 'package:mozzy/mozzy_ii/domains/jobs/models/job_post_model.dart';
 import 'package:mozzy/mozzy_ii/domains/marketplace/models/product_model.dart';
+import 'package:mozzy/mozzy_ii/domains/news/models/post_model.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 
 void main() {
@@ -64,6 +66,33 @@ void main() {
       expect(item.title, 'Used iPhone');
       expect(item.imageUrl, 'https://example.com/img.jpg');
       expect(item.route, '/marketplace/prod123');
+    });
+
+    test('NewsFeedMapper maps PostModel to FeedItemModel', () {
+      final post = PostModel(
+        id: 'news123',
+        userId: 'user3',
+        title: 'Breaking News',
+        content: 'Something happened',
+        category: 'umum',
+        geoPath: 'some/path',
+        location: const LocationParts(
+          countryCode: 'ID',
+          latitude: 0,
+          longitude: 0,
+          geoHash: 'abc',
+        ),
+        createdAt: now,
+      );
+
+      final item = NewsFeedMapper.map(post);
+
+      expect(item.sourceId, 'news123');
+      expect(item.type, FeedItemType.localNews);
+      expect(item.title, 'Breaking News');
+      expect(item.description, 'Something happened');
+      expect(item.route, '/news/news123');
+      expect(item.imageUrl, isNull);
     });
   });
 }

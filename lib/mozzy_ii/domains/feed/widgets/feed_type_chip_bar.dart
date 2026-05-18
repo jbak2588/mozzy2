@@ -26,6 +26,13 @@ class FeedTypeChipBar extends ConsumerWidget {
             'feed.marketplace'.tr(),
             selectedFilter == FeedItemType.marketplaceProduct.name,
           ),
+          const SizedBox(width: 8),
+          _buildChip(
+            ref,
+            FeedItemType.localNews.name,
+            'feed.localNews'.tr(),
+            selectedFilter == FeedItemType.localNews.name,
+          ),
           // Add more if needed later
         ],
       ),

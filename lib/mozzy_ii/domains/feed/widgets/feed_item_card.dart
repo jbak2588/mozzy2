@@ -116,6 +116,18 @@ class FeedItemCard extends ConsumerWidget {
   }
 
   Widget _buildThumbnail() {
+    IconData fallbackIcon;
+    switch (item.type) {
+      case FeedItemType.job:
+        fallbackIcon = Icons.work_outline;
+        break;
+      case FeedItemType.localNews:
+        fallbackIcon = Icons.article_outlined;
+        break;
+      default:
+        fallbackIcon = Icons.shopping_bag_outlined;
+    }
+
     return Container(
       width: 80,
       height: 80,
@@ -131,7 +143,7 @@ class FeedItemCard extends ConsumerWidget {
       ),
       child: item.imageUrl == null
           ? Icon(
-              item.type == FeedItemType.job ? Icons.work_outline : Icons.shopping_bag_outlined,
+              fallbackIcon,
               color: Colors.grey[400],
             )
           : null,
@@ -140,7 +152,17 @@ class FeedItemCard extends ConsumerWidget {
 
   Widget _buildTypeBadge() {
     String label = 'feed.${item.type.name}'.tr();
-    Color color = item.type == FeedItemType.job ? Colors.blue : Colors.orange;
+    Color color;
+    switch (item.type) {
+      case FeedItemType.job:
+        color = Colors.blue;
+        break;
+      case FeedItemType.localNews:
+        color = Colors.teal;
+        break;
+      default:
+        color = Colors.orange;
+    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

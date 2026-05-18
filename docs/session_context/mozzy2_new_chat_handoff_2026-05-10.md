@@ -314,6 +314,22 @@
 - Decision: Berita must be integrated into Smart Feed after architecture approval.
 - Next recommended task: P6-S24 Berita Smart Feed Integration
 
+## P6-S24 Berita Smart Feed Integration Status
+
+- P6-S24 Berita Smart Feed Integration completed.
+- Base HEAD: daa0c55
+- Report: docs/release/P6-S24_Berita_Smart_Feed_Integration_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Smart Feed ADR: docs/adr/ADR-004-Smart-Feed-Official-Architecture.md
+- Payment provider: Xendit
+- Berita in Smart Feed: Yes
+- Berita filter chip: Yes
+- Marketplace preserved: Yes
+- Jobs preserved: Yes
+- Tests: Passed
+- Firestore indexes: Used existing single-field limits. No new composites yet.
+- Next recommended task: P6-S25 Product / Job Shared Contract Normalization
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S23 Smart Feed Official Architecture Implementation Plan 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 P6-S24 Berita Smart Feed Integration 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S24 Berita Smart Feed Integration 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md`와 `docs/adr/ADR-004-Smart-Feed-Official-Architecture.md` 기준으로 P6-S25 Product / Job Shared Contract Normalization 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.

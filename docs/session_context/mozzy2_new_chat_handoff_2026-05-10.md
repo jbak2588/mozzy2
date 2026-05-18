@@ -280,8 +280,20 @@
 - Tester Activation: Resume
 - Next recommended task: P6-S21 Tester Activation 24h Follow-up — Build 8
 
+## P6-S21 Tester Activation 24h Follow-up — Build 8 Status
+- P6-S21 Tester Activation 24h Follow-up — Build 8 completed.
+- Base HEAD: 0a04b04
+- Build: 1.0.0+8
+- Report: docs/release/P6-S21_Tester_Activation_24h_Followup_Build8_Report.md
+- Beta 1 status: Continue
+- Tester adoption: Good (10 simulated active installs)
+- P0 issues: 0
+- P1 issues: 0
+- Current route/feed map documented: Yes
+- Next recommended task: P6-S22 Smart Feed Source Expansion Audit
+
 ## 7. Next Prompt for New Chat
 
 Paste this instruction:
 
-"Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S20 Build 8 Verification & Tester Activation Resume 이후 상태를 검토한 다음 Build 8 테스터 활성화 24시간 결과에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘."
+"Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S21 Tester Activation 24h Follow-up — Build 8 이후 상태를 검토한 다음 Beta 1 활성화 결과와 Smart Feed 연결 구조에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘."

@@ -383,6 +383,21 @@
 - Tests: Passed
 - Next recommended task: P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Feasibility Review
 
+## P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Review Status
+
+- P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Review completed.
+- Base HEAD: 2efce72
+- Report: docs/release/P6-S28_Smart_Feed_Pagination_Boost_Policy_Materialized_Feed_Review.md
+- ADR: docs/adr/ADR-005-Smart-Feed-Pagination-Boost-And-Materialized-Feed-Policy.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Smart Feed ADR: docs/adr/ADR-004-Smart-Feed-Official-Architecture.md
+- Payment provider: Xendit
+- Pagination decision: First-page optimized (60 items) for Beta 1.
+- Boost policy decision: Legacy +100.0 for Beta 1; Promoted Layer planned for Beta 2.
+- Materialized feed decision: Deferred until >5 sources or deep pagination required.
+- Tests: Passed
+- Next recommended task: P6-S29 Xendit Flutter Payment Foundation
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S27 Time-Based Weighting + Diversity Ranking 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md`와 `docs/adr/ADR-004-Smart-Feed-Official-Architecture.md` 기준으로 P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Feasibility Review 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Review 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 P6-S29 Xendit Flutter Payment Foundation 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.

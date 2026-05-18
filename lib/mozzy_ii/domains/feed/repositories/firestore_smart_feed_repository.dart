@@ -13,30 +13,38 @@ import 'smart_feed_repository.dart';
 class FirestoreSmartFeedRepository implements SmartFeedRepository {
   final FirebaseFirestore _firestore;
 
+  static const int defaultFeedLimit = 60;
+  static const int sourceCount = 3; // News, Marketplace, Jobs
+
   FirestoreSmartFeedRepository({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
-  Stream<List<FeedItemModel>> getSmartFeed({LocationParts? locationFilter, int limit = 60}) {
+  Stream<List<FeedItemModel>> getSmartFeed({
+    LocationParts? locationFilter,
+    int limit = defaultFeedLimit,
+  }) {
+    final perSourceLimit = limit ~/ sourceCount;
+
     // 1. Jobs Stream
     Query jobsQuery = _firestore.collection('job_posts')
         .where('isDeleted', isEqualTo: false)
         .where('status', isEqualTo: 'open')
         .orderBy('createdAt', descending: true)
-        .limit(limit ~/ 3);
+        .limit(perSourceLimit);
 
     // 2. Products Stream
     Query productsQuery = _firestore.collectionGroup('products')
         .where('isDeleted', isEqualTo: false)
         .where('status', isEqualTo: 'available')
         .orderBy('createdAt', descending: true)
-        .limit(limit ~/ 3);
+        .limit(perSourceLimit);
 
     // 3. News Stream
     Query newsQuery = _firestore.collection('posts')
         .where('isDeleted', isEqualTo: false)
         .orderBy('createdAt', descending: true)
-        .limit(limit ~/ 3);
+        .limit(perSourceLimit);
 
     // Combine using RxDart with error handling for individual streams
     return Rx.combineLatest3(

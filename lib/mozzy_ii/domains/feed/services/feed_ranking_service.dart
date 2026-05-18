@@ -156,8 +156,12 @@ class FeedRankingService extends _$FeedRankingService {
   }
 
   /// Boost Score Component (High priority override)
+  /// TODO(P6-S29): In Beta 2, replace fixed override with a dedicated 'Promoted' list layer
+  /// to keep signalScore bounded between 0.0 and 1.0.
+  static const double legacyBoostBonus = 100.0;
+
   double calculateBoostScore(FeedItemModel item) {
-    return item.isPromoted ? 100.0 : 0.0;
+    return item.isPromoted ? legacyBoostBonus : 0.0;
   }
 
   /// Compatibility method for existing callers.

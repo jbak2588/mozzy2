@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'feed_ranking_service.dart';
+part of 'feed_time_weight_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,28 +9,28 @@ part of 'feed_ranking_service.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(FeedRankingService)
-final feedRankingServiceProvider = FeedRankingServiceProvider._();
+@ProviderFor(FeedTimeWeightService)
+final feedTimeWeightServiceProvider = FeedTimeWeightServiceProvider._();
 
-final class FeedRankingServiceProvider
-    extends $NotifierProvider<FeedRankingService, void> {
-  FeedRankingServiceProvider._()
+final class FeedTimeWeightServiceProvider
+    extends $NotifierProvider<FeedTimeWeightService, void> {
+  FeedTimeWeightServiceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'feedRankingServiceProvider',
+        name: r'feedTimeWeightServiceProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$feedRankingServiceHash();
+  String debugGetCreateSourceHash() => _$feedTimeWeightServiceHash();
 
   @$internal
   @override
-  FeedRankingService create() => FeedRankingService();
+  FeedTimeWeightService create() => FeedTimeWeightService();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(void value) {
@@ -41,10 +41,10 @@ final class FeedRankingServiceProvider
   }
 }
 
-String _$feedRankingServiceHash() =>
-    r'b09619badd21678b84e632ff6e57f387b3b45187';
+String _$feedTimeWeightServiceHash() =>
+    r'4dfa035792f2f014b2d84edc36e0b769aacb864e';
 
-abstract class _$FeedRankingService extends $Notifier<void> {
+abstract class _$FeedTimeWeightService extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

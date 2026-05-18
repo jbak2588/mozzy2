@@ -293,7 +293,7 @@ final class SmartFeedProvider
   }
 }
 
-String _$smartFeedHash() => r'686027af13143c4935ee07934067138fc14c40ab';
+String _$smartFeedHash() => r'f64ff6ae423e73d27bb1ecb3425f85ac0f5bc85f';
 
 @ProviderFor(FeedFilter)
 final feedFilterProvider = FeedFilterProvider._();

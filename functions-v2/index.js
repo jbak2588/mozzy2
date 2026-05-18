@@ -1725,3 +1725,183 @@ exports.onAccountDeletionRequested = onDocumentCreated("account_deletion_request
         });
     }
 });
+
+/**
+ * Monetization: Generic Create Xendit Invoice
+ */
+exports.createXenditInvoice = onCall(async (request) => {
+    const { purpose, userId, amountIdr, description, sourceType, sourceId, method, metadata = {} } = request.data;
+    const auth = request.auth;
+
+    if (!auth) {
+        throw new HttpsError("unauthenticated", "Authentication required");
+    }
+
+    if (auth.uid !== userId) {
+        throw new HttpsError("permission-denied", "User ID mismatch");
+    }
+
+    if (!Number.isInteger(amountIdr) || amountIdr <= 0 || amountIdr > 20000000) {
+        throw new HttpsError("invalid-argument", "Invalid payment amount");
+    }
+
+    const ALLOWED_PURPOSES = ["aiVerification", "boostPost", "boostProduct", "boostJob", "subscriptionMozzyPlus", "businessPlus"];
+    if (!ALLOWED_PURPOSES.includes(purpose)) {
+        throw new HttpsError("invalid-argument", "Invalid payment purpose");
+    }
+
+    // 1. Create Payment Document
+    const paymentId = admin.firestore().collection("payments").doc().id;
+    const now = admin.firestore.FieldValue.serverTimestamp();
+    const externalId = `mozzy_${purpose}_${userId}_${Date.now()}`;
+
+    const paymentData = {
+        id: paymentId,
+        paymentId: paymentId,
+        externalId: externalId,
+        provider: "xendit",
+        providerMode: process.env.PAYMENT_MOCK_MODE === "true" ? "mock" : "sandbox",
+        purpose,
+        userId,
+        buyerId: userId,
+        ownerId: userId,
+        sellerId: null,
+        amount: amountIdr,
+        amountIdr,
+        currency: "IDR",
+        status: "created",
+        sourceType: sourceType || null,
+        sourceId: sourceId || null,
+        method: method || "invoice",
+        metadata: sanitizeMetadata(metadata),
+        createdAt: now,
+        updatedAt: now
+    };
+
+    // 2. Provider Invoice Creation
+    const xenditSecretKey = process.env.XENDIT_SECRET_KEY;
+    const isMockMode = process.env.PAYMENT_MOCK_MODE === "true";
+
+    if (!xenditSecretKey && !isMockMode) {
+        throw new HttpsError("failed-precondition", "Payment provider configuration missing");
+    }
+
+    if (isMockMode) {
+        paymentData.providerInvoiceId = `mock_inv_${paymentId}`;
+        paymentData.providerInvoiceUrl = `https://checkout-staging.xendit.co/v2/mock_inv_${paymentId}`;
+        paymentData.status = "pending";
+    } else {
+        try {
+            const authHeader = Buffer.from(`${xenditSecretKey}:`).toString('base64');
+            const response = await axios.post('https://api.xendit.co/v2/invoices', {
+                external_id: externalId,
+                amount: amountIdr,
+                currency: "IDR",
+                description: description || `Mozzy Payment - ${purpose}`,
+                payer_email: auth.token.email || null,
+                success_redirect_url: `mozzy://payments/${paymentId}`,
+                failure_redirect_url: `mozzy://payments/${paymentId}`,
+                metadata: {
+                    paymentId,
+                    userId,
+                    purpose,
+                    sourceType,
+                    sourceId
+                }
+            }, {
+                headers: {
+                    'Authorization': `Basic ${authHeader}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const invoice = response.data;
+            paymentData.providerInvoiceId = invoice.id;
+            paymentData.providerInvoiceUrl = invoice.invoice_url;
+            paymentData.status = "pending";
+            if (invoice.expiry_date) {
+                paymentData.expiredAt = admin.firestore.Timestamp.fromDate(new Date(invoice.expiry_date));
+            }
+        } catch (error) {
+            console.error("Xendit Invoice API Error:", error.response?.data || error.message);
+            throw new HttpsError("internal", "Failed to create invoice with provider");
+        }
+    }
+
+    await admin.firestore().collection("payments").doc(paymentId).set(paymentData);
+
+    return {
+        paymentId,
+        externalId,
+        status: paymentData.status,
+        amountIdr,
+        invoiceUrl: paymentData.providerInvoiceUrl,
+        qrString: null,
+        expiresAt: paymentData.expiresAt ? paymentData.expiresAt.toDate().toISOString() : null,
+        raw: isMockMode ? { mock: true } : {}
+    };
+});
+
+/**
+ * Monetization: Generic Create Xendit QRIS
+ */
+exports.createXenditQris = onCall(async (request) => {
+    // QRIS implementation often requires specific account activation.
+    // For Beta 1 foundation, we provide a placeholder or minimal implementation.
+    throw new HttpsError("unavailable", "QRIS payment is currently pending account permission");
+});
+
+/**
+ * Monetization: Get Xendit Payment Status
+ */
+exports.getXenditPaymentStatus = onCall(async (request) => {
+    const { paymentId } = request.data;
+    const auth = request.auth;
+
+    if (!auth) {
+        throw new HttpsError("unauthenticated", "Authentication required");
+    }
+
+    const paymentRef = admin.firestore().collection("payments").doc(paymentId);
+    const paymentDoc = await paymentRef.get();
+
+    if (!paymentDoc.exists) {
+        throw new HttpsError("not-found", "Payment record not found");
+    }
+
+    const paymentData = paymentDoc.data();
+
+    if (paymentData.userId !== auth.uid) {
+        throw new HttpsError("permission-denied", "Unauthorized access to payment record");
+    }
+
+    // Optionally fetch live status from Xendit if not in a final state
+    // For foundation, we return the cached Firestore status
+    return {
+        paymentId,
+        externalId: paymentData.externalId,
+        status: paymentData.status,
+        amountIdr: paymentData.amountIdr || paymentData.amount,
+        invoiceUrl: paymentData.providerInvoiceUrl,
+        qrString: paymentData.qrString || null,
+        expiresAt: paymentData.expiresAt ? (paymentData.expiresAt.toDate ? paymentData.expiresAt.toDate().toISOString() : paymentData.expiresAt) : null,
+        raw: paymentData.rawProviderStatus ? { providerStatus: paymentData.rawProviderStatus } : {}
+    };
+});
+
+/**
+ * Helper: Sanitize Metadata
+ */
+function sanitizeMetadata(metadata) {
+    const cleaned = {};
+    if (metadata && typeof metadata === 'object') {
+        const FORBIDDEN = ["email", "phone", "phoneNumber", "nik", "ktp", "address"];
+        Object.keys(metadata).forEach(key => {
+            if (!FORBIDDEN.includes(key)) {
+                cleaned[key] = metadata[key];
+            }
+        });
+    }
+    return cleaned;
+}
+

@@ -336,6 +336,7 @@ service cloud.firestore {
       allow read: if isAuthenticated() &&
         (resource.data.buyerId == request.auth.uid ||
          resource.data.sellerId == request.auth.uid ||
+         resource.data.userId == request.auth.uid ||
          resource.data.ownerId == request.auth.uid);
 
       allow create, update, delete: if false; // Only via Cloud Functions / Admin SDK

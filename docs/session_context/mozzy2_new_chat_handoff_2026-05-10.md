@@ -414,6 +414,22 @@
 - Tests: Passed
 - Next recommended task: P6-S30 Xendit Backend Callable Functions Implementation
 
+## P6-S30 Xendit Backend Callable Functions Status
+
+- P6-S30 Xendit Backend Callable Functions completed.
+- Base HEAD: df2ff1e
+- Report: docs/release/P6-S30_Xendit_Backend_Callable_Functions_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Payment provider: Xendit
+- createXenditInvoice: Complete (Generic Callable)
+- createXenditQris: Placeholder (Returns unavailable)
+- getXenditPaymentStatus: Complete (Cached Firestore status)
+- xenditWebhook: Preserved (Aligned with generic externalId)
+- payments collection: Updated with userId/buyerId/ownerId
+- Security check: Pass
+- Tests: Passed (102 functions tests, 4 flutter tests)
+- Next recommended task: P6-S31 Xendit Sandbox E2E Payment Test
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S29 Xendit Flutter Payment Foundation 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 다음 Xendit 결제 연동 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S30 Xendit Backend Callable Functions 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 다음 Xendit 결제 연동 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.

@@ -471,7 +471,12 @@
     "paymentExpired": "Payment expired",
     "paymentFailed": "Payment failed",
     "boostWillActivate": "Boost will activate soon after payment is confirmed",
-    "boostActivated": "Job boost active"
+    "boostActivated": "Job boost active",
+    "method": "Payment Method",
+    "qris": "QRIS",
+    "virtualAccount": "Virtual Account Transfer",
+    "continue": "Continue to Payment",
+    "retry": "Try Again"
   },
   "monetization": {
     "jobBoost": "Job Boost",
@@ -544,7 +549,14 @@
     "comingSoonTitle": "Coming Soon",
     "comingSoonBody": "This feature is being prepared for the next beta update.",
     "backToHome": "Back to Home",
-    "sandboxOnly": "Sandbox payment only during private beta."
+    "sandboxOnly": "Sandbox payment only during private beta.",
+    "method": "Payment Method",
+    "qris": "QRIS",
+    "virtualAccount": "Virtual Account Transfer",
+    "continue": "Continue to Payment",
+    "pending": "Pending Payment",
+    "success": "Payment Successful",
+    "retry": "Try Again"
   },
   "moderation": {
     "report": "Report",

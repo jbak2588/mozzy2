@@ -398,6 +398,22 @@
 - Tests: Passed
 - Next recommended task: P6-S29 Xendit Flutter Payment Foundation
 
+## P6-S29 Xendit Flutter Payment Foundation Status
+
+- P6-S29 Xendit Flutter Payment Foundation completed.
+- Base HEAD: b374826
+- Report: docs/release/P6-S29_Xendit_Flutter_Payment_Foundation_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Payment provider: Xendit
+- PaymentRequest/PaymentResult models: Complete (Freezed)
+- XenditService: Complete (Firebase Callable Interface)
+- PaymentRepository/Provider: Complete
+- PaymentSheet: Complete (Reusable UI Foundation)
+- Backend callable readiness: Partial (Only Job Boost exists)
+- Security check: Pass
+- Tests: Passed
+- Next recommended task: P6-S30 Xendit Backend Callable Functions Implementation
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S28 Smart Feed Pagination / Boost Policy / Materialized Feed Review 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 P6-S29 Xendit Flutter Payment Foundation 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S29 Xendit Flutter Payment Foundation 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 다음 Xendit 결제 연동 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.

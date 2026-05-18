@@ -1,7 +1,7 @@
 # Mozzy Beta — 5 Minute Test Mission
 
 ## Build
-- Android Build: 1.0.0+7
+- Android Build: 1.0.0+8
 - Distribution: Firebase App Distribution
 - Payment: Sandbox only
 
@@ -11,13 +11,15 @@
 |---|---|---|---|
 | 1 | Install app from Firebase link | App installed successfully |  |
 | 2 | Login with Google | Smart Feed opens |  |
-| 3 | Open Marketplace | Product list or empty state appears |  |
-| 4 | Open one product detail | Product detail opens |  |
-| 5 | Open Pesan / Chat | Chat list or empty state appears, no infinite loading |  |
-| 6 | Open Account Settings | Settings screen opens |  |
-| 7 | Tap Feedback | Feedback form opens |  |
-| 8 | Submit one feedback | Success message appears |  |
-| 9 | Logout and login again | Login works again |  |
+| 3 | Create a Berita post | Post is published and visible |  |
+| 4 | Add a comment to a Berita post | Comment appears under the post |  |
+| 5 | Open Marketplace | Product list or empty state appears |  |
+| 6 | Open one product detail | Product detail opens |  |
+| 7 | Open Pesan / Chat | Chat list or empty state appears, no infinite loading |  |
+| 8 | Open Account Settings | Settings screen opens |  |
+| 9 | Tap Feedback | Feedback form opens |  |
+| 10 | Submit one feedback | Success message appears |  |
+| 11 | Logout and login again | Login works again |  |
 
 ## Please report
 - App crash

@@ -15,6 +15,7 @@ Please send:
 - Phone model
 - Android version
 - Time of failure
+Note: Ensure you are on Build 1.0.0+8 where the main login issue is fixed.
 
 ## 4. App opens but there is no data
 - Some areas may have limited beta data.

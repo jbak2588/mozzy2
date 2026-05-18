@@ -1,4 +1,4 @@
-# Mozzy2 New Chat Handoff — 2026-05-10
+﻿# Mozzy2 New Chat Handoff â€” 2026-05-10
 
 ## 1. Repository
 - Repo: jbak2588/mozzy2
@@ -119,7 +119,7 @@
 - Report: docs/release/P6-S10_Beta_Bug_Fix_Sprint_Report.md
 - Build 2 Release Notes: docs/release/P6-S10_Android_Internal_Build_2_Release_Notes.md
 - Firebase tester group 404: Fixed (Group 'mozzy-private-beta' created and Build 2 uploaded)
-- Analyzer warnings: 25 (reported) → 0 (Verified with --fatal-infos)
+- Analyzer warnings: 25 (reported) â†’ 0 (Verified with --fatal-infos)
 - Android Internal Beta decision: **Go**
 - Next recommended task: P6-S11 Real Device Smoke Test Build 2
 
@@ -268,8 +268,20 @@
 - Tester Activation: Resume
 - Next recommended task: P6-S20 Resume Tester Activation with Build 8
 
+## P6-S20 Build 8 Verification & Tester Activation Resume Status
+- P6-S20 Build 8 Verification & Tester Activation Resume completed.
+- Base HEAD: e941563
+- Build: 1.0.0+8
+- Report: docs/release/P6-S20_Build_8_Verification_And_Activation_Resume_Report.md
+- Google Login: Fixed and verified on real device
+- Berita feed creation: Pass
+- Berita comment creation: Pass
+- Firebase App Distribution: Success
+- Tester Activation: Resume
+- Next recommended task: P6-S21 Tester Activation 24h Follow-up — Build 8
+
 ## 7. Next Prompt for New Chat
 
 Paste this instruction:
 
-“Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S19 Google Login Runtime Blocker Reopen 이후 상태를 검토한 다음 Google Login 차단 해소 여부에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘.”
+"Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S20 Build 8 Verification & Tester Activation Resume 이후 상태를 검토한 다음 Build 8 테스터 활성화 24시간 결과에 맞춰 다음 작업지시서를 작성해줘. 반드시 repo 최신 커밋과 문서 정합성을 확인한 후 진행해줘."

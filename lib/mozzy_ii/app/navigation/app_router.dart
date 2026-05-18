@@ -41,6 +41,7 @@ import '../../domains/feed/screens/smart_feed_screen.dart';
 import '../../core/config/beta_feature_flags.dart';
 import '../../shared/screens/feature_coming_soon_screen.dart';
 import '../../core/monitoring/screens/monitoring_debug_screen.dart';
+import '../payment/debug_xendit_payment_test_screen.dart';
 
 // 임시 플레이스홀더 화면들
 class DummyScreen extends StatelessWidget {
@@ -294,6 +295,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         GoRoute(
           path: '/dev/monitoring',
           builder: (context, state) => const MonitoringDebugScreen(),
+        ),
+        GoRoute(
+          path: '/dev/xendit-payment-test',
+          builder: (context, state) => const DebugXenditPaymentTestScreen(),
         ),
       ],
       

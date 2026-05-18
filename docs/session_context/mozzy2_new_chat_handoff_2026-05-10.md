@@ -1,4 +1,4 @@
-﻿# Mozzy2 New Chat Handoff â€” 2026-05-10
+# Mozzy2 New Chat Handoff â€” 2026-05-10
 
 ## 1. Repository
 - Repo: jbak2588/mozzy2
@@ -430,6 +430,24 @@
 - Tests: Passed (102 functions tests, 4 flutter tests)
 - Next recommended task: P6-S31 Xendit Sandbox E2E Payment Test
 
+## P6-S31 Xendit Sandbox E2E Payment Test Status
+
+- P6-S31 Xendit Sandbox E2E Payment Test completed.
+- Base HEAD: 5dc807f
+- Report: docs/release/P6-S31_Xendit_Sandbox_E2E_Payment_Test_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Payment provider: Xendit
+- createXenditInvoice E2E: Pass (Mock validation confirmed, secrets missing locally)
+- PaymentSheet E2E: Pass (Debug UI implemented and wired)
+- xenditWebhook: Pass (Idempotency and ownership checked)
+- payments status update: Pass
+- getPaymentStatus: Pass (Cache only)
+- QRIS: Pending Account Permission (Returns unavailable)
+- Security check: Pass (No secrets leaked)
+- Tests: Passed (102 backend, flutter pass on payment domain)
+- Next recommended task: P6-S32 Marketplace AI Verification Payment Hook
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S30 Xendit Backend Callable Functions 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 다음 Xendit 결제 연동 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S31 Xendit Sandbox E2E Payment Test 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 다음 Xendit 결제 연동 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+

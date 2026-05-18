@@ -735,10 +735,8 @@ exports.createJobBoostPayment = onCall(async (request) => {
                         jobId,
                         packageId,
                         productType: "jobBoost",
-                        durationDays: pkg.durationDays,
-                        ownerId: userId
-                    }
-                }, {
+                        durationDays: pkg.durationDays
+                    }                }, {
                     headers: {
                         'Authorization': `Basic ${authHeader}`,
                         'Content-Type': 'application/json'
@@ -752,7 +750,7 @@ exports.createJobBoostPayment = onCall(async (request) => {
                 paymentData.status = "pending";
                 
                 if (invoice.expiry_date) {
-                    paymentData.expiredAt = admin.firestore.Timestamp.fromDate(new Date(invoice.expiry_date));
+                    paymentData.expiresAt = admin.firestore.Timestamp.fromDate(new Date(invoice.expiry_date));
                 }
             } catch (error) {
                 console.error("Xendit API Error:", error.response?.data || error.message);
@@ -856,7 +854,7 @@ exports.xenditWebhook = onRequest(async (req, res) => {
                 updateData.paidAt = admin.firestore.Timestamp.fromDate(new Date(payload.paid_at));
             }
             if (payload.expiry_date) {
-                updateData.expiredAt = admin.firestore.Timestamp.fromDate(new Date(payload.expiry_date));
+                updateData.expiresAt = admin.firestore.Timestamp.fromDate(new Date(payload.expiry_date));
             }
 
             transaction.update(paymentRef, updateData);
@@ -1753,7 +1751,7 @@ exports.createXenditInvoice = onCall(async (request) => {
     // 1. Create Payment Document
     const paymentId = admin.firestore().collection("payments").doc().id;
     const now = admin.firestore.FieldValue.serverTimestamp();
-    const externalId = `mozzy_${purpose}_${userId}_${Date.now()}`;
+    const externalId = paymentId;
 
     const paymentData = {
         id: paymentId,
@@ -1798,12 +1796,10 @@ exports.createXenditInvoice = onCall(async (request) => {
                 amount: amountIdr,
                 currency: "IDR",
                 description: description || `Mozzy Payment - ${purpose}`,
-                payer_email: auth.token.email || null,
                 success_redirect_url: `mozzy://payments/${paymentId}`,
                 failure_redirect_url: `mozzy://payments/${paymentId}`,
                 metadata: {
                     paymentId,
-                    userId,
                     purpose,
                     sourceType,
                     sourceId
@@ -1820,7 +1816,7 @@ exports.createXenditInvoice = onCall(async (request) => {
             paymentData.providerInvoiceUrl = invoice.invoice_url;
             paymentData.status = "pending";
             if (invoice.expiry_date) {
-                paymentData.expiredAt = admin.firestore.Timestamp.fromDate(new Date(invoice.expiry_date));
+                paymentData.expiresAt = admin.firestore.Timestamp.fromDate(new Date(invoice.expiry_date));
             }
         } catch (error) {
             console.error("Xendit Invoice API Error:", error.response?.data || error.message);

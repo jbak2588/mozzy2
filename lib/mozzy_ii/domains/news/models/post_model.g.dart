@@ -47,39 +47,68 @@ _PostModel _$PostModelFromJson(Map<String, dynamic> json) => _PostModel(
           ?.map((e) => e as String)
           .toList() ??
       const <String>[],
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
+  isPromoted: json['isPromoted'] as bool? ?? false,
+  boostStatus: json['boostStatus'] as String? ?? 'none',
+  boostPaymentId: json['boostPaymentId'] as String?,
+  boostPackageId: json['boostPackageId'] as String?,
+  boostStartedAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['boostStartedAt'],
+  ),
+  boostActiveUntil: const OptionalSafeDateTimeConverter().fromJson(
+    json['boostActiveUntil'],
+  ),
+  boostDurationDays: (json['boostDurationDays'] as num?)?.toInt() ?? 0,
+  boostSignalScore: (json['boostSignalScore'] as num?)?.toDouble() ?? 0.0,
+  lastBoostedAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['lastBoostedAt'],
+  ),
+  createdAt: const SafeDateTimeConverter().fromJson(json['createdAt']),
+  updatedAt: const OptionalSafeDateTimeConverter().fromJson(json['updatedAt']),
 );
 
-Map<String, dynamic> _$PostModelToJson(_PostModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'title': instance.title,
-      'content': instance.content,
-      'imageUrls': instance.imageUrls,
-      'category': instance.category,
-      'geoScope': _$GeoScopeEnumMap[instance.geoScope]!,
-      'reachMode': _$ReachModeEnumMap[instance.reachMode]!,
-      'translationState': instance.translationState,
-      'trustScore': instance.trustScore,
-      'signalScore': instance.signalScore,
-      'geoPath': instance.geoPath,
-      'location': instance.location.toJson(),
-      'countryCode': instance.countryCode,
-      'isDeleted': instance.isDeleted,
-      'reportCount': instance.reportCount,
-      'likesCount': instance.likesCount,
-      'commentsCount': instance.commentsCount,
-      'viewsCount': instance.viewsCount,
-      'mapVisibility': instance.mapVisibility,
-      'discoveryChannels': instance.discoveryChannels,
-      'relayTargets': instance.relayTargets,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$PostModelToJson(
+  _PostModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'title': instance.title,
+  'content': instance.content,
+  'imageUrls': instance.imageUrls,
+  'category': instance.category,
+  'geoScope': _$GeoScopeEnumMap[instance.geoScope]!,
+  'reachMode': _$ReachModeEnumMap[instance.reachMode]!,
+  'translationState': instance.translationState,
+  'trustScore': instance.trustScore,
+  'signalScore': instance.signalScore,
+  'geoPath': instance.geoPath,
+  'location': instance.location.toJson(),
+  'countryCode': instance.countryCode,
+  'isDeleted': instance.isDeleted,
+  'reportCount': instance.reportCount,
+  'likesCount': instance.likesCount,
+  'commentsCount': instance.commentsCount,
+  'viewsCount': instance.viewsCount,
+  'mapVisibility': instance.mapVisibility,
+  'discoveryChannels': instance.discoveryChannels,
+  'relayTargets': instance.relayTargets,
+  'isPromoted': instance.isPromoted,
+  'boostStatus': instance.boostStatus,
+  'boostPaymentId': instance.boostPaymentId,
+  'boostPackageId': instance.boostPackageId,
+  'boostStartedAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.boostStartedAt,
+  ),
+  'boostActiveUntil': const OptionalSafeDateTimeConverter().toJson(
+    instance.boostActiveUntil,
+  ),
+  'boostDurationDays': instance.boostDurationDays,
+  'boostSignalScore': instance.boostSignalScore,
+  'lastBoostedAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.lastBoostedAt,
+  ),
+  'createdAt': const SafeDateTimeConverter().toJson(instance.createdAt),
+  'updatedAt': const OptionalSafeDateTimeConverter().toJson(instance.updatedAt),
+};
 
 const _$GeoScopeEnumMap = {
   GeoScope.neighborhood: 'neighborhood',

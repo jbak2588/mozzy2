@@ -66,6 +66,21 @@ _ProductModel _$ProductModelFromJson(
     json['aiVerificationPaidAt'],
   ),
   aiVerificationError: json['aiVerificationError'] as String?,
+  isPromoted: json['isPromoted'] as bool? ?? false,
+  boostStatus: json['boostStatus'] as String? ?? 'none',
+  boostPaymentId: json['boostPaymentId'] as String?,
+  boostPackageId: json['boostPackageId'] as String?,
+  boostStartedAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['boostStartedAt'],
+  ),
+  boostActiveUntil: const OptionalSafeDateTimeConverter().fromJson(
+    json['boostActiveUntil'],
+  ),
+  boostDurationDays: (json['boostDurationDays'] as num?)?.toInt() ?? 0,
+  boostSignalScore: (json['boostSignalScore'] as num?)?.toDouble() ?? 0.0,
+  lastBoostedAt: const OptionalSafeDateTimeConverter().fromJson(
+    json['lastBoostedAt'],
+  ),
   createdAt: const SafeDateTimeConverter().fromJson(json['createdAt']),
   updatedAt: const OptionalSafeDateTimeConverter().fromJson(json['updatedAt']),
   isDeleted: json['isDeleted'] as bool? ?? false,
@@ -116,6 +131,21 @@ Map<String, dynamic> _$ProductModelToJson(
     instance.aiVerificationPaidAt,
   ),
   'aiVerificationError': instance.aiVerificationError,
+  'isPromoted': instance.isPromoted,
+  'boostStatus': instance.boostStatus,
+  'boostPaymentId': instance.boostPaymentId,
+  'boostPackageId': instance.boostPackageId,
+  'boostStartedAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.boostStartedAt,
+  ),
+  'boostActiveUntil': const OptionalSafeDateTimeConverter().toJson(
+    instance.boostActiveUntil,
+  ),
+  'boostDurationDays': instance.boostDurationDays,
+  'boostSignalScore': instance.boostSignalScore,
+  'lastBoostedAt': const OptionalSafeDateTimeConverter().toJson(
+    instance.lastBoostedAt,
+  ),
   'createdAt': const SafeDateTimeConverter().toJson(instance.createdAt),
   'updatedAt': const OptionalSafeDateTimeConverter().toJson(instance.updatedAt),
   'isDeleted': instance.isDeleted,

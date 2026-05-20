@@ -66,6 +66,7 @@ abstract class JobPostModel with _$JobPostModel implements MozzyPostContract {
     @Default(0) int viewCount,
     @Default(false) bool isDeleted,
     @Default(false) bool isClosed,
+    @Default(false) bool isPromoted,
     @Default('none') String boostStatus,
     String? boostPaymentId,
     String? boostPackageId,

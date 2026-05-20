@@ -2,8 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/auth/auth_service.dart';
+import '../../../core/payment/boost/widgets/ugc_boost_bottom_sheet.dart';
+import '../../../core/payment/models/payment_purpose.dart';
+import '../../../core/utils/formatters.dart';
 import '../../moderation/models/report_model.dart';
 import '../../moderation/widgets/report_button.dart';
+import '../models/post_model.dart';
 import '../providers/posts_provider.dart';
 import '../widgets/cross_link_section.dart';
 import '../widgets/comments_section.dart';
@@ -23,15 +28,16 @@ class LocalNewsDetailScreen extends ConsumerWidget {
         title: const Text('news.detailTitle').tr(),
         actions: [
           postAsync.whenOrNull(
-            data: (post) {
-              if (post == null) return const SizedBox.shrink();
-              return ReportButton(
-                targetType: ReportTargetType.news,
-                targetId: post.id,
-                targetOwnerId: post.userId,
-              );
-            },
-          ) ?? const SizedBox.shrink(),
+                data: (post) {
+                  if (post == null) return const SizedBox.shrink();
+                  return ReportButton(
+                    targetType: ReportTargetType.news,
+                    targetId: post.id,
+                    targetOwnerId: post.userId,
+                  );
+                },
+              ) ??
+              const SizedBox.shrink(),
         ],
       ),
       body: postAsync.when(
@@ -69,6 +75,9 @@ class LocalNewsDetailScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
+                const SizedBox(height: 16),
+                if (post.userId == ref.watch(authStateProvider).value?.uid)
+                  _buildOwnerActions(context, post),
                 const SizedBox(height: 16),
                 Chip(label: Text(post.category)),
                 const SizedBox(height: 8),
@@ -132,6 +141,85 @@ class LocalNewsDetailScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildOwnerActions(BuildContext context, PostModel post) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (post.isBoostActive) _buildBoostStatus(context, post),
+        SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton.icon(
+            onPressed: post.isBoostActive
+                ? null
+                : () => UgcBoostBottomSheet.show(
+                      context: context,
+                      title: post.title,
+                      purpose: PaymentPurpose.boostPost,
+                      sourceType: 'news',
+                      sourceId: post.id,
+                      userId: post.userId,
+                      countryCode: post.countryCode,
+                    ),
+            icon: const Icon(Icons.rocket_launch),
+            label: Text(
+              post.isBoostActive
+                  ? 'monetization.boostActive'.tr()
+                  : 'monetization.boost'.tr(),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: post.isBoostActive ? Colors.grey : Colors.orange,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBoostStatus(BuildContext context, PostModel post) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.orange[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.orange[200]!),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.bolt, color: Colors.orange),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'monetization.boostActive'.tr(),
+                  style: const TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'monetization.boostActiveUntil'.tr(
+                    namedArgs: {
+                      'date': MozzyFormatters.formatDateID(
+                        post.boostActiveUntil!,
+                      ),
+                    },
+                  ),
+                  style: const TextStyle(fontSize: 12, color: Colors.orange),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

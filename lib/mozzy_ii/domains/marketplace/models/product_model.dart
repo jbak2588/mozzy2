@@ -106,6 +106,16 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
     @OptionalSafeDateTimeConverter() DateTime? aiVerificationPaidAt,
     String? aiVerificationError,
 
+    @Default(false) bool isPromoted,
+    @Default('none') String boostStatus,
+    String? boostPaymentId,
+    String? boostPackageId,
+    @OptionalSafeDateTimeConverter() DateTime? boostStartedAt,
+    @OptionalSafeDateTimeConverter() DateTime? boostActiveUntil,
+    @Default(0) int boostDurationDays,
+    @Default(0.0) double boostSignalScore,
+    @OptionalSafeDateTimeConverter() DateTime? lastBoostedAt,
+
     @SafeDateTimeConverter() required DateTime createdAt,
     @OptionalSafeDateTimeConverter() DateTime? updatedAt,
 
@@ -120,6 +130,11 @@ abstract class ProductModel with _$ProductModel implements MozzyPostContract {
   // Alias for MozzyPostContract compatibility if needed,
   // but we already mapped sellerId to userId in the factory.
   String get sellerId => userId;
+
+  bool get isBoostActive =>
+      boostStatus == 'active' &&
+      boostActiveUntil != null &&
+      boostActiveUntil!.isAfter(DateTime.now());
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json);

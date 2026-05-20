@@ -4,6 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import '../../../core/config/integration_test_config.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/payment/models/payment_purpose.dart';
+import '../../../core/payment/boost/widgets/ugc_boost_bottom_sheet.dart';
 import '../widgets/product_verification_badge.dart';
 import '../providers/marketplace_provider.dart';
 import '../models/product_model.dart';
@@ -255,6 +257,49 @@ class _ProductDetailContent extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           if (!isSold) ...[
+            if (product.boostStatus == 'active')
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: Colors.green[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.green[200]!),
+                ),
+                child: Center(
+                  child: Text(
+                    'Boost Aktif sampai ${product.boostActiveUntil != null ? MozzyFormatters.formatDateID(product.boostActiveUntil!) : "-"}',
+                    style: TextStyle(
+                      color: Colors.green[800],
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
+            else
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton.icon(
+                  onPressed: () => UgcBoostBottomSheet.show(
+                    context: context,
+                    title: product.title,
+                    purpose: PaymentPurpose.boostProduct,
+                    sourceType: 'marketplace',
+                    sourceId: product.id,
+                    userId: product.userId,
+                    countryCode: product.countryCode,
+                  ),
+                  icon: const Icon(Icons.rocket_launch),
+                  label: const Text('Boost Produk'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               height: 48,

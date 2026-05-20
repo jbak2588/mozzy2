@@ -128,7 +128,18 @@ service cloud.firestore {
         && request.resource.data.geoPath.size() > 0
         && request.resource.data.trustScore >= 0.0;
         
-      allow update: if (isOwner(resource.data.userId) && request.resource.data.userId == resource.data.userId) || isAdmin();
+      allow update: if ((isOwner(resource.data.userId) && request.resource.data.userId == resource.data.userId) || isAdmin())
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'isPromoted',
+          'boostStatus',
+          'boostPaymentId',
+          'boostPackageId',
+          'boostStartedAt',
+          'boostActiveUntil',
+          'boostDurationDays',
+          'boostSignalScore',
+          'lastBoostedAt'
+        ]);
         
       allow delete: if isOwner(resource.data.userId);
     }
@@ -162,7 +173,14 @@ service cloud.firestore {
           'aiVerificationSummary',
           'aiDetectedIssues',
           'aiSuggestedCategory',
-          'aiConditionLabel'
+          'aiConditionLabel',
+          'isPromoted',
+          'boostStatus',
+          'boostPaymentId',
+          'boostPackageId',
+          'boostStartedAt',
+          'boostActiveUntil',
+          'boostDurationDays'
         ])
         && (
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(['aiVerificationStatus'])

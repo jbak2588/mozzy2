@@ -478,7 +478,23 @@
 - Tests: Passed (113 backend unit tests, all frontend payment tests, flutter analyze 0 issues)
 - Next recommended task: P6-S34 Boost Payment Hook for Berita / Marketplace / Jobs
 
+## P6-S34 Boost Payment Hook for Berita / Marketplace / Jobs Status
+
+- P6-S34 Boost Payment Hook completed.
+- Base HEAD: 1296ee4
+- New HEAD: [To be generated on commit]
+- Report: docs/release/P6-S34_Boost_Payment_Hook_For_Berita_Marketplace_Jobs_Report.md
+- Official baseline: docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md
+- Payment provider: Xendit
+- Backend boost trigger: onPaymentPaidActivateUgcBoost
+- Supported targets: News, Marketplace, Jobs
+- Firestore rules: Hardened for all three domains.
+- Smart Feed boost behavior: legacyBoostBonus (100.0 weight) preserved.
+- Security check: Boost fields protected from client writes.
+- Tests: Flutter analyze passed.
+- Next recommended task: P6-S35 Xendit Live Status Fetch / Payment Reconciliation.
+
 ## Next Prompt for New Chat
 
-Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S33 Payment Paid Trigger / AI Verification Fulfillment Automation 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 P6-S34 Boost Payment Hook for Berita / Marketplace / Jobs 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
+Repo에서 `docs/session_context/mozzy2_new_chat_handoff_2026-05-10.md`를 먼저 확인하고, P6-S34 Boost Payment Hook for Berita / Marketplace / Jobs 이후 상태를 검토한 다음 `docs/planning/Mozzy_Indonesia_Dev_Plan_2026.md` 기준으로 P6-S35 Xendit Live Status Fetch / Payment Reconciliation 작업을 진행해줘. 결제는 Xendit 기준으로만 유지하고, 다른 기획 문서는 참조하지 마.
 

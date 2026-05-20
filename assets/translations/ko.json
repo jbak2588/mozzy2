@@ -486,8 +486,11 @@
     "jobBoost": "공고 부스트",
     "marketplaceBoost": "상품 부스트",
     "comingSoon": "준비 중",
-    "boostLowongan": "공고 부스트",
+    "boostLowongan": "구인 홍보",
+    "boost": "콘텐츠 홍보",
+    "boostProduct": "상품 홍보",
     "chooseBoostPackage": "부스트 패키지 선택",
+
     "boostDescription": "주변 지역에서 공고를 더 자주 노출합니다.",
     "boost1Day": "1일 부스트",
     "boost3Days": "3일 부스트",

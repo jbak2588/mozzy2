@@ -6,6 +6,8 @@ import '../models/job_post_model.dart';
 import '../providers/job_provider.dart';
 import '../providers/job_applicant_provider.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/payment/models/payment_purpose.dart';
+import '../../../core/payment/boost/widgets/ugc_boost_bottom_sheet.dart';
 import '../../../app/auth/auth_service.dart';
 import '../../moderation/models/report_model.dart';
 import '../../moderation/widgets/report_button.dart';
@@ -194,7 +196,15 @@ class JobDetailScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: job.isBoostActive ? null : () => context.push('/jobs/${job.id}/boost'),
+                onPressed: job.isBoostActive ? null : () => UgcBoostBottomSheet.show(
+                  context: context,
+                  title: job.title,
+                  purpose: PaymentPurpose.boostJob,
+                  sourceType: 'jobs',
+                  sourceId: job.id,
+                  userId: job.ownerId,
+                  countryCode: 'ID',
+                ),
                 icon: const Icon(Icons.bolt),
                 label: Text(job.isBoostActive 
                   ? 'monetization.boostAlreadyActive'.tr() 

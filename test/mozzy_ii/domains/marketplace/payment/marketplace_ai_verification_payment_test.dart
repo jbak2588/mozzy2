@@ -24,7 +24,7 @@ void main() {
       expect(request.sourceType, equals('product'));
       expect(request.sourceId, equals('prod_123'));
       expect(request.userId, equals('test_user'));
-      expect(request.metadata?['productId'], equals('prod_123'));
+      expect(request.metadata['productId'], equals('prod_123'));
     });
   });
 }

@@ -500,6 +500,10 @@ function sanitizeFeedInteractionPayload(data, uid) {
 
 // Boost Packages Policy
 const BOOST_PACKAGES = {
+    'boost_1d': { amountIdr: 15000, durationDays: 1, title: 'Boost 1 Hari' },
+    'boost_3d': { amountIdr: 35000, durationDays: 3, title: 'Boost 3 Hari' },
+    'boost_7d': { amountIdr: 70000, durationDays: 7, title: 'Boost 7 Hari' },
+    // legacy support
     'job_boost_1_day': { amount: 15000, durationDays: 1, title: 'Boost 1 hari' },
     'job_boost_3_days': { amount: 40000, durationDays: 3, title: 'Boost 3 hari' },
     'job_boost_7_days': { amount: 90000, durationDays: 7, title: 'Boost 7 hari' }
@@ -964,7 +968,7 @@ function calculateBoostActiveUntil(startTimestampOrDate, durationDays) {
     return admin.firestore.Timestamp.fromDate(until);
 }
 
-function shouldActivateJobBoost(beforeData, afterData) {
+function shouldActivateUgcBoost(beforeData, afterData) {
     if (!beforeData || !afterData) return false;
     
     // Status Transition: non-paid to paid
@@ -972,31 +976,41 @@ function shouldActivateJobBoost(beforeData, afterData) {
     const wasAlreadyPaid = beforeData.status === "paid";
     if (wasAlreadyPaid || !isPaidNow) return false;
 
-    // Product check
-    if (afterData.productType !== "jobBoost" || afterData.relatedDomain !== "jobs") return false;
+    // Purpose check
+    const allowedPurposes = ["boostPost", "boostProduct", "boostJob"];
+    const isLegacyJobBoost = afterData.productType === "jobBoost";
+    if (!allowedPurposes.includes(afterData.purpose) && !isLegacyJobBoost) return false;
 
     // Idempotency check
+    if (afterData.fulfillmentStatus === "completed") return false;
     if (afterData.metadata && afterData.metadata.boostActivated) return false;
 
     return true;
 }
 
-function buildJobBoostUpdate(paymentId, paymentData, paidAtOrNow) {
-    const packageId = paymentData.metadata?.packageId;
+function buildUgcBoostUpdate(paymentId, paymentData, targetData, paidAtOrNow) {
+    const packageId = paymentData.metadata?.packageId || "boost_1d";
     const durationDays = resolveBoostDurationDays(packageId, paymentData.metadata?.durationDays);
     const boostStartedAt = paidAtOrNow || paymentData.paidAt || admin.firestore.Timestamp.now();
-    const boostActiveUntil = calculateBoostActiveUntil(boostStartedAt, durationDays);
+    
+    const currentUntil = targetData.boostActiveUntil?.toDate?.();
+    const nowDate = boostStartedAt.toDate();
+    const baseDate = (currentUntil && currentUntil > nowDate) ? currentUntil : nowDate;
+    const newUntil = new Date(baseDate.getTime() + durationDays * 24 * 60 * 60 * 1000);
+    const boostActiveUntil = admin.firestore.Timestamp.fromDate(newUntil);
 
     return {
         boostStatus: "active",
         boostPaymentId: paymentId,
-        boostPackageId: packageId || "manual",
+        boostPackageId: packageId,
         boostStartedAt: boostStartedAt,
         boostActiveUntil: boostActiveUntil,
         boostDurationDays: durationDays,
+        isPromoted: true,
+        // Legacy support
         boostSignalScore: 100.0,
         lastBoostedAt: boostStartedAt,
-        updatedAt: admin.firestore.Timestamp.now()
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
     };
 }
 
@@ -1014,6 +1028,7 @@ function buildBoostExpiredUpdate() {
     return {
         boostStatus: "expired",
         boostSignalScore: 0.0,
+        isPromoted: false,
         updatedAt: admin.firestore.Timestamp.now()
     };
 }
@@ -1050,6 +1065,9 @@ function buildAuditLogData({
 }
 
 function buildAuditLogId(type, relatedId, paymentId = null) {
+    if (type === "ugc_boost_activated" && paymentId) {
+        return `ugc_boost_activated_${paymentId}`;
+    }
     if (type === "job_boost_activated" && paymentId) {
         return `job_boost_activated_${paymentId}`;
     }
@@ -1069,8 +1087,8 @@ exports._testHelpers = {
     shouldSkipUpdate,
     resolveBoostDurationDays,
     calculateBoostActiveUntil,
-    shouldActivateJobBoost,
-    buildJobBoostUpdate,
+    shouldActivateUgcBoost,
+    buildUgcBoostUpdate,
     isBoostExpiredForScheduler,
     buildBoostExpiredUpdate,
     buildAuditLogData,
@@ -1097,148 +1115,216 @@ exports._testHelpers = {
     runMockGeminiVerification
 };
 
+async function updatePaymentFulfillmentFailed(db, paymentId, errorReason) {
+    await db.collection("payments").doc(paymentId).update({
+        fulfillmentStatus: "failed",
+        fulfillmentError: errorReason,
+        fulfillmentFailedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+}
+
 /**
- * Monetization: Activate Job Boost on Payment Success
+ * Monetization: Activate UGC Boost on Payment Success
  */
-exports.onPaymentPaidActivateJobBoost = onDocumentUpdated("payments/{paymentId}", async (event) => {
+exports.onPaymentPaidActivateUgcBoost = onDocumentUpdated("payments/{paymentId}", async (event) => {
     const beforeData = event.data.before.data();
     const afterData = event.data.after.data();
 
     // 1. Check if activation is needed
-    if (!shouldActivateJobBoost(beforeData, afterData)) {
+    if (!shouldActivateUgcBoost(beforeData, afterData)) {
         return;
     }
 
     const paymentId = event.params.paymentId;
-    const jobId = afterData.relatedId;
-    const userId = afterData.buyerId;
+    const purpose = afterData.purpose || (afterData.productType === "jobBoost" ? "boostJob" : null);
+    const sourceType = afterData.sourceType || (afterData.relatedDomain === "jobs" ? "jobs" : null);
+    const sourceId = afterData.sourceId || afterData.relatedId;
+    const userId = afterData.userId || afterData.buyerId;
 
-    if (!jobId) {
-        console.error(`Missing relatedId for jobBoost payment ${paymentId}`);
+    if (!sourceId || !userId) {
+        console.error(`Missing sourceId or userId for ugcBoost payment ${paymentId}`);
         return;
     }
 
     try {
-        const jobRef = admin.firestore().collection("job_posts").doc(jobId);
-        const paymentRef = admin.firestore().collection("payments").doc(paymentId);
+        let targetRef;
+        let ownerField;
+        
+        const db = admin.firestore();
 
-        await admin.firestore().runTransaction(async (transaction) => {
-            const jobDoc = await transaction.get(jobRef);
-            if (!jobDoc.exists) {
-                console.warn(`Job post ${jobId} not found for boost activation`);
+        if (purpose === "boostJob" || sourceType === "jobs") {
+            targetRef = db.collection("job_posts").doc(sourceId);
+            ownerField = ["employerId", "ownerId", "userId"];
+        } else if (purpose === "boostPost" || sourceType === "news") {
+            targetRef = db.collection("countries").doc("ID").collection("domains").doc("local_news").collection("posts").doc(sourceId);
+            ownerField = ["authorId", "userId"];
+        } else if (purpose === "boostProduct" || sourceType === "marketplace") {
+            const productsQuery = await db.collectionGroup("products").where("id", "==", sourceId).limit(1).get();
+            if (productsQuery.empty) {
+                console.warn(`Product ${sourceId} not found for boost activation`);
+                await updatePaymentFulfillmentFailed(db, paymentId, "target_not_found");
+                return;
+            }
+            targetRef = productsQuery.docs[0].ref;
+            ownerField = ["sellerId", "userId"];
+        } else {
+            console.error(`Unsupported purpose/sourceType for boost: ${purpose}/${sourceType}`);
+            await updatePaymentFulfillmentFailed(db, paymentId, "unsupported_source_type");
+            return;
+        }
+
+        const paymentRef = db.collection("payments").doc(paymentId);
+
+        await db.runTransaction(async (transaction) => {
+            const targetDoc = await transaction.get(targetRef);
+            if (!targetDoc.exists) {
+                console.warn(`Target ${sourceId} not found for boost activation`);
                 return;
             }
 
-            const jobData = jobDoc.data();
+            const targetData = targetDoc.data();
 
-            // 2. Verification
-            if (jobData.ownerId !== userId) {
-                console.error(`User mismatch for boost activation: payment buyer ${userId}, job owner ${jobData.ownerId}`);
+            // 2. Verification (Ownership)
+            let isOwner = false;
+            for (const field of ownerField) {
+                if (targetData[field] === userId) {
+                    isOwner = true;
+                    break;
+                }
+            }
+
+            if (!isOwner) {
+                console.error(`User mismatch for boost activation: payment buyer ${userId}`);
                 return;
             }
 
-            if (jobData.status !== "open" || jobData.isDeleted) {
-                console.warn(`Job ${jobId} is not in a boostable state`);
+            if (targetData.status && targetData.status !== "open" && targetData.status !== "active") {
+                console.warn(`Target ${sourceId} is not in a boostable state`);
+                // Proceed or block based on domain rules, let's allow it for now except if deleted
+            }
+            if (targetData.isDeleted) {
+                console.warn(`Target ${sourceId} is deleted`);
                 return;
             }
 
-            // 3. Update Job Post
-            const jobUpdate = buildJobBoostUpdate(paymentId, afterData);
-            transaction.update(jobRef, jobUpdate);
+            // 3. Update Target Post
+            const boostUpdate = buildUgcBoostUpdate(paymentId, afterData, targetData);
+            transaction.update(targetRef, boostUpdate);
 
-            // 4. Mark Payment as Activated
+            // 4. Mark Payment as Fulfilled
             transaction.update(paymentRef, {
-                'metadata.boostActivated': true,
+                fulfillmentStatus: "completed",
+                fulfillmentType: "ugcBoost",
+                boostActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                boostTargetType: sourceType,
+                boostTargetId: sourceId,
+                boostActiveUntil: boostUpdate.boostActiveUntil,
+                'metadata.boostActivated': true, // Legacy support
                 'metadata.boostActivatedAt': admin.firestore.FieldValue.serverTimestamp(),
                 updatedAt: admin.firestore.FieldValue.serverTimestamp()
             });
 
-            // 5. Audit Log: job_boost_activated
+            // 5. Audit Log: ugc_boost_activated
             const auditData = buildAuditLogData({
-                type: "job_boost_activated",
-                relatedDomain: "jobs",
-                relatedId: jobId,
+                type: "ugc_boost_activated",
+                relatedDomain: sourceType,
+                relatedId: sourceId,
                 paymentId,
-                jobId,
+                jobId: sourceId, // Legacy
                 actorType: "system",
-                actorId: "onPaymentPaidActivateJobBoost",
-                beforeStatus: jobData.boostStatus || "none",
+                actorId: "onPaymentPaidActivateUgcBoost",
+                beforeStatus: targetData.boostStatus || "none",
                 afterStatus: "active",
                 amount: afterData.amount,
                 currency: afterData.currency,
                 metadata: {
-                    packageId: afterData.metadata?.packageId,
-                    durationDays: jobUpdate.boostDurationDays,
-                    boostActiveUntil: jobUpdate.boostActiveUntil
+                    packageId: boostUpdate.boostPackageId,
+                    durationDays: boostUpdate.boostDurationDays,
+                    boostActiveUntil: boostUpdate.boostActiveUntil
                 }
             });
-            const auditId = buildAuditLogId("job_boost_activated", jobId, paymentId);
-            const auditRef = admin.firestore().collection("monetization_audit_logs").doc(auditId);
+            const auditId = buildAuditLogId("ugc_boost_activated", sourceId, paymentId);
+            const auditRef = db.collection("monetization_audit_logs").doc(auditId);
             transaction.set(auditRef, { ...auditData, id: auditId });
 
-            console.log(`Successfully activated job boost for job ${jobId}`);
+            console.log(`Successfully activated ugc boost for target ${sourceId}`);
         });
     } catch (error) {
-        console.error(`Error activating job boost for ${paymentId}:`, error);
+        console.error(`Error activating ugc boost for ${paymentId}:`, error);
     }
 });
 
 /**
- * Monetization: Job Boost Expiry Scheduler
- * Runs every hour to check for expired boosts
+ * Monetization: UGC Boost Expiry Scheduler
+ * Runs every hour to check for expired boosts across all domains
  */
-exports.expireJobBoosts = onSchedule("every 1 hours", async (event) => {
+exports.expireUgcBoosts = onSchedule("every 1 hours", async (event) => {
     const now = admin.firestore.Timestamp.now();
+    const db = admin.firestore();
 
-    const expiredJobsQuery = await admin.firestore().collection("job_posts")
-        .where("boostStatus", "==", "active")
-        .where("boostActiveUntil", "<=", now)
-        .limit(250)
-        .get();
+    const collections = [
+        { name: "job_posts", domain: "jobs" },
+        { name: "posts", domain: "news", isCollectionGroup: true },
+        { name: "products", domain: "marketplace", isCollectionGroup: true }
+    ];
 
-    if (expiredJobsQuery.empty) {
-        console.log("No expired job boosts found");
-        return;
-    }
+    for (const col of collections) {
+        let query;
+        if (col.isCollectionGroup) {
+            query = db.collectionGroup(col.name);
+        } else {
+            query = db.collection(col.name);
+        }
 
-    console.log(`Found ${expiredJobsQuery.size} expired job boosts`);
+        const expiredQuery = await query
+            .where("boostStatus", "==", "active")
+            .where("boostActiveUntil", "<=", now)
+            .limit(200)
+            .get();
 
-    const batch = admin.firestore().batch();
-    const auditLogs = [];
+        if (expiredQuery.empty) {
+            console.log(`No expired boosts found for ${col.domain} (${col.name})`);
+            continue;
+        }
 
-    expiredJobsQuery.docs.forEach(doc => {
-        const jobData = doc.data();
-        const jobId = doc.id;
+        console.log(`Found ${expiredQuery.size} expired boosts for ${col.domain}`);
 
-        batch.update(doc.ref, buildBoostExpiredUpdate());
-
-        // Prepare audit log
-        const auditData = buildAuditLogData({
-            type: "job_boost_expired",
-            relatedDomain: "jobs",
-            relatedId: jobId,
-            jobId: jobId,
-            paymentId: jobData.boostPaymentId || null,
-            actorType: "scheduler",
-            actorId: "expireJobBoosts",
-            beforeStatus: "active",
-            afterStatus: "expired",
-            metadata: {
-                boostActiveUntil: jobData.boostActiveUntil,
-                boostPaymentId: jobData.boostPaymentId
-            }
-        });
-        const auditId = buildAuditLogId("job_boost_expired", jobId);
-        const auditRef = admin.firestore().collection("monetization_audit_logs").doc(auditId);
+        const batch = db.batch();
         
-        batch.set(auditRef, { ...auditData, id: auditId });
-    });
+        expiredQuery.docs.forEach(doc => {
+            const data = doc.data();
+            const targetId = doc.id;
 
-    try {
-        await batch.commit();
-        console.log(`Successfully expired ${expiredJobsQuery.size} job boosts`);
-    } catch (error) {
-        console.error("Error committing boost expiry batch:", error);
+            batch.update(doc.ref, buildBoostExpiredUpdate());
+
+            // Audit Log: ugc_boost_expired
+            const auditData = buildAuditLogData({
+                type: "ugc_boost_expired",
+                relatedDomain: col.domain,
+                relatedId: targetId,
+                paymentId: data.boostPaymentId || null,
+                actorType: "scheduler",
+                actorId: "expireUgcBoosts",
+                beforeStatus: "active",
+                afterStatus: "expired",
+                metadata: {
+                    boostActiveUntil: data.boostActiveUntil,
+                    boostPaymentId: data.boostPaymentId
+                }
+            });
+            const auditId = buildAuditLogId("ugc_boost_expired", targetId);
+            const auditRef = db.collection("monetization_audit_logs").doc(auditId);
+            
+            batch.set(auditRef, { ...auditData, id: auditId });
+        });
+
+        try {
+            await batch.commit();
+            console.log(`Successfully expired ${expiredQuery.size} boosts for ${col.domain}`);
+        } catch (error) {
+            console.error(`Error committing boost expiry batch for ${col.domain}:`, error);
+        }
     }
 });
 

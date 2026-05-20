@@ -9,6 +9,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mozzy/mozzy_ii/geo/models/location_parts.dart';
 import 'package:mozzy/mozzy_ii/shared/contracts/mozzy_post_contract.dart';
+import 'package:mozzy/mozzy_ii/core/utils/datetime_converter.dart';
 
 part 'post_model.freezed.dart';
 part 'post_model.g.dart';
@@ -50,9 +51,24 @@ abstract class PostModel with _$PostModel implements MozzyPostContract {
     @Default(<String>[]) List<String> discoveryChannels,
     @Default(<String>[]) List<String> relayTargets,
 
-    required DateTime createdAt,
-    DateTime? updatedAt,
+    @Default(false) bool isPromoted,
+    @Default('none') String boostStatus,
+    String? boostPaymentId,
+    String? boostPackageId,
+    @OptionalSafeDateTimeConverter() DateTime? boostStartedAt,
+    @OptionalSafeDateTimeConverter() DateTime? boostActiveUntil,
+    @Default(0) int boostDurationDays,
+    @Default(0.0) double boostSignalScore,
+    @OptionalSafeDateTimeConverter() DateTime? lastBoostedAt,
+
+    @SafeDateTimeConverter() required DateTime createdAt,
+    @OptionalSafeDateTimeConverter() DateTime? updatedAt,
   }) = _PostModel;
+
+  bool get isBoostActive =>
+      boostStatus == 'active' &&
+      boostActiveUntil != null &&
+      boostActiveUntil!.isAfter(DateTime.now());
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>
       _$PostModelFromJson(json);

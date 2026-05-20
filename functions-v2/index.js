@@ -1091,7 +1091,10 @@ exports._testHelpers = {
     calculateEngagementScore,
     buildEngagementSummaryId,
     isValidEngagementInteraction,
-    groupFeedInteractions
+    groupFeedInteractions,
+    shouldTriggerAiVerification,
+    runMarketplaceAiVerification,
+    runMockGeminiVerification
 };
 
 /**
@@ -1899,5 +1902,386 @@ function sanitizeMetadata(metadata) {
         });
     }
     return cleaned;
+}
+
+/**
+ * Monetization: Automate AI Verification on Paid Payment
+ */
+exports.onPaymentPaidStartAiVerification = onDocumentUpdated({ secrets: [geminiApiKey] }, async (event) => {
+    const beforeData = event.data.before.data();
+    const afterData = event.data.after.data();
+
+    // 1. Verify transitions and criteria
+    if (!shouldTriggerAiVerification(beforeData, afterData)) {
+        return;
+    }
+
+    const paymentId = event.params.paymentId;
+    const productId = afterData.sourceId || afterData.relatedId || (afterData.metadata && afterData.metadata.productId);
+    const userId = afterData.userId || afterData.buyerId;
+
+    if (!productId) {
+        console.error(`Missing productId for aiVerification payment ${paymentId}`);
+        return;
+    }
+
+    try {
+        await runMarketplaceAiVerification({
+            productId,
+            paymentId,
+            userId,
+            paymentData: afterData
+        });
+    } catch (error) {
+        console.error(`Error executing AI verification for payment ${paymentId}:`, error);
+    }
+});
+
+/**
+ * Helper: check if payment paid status transitions can trigger AI verification
+ */
+function shouldTriggerAiVerification(beforeData, afterData) {
+    if (!beforeData || !afterData) return false;
+    
+    // Status transition: must transition to paid
+    if (beforeData.status === "paid" || afterData.status !== "paid") {
+        return false;
+    }
+    
+    // Provider check
+    if (afterData.provider !== "xendit") {
+        return false;
+    }
+    
+    // Purpose check
+    if (afterData.purpose !== "aiVerification") {
+        return false;
+    }
+
+    // Source type check
+    if (afterData.sourceType !== "product") {
+        return false;
+    }
+
+    // Idempotency: skip if already triggered
+    if (afterData.aiVerificationTriggeredAt || (afterData.metadata && afterData.metadata.aiVerificationTriggeredAt)) {
+        console.log(`AI Verification already triggered for payment`);
+        return false;
+    }
+
+    if (afterData.fulfillmentStatus === "processing" || afterData.fulfillmentStatus === "completed") {
+        console.log(`Fulfillment already in status: ${afterData.fulfillmentStatus}`);
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * Helper: run Marketplace AI Verification and persist outcomes
+ */
+async function runMarketplaceAiVerification({ productId, paymentId, userId, paymentData }) {
+    const db = admin.firestore();
+    const paymentRef = db.collection("payments").doc(paymentId);
+
+    // 1. Find Product Document
+    let productRef = null;
+    const countryCode = (paymentData.metadata && paymentData.metadata.countryCode) || "ID";
+    
+    // Direct path lookup
+    productRef = db.collection("countries").doc(countryCode)
+        .collection("domains").doc("marketplace")
+        .collection("products").doc(productId);
+        
+    let productDoc = await productRef.get();
+    
+    if (!productDoc.exists) {
+        // Fallback: search via Collection Group
+        console.log(`Product ${productId} not found at direct path. Searching via collectionGroup...`);
+        const querySnapshot = await db.collectionGroup("products").where("id", "==", productId).limit(1).get();
+        if (!querySnapshot.empty) {
+            productDoc = querySnapshot.docs[0];
+            productRef = productDoc.ref;
+        } else {
+            console.error(`Product ${productId} not found anywhere`);
+            await paymentRef.update({
+                fulfillmentStatus: "failed",
+                fulfillmentError: "product_not_found",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            return;
+        }
+    }
+
+    const productData = productDoc.data();
+
+    // 2. Validate Ownership
+    const sellerId = productData.sellerId || productData.userId;
+    if (sellerId !== userId) {
+        console.error(`Ownership mismatch: product owner ${sellerId}, payment buyer ${userId}`);
+        await paymentRef.update({
+            fulfillmentStatus: "failed",
+            fulfillmentError: "ownership_mismatch",
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        return;
+    }
+
+    // 3. Validate Images
+    const imageUrls = productData.imageUrls || [];
+    if (!imageUrls || imageUrls.length === 0) {
+        console.error(`Product ${productId} has no images`);
+        
+        await db.runTransaction(async (transaction) => {
+            transaction.update(productRef, {
+                aiVerificationStatus: "failed",
+                aiVerificationError: "missing_images",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            transaction.update(paymentRef, {
+                fulfillmentStatus: "failed",
+                fulfillmentError: "missing_images",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+        });
+        return;
+    }
+
+    // 4. Idempotency on Product Status
+    if (productData.aiVerificationStatus === "completed" || productData.isAiVerified) {
+        console.warn(`Product ${productId} is already verified`);
+        await paymentRef.update({
+            fulfillmentStatus: "completed",
+            fulfillmentCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        return;
+    }
+
+    if (productData.aiVerificationStatus === "processing") {
+        console.warn(`Product ${productId} is already in processing state`);
+        return;
+    }
+
+    // 5. Update Status to processing
+    const now = admin.firestore.FieldValue.serverTimestamp();
+    await db.runTransaction(async (transaction) => {
+        transaction.update(productRef, {
+            aiVerificationStatus: "processing",
+            aiVerificationProcessingStartedAt: now,
+            aiVerificationPaymentId: paymentId,
+            updatedAt: now
+        });
+        transaction.update(paymentRef, {
+            fulfillmentStatus: "processing",
+            fulfillmentType: "aiVerification",
+            fulfillmentStartedAt: now,
+            aiVerificationTriggeredAt: now,
+            updatedAt: now
+        });
+    });
+
+    // 6. Gemini AI Call (Mock or Live)
+    const isMockMode = process.env.AI_MOCK_MODE === "true";
+    const apiKey = geminiApiKey.value();
+
+    let aiResult;
+    try {
+        if (isMockMode) {
+            aiResult = await runMockGeminiVerification({
+                productId,
+                title: productData.title,
+                description: productData.description,
+                category: productData.category,
+                imageUrls
+            });
+        } else {
+            if (!apiKey) {
+                throw new Error("GEMINI_API_KEY is missing");
+            }
+            aiResult = await runLiveGeminiVerification({
+                productId,
+                title: productData.title,
+                description: productData.description,
+                category: productData.category,
+                imageUrls,
+                apiKey
+            });
+        }
+
+        // 7. Process Verification Completion
+        const isPassed = aiResult.status === "passed";
+        
+        await db.runTransaction(async (transaction) => {
+            transaction.update(productRef, {
+                isAiVerified: isPassed,
+                aiVerificationStatus: isPassed ? "completed" : "failed",
+                aiVerificationCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+                aiVerifiedAt: admin.firestore.FieldValue.serverTimestamp(),
+                aiVerificationResult: {
+                    status: aiResult.status,
+                    confidence: aiResult.score || 0.85,
+                    summary: aiResult.summary || "Verified by Mozzy AI",
+                    detectedCategory: aiResult.suggestedCategory || productData.category,
+                    conditionGrade: aiResult.conditionLabel === "new" ? "A" : aiResult.conditionLabel === "good" ? "B" : "C",
+                    riskFlags: aiResult.detectedIssues || []
+                },
+                // Deprecated Option A fields but keeping them updated for compatibility
+                aiVerificationScore: aiResult.score || 0.85,
+                aiVerificationSummary: aiResult.summary || "Verified by Mozzy AI",
+                aiDetectedIssues: aiResult.detectedIssues || [],
+                aiSuggestedCategory: aiResult.suggestedCategory || productData.category,
+                aiConditionLabel: aiResult.conditionLabel || "unknown",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+
+            transaction.update(paymentRef, {
+                fulfillmentStatus: isPassed ? "completed" : "failed",
+                fulfillmentCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+                fulfillmentError: isPassed ? null : "ai_verification_failed",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+        });
+
+        console.log(`AI verification finished for product ${productId}: result = ${aiResult.status}`);
+
+    } catch (e) {
+        console.error(`AI verification exception for product ${productId}:`, e);
+        
+        await db.runTransaction(async (transaction) => {
+            transaction.update(productRef, {
+                aiVerificationStatus: "failed",
+                aiVerificationError: e.message || "AI Verification Error",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+            transaction.update(paymentRef, {
+                fulfillmentStatus: "failed",
+                fulfillmentFailedAt: admin.firestore.FieldValue.serverTimestamp(),
+                fulfillmentError: "ai_api_error",
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+        });
+    }
+}
+
+/**
+ * Helper: run Mock Gemini AI Verification
+ */
+async function runMockGeminiVerification({ productId, title, description, category, imageUrls }) {
+    console.log(`Running Mock Gemini verification for ${title}`);
+    
+    // We allow testing the failed path by having "fail" or "fraud" in the title!
+    const isFail = title.toLowerCase().includes("fail") || title.toLowerCase().includes("fraud");
+    
+    if (isFail) {
+        return {
+            status: "failed",
+            score: 0.15,
+            summary: "Mock AI Verification Failed: Suspected fraud or keyword trigger",
+            detectedIssues: ["suspected_mismatch", "keyword_flagged"],
+            suggestedCategory: category,
+            conditionLabel: "damaged"
+        };
+    } else {
+        return {
+            status: "passed",
+            score: 0.95,
+            summary: "Mock AI Verification Passed: Product image matches listing title and category",
+            detectedIssues: [],
+            suggestedCategory: category,
+            conditionLabel: "good"
+        };
+    }
+}
+
+/**
+ * Helper: run Live Gemini AI Verification
+ */
+async function runLiveGeminiVerification({ productId, title, description, category, imageUrls, apiKey }) {
+    const modelName = process.env.GEMINI_MODEL || "gemini-3-flash-preview";
+    
+    const prompt = `You are a strict marketplace AI verification agent for Mozzy, a hyperlocal Indonesian marketplace.
+You must verify whether the listing text and the uploaded product images match exactly.
+
+Product Title: ${title}
+Description: ${description}
+Category: ${category}
+
+Critical Rules:
+1. Inspect the provided images directly and compare them with the title and description.
+2. If the title claims a specific model, generation, or version (e.g., "AirPods Pro 3", "iPhone 15 Pro"), verify if the images actually show that exact model.
+3. If the model/generation cannot be confidently verified from the images, you MUST return "needs_review".
+4. If the images appear to show a different product, a different version, or a knock-off of what is claimed in the title, return "needs_review" or "failed".
+5. If images are missing, blurry, or insufficient to prove the claim, return "needs_review".
+6. Be extremely conservative for electronics and branded goods. Do not mark "passed" unless the image-text-category consistency is 100% clear.
+
+Return ONLY a JSON object:
+{
+  "status": "passed" | "failed" | "needs_review",
+  "score": 0.0 to 1.0,
+  "summary": "Brief explanation",
+  "detectedIssues": ["issue1", "issue2"],
+  "suggestedCategory": "category name",
+  "conditionLabel": "new" | "good" | "used" | "damaged" | "unknown",
+  "imageTextMatch": "matched" | "mismatch" | "uncertain",
+  "modelClaimVerified": true | false
+}`;
+
+    const parts = [{ text: prompt }];
+
+    // Fetch the first image and add as inlineData
+    if (imageUrls && imageUrls.length > 0) {
+        const base64Data = await downloadImageAsBase64(imageUrls[0]);
+        if (base64Data) {
+            parts.push({
+                inlineData: {
+                    mimeType: "image/webp",
+                    data: base64Data
+                }
+            });
+        }
+    }
+
+    const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+        {
+            contents: [{ parts }],
+            generationConfig: {
+                responseMimeType: "application/json",
+            }
+        },
+        {
+            headers: { 'Content-Type': 'application/json' },
+            timeout: 25000
+        }
+    );
+
+    const content = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!content) {
+        throw new Error("Empty response from Gemini");
+    }
+
+    let cleanedJson = content.trim();
+    if (cleanedJson.startsWith("```")) {
+        const lines = cleanedJson.split("\n");
+        if (lines.length >= 2) {
+            cleanedJson = lines.slice(1, lines.length - 1).join("\n").trim();
+        }
+    }
+
+    return JSON.parse(cleanedJson);
+}
+
+/**
+ * Helper: Download image and encode as base64
+ */
+async function downloadImageAsBase64(url) {
+    try {
+        const response = await axios.get(url, { responseType: 'arraybuffer', timeout: 5000 });
+        return Buffer.from(response.data, 'binary').toString('base64');
+    } catch (e) {
+        console.error(`Failed to download image from ${url}:`, e.message);
+        return null;
+    }
 }
 

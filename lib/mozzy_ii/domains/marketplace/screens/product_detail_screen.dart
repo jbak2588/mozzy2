@@ -451,21 +451,42 @@ class _ProductDetailContent extends ConsumerWidget {
   }
 
   Widget _buildAiVerification(BuildContext context, WidgetRef ref, bool isSeller, String? userId) {
+    final hasNoVerification = !product.isAiVerified &&
+        (product.aiVerificationStatus == 'none' ||
+         product.aiVerificationStatus == 'not_requested' ||
+         product.aiVerificationStatus.isEmpty);
+
+    if (hasNoVerification && !isSeller) {
+      return const SizedBox.shrink();
+    }
+
     final statusColor = product.isAiVerified
         ? Colors.green
         : (product.aiVerificationStatus == 'failed'
               ? Colors.red
-              : Colors.orange);
+              : (product.aiVerificationStatus == 'processing'
+                  ? Colors.blue
+                  : (product.aiVerificationStatus == 'payment_pending'
+                      ? Colors.orange
+                      : Colors.grey)));
     final bgColor = product.isAiVerified
         ? Colors.green[50]
         : (product.aiVerificationStatus == 'failed'
               ? Colors.red[50]
-              : Colors.orange[50]);
+              : (product.aiVerificationStatus == 'processing'
+                  ? Colors.blue[50]
+                  : (product.aiVerificationStatus == 'payment_pending'
+                      ? Colors.orange[50]
+                      : Colors.grey[50])));
     final borderColor = product.isAiVerified
         ? Colors.green[100]
         : (product.aiVerificationStatus == 'failed'
               ? Colors.red[100]
-              : Colors.orange[100]);
+              : (product.aiVerificationStatus == 'processing'
+                  ? Colors.blue[100]
+                  : (product.aiVerificationStatus == 'payment_pending'
+                      ? Colors.orange[100]
+                      : Colors.grey[200])));
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -483,10 +504,14 @@ class _ProductDetailContent extends ConsumerWidget {
               const SizedBox(width: 8),
               Text(
                 product.isAiVerified
-                    ? 'marketplace.aiVerified'.tr()
+                    ? 'marketplace.aiVerification.completed'.tr()
                     : (product.aiVerificationStatus == 'failed'
-                        ? 'marketplace.aiRejected'.tr()
-                        : 'marketplace.aiReviewPending'.tr()),
+                        ? 'marketplace.aiVerification.failed'.tr()
+                        : (product.aiVerificationStatus == 'processing'
+                            ? 'marketplace.aiVerification.processing'.tr()
+                            : (product.aiVerificationStatus == 'payment_pending'
+                                ? 'marketplace.aiVerification.pendingPayment'.tr()
+                                : 'marketplace.aiNotVerified'.tr()))),
                 style: TextStyle(
                   color: statusColor,
                   fontWeight: FontWeight.bold,
@@ -497,6 +522,15 @@ class _ProductDetailContent extends ConsumerWidget {
                 Icon(Icons.check_circle, color: statusColor)
               else if (product.aiVerificationStatus == 'failed')
                 Icon(Icons.error_outline, color: statusColor)
+              else if (product.aiVerificationStatus == 'processing')
+                SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+                  ),
+                )
               else
                 const Icon(Icons.help_outline, color: Colors.grey),
             ],
@@ -504,7 +538,15 @@ class _ProductDetailContent extends ConsumerWidget {
           const SizedBox(height: 12),
           _buildAiRow(
             'marketplace.aiStatus'.tr(),
-            product.aiVerificationStatus,
+            product.isAiVerified
+                ? 'marketplace.aiVerification.completed'.tr()
+                : (product.aiVerificationStatus == 'failed'
+                    ? 'marketplace.aiVerification.failed'.tr()
+                    : (product.aiVerificationStatus == 'processing'
+                        ? 'marketplace.aiVerification.processing'.tr()
+                        : (product.aiVerificationStatus == 'payment_pending'
+                            ? 'marketplace.aiVerification.pendingPayment'.tr()
+                            : 'marketplace.aiNotVerified'.tr()))),
           ),
           if (product.aiVerificationScore != null)
             _buildAiRow(
